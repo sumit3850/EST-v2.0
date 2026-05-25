@@ -5,8 +5,13 @@
       "password": "2026",
       "role": "admin",
       "active": true
+    },
+    {
+      "username": "USER-1",
+      "password": "2026",
+      "role": "field",
+      "active": true
     }
   ],
-  "updatedAt": "2025-05-25T00:00:00Z",
-  "note": "Edit credentials here. Set active:false to block a user instantly."
+  "updatedAt": "2026-05-25T15:56:56.227Z"
 }
