@@ -274,18 +274,47 @@ let GH={owner:'',repo:'EST-v2.0',token:''};
 let allAdult=[],allLarval=[],adultF=[],larvalF=[],usersCfg=[];
 
 /* ── AUTH ── */
+function validateDashLogin(u,p){
+  if(!u||!p) return false;
+  if(u.trim()===DASH_U && p===DASH_P) return true;
+  // Also allow GitHub-configured credentials (cached)
+  try{
+    const raw=localStorage.getItem('est_gh_config')||localStorage.getItem('est_dash_cfg_creds');
+    if(raw){
+      const cfg=JSON.parse(raw);
+      const creds=cfg.credentials||[];
+      return creds.some(c=>c.username&&c.username.trim()===u.trim()&&c.password===p&&c.active!==false&&(c.role==='admin'||!c.role));
+    }
+  }catch(e){}
+  return false;
+}
 function doLogin(){
   const u=document.getElementById('lf-user').value.trim();
   const p=document.getElementById('lf-pass').value;
   const rem=document.getElementById('lf-rem').checked;
-  if(u!==DASH_U||p!==DASH_P){document.getElementById('lf-err').style.display='block';document.getElementById('lf-pass').value='';return;}
+  const errEl=document.getElementById('lf-err');
+  if(!validateDashLogin(u,p)){
+    errEl.textContent='Invalid credentials. Use ANIENTO / 2026 or configured GitHub credentials.';
+    errEl.style.display='block';
+    document.getElementById('lf-pass').value='';
+    return;
+  }
+  errEl.style.display='none';
   if(rem)localStorage.setItem(DASH_KEY,JSON.stringify({u,p}));else localStorage.removeItem(DASH_KEY);
   document.getElementById('login-screen').classList.add('gone');
   document.getElementById('app').classList.add('show');
   loadSetup();loadAll();
 }
 function checkAuth(){
-  try{const c=JSON.parse(localStorage.getItem(DASH_KEY));if(c&&c.u===DASH_U&&c.p===DASH_P){document.getElementById('lf-user').value=c.u;document.getElementById('lf-pass').value=c.p;document.getElementById('lf-rem').checked=true;doLogin();}}catch(e){}
+  try{
+    const c=JSON.parse(localStorage.getItem(DASH_KEY));
+    if(c&&c.u&&c.p&&validateDashLogin(c.u,c.p)){
+      document.getElementById('lf-user').value=c.u;
+      document.getElementById('lf-pass').value=c.p;
+      document.getElementById('lf-rem').checked=true;
+      doLogin();
+    }
+  }catch(e){}
 }
 function doLogout(){localStorage.removeItem(DASH_KEY);document.getElementById('login-screen').classList.remove('gone');document.getElementById('app').classList.remove('show');}
 

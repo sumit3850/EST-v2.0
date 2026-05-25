@@ -1188,22 +1188,24 @@ async function ghFetchConfig(){
 
 /* ── VALIDATE CREDENTIALS ────────────────────────────────── */
 function validateCredentials(user, pass){
-  // 1. Hardcoded admin — INSTANT, no network, always works
-  if(user===VALID_USER && pass===VALID_PASS) return { valid:true, role:'admin', source:'local' };
-  // 2. Cached GitHub config from last online session
+  if(!user||!pass) return {valid:false,reason:'empty'};
+  // 1. Hardcoded built-in — ALWAYS works, instant, no network
+  if(user.trim()===VALID_USER && pass===VALID_PASS) return {valid:true,role:'admin',source:'local'};
+  // 2. Cached GitHub credentials from previous online session
   try{
-    const cached=localStorage.getItem('est_gh_config');
-    if(cached){
-      const config=JSON.parse(cached);
-      if(config&&config.credentials){
-        const match=config.credentials.find(c=>c.username===user&&c.password===pass&&c.active!==false);
-        if(match)return{valid:true,role:match.role||'field',source:'cache'};
-        const anyMatch=config.credentials.find(c=>c.username===user);
-        if(anyMatch)return{valid:false,source:'cache'};
-      }
+    const raw=localStorage.getItem('est_gh_config');
+    if(raw){
+      const cfg=JSON.parse(raw);
+      const creds=Array.isArray(cfg.credentials)?cfg.credentials:[];
+      const match=creds.find(c=>c.username&&c.username.trim()===user.trim()&&c.password===pass&&c.active!==false);
+      if(match) return {valid:true,role:match.role||'field',source:'cache'};
+      const found=creds.find(c=>c.username&&c.username.trim()===user.trim());
+      if(found) return {valid:false,reason:found.active===false?'inactive':'wrong_password',source:'cache'};
     }
-  }catch(e){}
-  return{valid:false,source:'local'};
+  }catch(e){
+    try{localStorage.removeItem('est_gh_config');}catch(e2){}
+  }
+  return {valid:false,reason:'not_found',source:'local'};
 }
 
 /* ── PUSH SURVEY TO GITHUB ───────────────────────────────── */
@@ -1440,8 +1442,12 @@ function doLogin(){
   const result=validateCredentials(u,p);
 
   if(!result.valid){
-    const offlineNote=!navigator.onLine?' (Offline — only pre-set credentials work)':'';
-    err.textContent='Invalid credentials'+offlineNote+'. Please try again.';
+    const r2=validateCredentials(u,p);
+    let msg='Invalid username or password.';
+    if(r2.reason==='inactive') msg='This account has been deactivated. Contact admin.';
+    else if(r2.reason==='empty') msg='Please enter username and password.';
+    else if(!navigator.onLine) msg='Invalid credentials. (Offline — only ANIENTO/2026 works offline)';
+    err.textContent=msg;
     err.style.display='block';
     document.getElementById('login-pass').value='';return;
   }
