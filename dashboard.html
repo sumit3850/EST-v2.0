@@ -364,6 +364,16 @@ function exportFilteredCSV(mod){
 }
 
 loadSetup();
+// Auto-load from localStorage if available
+const savedCfg = localStorage.getItem('est_dash_cfg');
+if(savedCfg){
+  try{
+    const c = JSON.parse(savedCfg);
+    if(c.owner && c.token){
+      setTimeout(()=>{loadAll();},500);
+    }
+  }catch(e){}
+}
 </script>
 </body>
 </html>

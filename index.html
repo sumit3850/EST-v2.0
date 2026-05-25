@@ -331,6 +331,13 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
       SIGN IN
     </button>
+    <div style="width:100%;max-width:340px;margin-top:10px;">
+      <button onclick="showGhSettings()" id="splash-db-btn" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;background:rgba(255,255,255,.12);border:1.5px solid rgba(104,250,221,.4);border-radius:var(--rxl);color:var(--pb);font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all var(--tr);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        <span id="splash-db-text">Connect GitHub Database</span>
+      </button>
+      <div id="splash-db-status" style="text-align:center;font-size:10px;color:rgba(255,255,255,.4);margin-top:6px;display:none;"></div>
+    </div>
     <div style="font-size:10px;color:rgba(255,255,255,.25);margin-top:14px;text-align:center;line-height:1.6;">Offline-capable · GPS enabled · Data stored locally<br>WHO-standard surveillance indices</div>
   </div>
 </div>
@@ -925,7 +932,7 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
 <!-- ══ ABOUT ══ -->
 <div class="screen" id="screen-about">
   <div class="scroll-area">
-    <button id="about-back-btn" onclick="backToLogin()" style="display:none;align-items:center;gap:7px;padding:7px 12px;background:var(--sfc);border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:12px;font-weight:700;color:var(--osv);cursor:pointer;margin-bottom:12px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Sign In</button>
+    <button id="about-back-btn" onclick="backFromAbout()" style="display:none;align-items:center;gap:7px;padding:7px 12px;background:var(--sfc);border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:12px;font-weight:700;color:var(--osv);cursor:pointer;margin-bottom:12px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Sign In</button>
     <div class="page-title">About EST</div>
     <div style="height:3px;width:36px;border-radius:2px;margin-bottom:16px;background:linear-gradient(90deg,var(--pl),var(--larval));"></div>
     <!-- App hero -->
@@ -1164,6 +1171,10 @@ async function ghFetchConfig(){
     const config = JSON.parse(b64Decode(data.content));
     ghConfigCache = config;
     localStorage.setItem('est_gh_config', JSON.stringify(config));
+    // Also cache the credentials list for offline validation
+    if(config.credentials){
+      localStorage.setItem('est_gh_creds_list', JSON.stringify(config.credentials));
+    }
     return config;
   }catch(e){ return null; }
 }
@@ -1177,7 +1188,7 @@ async function validateCredentials(user, pass){
       const match = config.credentials.find(c => c.username===user && c.password===pass && c.active!==false);
       if(match) return { valid:true, role:match.role||'field', source:'github' };
       const anyMatch = config.credentials.find(c => c.username===user);
-      if(anyMatch) return { valid:false, source:'github' }; // username found but wrong pass
+      if(anyMatch) return { valid:false, source:'github' };
     }
   }
   // Fallback to cached config (offline)
@@ -1191,6 +1202,17 @@ async function validateCredentials(user, pass){
         const anyMatch = config.credentials.find(c => c.username===user);
         if(anyMatch) return { valid:false, source:'cache' };
       }
+    }catch(e){}
+  }
+  // Fallback to cached credentials list
+  const cachedCreds = localStorage.getItem('est_gh_creds_list');
+  if(cachedCreds){
+    try{
+      const creds = JSON.parse(cachedCreds);
+      const match = creds.find(c => c.username===user && c.password===pass && c.active!==false);
+      if(match) return { valid:true, role:match.role||'field', source:'cache' };
+      const anyMatch = creds.find(c => c.username===user);
+      if(anyMatch) return { valid:false, source:'cache' };
     }catch(e){}
   }
   // Final fallback: hardcoded credentials (works always)
@@ -1286,8 +1308,9 @@ function saveGhSettings(){
   GH_CONFIG.owner=o; GH_CONFIG.repo=rp; GH_CONFIG.token=t;
   try{localStorage.setItem('est_gh_settings',JSON.stringify({owner:o,repo:rp,token:t}));}catch(e){}
   document.getElementById('gh-settings-modal')?.classList.remove('open');
+  updateGhButtonStatus(); // Refresh splash button
   showToast('GitHub settings saved','check');
-  if(o&&t){ ghFetchConfig().then(c=>{ if(c)showToast('Connected to GitHub ✓','check'); else showToast('Check your token/repo name','warn');}); }
+  if(o&&t){ ghFetchConfig().then(c=>{ if(c){showToast('Connected to GitHub ✓','check');updateGhButtonStatus();} else showToast('Check your token/repo name','warn');}); }
 }
 function loadGhSettings(){
   try{
@@ -1295,6 +1318,7 @@ function loadGhSettings(){
     if(s.owner)GH_CONFIG.owner=s.owner;
     if(s.repo)GH_CONFIG.repo=s.repo;
     if(s.token)GH_CONFIG.token=s.token;
+    updateGhButtonStatus();
   }catch(e){}
 }
 
@@ -1381,33 +1405,47 @@ function backToLogin(){
   const backBtn=document.getElementById('about-back-btn');
   if(backBtn)backBtn.style.display='none';
   const hdr=document.getElementById('app-header');
-  // If user was not logged in (came from login page), hide header and go back to splash
   if(!window._estLoggedIn){
     if(hdr)hdr.style.display='none';
     document.querySelectorAll('.screen:not(#splash)').forEach(s=>s.classList.remove('active'));
-    const sp=document.getElementById('splash');if(sp){sp.classList.add('active');sp.style.opacity='1';}
+    const sp=document.getElementById('splash');if(sp){sp.classList.add('active');sp.style.opacity='1';sp.style.transform='';}
   } else {
-    // User is logged in — go back to dashboard
-    goTo('home');
+    goTo('dash');
+  }
+}
+function backFromAbout(){
+  const backBtn=document.getElementById('about-back-btn');
+  if(backBtn)backBtn.style.display='none';
+  if(!window._estLoggedIn){
+    document.querySelectorAll('.screen:not(#splash)').forEach(s=>s.classList.remove('active'));
+    const sp=document.getElementById('splash');if(sp){sp.classList.add('active');sp.style.opacity='1';sp.style.transform='';}
+    document.getElementById('app-header').style.display='none';
+    document.getElementById('app-nav').style.display='none';
+  } else {
+    goTo('dash');
   }
 }
 function goToAbout(){
-  // Show about screen without logging in
   document.getElementById('splash').style.opacity='0';
   document.getElementById('splash').style.transition='opacity .3s';
   setTimeout(()=>{
     document.getElementById('splash').classList.remove('active');
     const abt=document.getElementById('screen-about');
     if(abt){abt.classList.add('active');abt.querySelector('.scroll-area')?.scrollTo(0,0);}
-    document.getElementById('app-header').style.display='flex';
-    // Back button shows on about page to return to login
+    // Hide header when about is accessed from splash (not logged in)
+    if(!window._estLoggedIn){
+      document.getElementById('app-header').style.display='none';
+      document.getElementById('app-nav').style.display='none';
+    } else {
+      document.getElementById('app-header').style.display='flex';
+    }
     const backBtn=document.getElementById('about-back-btn');
-  if(backBtn){
-    backBtn.style.display='flex';
-    backBtn.innerHTML=window._estLoggedIn
-      ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Dashboard'
-      : '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Sign In';
-  }
+    if(backBtn){
+      backBtn.style.display='flex';
+      backBtn.innerHTML=window._estLoggedIn
+        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Dashboard'
+        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Sign In';
+    }
   },300);
 }
 async function doLogin(){
@@ -1434,9 +1472,19 @@ function showScreen(id){
   document.querySelectorAll('.screen:not(#splash)').forEach(s=>s.classList.remove('active'));
   const sc=document.getElementById('screen-'+id);
   if(sc){sc.classList.add('active');sc.querySelector('.scroll-area')?.scrollTo(0,0);}
-  // Hide header on dashboard, show on all other screens
+  // Hide header on dashboard and about (when not logged in), show on all other screens
   const hdr=document.getElementById('app-header');
-  if(hdr)hdr.style.display=(id==='dash')?'none':'flex';
+  if(hdr){
+    if(id==='dash'){hdr.style.display='none';}
+    else if(id==='about'&&!window._estLoggedIn){hdr.style.display='none';}
+    else{hdr.style.display='flex';}
+  }
+  // Hide nav on about when not logged in
+  const nav=document.getElementById('app-nav');
+  if(nav){
+    if(id==='about'&&!window._estLoggedIn){nav.style.display='none';}
+    else if(id!=='dash'){nav.style.display='flex';}
+  }
   ['home','survey','collect','review','saved'].forEach(k=>{const b=document.getElementById('nav-'+k);if(b)b.classList.remove('active','larval-active');});
   const nm={'dash':'home','adult-survey':'survey','adult-collect':'collect','adult-review':'review','larval-survey':'survey','larval-collect':'collect','larval-review':'review','saved':'saved'};
   const nb=nm[id];if(nb){const el=document.getElementById('nav-'+nb);if(el)el.classList.add(activeModule==='larval'?'larval-active':'active');}
@@ -1444,6 +1492,7 @@ function showScreen(id){
   if(badge){
     if(id.startsWith('adult')||activeModule==='adult'){badge.className='hmod-badge adult';badge.textContent='Adult Surveillance';}
     else if(id.startsWith('larval')||activeModule==='larval'){badge.className='hmod-badge larval';badge.textContent='Larval Surveillance';}
+    else if(id==='about'){badge.className='hmod-badge adult';badge.textContent='About EST';}
     else{badge.className='hmod-badge adult';badge.textContent='EST v2.0';}
   }
 }
@@ -2538,6 +2587,8 @@ window.addEventListener('beforeunload',(e)=>{
 });
 document.addEventListener('DOMContentLoaded',()=>{
   loadSavedCreds();
+  loadGhSettings(); // Load GitHub settings early
+  updateGhButtonStatus(); // Update splash DB button
   buildAdultMatrix();
   buildLarvalMatrix();
   buildContainerMatrix();
@@ -2545,7 +2596,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('l-date').value=todayStr();
   document.getElementById('hlc-warn').style.display='none';
   document.getElementById('a-nights-row').style.display='block';
-  // Credentials pre-filled by loadSavedCreds() — user taps Sign In
   // Populate India states/UTs in both survey forms
   setTimeout(()=>{populateStates('a-state');populateStates('l-state');},100);
 });
@@ -2553,101 +2603,69 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 <script>
 /* ═══════════════════════════════════════════════════════
-   EST v2.0 — PWA / Service Worker / Offline Support
+   EST v2.0 — Offline Support & PWA
    ─────────────────────────────────────────────────────
-   HOW IT WORKS:
-   1. On first load (online): SW caches entire app → offline capable
-   2. On subsequent loads (offline): SW serves from cache
-   3. On load (online, new version): SW fetches update, notifies user
-   4. User taps "Update" → SW installs new version, page reloads
-   5. All localStorage data (surveys, drafts) is NEVER touched by SW
+   NOTE: For full offline capability on GitHub Pages,
+   create a file named "sw.js" in your repo root with:
+
+   const CACHE_NAME = 'est-v2.0.1';
+   self.addEventListener('install', e => {
+     e.waitUntil(caches.open(CACHE_NAME).then(c => c.add('.')).then(() => self.skipWaiting()));
+   });
+   self.addEventListener('activate', e => {
+     e.waitUntil(caches.keys().then(k => Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)))).then(()=>self.clients.claim()));
+   });
+   self.addEventListener('fetch', e => {
+     if(e.request.method !== 'GET') return;
+     e.respondWith(fetch(e.request).then(r=>{if(r&&r.ok){const rc=r.clone();caches.open(CACHE_NAME).then(c=>c.put(e.request,rc));}return r;}).catch(()=>caches.match(e.request)));
+   });
+
+   Then add to <head>: <script>if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js');</script>
 ═══════════════════════════════════════════════════════ */
 
-const EST_VERSION = '2.0.1';
-const SW_CACHE = 'est-v' + EST_VERSION;
-
-/* ── Inline Service Worker via Blob URL ─────────────── */
-const SW_CODE = `
-const CACHE_NAME = '${SW_CACHE}';
-const CURRENT_VERSION = '${EST_VERSION}';
-
-self.addEventListener('install', evt => {
-  evt.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.add(self.location.href.split('?')[0]);
-    }).then(() => self.skipWaiting())
-  );
-});
-
-self.addEventListener('activate', evt => {
-  evt.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
-  );
-});
-
-self.addEventListener('fetch', evt => {
-  if (evt.request.method !== 'GET') return;
-  const url = new URL(evt.request.url);
-  // Only cache same-origin requests (the app file itself)
-  if (url.origin !== self.location.origin) {
-    // For GPS APIs and external: network only, don't cache
-    return;
+/* ── Update splash DB button based on connection status ── */
+function updateGhButtonStatus(){
+  const btn=document.getElementById('splash-db-btn');
+  const txt=document.getElementById('splash-db-text');
+  const status=document.getElementById('splash-db-status');
+  if(!btn||!txt)return;
+  if(GH_CONFIG.owner&&GH_CONFIG.token){
+    txt.textContent='GitHub DB Connected ✓';
+    btn.style.borderColor='rgba(104,250,221,.6)';
+    btn.style.background='rgba(104,250,221,.15)';
+    if(status){status.textContent='Synced to '+GH_CONFIG.owner+'/'+GH_CONFIG.repo;status.style.display='block';}
+  }else{
+    txt.textContent='Connect GitHub Database';
+    btn.style.borderColor='rgba(104,250,221,.4)';
+    btn.style.background='rgba(255,255,255,.12)';
+    if(status)status.style.display='none';
   }
-  evt.respondWith(
-    caches.open(CACHE_NAME).then(cache =>
-      fetch(evt.request).then(resp => {
-        if (resp && resp.ok) {
-          const respClone = resp.clone();
-          // Check if version changed
-          respClone.text().then(text => {
-            const m = text.match(/meta name="est-version" content="([^"]+)"/);
-            if (m && m[1] !== CURRENT_VERSION) {
-              cache.put(evt.request, resp.clone());
-              // Notify all clients of update
-              self.clients.matchAll().then(clients =>
-                clients.forEach(c => c.postMessage({type:'UPDATE_AVAILABLE',version:m[1]}))
-              );
-            } else {
-              cache.put(evt.request, resp.clone());
-            }
-          });
-        }
-        return resp;
-      }).catch(() => cache.match(evt.request))
-    )
-  );
-});
-`;
+}
 
 /* ── Register SW ───────────────────────────────────── */
 function registerSW() {
-  if (!('serviceWorker' in navigator)) return;
-  try {
-    const blob = new Blob([SW_CODE], { type: 'application/javascript' });
-    const swUrl = URL.createObjectURL(blob);
-    navigator.serviceWorker.register(swUrl, { scope: './' })
-      .then(reg => {
-        console.log('[EST] Service Worker registered', reg.scope);
-        // Listen for update messages from SW
-        navigator.serviceWorker.addEventListener('message', evt => {
-          if (evt.data && evt.data.type === 'UPDATE_AVAILABLE') {
-            showUpdateBanner(evt.data.version);
-          }
-        });
-        // Check for update every 30 minutes while online
-        setInterval(() => { if (navigator.onLine) reg.update(); }, 30 * 60 * 1000);
-      })
-      .catch(err => console.warn('[EST] SW registration failed:', err));
-  } catch(e) {
-    console.warn('[EST] SW blob URL not supported:', e);
-    // Fallback: try to register from same path
-    if (window.location.protocol !== 'file:') {
-      navigator.serviceWorker.register(window.location.pathname + '?sw=1')
-        .catch(() => {});
-    }
+  // Blob URLs are NOT supported for ServiceWorker registration (browser security restriction)
+  // We use a lightweight approach: detect if a real sw.js exists and register it
+  if (!('serviceWorker' in navigator)) {
+    console.log('[EST] Service Workers not supported');
+    return;
   }
+  // Try to register a real sw.js file if it exists
+  fetch('./sw.js', { method: 'HEAD', cache: 'no-store' })
+    .then(r => {
+      if (r.ok) {
+        return navigator.serviceWorker.register('./sw.js', { scope: './' })
+          .then(reg => {
+            console.log('[EST] Service Worker registered from sw.js');
+            reg.update();
+          });
+      } else {
+        console.log('[EST] No sw.js found — create one for full offline support');
+      }
+    })
+    .catch(() => {
+      console.log('[EST] No sw.js available — app works online with localStorage persistence');
+    });
 }
 
 /* ── Update banner ─────────────────────────────────── */
