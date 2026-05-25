@@ -1,0 +1,517 @@
+{
+  "id": 1779713235881,
+  "savedAt": "2026-05-25T12:47:15.881Z",
+  "appType": "adult",
+  "v": "2.0",
+  "collType": "hlc",
+  "date": "25-05-2026",
+  "state": "Andaman and Nicobar Islands",
+  "district": "Nicobar",
+  "location": "Kakana, Car Nicobar",
+  "workers": "Shiva, Shivan",
+  "officers": "Sumit",
+  "collectors": 2,
+  "nights": 1,
+  "lat": "9.147241",
+  "lng": "92.814074",
+  "houses": [
+    {
+      "id": 1779711870096,
+      "houseNo": "ST-001",
+      "rooms": 0,
+      "start": "17:42",
+      "end": "17:54",
+      "hours": 0.2,
+      "counts": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "total": 4,
+      "otherName": ""
+    },
+    {
+      "id": 1779712854877,
+      "houseNo": "ST-002",
+      "rooms": 0,
+      "start": "17:57",
+      "end": "18:10",
+      "hours": 0.2167,
+      "counts": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "total": 4,
+      "otherName": ""
+    }
+  ],
+  "speciesBreakdown": [
+    {
+      "name": "Ae. aegypti",
+      "genus": "AEDES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Ae. albopictus",
+      "genus": "AEDES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Ae. niveus",
+      "genus": "AEDES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. culicifacies",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. stephensi",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. fluviatilis",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. philippinensis",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. sundaicus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. dirus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. minimus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. varuna",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. annularis",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. barbirostris",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. hyrcanus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. subpictus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. kochi",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. quinquefasciatus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 8,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. vishnui",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. pseudovishnui",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. tritaeniorhynchus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. gelidus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. fuscocephala",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. whitmorei",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. epidesmus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. bitaeniorhynchus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Ph. argentipes",
+      "genus": "OTHER VECTORS",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Others",
+      "genus": "OTHERS",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    }
+  ],
+  "MHD": "0.00",
+  "TMHD": "95.99",
+  "indoorDensity": "0.00",
+  "outdoorDensity": "0.00",
+  "roomDensity": "—",
+  "HBR": "4.00",
+  "totalMosq": 8,
+  "totIndoor": 0,
+  "totOutdoor": 0,
+  "totNonCulex": 0,
+  "totCulex": 8,
+  "totalRooms": 0,
+  "totalManHours": 0.8334
+}
