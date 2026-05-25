@@ -5,7 +5,13 @@
       "password": "2026",
       "role": "admin",
       "active": true
+    },
+    {
+      "username": "USER-1",
+      "password": "2026",
+      "role": "field",
+      "active": true
     }
   ],
-  "updatedAt": "2025-05-26T00:00:00Z"
+  "updatedAt": "2026-05-25T19:47:41.257Z"
 }
