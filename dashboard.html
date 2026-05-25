@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EST Database Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',sans-serif;background:#f0f4f3;color:#191c1d;}
+.hdr{background:linear-gradient(135deg,#004d42,#006b5c);color:#fff;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.hdr h1{font-size:20px;font-weight:700;}
+.hdr p{font-size:11px;opacity:.7;margin-top:2px;}
+.setup{background:#fff;border:1.5px solid #00bfa5;border-radius:10px;padding:18px;margin:16px;max-width:520px;}
+.setup h3{font-size:14px;font-weight:700;color:#006b5c;margin-bottom:10px;}
+.field{margin-bottom:10px;}
+.field label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6c7a76;display:block;margin-bottom:4px;}
+.field input{width:100%;height:40px;padding:0 11px;border:1.5px solid #bbcac4;border-radius:8px;font-size:14px;font-family:monospace;}
+.field input:focus{outline:none;border-color:#006b5c;}
+.btn-p{height:42px;padding:0 18px;background:#00bfa5;color:#00201a;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;}
+.btn-s{height:42px;padding:0 18px;background:#fff;color:#006b5c;border:1.5px solid #006b5c;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;margin-left:8px;}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px;}
+.stat{background:#fff;border-radius:10px;padding:16px;border:1px solid #e0e0e0;}
+.stat-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6c7a76;margin-bottom:5px;}
+.stat-val{font-family:monospace;font-size:28px;font-weight:700;color:#006b5c;}
+.stat-val.lv{color:#1565c0;}
+.tabs{display:flex;border-bottom:2px solid #e0e0e0;margin:0 16px;gap:0;}
+.tab{padding:10px 20px;background:none;border:none;font-size:13px;font-weight:600;color:#6c7a76;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.active{color:#006b5c;border-bottom-color:#006b5c;}
+.tab.active.lv{color:#1565c0;border-bottom-color:#1565c0;}
+.panel{display:none;margin:16px;}
+.panel.active{display:block;}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e0e0e0;}
+thead tr{background:#006b5c;color:#fff;}
+thead.lv tr{background:#1565c0;}
+th,td{padding:10px 12px;font-size:12px;text-align:left;}
+th{font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:10px;}
+tr:nth-child(even){background:#f8fbfa;}
+td.idx{color:#006b5c;font-weight:700;}
+td.idx.lv{color:#1565c0;}
+.badge{padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;}
+.badge.synced{background:#e6f7f4;color:#006b5c;}
+.badge.pend{background:#fff8e1;color:#b45309;}
+.search-bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.search-bar input,.search-bar select{height:38px;padding:0 11px;border:1.5px solid #bbcac4;border-radius:8px;font-size:13px;}
+.search-bar input{flex:1;min-width:180px;}
+.exp-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.status{padding:10px 14px;border-radius:8px;font-size:12px;font-weight:600;margin:0 16px 12px;}
+.status.ok{background:#e6f7f4;color:#006b5c;border:1px solid #00bfa5;}
+.status.err{background:#ffdad6;color:#ba1a1a;border:1px solid #ba1a1a;}
+.status.info{background:#fff8e1;color:#7a5c00;border:1px solid #f0c040;}
+.empty{text-align:center;color:#6c7a76;padding:32px;font-size:14px;}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div>
+    <h1>🦟 EST Database Dashboard</h1>
+    <p>Entomological Surveillance Tool — Survey Data Monitor</p>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <span id="conn-badge" style="font-size:11px;padding:4px 10px;border-radius:12px;background:rgba(255,255,255,.15);">Not connected</span>
+    <button class="btn-p" onclick="loadAll()" style="height:36px;font-size:12px;">↻ Refresh</button>
+    <button class="btn-p" onclick="exportAllCSV()" style="height:36px;font-size:12px;background:#68fadd;">Export All CSV</button>
+  </div>
+</div>
+
+<div id="setup-panel" class="setup">
+  <h3>Connect to GitHub Repository</h3>
+  <p style="font-size:12px;color:#6c7a76;margin-bottom:12px;">This dashboard reads survey data pushed by EST app to your GitHub repo.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+    <div class="field"><label>GitHub Username</label><input id="s-owner" placeholder="your-username"></div>
+    <div class="field"><label>Repo Name</label><input id="s-repo" value="est-db"></div>
+  </div>
+  <div class="field"><label>Personal Access Token (read:public_repo scope)</label><input id="s-token" type="password" placeholder="ghp_xxxxxxxxxxxx"></div>
+  <button class="btn-p" onclick="saveSetup()">Connect</button>
+  <button class="btn-s" onclick="document.getElementById('setup-panel').style.display='none'">Hide</button>
+</div>
+
+<div id="status-msg" style="display:none;" class="status info">Loading…</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-lbl">Adult Surveys</div><div class="stat-val" id="st-adult">—</div></div>
+  <div class="stat"><div class="stat-lbl">Larval Surveys</div><div class="stat-val lv" id="st-larval">—</div></div>
+  <div class="stat"><div class="stat-lbl">Total Mosquitoes</div><div class="stat-val" id="st-mosq">—</div></div>
+  <div class="stat"><div class="stat-lbl">Locations Covered</div><div class="stat-val" id="st-loc">—</div></div>
+  <div class="stat"><div class="stat-lbl">Last Sync</div><div class="stat-val" id="st-sync" style="font-size:13px;">—</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('adult',this)">Adult Surveillance</button>
+  <button class="tab" onclick="switchTab('larval',this)">Larval Surveillance</button>
+  <button class="tab" onclick="switchTab('users',this)">Manage Users</button>
+</div>
+
+<!-- ADULT PANEL -->
+<div class="panel active" id="panel-adult">
+  <div class="search-bar">
+    <input id="search-adult" placeholder="Search location, district…" oninput="filterTable('adult')">
+    <select id="filter-adult-ct" onchange="filterTable('adult')">
+      <option value="">All types</option>
+      <option value="resting">Resting</option>
+      <option value="hlc">HLC</option>
+    </select>
+    <input id="filter-adult-date" type="date" onchange="filterTable('adult')">
+    <button class="btn-p" style="height:38px;font-size:12px;" onclick="exportFilteredCSV('adult')">Export CSV</button>
+  </div>
+  <table>
+    <thead><tr>
+      <th>#</th><th>Date</th><th>Location</th><th>District</th><th>Type</th>
+      <th>Houses</th><th>Mosquitoes</th><th>PMHD</th><th>TMHD</th>
+      <th>Collectors</th><th>Officer</th><th>Sync</th>
+    </tr></thead>
+    <tbody id="tbl-adult"><tr><td colspan="12" class="empty">Connect to GitHub to load data</td></tr></tbody>
+  </table>
+</div>
+
+<!-- LARVAL PANEL -->
+<div class="panel" id="panel-larval">
+  <div class="search-bar">
+    <input id="search-larval" placeholder="Search location, district…" oninput="filterTable('larval')">
+    <input id="filter-larval-date" type="date" onchange="filterTable('larval')">
+    <button class="btn-p" style="height:38px;font-size:12px;" onclick="exportFilteredCSV('larval')">Export CSV</button>
+  </div>
+  <table>
+    <thead class="lv"><tr>
+      <th>#</th><th>Date</th><th>Location</th><th>District</th>
+      <th>Houses</th><th>HI%</th><th>CI%</th><th>BI</th>
+      <th>Pupal Idx</th><th>Larval Den</th><th>Total Larvae</th>
+      <th>Officer</th><th>Sync</th>
+    </tr></thead>
+    <tbody id="tbl-larval"><tr><td colspan="13" class="empty">Connect to GitHub to load data</td></tr></tbody>
+  </table>
+</div>
+
+<!-- USERS PANEL -->
+<div class="panel" id="panel-users">
+  <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+    <button class="btn-p" onclick="addUserRow()">+ Add User</button>
+    <button class="btn-s" onclick="saveCredentials()">Save to GitHub</button>
+  </div>
+  <table>
+    <thead><tr><th>#</th><th>Username</th><th>Password</th><th>Role</th><th>Active</th><th>Action</th></tr></thead>
+    <tbody id="tbl-users"><tr><td colspan="6" class="empty">Connect to GitHub to load users</td></tr></tbody>
+  </table>
+  <div style="background:#fff8e1;border:1px solid #f0c040;border-radius:8px;padding:12px;margin-top:12px;font-size:12px;color:#7a5c00;">
+    <strong>Note:</strong> After saving, all EST app users will see new credentials on next login (when online). Setting a user to inactive immediately prevents their login.
+  </div>
+</div>
+
+<script>
+let GH={owner:'',repo:'est-db',token:''};
+let allAdult=[],allLarval=[],usersCfg=[];
+let adultFiltered=[],larvalFiltered=[];
+
+function saveSetup(){
+  GH.owner=document.getElementById('s-owner').value.trim();
+  GH.repo=document.getElementById('s-repo').value.trim()||'est-db';
+  GH.token=document.getElementById('s-token').value.trim();
+  localStorage.setItem('est_dash_cfg',JSON.stringify(GH));
+  loadAll();
+}
+function loadSetup(){
+  const s=localStorage.getItem('est_dash_cfg');
+  if(s){const c=JSON.parse(s);GH=c;document.getElementById('s-owner').value=c.owner||'';document.getElementById('s-repo').value=c.repo||'est-db';document.getElementById('s-token').value=c.token||'';}
+}
+function ghHdr(){const h={'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};if(GH.token)h['Authorization']='token '+GH.token;return h;}
+function b64d(s){return decodeURIComponent(escape(atob(s)));}
+function setStatus(msg,type='info'){const el=document.getElementById('status-msg');el.textContent=msg;el.className='status '+type;el.style.display=msg?'block':'none';}
+
+async function listFiles(prefix){
+  const url=`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${prefix}`;
+  const r=await fetch(url,{headers:ghHdr(),cache:'no-store'});
+  if(!r.ok)return [];
+  const items=await r.json();
+  return items;
+}
+async function fetchFile(path){
+  const url=`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`;
+  const r=await fetch(url,{headers:ghHdr(),cache:'no-store'});
+  if(!r.ok)return null;
+  const d=await r.json();
+  return JSON.parse(b64d(d.content));
+}
+async function putFile(path,content,sha){
+  const url=`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`;
+  const body={message:'[EST Dashboard] Update '+path,content:btoa(unescape(encodeURIComponent(JSON.stringify(content,null,2)))),branch:'main'};
+  if(sha)body.sha=sha;
+  const r=await fetch(url,{method:'PUT',headers:{...ghHdr(),'Content-Type':'application/json'},body:JSON.stringify(body)});
+  return r.ok;
+}
+
+async function loadAll(){
+  if(!GH.owner||!GH.token){setStatus('Enter GitHub credentials above','info');return;}
+  setStatus('Loading surveys from GitHub…','info');
+  const badge=document.getElementById('conn-badge');badge.textContent='Connecting…';
+  try{
+    // List all month folders under data/
+    const root=await listFiles('data');
+    let adultFiles=[],larvalFiles=[];
+    for(const item of root){
+      if(item.type==='dir'){
+        const files=await listFiles(item.path);
+        files.forEach(f=>{
+          if(f.name.startsWith('adult-'))adultFiles.push(f.path);
+          else if(f.name.startsWith('larval-'))larvalFiles.push(f.path);
+        });
+      }
+    }
+    // Fetch all
+    allAdult=await Promise.all(adultFiles.map(f=>fetchFile(f).catch(()=>null)));
+    allAdult=allAdult.filter(Boolean);
+    allLarval=await Promise.all(larvalFiles.map(f=>fetchFile(f).catch(()=>null)));
+    allLarval=allLarval.filter(Boolean);
+    // Sort newest first
+    allAdult.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
+    allLarval.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
+    adultFiltered=[...allAdult];larvalFiltered=[...allLarval];
+    // Load users
+    const cfg=await fetchFile('config.json').catch(()=>null);
+    if(cfg)usersCfg=cfg.credentials||[];
+    // Update stats
+    updateStats();
+    renderAdult();renderLarval();renderUsers();
+    badge.textContent='Connected ✓';badge.style.background='rgba(104,250,221,.2)';
+    setStatus('');
+    document.getElementById('st-sync').textContent=new Date().toLocaleTimeString();
+  }catch(e){
+    setStatus('Error: '+e.message,'err');
+    badge.textContent='Error';badge.style.background='rgba(186,26,26,.2)';
+  }
+}
+
+function updateStats(){
+  document.getElementById('st-adult').textContent=allAdult.length;
+  document.getElementById('st-larval').textContent=allLarval.length;
+  const totalMosq=allAdult.reduce((s,a)=>s+(a.totalMosq||0),0);
+  document.getElementById('st-mosq').textContent=totalMosq.toLocaleString();
+  const locs=new Set([...allAdult.map(a=>a.location),...allLarval.map(l=>l.location)].filter(Boolean));
+  document.getElementById('st-loc').textContent=locs.size;
+}
+
+function renderAdult(){
+  const tbody=document.getElementById('tbl-adult');
+  if(!adultFiltered.length){tbody.innerHTML='<tr><td colspan="12" class="empty">No adult surveys found</td></tr>';return;}
+  tbody.innerHTML=adultFiltered.map((s,i)=>`<tr>
+    <td>${i+1}</td>
+    <td>${s.date||'-'}</td>
+    <td style="font-weight:600;">${s.location||'-'}</td>
+    <td>${s.district||'-'}</td>
+    <td><span class="badge synced">${s.collType==='resting'?'Resting':'HLC'}</span></td>
+    <td>${s.houses?.length||0}</td>
+    <td class="idx">${s.totalMosq||0}</td>
+    <td class="idx">${s.MHD||'-'}</td>
+    <td class="idx">${s.TMHD||'-'}</td>
+    <td>${s.workers||'-'}</td>
+    <td>${s.officers||'-'}</td>
+    <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'Synced':'Local'}</span></td>
+  </tr>`).join('');
+}
+
+function renderLarval(){
+  const tbody=document.getElementById('tbl-larval');
+  if(!larvalFiltered.length){tbody.innerHTML='<tr><td colspan="13" class="empty">No larval surveys found</td></tr>';return;}
+  tbody.innerHTML=larvalFiltered.map((s,i)=>`<tr>
+    <td>${i+1}</td>
+    <td>${s.date||'-'}</td>
+    <td style="font-weight:600;">${s.location||'-'}</td>
+    <td>${s.district||'-'}</td>
+    <td>${s.houses?.length||0}</td>
+    <td class="idx lv">${s.HI||'-'}</td>
+    <td class="idx lv">${s.CI||'-'}</td>
+    <td class="idx lv">${s.BI||'-'}</td>
+    <td>${s.PI||'-'}</td>
+    <td>${s.LD||'-'}</td>
+    <td>${s.totalLarvae||0}</td>
+    <td>${s.officers||'-'}</td>
+    <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'Synced':'Local'}</span></td>
+  </tr>`).join('');
+}
+
+function renderUsers(){
+  const tbody=document.getElementById('tbl-users');
+  if(!usersCfg.length){tbody.innerHTML='<tr><td colspan="6" class="empty">No users found. Connect to GitHub first.</td></tr>';return;}
+  tbody.innerHTML=usersCfg.map((u,i)=>`<tr>
+    <td>${i+1}</td>
+    <td><input value="${u.username}" onchange="usersCfg[${i}].username=this.value" style="border:1px solid #ccc;border-radius:6px;padding:4px 8px;font-family:monospace;font-size:13px;width:120px;"></td>
+    <td><input value="${u.password}" onchange="usersCfg[${i}].password=this.value" style="border:1px solid #ccc;border-radius:6px;padding:4px 8px;font-family:monospace;font-size:13px;width:100px;"></td>
+    <td><select onchange="usersCfg[${i}].role=this.value" style="border:1px solid #ccc;border-radius:6px;padding:4px;font-size:13px;">
+      <option ${u.role==='admin'?'selected':''}>admin</option>
+      <option ${u.role==='field'?'selected':''}>field</option>
+    </select></td>
+    <td><input type="checkbox" ${u.active!==false?'checked':''} onchange="usersCfg[${i}].active=this.checked" style="width:20px;height:20px;accent-color:#006b5c;cursor:pointer;"></td>
+    <td><button onclick="usersCfg.splice(${i},1);renderUsers()" style="padding:4px 10px;background:#ffdad6;border:1px solid #ba1a1a;border-radius:6px;font-size:11px;color:#ba1a1a;cursor:pointer;">Remove</button></td>
+  </tr>`).join('');
+}
+
+function addUserRow(){
+  usersCfg.push({username:'',password:'',role:'field',active:true});
+  renderUsers();
+}
+
+async function saveCredentials(){
+  if(!GH.owner||!GH.token){alert('Connect to GitHub first');return;}
+  setStatus('Saving credentials to GitHub…','info');
+  // Fetch current SHA
+  const url=`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/config.json`;
+  const r=await fetch(url,{headers:ghHdr()});
+  const sha=r.ok?(await r.json()).sha:undefined;
+  const content={credentials:usersCfg,updatedAt:new Date().toISOString()};
+  const ok=await putFile('config.json',content,sha);
+  setStatus(ok?'Credentials saved to GitHub ✓ — apps will use new creds on next online login':'Failed to save — check token permissions',ok?'ok':'err');
+}
+
+function filterTable(mod){
+  const q=document.getElementById('search-'+mod)?.value.toLowerCase()||'';
+  const dateF=document.getElementById('filter-'+mod+'-date')?.value||'';
+  const ctF=document.getElementById('filter-'+mod+'-ct')?.value||'';
+  const src=mod==='adult'?allAdult:allLarval;
+  const filtered=src.filter(s=>{
+    const loc=(s.location+s.district+s.workers+s.officers).toLowerCase();
+    if(q&&!loc.includes(q))return false;
+    if(dateF&&s.date!==dateF)return false;
+    if(ctF&&s.collType!==ctF)return false;
+    return true;
+  });
+  if(mod==='adult'){adultFiltered=filtered;renderAdult();}
+  else{larvalFiltered=filtered;renderLarval();}
+}
+
+function switchTab(tab,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  if(tab==='larval')btn.classList.add('lv');
+  document.getElementById('panel-'+tab).classList.add('active');
+}
+
+function exportAllCSV(){
+  const rows=[['Type','Date','State','District','Location','GPS Lat','GPS Lng','Survey Type','Workers','Collectors','Officer','Houses','Total Mosq','PMHD','TMHD','Indoor Density','Outdoor Density','Room Density','HBR','Non-Culex','Culex','Saved At']];
+  allAdult.forEach(s=>{rows.push(['Adult',s.date,s.state||'',s.district,s.location,s.lat,s.lng,s.collType,s.workers,s.collectors,s.officers,s.houses?.length||0,s.totalMosq||0,s.MHD||'-',s.TMHD||'-',s.indoorDensity||'-',s.outdoorDensity||'-',s.roomDensity||'-',s.HBR||'-',s.totNonCulex||0,s.totCulex||0,s.savedAt||'']);});
+  rows.push([]);
+  rows.push(['Type','Date','State','District','Location','GPS Lat','GPS Lng','Workers','Officer','Houses','HI%','CI%','BI','Pupal Index','Larval Density','Pupal Density','Immature Density','Total Larvae','Total Pupae','Total Dips','Saved At']);
+  allLarval.forEach(s=>{rows.push(['Larval',s.date,s.state||'',s.district,s.location,s.lat,s.lng,s.workers,s.officers,s.houses?.length||0,s.HI||'-',s.CI||'-',s.BI||'-',s.PI||'-',s.LD||'-',s.PD||'-','-',s.totalLarvae||0,s.totalPupae||0,s.totalDips||0,s.savedAt||'']);});
+  const csv='\uFEFF'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const b=new Blob([csv],{type:'text/csv'});const u=URL.createObjectURL(b);
+  const a=document.createElement('a');a.href=u;a.download='EST_All_Surveys_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);
+}
+
+function exportFilteredCSV(mod){
+  const src=mod==='adult'?adultFiltered:larvalFiltered;
+  if(!src.length){alert('No data to export');return;}
+  const rows=mod==='adult'
+    ?[['#','Date','State','District','Location','GPS Lat','GPS Lng','Type','Workers','Collectors','Officer','Houses','Mosq','PMHD','TMHD','Non-Culex','Culex','Saved At']]
+    :[['#','Date','State','District','Location','GPS Lat','GPS Lng','Workers','Officer','Houses','HI%','CI%','BI','Pupal Index','Larval Den.','Pupal Den.','Total Larvae','Total Pupae','Total Dips','Saved At']];
+  src.forEach((s,i)=>{
+    if(mod==='adult') rows.push([i+1,s.date,s.state||'',s.district,s.location,s.lat,s.lng,s.collType,s.workers,s.collectors,s.officers,s.houses?.length||0,s.totalMosq||0,s.MHD||'-',s.TMHD||'-',s.totNonCulex||0,s.totCulex||0,s.savedAt||'']);
+    else rows.push([i+1,s.date,s.state||'',s.district,s.location,s.lat,s.lng,s.workers,s.officers,s.houses?.length||0,s.HI||'-',s.CI||'-',s.BI||'-',s.PI||'-',s.LD||'-',s.PD||'-',s.totalLarvae||0,s.totalPupae||0,s.totalDips||0,s.savedAt||'']);
+  });
+  const csv='\uFEFF'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const b=new Blob([csv],{type:'text/csv'});const u=URL.createObjectURL(b);
+  const a=document.createElement('a');a.href=u;a.download='EST_'+mod+'_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);
+}
+
+loadSetup();
+</script>
+</body>
+</html>

@@ -7,6 +7,6 @@
       "active": true
     }
   ],
-  "updatedAt": "2025-01-01T00:00:00Z",
-  "note": "Edit credentials here. Set active:false to block a user. Save file to update all apps."
+  "updatedAt": "2025-05-25T00:00:00Z",
+  "note": "Edit credentials here. Set active:false to block a user instantly."
 }
