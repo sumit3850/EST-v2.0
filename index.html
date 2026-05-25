@@ -32,9 +32,10 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
   #app-nav{padding-bottom:calc(8px + env(safe-area-inset-bottom));}
   #app-header{padding-top:env(safe-area-inset-top);}
 }
-.screen{position:fixed;inset:0;display:flex;flex-direction:column;background:var(--sf);opacity:0;pointer-events:none;transition:opacity .3s ease,transform .3s cubic-bezier(.4,0,.2,1);transform:translateY(18px);}
-.screen.active{opacity:1;pointer-events:all;transform:translateY(0);}
-#splash{background:linear-gradient(160deg,#002d26 0%,#004d42 45%,#006b5c 100%);align-items:center;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+#app-header,#app-nav{display:none;}
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;background:var(--sf);opacity:0;pointer-events:none;visibility:hidden;z-index:1;transition:opacity .3s ease,transform .3s cubic-bezier(.4,0,.2,1);transform:translateY(18px);}
+.screen.active{opacity:1;pointer-events:all;transform:translateY(0);visibility:visible;}
+#splash{background:linear-gradient(160deg,#002d26 0%,#004d42 45%,#006b5c 100%);align-items:center;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch;z-index:9999;visibility:visible;}
 .sbg{position:absolute;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none;}
 .sbg.c1{width:360px;height:360px;top:-90px;right:-90px;}
 .sbg.c2{width:240px;height:240px;bottom:100px;left:-70px;}
@@ -338,7 +339,8 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
       </button>
       <div id="splash-db-status" style="text-align:center;font-size:10px;color:rgba(255,255,255,.4);margin-top:6px;display:none;"></div>
     </div>
-    <div style="font-size:10px;color:rgba(255,255,255,.25);margin-top:14px;text-align:center;line-height:1.6;">Offline-capable · GPS enabled · Data stored locally<br>WHO-standard surveillance indices</div>
+    <div id="offline-login-badge" style="display:none;background:rgba(180,83,9,.25);border:1px solid rgba(251,191,36,.4);border-radius:8px;padding:7px 14px;font-size:11px;font-weight:600;color:#fde68a;text-align:center;margin-top:8px;margin-bottom:4px;width:100%;max-width:340px;">⚠ Offline — use pre-configured credentials</div>
+    <div style="font-size:10px;color:rgba(255,255,255,.25);margin-top:10px;text-align:center;line-height:1.6;">Offline-capable · GPS enabled · Data stored locally<br>WHO-standard surveillance indices</div>
   </div>
 </div>
 
@@ -362,7 +364,6 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
         </svg>
       </div>
       <div class="dash-title">Entomological<br>Surveillance Tool</div>
-      <div style="font-family:var(--mono);font-size:11px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:.14em;margin-bottom:4px;">EST v2.0</div>
       <div class="dash-sub">EST v2.0</div>
 
     </div>
@@ -1186,44 +1187,23 @@ async function ghFetchConfig(){
 }
 
 /* ── VALIDATE CREDENTIALS ────────────────────────────────── */
-async function validateCredentials(user, pass){
-  // Try GitHub config first (if online and configured)
-  if(GH_CONFIG.owner && GH_CONFIG.token && navigator.onLine){
-    const config = await ghFetchConfig();
-    if(config && config.credentials){
-      const match = config.credentials.find(c => c.username===user && c.password===pass && c.active!==false);
-      if(match) return { valid:true, role:match.role||'field', source:'github' };
-      const anyMatch = config.credentials.find(c => c.username===user);
-      if(anyMatch) return { valid:false, source:'github' };
-    }
-  }
-  // Fallback to cached config (offline)
-  const cached = localStorage.getItem('est_gh_config');
-  if(cached){
-    try{
-      const config = JSON.parse(cached);
-      if(config.credentials){
-        const match = config.credentials.find(c => c.username===user && c.password===pass && c.active!==false);
-        if(match) return { valid:true, role:match.role||'field', source:'cache' };
-        const anyMatch = config.credentials.find(c => c.username===user);
-        if(anyMatch) return { valid:false, source:'cache' };
-      }
-    }catch(e){}
-  }
-  // Fallback to cached credentials list
-  const cachedCreds = localStorage.getItem('est_gh_creds_list');
-  if(cachedCreds){
-    try{
-      const creds = JSON.parse(cachedCreds);
-      const match = creds.find(c => c.username===user && c.password===pass && c.active!==false);
-      if(match) return { valid:true, role:match.role||'field', source:'cache' };
-      const anyMatch = creds.find(c => c.username===user);
-      if(anyMatch) return { valid:false, source:'cache' };
-    }catch(e){}
-  }
-  // Final fallback: hardcoded credentials (works always)
+function validateCredentials(user, pass){
+  // 1. Hardcoded admin — INSTANT, no network, always works
   if(user===VALID_USER && pass===VALID_PASS) return { valid:true, role:'admin', source:'local' };
-  return { valid:false, source:'local' };
+  // 2. Cached GitHub config from last online session
+  try{
+    const cached=localStorage.getItem('est_gh_config');
+    if(cached){
+      const config=JSON.parse(cached);
+      if(config&&config.credentials){
+        const match=config.credentials.find(c=>c.username===user&&c.password===pass&&c.active!==false);
+        if(match)return{valid:true,role:match.role||'field',source:'cache'};
+        const anyMatch=config.credentials.find(c=>c.username===user);
+        if(anyMatch)return{valid:false,source:'cache'};
+      }
+    }
+  }catch(e){}
+  return{valid:false,source:'local'};
 }
 
 /* ── PUSH SURVEY TO GITHUB ───────────────────────────────── */
@@ -1314,9 +1294,9 @@ function saveGhSettings(){
   GH_CONFIG.owner=o; GH_CONFIG.repo=rp; GH_CONFIG.token=t;
   try{localStorage.setItem('est_gh_settings',JSON.stringify({owner:o,repo:rp,token:t}));}catch(e){}
   document.getElementById('gh-settings-modal')?.classList.remove('open');
-  updateGhButtonStatus(); // Refresh splash button
+  typeof updateGhButtonStatus==='function'&&updateGhButtonStatus(); // Refresh splash button
   showToast('GitHub settings saved','check');
-  if(o&&t){ ghFetchConfig().then(c=>{ if(c){showToast('Connected to GitHub ✓','check');updateGhButtonStatus();} else showToast('Check your token/repo name','warn');}); }
+  if(o&&t){ ghFetchConfig().then(c=>{ if(c){showToast('Connected to GitHub ✓','check');typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();} else showToast('Check your token/repo name','warn');}); }
 }
 function loadGhSettings(){
   try{
@@ -1324,7 +1304,6 @@ function loadGhSettings(){
     if(s.owner)GH_CONFIG.owner=s.owner;
     if(s.repo)GH_CONFIG.repo=s.repo;
     if(s.token)GH_CONFIG.token=s.token;
-    updateGhButtonStatus();
   }catch(e){}
 }
 
@@ -1452,26 +1431,53 @@ function goToAbout(){
     }
   },300);
 }
-async function doLogin(){
+function doLogin(){
   const u=document.getElementById('login-user').value.trim();
   const p=document.getElementById('login-pass').value.trim();
   const rem=document.getElementById('remember-me').checked;
   const err=document.getElementById('login-err');
-  const btn=document.querySelector('.launch-btn');if(btn){btn.disabled=true;btn.textContent='Checking…';}
-  const result=await validateCredentials(u,p);
-  if(btn){btn.disabled=false;btn.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg> SIGN IN';}
-  if(!result.valid){err.style.display='block';document.getElementById('login-pass').value='';return;}
+  const btn=document.querySelector('.launch-btn');
+  const result=validateCredentials(u,p);
+
+  if(!result.valid){
+    const offlineNote=!navigator.onLine?' (Offline — only pre-set credentials work)':'';
+    err.textContent='Invalid credentials'+offlineNote+'. Please try again.';
+    err.style.display='block';
+    document.getElementById('login-pass').value='';return;
+  }
   err.style.display='none';
   window._estLoggedIn=true;
+  // Silently refresh GitHub credentials in background after login (non-blocking)
+  if(GH_CONFIG.owner && GH_CONFIG.token && navigator.onLine){
+    ghFetchConfig().catch(()=>{}); // fire and forget
+  }
   if(rem){try{localStorage.setItem(CRED_KEY,JSON.stringify({u,p}));}catch(e){}}else{try{localStorage.removeItem(CRED_KEY);}catch(e){}}
   const sp=document.getElementById('splash');
-  sp.style.opacity='0';sp.style.transform='scale(1.04)';sp.style.transition='all .5s ease';
-  setTimeout(()=>{
+  // Lock splash on top and make non-interactive immediately
+  sp.style.pointerEvents='none';
+  sp.style.zIndex='9999';
+  // Fade out
+  sp.style.transition='opacity .4s ease';
+  sp.style.opacity='0';
+  // On transition end — guaranteed no flash since transition is complete
+  sp.addEventListener('transitionend', function handler(){
+    sp.removeEventListener('transitionend', handler);
     sp.classList.remove('active');
+    sp.style.display='none';
+    sp.style.visibility='hidden';
     document.getElementById('app-header').style.display='flex';
     document.getElementById('app-nav').style.display='flex';
     showScreen('dash');
-  },480);
+  }, {once:true});
+  // Safety fallback in case transitionend doesn't fire (some mobile browsers)
+  setTimeout(()=>{
+    if(sp.style.opacity==='0'&&sp.style.display!=='none'){
+      sp.style.display='none';
+      document.getElementById('app-header').style.display='flex';
+      document.getElementById('app-nav').style.display='flex';
+      showScreen('dash');
+    }
+  },600);
   checkDrafts();
 }
 function loadSavedCreds(){try{const c=JSON.parse(localStorage.getItem(CRED_KEY));if(c&&c.u&&c.p){document.getElementById('login-user').value=c.u;document.getElementById('login-pass').value=c.p;document.getElementById('remember-me').checked=true;}}catch(e){}}
@@ -2282,21 +2288,186 @@ function exportLarvalCSV(){const s=lSnap();const fn='EST_Larval_'+(s.location||s
 /* ── PDF EXPORT ─────────────────────────────────────────── */
 function exportAdultPDF(){
   const s=aSnap();const isR=s.collType==='resting';
-  const gpsStr=s.lat?parseFloat(s.lat).toFixed(5)+'N, '+parseFloat(s.lng).toFixed(5)+'E':'Not captured';
+  const gpsStr=s.lat?parseFloat(s.lat).toFixed(5)+'°N, '+parseFloat(s.lng).toFixed(5)+'°E':'Not captured';
+  const imd=s.totalManHours?.toFixed?s.totalManHours.toFixed(2):'-';
+
+  // ── Species rows (with genus group headers) ──
   let spRows='',totI=0,totO=0,lastG='';
-  ASP.forEach((sp,i)=>{const v0=s.houses.reduce((t,h)=>t+h.counts[i][0],0),v1=isR?s.houses.reduce((t,h)=>t+h.counts[i][1],0):0;totI+=v0;totO+=v1;if(v0+v1>0){if(sp.g!==lastG){lastG=sp.g;spRows+=`<tr><td colspan="${isR?4:3}" style="background:#f0f0f0;font-size:8pt;font-weight:700;text-transform:uppercase;color:#444;padding:4px 8px;">${sp.g}</td></tr>`;}spRows+=`<tr><td><em>${sp.n}</em></td><td>${v0}</td>${isR?`<td>${v1}</td>`:''}<td><strong>${v0+v1}</strong></td></tr>`;}});
-  spRows+=`<tr style="background:#e8f5f2;font-weight:700;border-top:2px solid #006b5c;"><td>TOTAL</td><td>${totI}</td>${isR?`<td>${totO}</td>`:''}<td>${totI+totO}</td></tr>`;
-  let hRows='';s.houses.forEach(h=>{const ind=h.counts.reduce((t,r)=>t+r[0],0),out=isR?h.counts.reduce((t,r)=>t+r[1],0):0;hRows+=`<tr><td>${h.houseNo}</td><td>${h.rooms}</td><td>${h.start}-${h.end}</td><td>${h.hours?.toFixed?h.hours.toFixed(2):'-'}</td><td>${ind}</td>${isR?`<td>${out}</td>`:''}<td><strong>${h.total}</strong></td></tr>`;});
-  const idxHtml=isR?`<div class="ib hi"><div class="il">PMHD (non-Culex)</div><div class="iv">${s.MHD}</div><div class="is">mosq/man-hr</div></div><div class="ib am"><div class="il">Culex TMHD x10</div><div class="iv">${s.TMHD}</div><div class="is">Culex x10</div></div><div class="ib"><div class="il">Indoor Resting Density</div><div class="iv">${s.indoorDensity}</div><div class="is">mosq/house/night</div></div><div class="ib"><div class="il">Outdoor Resting Density</div><div class="iv">${s.outdoorDensity}</div><div class="is">mosq/house/night</div></div><div class="ib"><div class="il">Room Density</div><div class="iv">${s.roomDensity}</div><div class="is">mosq/room</div></div>`:`<div class="ib hi"><div class="il">Human Biting Rate (HBR)</div><div class="iv">${s.HBR}</div><div class="is">bites/collector</div></div><div class="ib"><div class="il">HBR per Hour</div><div class="iv">${s.HBRHr||'—'}</div><div class="is">bites/collector/hr</div></div><div class="ib hi"><div class="il">PMHD (non-Culex)</div><div class="iv">${s.MHD}</div><div class="is">Non-Culex ÷ man-hrs ×100</div></div><div class="ib am"><div class="il">Culex TMHD ×10</div><div class="iv">${s.TMHD}</div><div class="is">Culex ÷ man-hrs ×10</div></div><div class="ib"><div class="il">Man-Hours</div><div class="iv">${s.totalManHours?.toFixed?s.totalManHours.toFixed(2):'-'}</div><div class="is">collectors × hrs</div></div>`;
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>EST Adult — ${s.district} — ${s.date}</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Times New Roman',serif;font-size:11pt;color:#111;}.page{width:210mm;min-height:297mm;margin:0 auto;padding:14mm 16mm 20mm;}.hd{border-bottom:3px double #006b5c;padding-bottom:10px;margin-bottom:12px;}.hd h2{font-size:14pt;font-weight:bold;color:#006b5c;}.hd p{font-size:9pt;color:#555;margin-top:2px;}.tb{text-align:center;border:2px solid #006b5c;border-radius:4px;padding:10px;margin-bottom:12px;}.tb h1{font-size:14pt;color:#006b5c;}.ref{display:flex;justify-content:space-between;font-size:9pt;color:#555;background:#f0faf5;border-left:3px solid #006b5c;padding:5px 10px;margin-bottom:14px;}.sec{font-size:11pt;font-weight:bold;color:#006b5c;text-transform:uppercase;border-bottom:1.5px solid #00bfa5;padding-bottom:3px;margin:14px 0 8px;}.mt{width:100%;border-collapse:collapse;}.mt td{padding:7px 10px;border:1px solid #ccc;font-size:10pt;}.mt td.lbl{background:#e8f5f2;font-weight:bold;font-size:8.5pt;color:#1a4040;width:22%;}.iw{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:4px;}.ib{border:1px solid #ccc;border-radius:4px;padding:9px 6px;text-align:center;flex:1;min-width:80px;}.ib.hi{border-color:#006b5c;background:#e8f5f2;}.ib.am{border-color:#b45309;background:#fffbeb;}.il{font-size:7.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:#555;margin-bottom:3px;}.iv{font-size:15pt;font-weight:bold;color:#006b5c;}.ib.am .iv{color:#b45309;}.is{font-size:7pt;color:#777;margin-top:2px;}table{width:100%;border-collapse:collapse;}thead tr{background:#006b5c;color:#fff;}thead th{padding:7px 8px;font-size:9pt;font-weight:bold;text-align:center;text-transform:uppercase;}thead th:first-child{text-align:left;}td{padding:5px 8px;border-bottom:1px solid #e0e0e0;font-size:10pt;text-align:center;}td:first-child{text-align:left;}.sig{display:flex;justify-content:space-between;gap:10px;margin-top:28px;padding-top:12px;border-top:1px solid #ccc;}.sb{flex:1;text-align:center;}.sl{border-top:1px solid #333;margin:0 auto 5px;width:88%;}.sn{font-size:9.5pt;font-weight:bold;}.sr{font-size:8pt;color:#555;margin-top:2px;}.footer{margin-top:14px;border-top:1px solid #ccc;padding-top:6px;font-size:8pt;color:#888;text-align:center;}.sb-fixed{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ccc;padding:10px;text-align:center;}.pb{background:#006b5c;color:#fff;border:none;padding:10px 30px;border-radius:6px;font-size:12pt;font-weight:bold;cursor:pointer;}@media print{.sb-fixed{display:none!important;}@page{size:A4;margin:12mm;}}</style></head><body><div style="height:64px;"></div><div class="page"><div class="hd"><h2>EST v2.0 — Entomological Surveillance Tool</h2><p>Entomological Surveillance Tool · A&amp;N Islands</p></div><div class="tb"><h1>Adult Mosquito Collection Report</h1><p>${isR?'Resting Collection — MHD / TMHD / Resting Density':'Human Landing Catch — Biting Rate'}</p></div><div class="ref"><span><strong>Date:</strong> ${s.date}</span><span><strong>Survey ID:</strong> EST-A-${s.id}</span><span><strong>District:</strong> ${s.district}</span></div><div class="sec">1. Survey Details</div><table class="mt"><tr><td class="lbl">Date</td><td>${s.date}</td><td class="lbl">District</td><td>${s.district}</td></tr><tr><td class="lbl">Collection Type</td><td colspan="3">${isR?'Resting Collection (Aspirator/Handheld Net)':'Human Landing Catch (HLC)'}</td></tr><tr><td class="lbl">Location</td><td colspan="3">${s.location}</td></tr><tr><td class="lbl">GPS</td><td colspan="3">${gpsStr}</td></tr><tr><td class="lbl">Collector(s)</td><td>${s.workers}</td><td class="lbl">Count</td><td>${s.collectors}</td></tr><tr><td class="lbl">Officer</td><td colspan="3">${s.officers}</td></tr><tr><td class="lbl">Houses</td><td>${s.houses?.length}</td><td class="lbl">Man-Hours</td><td>${s.totalManHours?.toFixed(2)} hrs</td></tr>${isR?`<tr><td class="lbl">Nights</td><td colspan="3">${s.nights||1}</td></tr>`:''}</table><div class="sec">2. Density Indices</div><div class="iw">${idxHtml}</div><div class="sec">3. Species Breakdown</div><table><thead><tr><th style="text-align:left;">Species</th><th>${isR?'Indoor':'Landing'}</th>${isR?'<th>Outdoor</th>':''}<th>Total</th></tr></thead><tbody>${spRows}</tbody></table><div class="sec">4. House-wise Summary</div><table><thead><tr><th style="text-align:left;">House</th><th>Rooms</th><th>Time</th><th>Hours</th><th>${isR?'Indoor':'Landing'}</th>${isR?'<th>Outdoor</th>':''}<th>Total</th></tr></thead><tbody>${hRows}</tbody></table><div class="sig"><div class="sb"><div class="sl"></div><div class="sn">${s.workers}</div><div class="sr">Surveillance Collector</div></div><div class="sb"><div class="sl"></div><div class="sn">${s.officers}</div><div class="sr">Senior Officer</div></div><div class="sb"><div class="sl"></div><div class="sn">Medical Incharge</div><div class="sr">Verification &amp; Approval</div></div></div><div class="footer">EST v2.0 · Entomological Surveillance Tool | Report ID: EST-A-${s.id} | Generated: ${new Date().toLocaleString('en-IN')}</div></div><div class="sb-fixed"><button class="pb" onclick="window.print()">Save as PDF / Print</button></div></body></html>`;
-  // Download as HTML file — open in browser to print/save as PDF (avoids popup blockers)
-  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  ASP.forEach((sp,i)=>{
+    const v0=s.houses.reduce((t,h)=>t+(h.counts[i]?h.counts[i][0]:0),0);
+    const v1=isR?s.houses.reduce((t,h)=>t+(h.counts[i]?h.counts[i][1]:0),0):0;
+    totI+=v0;totO+=v1;
+    if(v0+v1>0){
+      if(sp.g!==lastG){lastG=sp.g;spRows+=`<tr><td colspan="${isR?4:3}" style="background:#e8f5e9;font-size:8pt;font-weight:700;text-transform:uppercase;color:#1b5e20;padding:4px 8px;letter-spacing:.06em;">${sp.g}</td></tr>`;}
+      spRows+=`<tr><td><em>${sp.n}</em></td><td style="text-align:center;">${v0}</td>${isR?`<td style="text-align:center;">${v1}</td>`:''}<td style="text-align:center;font-weight:700;">${v0+v1}</td></tr>`;
+    }
+  });
+  spRows+=`<tr style="background:#e8f5e9;font-weight:700;border-top:2px solid #006b5c;"><td>TOTAL</td><td style="text-align:center;">${totI}</td>${isR?`<td style="text-align:center;">${totO}</td>`:''}<td style="text-align:center;">${totI+totO}</td></tr>`;
+
+  // ── House/site rows ──
+  let hRows='';
+  s.houses.forEach(h=>{
+    const ind=h.counts.reduce((t,r)=>t+(r[0]||0),0);
+    const out=isR?h.counts.reduce((t,r)=>t+(r[1]||0),0):0;
+    hRows+=`<tr><td>${h.houseNo}</td><td style="text-align:center;">${h.rooms}</td><td style="text-align:center;">${h.start||'-'}</td><td style="text-align:center;">${h.end||'-'}</td><td style="text-align:center;">${h.hours?.toFixed?h.hours.toFixed(2):'-'}</td><td style="text-align:center;">${ind}</td>${isR?`<td style="text-align:center;">${out}</td>`:''}<td style="text-align:center;font-weight:700;">${h.total}</td></tr>`;
+  });
+
+  // ── Per-house species detail rows ──
+  let perHouseRows='';
+  s.houses.forEach(h=>{
+    let first=true;
+    ASP.forEach((sp,i)=>{
+      const v0=h.counts[i]?h.counts[i][0]:0;
+      const v1=isR?(h.counts[i]?h.counts[i][1]:0):0;
+      if(v0+v1>0){
+        perHouseRows+=`<tr><td>${first?h.houseNo:''}</td><td><em>${sp.n}</em></td><td style="font-size:8pt;color:#555;">${sp.g}</td><td style="text-align:center;">${v0}</td>${isR?`<td style="text-align:center;">${v1}</td>`:''}<td style="text-align:center;font-weight:700;">${v0+v1}</td></tr>`;
+        first=false;
+      }
+    });
+  });
+
+  // ── Indices HTML ──
+  const idxHtml=isR
+    ?`<div class="ib hi"><div class="il">PMHD (non-Culex)</div><div class="iv">${s.MHD}</div><div class="is">(Non-Culex÷man-hrs)×100</div></div>
+      <div class="ib am"><div class="il">Culex TMHD ×10</div><div class="iv">${s.TMHD}</div><div class="is">(Culex÷man-hrs)×10</div></div>
+      <div class="ib"><div class="il">Indoor Resting Density</div><div class="iv">${s.indoorDensity}</div><div class="is">mosq/house/night</div></div>
+      <div class="ib"><div class="il">Outdoor Resting Density</div><div class="iv">${s.outdoorDensity}</div><div class="is">mosq/house/night</div></div>
+      <div class="ib"><div class="il">Room Density</div><div class="iv">${s.roomDensity}</div><div class="is">mosq/room</div></div>
+      <div class="ib"><div class="il">Man-Hours</div><div class="iv">${imd}</div><div class="is">collectors × hrs</div></div>`
+    :`<div class="ib hi"><div class="il">HBR</div><div class="iv">${s.HBR}</div><div class="is">bites/collector</div></div>
+      <div class="ib"><div class="il">HBR per Hour</div><div class="iv">${s.HBRHr||'—'}</div><div class="is">bites/collector/hr</div></div>
+      <div class="ib hi"><div class="il">PMHD (non-Culex)</div><div class="iv">${s.MHD}</div><div class="is">(Non-Culex÷man-hrs)×100</div></div>
+      <div class="ib am"><div class="il">Culex TMHD ×10</div><div class="iv">${s.TMHD}</div><div class="is">(Culex÷man-hrs)×10</div></div>
+      <div class="ib"><div class="il">Man-Hours</div><div class="iv">${imd}</div><div class="is">collectors × hrs</div></div>
+      <div class="ib"><div class="il">Total Landing</div><div class="iv">${s.totalMosq||0}</div><div class="is">all species</div></div>`;
+
+  const reportHtml=`<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>EST Adult — ${s.district} — ${s.date}</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Times New Roman',serif;font-size:10.5pt;color:#111;background:#fff;}
+.page{width:210mm;min-height:297mm;margin:0 auto;padding:12mm 14mm 18mm;}
+.hd{border-bottom:3px double #006b5c;padding-bottom:8px;margin-bottom:10px;display:flex;align-items:flex-start;justify-content:space-between;}
+.hd-left h2{font-size:13pt;font-weight:700;color:#006b5c;margin-bottom:2px;}
+.hd-left p{font-size:8.5pt;color:#555;}
+.hd-right{text-align:right;font-size:8pt;color:#777;}
+.report-title{background:linear-gradient(135deg,#004d42,#006b5c);color:#fff;text-align:center;padding:10px;border-radius:6px;margin-bottom:10px;}
+.report-title h1{font-size:13pt;font-weight:700;margin-bottom:2px;}
+.report-title p{font-size:8.5pt;opacity:.8;}
+.ref-bar{display:flex;justify-content:space-between;background:#e8f5e9;border-left:3px solid #006b5c;padding:5px 10px;font-size:8.5pt;color:#1b5e20;margin-bottom:12px;border-radius:0 4px 4px 0;}
+.sec{font-size:10pt;font-weight:700;text-transform:uppercase;color:#006b5c;border-bottom:1.5px solid #a5d6a7;padding-bottom:2px;margin:12px 0 7px;letter-spacing:.05em;}
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid #ccc;border-radius:4px;overflow:hidden;margin-bottom:10px;}
+.mg-row{display:contents;}
+.mg-k{background:#f1f8f1;font-weight:700;font-size:8.5pt;color:#1b5e20;padding:5px 9px;border-bottom:1px solid #ddd;}
+.mg-v{font-size:9pt;padding:5px 9px;border-bottom:1px solid #ddd;border-left:1px solid #ddd;}
+.idx-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.ib{border:1px solid #a5d6a7;border-radius:5px;padding:8px 7px;text-align:center;min-width:80px;flex:1;background:#f1f8f1;}
+.ib.hi{background:#e8f5e9;border-color:#66bb6a;}
+.ib.am{background:#fff3e0;border-color:#ffa726;}
+.il{font-size:7pt;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#555;margin-bottom:3px;}
+.iv{font-size:14pt;font-weight:700;color:#006b5c;}
+.ib.am .iv{color:#e65100;}
+.is{font-size:7pt;color:#777;margin-top:2px;}
+table{width:100%;border-collapse:collapse;font-size:9pt;margin-bottom:10px;}
+thead tr{background:#006b5c;color:#fff;}
+th{padding:6px 7px;text-align:left;font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+th:not(:first-child){text-align:center;}
+td{padding:4px 7px;border-bottom:1px solid #e0e0e0;vertical-align:middle;}
+tr:nth-child(even) td{background:#f9fdf9;}
+.sig{display:flex;justify-content:space-between;gap:12px;margin-top:24px;padding-top:10px;border-top:1px solid #ccc;}
+.sb{flex:1;text-align:center;}
+.sl{border-top:1px solid #333;margin:0 auto 4px;width:85%;}
+.sn{font-size:9pt;font-weight:700;}
+.sr{font-size:7.5pt;color:#666;margin-top:2px;}
+.footer{margin-top:12px;border-top:1px solid #ccc;padding-top:5px;font-size:7.5pt;color:#999;text-align:center;}
+.print-btn{position:fixed;bottom:16px;right:16px;background:#006b5c;color:#fff;border:none;border-radius:8px;padding:12px 24px;font-size:13pt;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);}
+@media print{.print-btn{display:none!important;}@page{size:A4;margin:10mm;}}
+</style></head><body>
+<div class="page">
+
+<div class="hd">
+  <div class="hd-left">
+    <h2>EST v2.0 — Entomological Surveillance Tool</h2>
+    <p>Adult Mosquito Surveillance Report</p>
+  </div>
+  <div class="hd-right">ID: EST-A-${s.id}<br>${s.date}</div>
+</div>
+
+<div class="report-title">
+  <h1>${isR?'Resting Collection Report':'Human Landing Catch (HLC) Report'}</h1>
+  <p>${s.location} · ${s.district}</p>
+</div>
+
+<div class="ref-bar">
+  <span><strong>Date:</strong> ${s.date}</span>
+  <span><strong>Type:</strong> ${isR?'Resting':'HLC'}</span>
+  <span><strong>Houses/Sites:</strong> ${s.houses.length}</span>
+  <span><strong>Report ID:</strong> EST-A-${s.id}</span>
+</div>
+
+<div class="sec">1. Survey Details</div>
+<div class="meta-grid">
+  <div class="mg-k">Date of Survey</div><div class="mg-v">${s.date}</div>
+  <div class="mg-k">State / UT</div><div class="mg-v">${s.state||'-'}</div>
+  <div class="mg-k">District</div><div class="mg-v">${s.district}</div>
+  <div class="mg-k">Location / Area</div><div class="mg-v">${s.location}</div>
+  <div class="mg-k">GPS Coordinates</div><div class="mg-v">${gpsStr}</div>
+  <div class="mg-k">Collection Type</div><div class="mg-v">${isR?'Resting Collection (Aspirator/Net)':'Human Landing Catch (HLC)'}</div>
+  <div class="mg-k">Surveillance Workers</div><div class="mg-v">${s.workers}</div>
+  <div class="mg-k">No. of Collectors</div><div class="mg-v">${s.collectors}</div>
+  <div class="mg-k">Nights Surveyed</div><div class="mg-v">${s.nights||1}</div>
+  <div class="mg-k">Senior Officer</div><div class="mg-v">${s.officers}</div>
+  <div class="mg-k">Total Houses/Sites</div><div class="mg-v">${s.houses.length}</div>
+  <div class="mg-k">Total Man-Hours</div><div class="mg-v">${imd} hrs</div>
+</div>
+
+<div class="sec">2. Density Indices</div>
+<div class="idx-wrap">${idxHtml}</div>
+<table>
+  <thead><tr><th>Metric</th><th>Value</th><th>Non-Culex</th><th>Culex</th>${isR?'<th>Indoor</th><th>Outdoor</th>':''}</tr></thead>
+  <tbody>
+    <tr><td>Total Mosquitoes</td><td style="text-align:center;font-weight:700;">${s.totalMosq||0}</td><td style="text-align:center;">${s.totNonCulex||0}</td><td style="text-align:center;">${s.totCulex||0}</td>${isR?`<td style="text-align:center;">${s.totIndoor||0}</td><td style="text-align:center;">${s.totOutdoor||0}</td>`:''}</tr>
+    ${isR?`<tr><td>Rooms Inspected</td><td style="text-align:center;">${s.totalRooms||0}</td><td colspan="${isR?4:2}"></td></tr>`:''}
+  </tbody>
+</table>
+
+<div class="sec">3. Species Breakdown</div>
+<table>
+  <thead><tr><th>Species</th><th>Indoor</th>${isR?'<th>Outdoor</th>':''}<th>Total</th></tr></thead>
+  <tbody>${spRows}</tbody>
+</table>
+
+<div class="sec">4. House / Site Details</div>
+<table>
+  <thead><tr><th>House/Site No.</th><th>Rooms</th><th>Start</th><th>End</th><th>Hours</th><th>Indoor</th>${isR?'<th>Outdoor</th>':''}<th>Total</th></tr></thead>
+  <tbody>${hRows}</tbody>
+</table>
+
+<div class="sec">5. Per-House / Site Species Breakdown</div>
+<table>
+  <thead><tr><th>House/Site</th><th>Species</th><th>Genus</th><th>Indoor</th>${isR?'<th>Outdoor</th>':''}<th>Total</th></tr></thead>
+  <tbody>${perHouseRows||'<tr><td colspan="5" style="text-align:center;color:#999;">No species data</td></tr>'}</tbody>
+</table>
+
+<div class="sig">
+  <div class="sb"><div class="sl"></div><div class="sn">${s.workers.split(/[\n,]/)[0]||'—'}</div><div class="sr">Surveillance Worker</div></div>
+  <div class="sb"><div class="sl"></div><div class="sn">${s.officers}</div><div class="sr">Senior Officer</div></div>
+  <div class="sb"><div class="sl"></div><div class="sn">Medical Incharge</div><div class="sr">Verification &amp; Approval</div></div>
+</div>
+
+<div class="footer">EST v2.0 · Entomological Surveillance Tool | Report ID: EST-A-${s.id} | Generated: ${new Date().toLocaleString('en-IN')}</div>
+</div>
+<button class="print-btn" onclick="window.print()">🖨 Print / Save PDF</button>
+</body></html>`;
+
+  const blob=new Blob([reportHtml],{type:'text/html;charset=utf-8'});
   const url=URL.createObjectURL(blob);
-  const a2=document.createElement('a');a2.href=url;a2.download='EST_Adult_'+s.district+'_'+s.date+'.html';
-  document.body.appendChild(a2);a2.click();document.body.removeChild(a2);
-  setTimeout(()=>URL.revokeObjectURL(url),2000);
-  showToast('Report downloaded — open in browser then Print → Save as PDF','pdf');
+  const a=document.createElement('a');a.href=url;a.download='EST_Adult_'+(s.location||s.district||'survey').replace(/[^a-zA-Z0-9]/g,'_').substring(0,20)+'_'+s.date+'.html';
+  a.style.display='none';document.body.appendChild(a);
+  setTimeout(()=>{a.click();setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},800);},50);
+  showToast('Report downloaded — open file then Print → Save as PDF','pdf');
 }
+
 function exportLarvalPDF(){
   const s=lSnap();
   const gpsStr=s.lat?parseFloat(s.lat).toFixed(5)+'N, '+parseFloat(s.lng).toFixed(5)+'E':'Not captured';
@@ -2595,7 +2766,7 @@ window.addEventListener('beforeunload',(e)=>{
 document.addEventListener('DOMContentLoaded',()=>{
   loadSavedCreds();
   loadGhSettings(); // Load GitHub settings early
-  updateGhButtonStatus(); // Update splash DB button
+  typeof updateGhButtonStatus==='function'&&updateGhButtonStatus(); // Update splash DB button
   buildAdultMatrix();
   buildLarvalMatrix();
   buildContainerMatrix();
@@ -2608,26 +2779,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 </script>
 
-<script>
-/* ═══════════════════════════════════════════════════════
-   EST v2.0 — Offline Support & PWA
-   ─────────────────────────────────────────────────────
-   NOTE: For full offline capability on GitHub Pages,
-   create a file named "sw.js" in your repo root with:
 
-   const CACHE_NAME = 'est-v2.0.1';
-   self.addEventListener('install', e => {
-     e.waitUntil(caches.open(CACHE_NAME).then(c => c.add('.')).then(() => self.skipWaiting()));
-   });
-   self.addEventListener('activate', e => {
-     e.waitUntil(caches.keys().then(k => Promise.all(k.filter(n=>n!==CACHE_NAME).map(n=>caches.delete(n)))).then(()=>self.clients.claim()));
-   });
-   self.addEventListener('fetch', e => {
-     if(e.request.method !== 'GET') return;
-     e.respondWith(fetch(e.request).then(r=>{if(r&&r.ok){const rc=r.clone();caches.open(CACHE_NAME).then(c=>c.put(e.request,rc));}return r;}).catch(()=>caches.match(e.request)));
-   });
-
-   Then add to <head>: <script>if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js');</script>
 ═══════════════════════════════════════════════════════ */
 
 /* ── Update splash DB button based on connection status ── */
@@ -2651,29 +2803,24 @@ function updateGhButtonStatus(){
 
 /* ── Register SW ───────────────────────────────────── */
 function registerSW() {
-  // Blob URLs are NOT supported for ServiceWorker registration (browser security restriction)
-  // We use a lightweight approach: detect if a real sw.js exists and register it
-  if (!('serviceWorker' in navigator)) {
-    console.log('[EST] Service Workers not supported');
-    return;
-  }
-  // Try to register a real sw.js file if it exists
-  fetch('./sw.js', { method: 'HEAD', cache: 'no-store' })
-    .then(r => {
-      if (r.ok) {
-        return navigator.serviceWorker.register('./sw.js', { scope: './' })
-          .then(reg => {
-            console.log('[EST] Service Worker registered from sw.js');
-            reg.update();
-          });
-      } else {
-        console.log('[EST] No sw.js found — create one for full offline support');
-      }
+  if (!('serviceWorker' in navigator)) return;
+  // Register external sw.js (works on GitHub Pages / any HTTPS server)
+  navigator.serviceWorker.register('./sw.js', { scope: './' })
+    .then(reg => {
+      console.log('[EST] SW registered:', reg.scope);
+      // Listen for update messages
+      navigator.serviceWorker.addEventListener('message', evt => {
+        if (evt.data && evt.data.type === 'UPDATE_AVAILABLE') showUpdateBanner(evt.data.version);
+      });
+      // Check for updates every 30 minutes
+      setInterval(() => { if (navigator.onLine) reg.update(); }, 30 * 60 * 1000);
     })
-    .catch(() => {
-      console.log('[EST] No sw.js available — app works online with localStorage persistence');
+    .catch(err => {
+      console.warn('[EST] SW registration failed:', err.message);
+      // Fallback: still works, just no offline caching
     });
 }
+
 
 /* ── Update banner ─────────────────────────────────── */
 function showUpdateBanner(newVersion) {
@@ -2719,6 +2866,9 @@ function injectManifest() {
 
 /* ── Offline / Online status banner ─────────────────── */
 function updateOnlineStatus() {
+  // Toggle login page offline badge
+  const loginBadge = document.getElementById('offline-login-badge');
+  if (loginBadge) loginBadge.style.display = navigator.onLine ? 'none' : 'flex';
   let ob = document.getElementById('est-offline-bar');
   if (!navigator.onLine) {
     if (!ob) {

@@ -3,516 +3,512 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EST Database Dashboard</title>
+<title>EST v2.0 — Database Dashboard</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Segoe UI',sans-serif;background:#f0f4f3;color:#191c1d;}
-.hdr{background:linear-gradient(135deg,#004d42,#006b5c);color:#fff;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
-.hdr h1{font-size:20px;font-weight:700;}
-.hdr p{font-size:11px;opacity:.7;margin-top:2px;}
-.setup{background:#fff;border:1.5px solid #00bfa5;border-radius:10px;padding:18px;margin:16px;max-width:520px;}
-.setup h3{font-size:14px;font-weight:700;color:#006b5c;margin-bottom:10px;}
-.field{margin-bottom:10px;}
-.field label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6c7a76;display:block;margin-bottom:4px;}
-.field input{width:100%;height:40px;padding:0 11px;border:1.5px solid #bbcac4;border-radius:8px;font-size:14px;font-family:monospace;}
-.field input:focus{outline:none;border-color:#006b5c;}
-.btn-p{height:42px;padding:0 18px;background:#00bfa5;color:#00201a;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;}
-.btn-s{height:42px;padding:0 18px;background:#fff;color:#006b5c;border:1.5px solid #006b5c;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;margin-left:8px;}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px;}
-.stat{background:#fff;border-radius:10px;padding:16px;border:1px solid #e0e0e0;}
-.stat-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6c7a76;margin-bottom:5px;}
-.stat-val{font-family:monospace;font-size:28px;font-weight:700;color:#006b5c;}
-.stat-val.lv{color:#1565c0;}
-.tabs{display:flex;border-bottom:2px solid #e0e0e0;margin:0 16px;gap:0;}
-.tab{padding:10px 20px;background:none;border:none;font-size:13px;font-weight:600;color:#6c7a76;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;}
-.tab.active{color:#006b5c;border-bottom-color:#006b5c;}
-.tab.active.lv{color:#1565c0;border-bottom-color:#1565c0;}
-.panel{display:none;margin:16px;}
+:root{--teal:#006b5c;--teal-dk:#004d42;--teal-lt:#e6f7f4;--blue:#1565c0;--blue-lt:#e3f2fd;--gold:#f59e0b;--err:#ba1a1a;--bg:#f0f5f4;--card:#fff;--bdr:#e0e8e5;--txt:#191c1d;--muted:#6c7a76;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);}
+/* ─ LOGIN ─ */
+#login-screen{position:fixed;inset:0;background:linear-gradient(160deg,#001e18 0%,#003528 40%,#004d42 100%);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;}
+#login-screen.gone{display:none;}
+.login-wrap{width:100%;max-width:400px;}
+.login-logo{text-align:center;margin-bottom:28px;}
+.login-logo-icon{width:80px;height:80px;background:rgba(0,191,165,.15);border:1.5px solid rgba(0,191,165,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+.login-logo h1{font-family:monospace;font-size:24px;font-weight:700;color:#fff;margin-bottom:3px;}
+.login-logo p{font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.1em;text-transform:uppercase;}
+.login-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:28px 24px;backdrop-filter:blur(10px);}
+.lf-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5);display:block;margin-bottom:5px;}
+.lf-input{width:100%;height:48px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:10px;padding:0 14px;font-size:15px;color:#fff;outline:none;margin-bottom:14px;font-family:monospace;}
+.lf-input:focus{border-color:rgba(0,191,165,.6);background:rgba(0,191,165,.08);}
+.lf-input::placeholder{color:rgba(255,255,255,.3);}
+.lf-rem{display:flex;align-items:center;gap:9px;margin-bottom:18px;}
+.lf-rem input{width:18px;height:18px;accent-color:#00bfa5;cursor:pointer;}
+.lf-rem label{font-size:12px;color:rgba(255,255,255,.6);cursor:pointer;}
+.login-btn{width:100%;height:50px;background:linear-gradient(135deg,#00bfa5,#009688);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.04em;transition:opacity .2s;}
+.login-btn:hover{opacity:.9;}
+.login-err{color:#ff8a80;font-size:12px;text-align:center;margin-top:10px;display:none;padding:8px;background:rgba(186,26,26,.15);border-radius:6px;}
+/* ─ LAYOUT ─ */
+#app{display:none;}
+#app.show{display:block;}
+.top-bar{background:linear-gradient(135deg,var(--teal-dk),var(--teal));color:#fff;padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2);}
+.top-bar-left{display:flex;align-items:center;gap:12px;}
+.top-bar-logo{width:36px;height:36px;background:rgba(255,255,255,.12);border-radius:50%;border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;}
+.top-bar h1{font-family:monospace;font-size:16px;font-weight:700;}
+.top-bar p{font-size:10px;opacity:.6;margin-top:1px;}
+.top-bar-actions{display:flex;gap:8px;align-items:center;}
+#conn-pill{font-size:11px;padding:4px 12px;border-radius:12px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);}
+#conn-pill.ok{background:rgba(0,191,165,.25);border-color:rgba(0,191,165,.5);}
+.tb-btn{height:34px;padding:0 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;}
+.tb-btn.primary{background:#68fadd;color:#00201a;}
+.tb-btn.ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);}
+/* ─ SETUP BANNER ─ */
+#setup-banner{background:#fff;border-bottom:1px solid var(--bdr);padding:16px 20px;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;}
+#setup-banner.hidden{display:none;}
+.sf-group{flex:1;min-width:180px;}
+.sf-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;display:block;}
+.sf-input{width:100%;height:40px;border:1.5px solid var(--bdr);border-radius:8px;padding:0 11px;font-size:13px;font-family:monospace;color:var(--txt);}
+.sf-input:focus{outline:none;border-color:var(--teal);}
+.sf-btn{height:40px;padding:0 18px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.sf-dismiss{height:40px;padding:0 12px;background:none;border:1.5px solid var(--bdr);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;}
+/* ─ STATS ─ */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;padding:16px 20px;}
+.stat-card{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:16px;}
+.stat-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;}
+.stat-value{font-family:monospace;font-size:28px;font-weight:700;color:var(--teal);line-height:1;}
+.stat-value.blue{color:var(--blue);}
+.stat-value.sm{font-size:16px;margin-top:4px;}
+.stat-card .trend{font-size:10px;color:var(--muted);margin-top:4px;}
+/* ─ TABS ─ */
+.tab-bar{display:flex;border-bottom:2px solid var(--bdr);padding:0 20px;background:var(--card);}
+.tab-item{padding:12px 18px;background:none;border:none;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;}
+.tab-item.active{color:var(--teal);border-bottom-color:var(--teal);}
+.tab-item.lv.active{color:var(--blue);border-bottom-color:var(--blue);}
+/* ─ PANELS ─ */
+.panel{display:none;padding:16px 20px;}
 .panel.active{display:block;}
-table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e0e0e0;}
-thead tr{background:#006b5c;color:#fff;}
-thead.lv tr{background:#1565c0;}
-th,td{padding:10px 12px;font-size:12px;text-align:left;}
-th{font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:10px;}
-tr:nth-child(even){background:#f8fbfa;}
-td.idx{color:#006b5c;font-weight:700;}
-td.idx.lv{color:#1565c0;}
-.badge{padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;}
-.badge.synced{background:#e6f7f4;color:#006b5c;}
-.badge.pend{background:#fff8e1;color:#b45309;}
-.search-bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
-.search-bar input,.search-bar select{height:38px;padding:0 11px;border:1.5px solid #bbcac4;border-radius:8px;font-size:13px;}
-.search-bar input{flex:1;min-width:180px;}
-.exp-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
-.status{padding:10px 14px;border-radius:8px;font-size:12px;font-weight:600;margin:0 16px 12px;}
-.status.ok{background:#e6f7f4;color:#006b5c;border:1px solid #00bfa5;}
-.status.err{background:#ffdad6;color:#ba1a1a;border:1px solid #ba1a1a;}
-.status.info{background:#fff8e1;color:#7a5c00;border:1px solid #f0c040;}
-.empty{text-align:center;color:#6c7a76;padding:32px;font-size:14px;}
-
-<style>
-#dash-login{position:fixed;inset:0;background:linear-gradient(135deg,#002d26,#004d42,#005a4f);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;padding:20px;}
-#dash-login.hidden{display:none;}
-.dl-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:28px 24px;width:100%;max-width:360px;}
-.dl-logo{width:72px;height:72px;background:rgba(0,191,165,.15);border-radius:50%;border:1.5px solid rgba(0,191,165,.35);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
-.dl-title{font-family:monospace;font-size:22px;font-weight:700;color:#fff;text-align:center;margin-bottom:3px;}
-.dl-sub{font-size:11px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:20px;letter-spacing:.08em;text-transform:uppercase;}
-.dl-field{margin-bottom:12px;}
-.dl-field label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5);display:block;margin-bottom:5px;}
-.dl-field input{width:100%;height:46px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:10px;padding:0 14px;font-size:15px;color:#fff;outline:none;font-family:monospace;}
-.dl-field input:focus{border-color:rgba(0,191,165,.6);background:rgba(0,191,165,.08);}
-.dl-rem{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
-.dl-rem input{width:18px;height:18px;accent-color:#00bfa5;}
-.dl-rem label{font-size:12px;color:rgba(255,255,255,.6);}
-.dl-btn{width:100%;height:48px;background:#00bfa5;color:#00201a;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em;}
-.dl-err{color:#ff8a80;font-size:12px;text-align:center;margin-top:8px;display:none;}
-</style>
+.panel-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;}
+.pt-search{height:38px;padding:0 12px;border:1.5px solid var(--bdr);border-radius:8px;font-size:13px;flex:1;min-width:180px;}
+.pt-select{height:38px;padding:0 10px;border:1.5px solid var(--bdr);border-radius:8px;font-size:13px;color:var(--txt);}
+.pt-btn{height:38px;padding:0 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;}
+.pt-btn.primary{background:var(--teal);color:#fff;}
+.pt-btn.secondary{background:var(--teal-lt);color:var(--teal);border:1px solid var(--teal);}
+.pt-btn.blue{background:var(--blue-lt);color:var(--blue);border:1px solid var(--blue);}
+.pt-btn.ghost{background:#f5f5f5;color:var(--muted);border:1px solid var(--bdr);}
+/* ─ TABLE ─ */
+.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--bdr);}
+table{width:100%;border-collapse:collapse;background:var(--card);font-size:12px;white-space:nowrap;}
+thead tr{background:var(--teal);color:#fff;}
+thead tr.blue-hd{background:var(--blue);}
+th{padding:9px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+th:not(:first-child):not(:nth-child(2)):not(:nth-child(3)):not(:nth-child(4)){text-align:center;}
+td{padding:7px 10px;border-bottom:1px solid var(--bdr);vertical-align:middle;}
+td:not(:first-child):not(:nth-child(2)):not(:nth-child(3)):not(:nth-child(4)){text-align:center;}
+tr:nth-child(even) td{background:#f8faf9;}
+.idx-cell{font-weight:700;color:var(--teal);}
+.idx-cell.blue{color:var(--blue);}
+.badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;display:inline-block;}
+.badge.synced{background:var(--teal-lt);color:var(--teal);}
+.badge.pend{background:#fff8e1;color:#7a5c00;}
+.badge.rest{background:var(--teal-lt);color:var(--teal);}
+.badge.hlc{background:#fce4ec;color:#c62828;}
+.tbl-empty{text-align:center;padding:32px;color:var(--muted);}
+.row-cb{width:16px;height:16px;accent-color:var(--teal);cursor:pointer;}
+/* ─ USERS ─ */
+.users-form{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:16px;margin-bottom:16px;}
+.users-form h3{font-size:13px;font-weight:700;color:var(--teal);margin-bottom:12px;}
+.user-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;}
+.user-row input,.user-row select{height:36px;padding:0 10px;border:1.5px solid var(--bdr);border-radius:7px;font-size:13px;font-family:monospace;}
+.user-row input{min-width:120px;}
+.del-btn{height:34px;padding:0 12px;background:#ffdad6;border:1px solid #ba1a1a;border-radius:7px;font-size:11px;color:#ba1a1a;cursor:pointer;font-weight:700;}
+.note-box{background:#fff8e1;border:1px solid #f0c040;border-radius:8px;padding:12px;font-size:12px;color:#7a5c00;line-height:1.6;}
+.status-bar{padding:10px 16px;border-radius:8px;font-size:12px;font-weight:600;margin-bottom:12px;display:none;}
+.status-bar.ok{background:var(--teal-lt);color:var(--teal);border:1px solid #a5d6a7;}
+.status-bar.err{background:#ffdad6;color:var(--err);border:1px solid #ba1a1a;}
+.status-bar.info{background:#fff8e1;color:#7a5c00;border:1px solid #f0c040;}
 </style>
 </head>
 <body>
-<div id="dash-login">
-  <div class="dl-box">
-    <div class="dl-logo">
-      <svg width="38" height="38" viewBox="0 0 100 100" fill="rgba(255,255,255,.9)">
-        <ellipse cx="50" cy="56" rx="7" ry="19"/>
-        <circle cx="50" cy="33" r="7"/>
+
+<!-- ═══════════════ LOGIN SCREEN ═══════════════ -->
+<div id="login-screen">
+  <div class="login-wrap">
+    <div class="login-logo">
+      <div class="login-logo-icon">
+        <svg width="44" height="44" viewBox="0 0 100 100" fill="rgba(255,255,255,.9)">
+          <ellipse cx="50" cy="56" rx="7" ry="19"/>
+          <circle cx="50" cy="33" r="7"/>
+          <line x1="50" y1="40" x2="50" y2="88" stroke="rgba(255,255,255,.9)" stroke-width="2.5"/>
+          <ellipse cx="28" cy="46" rx="19" ry="7" transform="rotate(-18 28 46)" opacity=".75"/>
+          <ellipse cx="72" cy="46" rx="19" ry="7" transform="rotate(18 72 46)" opacity=".75"/>
+          <line x1="43" y1="60" x2="18" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
+          <line x1="57" y1="60" x2="82" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
+          <line x1="45" y1="27" x2="34" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
+          <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
+        </svg>
+      </div>
+      <h1>EST Database</h1>
+      <p>Admin Dashboard · v2.0</p>
+    </div>
+    <div class="login-card">
+      <label class="lf-label">Username</label>
+      <input id="lf-user" class="lf-input" type="text" placeholder="ANIENTO" autocomplete="username">
+      <label class="lf-label">Password</label>
+      <input id="lf-pass" class="lf-input" type="password" placeholder="••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      <div class="lf-rem">
+        <input type="checkbox" id="lf-rem">
+        <label for="lf-rem">Remember me on this device</label>
+      </div>
+      <button class="login-btn" onclick="doLogin()">SIGN IN TO DASHBOARD</button>
+      <div class="login-err" id="lf-err">Invalid credentials. Please try again.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ APP ═══════════════ -->
+<div id="app">
+
+<!-- Top bar -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <div class="top-bar-logo">
+      <svg width="20" height="20" viewBox="0 0 100 100" fill="rgba(255,255,255,.9)">
+        <ellipse cx="50" cy="56" rx="7" ry="19"/><circle cx="50" cy="33" r="7"/>
         <line x1="50" y1="40" x2="50" y2="88" stroke="rgba(255,255,255,.9)" stroke-width="2.5"/>
         <ellipse cx="28" cy="46" rx="19" ry="7" transform="rotate(-18 28 46)" opacity=".75"/>
         <ellipse cx="72" cy="46" rx="19" ry="7" transform="rotate(18 72 46)" opacity=".75"/>
-        <line x1="43" y1="60" x2="18" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
-        <line x1="57" y1="60" x2="82" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
-        <line x1="45" y1="27" x2="34" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
-        <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
       </svg>
     </div>
-    <div class="dl-title">EST Database</div>
-    <div class="dl-sub">Admin Dashboard · v2.0</div>
-    <div class="dl-field">
-      <label>Username</label>
-      <input id="dl-user" type="text" placeholder="ANIENTO" autocomplete="username">
-    </div>
-    <div class="dl-field">
-      <label>Password</label>
-      <input id="dl-pass" type="password" placeholder="••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')dashLogin()">
-    </div>
-    <div class="dl-rem">
-      <input type="checkbox" id="dl-rem">
-      <label for="dl-rem">Remember me on this device</label>
-    </div>
-    <button class="dl-btn" onclick="dashLogin()">SIGN IN TO DASHBOARD</button>
-    <div class="dl-err" id="dl-err">Invalid credentials</div>
+    <div><h1>EST Database</h1><p>Entomological Surveillance · A&N Islands</p></div>
   </div>
-</div>
-<div class="hdr">
-  <div>
-    <h1>🦟 EST Database Dashboard</h1>
-    <p>Entomological Surveillance Tool — Survey Data Monitor</p>
-  </div>
-  <div style="display:flex;gap:8px;align-items:center;">
-    <span id="conn-badge" style="font-size:11px;padding:4px 10px;border-radius:12px;background:rgba(255,255,255,.15);">Not connected</span>
-    <button class="btn-p" onclick="loadAll()" style="height:36px;font-size:12px;">↻ Refresh</button>
-    <button class="btn-p" onclick="exportAllCSV()" style="height:36px;font-size:12px;background:#68fadd;">Export All CSV</button>
+  <div class="top-bar-actions">
+    <span id="conn-pill">Not connected</span>
+    <button class="tb-btn ghost" onclick="toggleSetup()">⚙ Setup</button>
+    <button class="tb-btn primary" onclick="loadAll()">↻ Refresh</button>
+    <button class="tb-btn primary" onclick="exportAllCSV()">⬇ Export All CSV</button>
+    <button class="tb-btn ghost" onclick="doLogout()">Sign Out</button>
   </div>
 </div>
 
-<div id="setup-panel" class="setup">
-  <h3>Connect to GitHub Repository</h3>
-  <p style="font-size:12px;color:#6c7a76;margin-bottom:12px;">This dashboard reads survey data pushed by EST app to your GitHub repo.</p>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-    <div class="field"><label>GitHub Username</label><input id="s-owner" placeholder="your-username"></div>
-    <div class="field"><label>Repo Name</label><input id="s-repo" value="est-db"></div>
-  </div>
-  <div class="field"><label>Personal Access Token (read:public_repo scope)</label><input id="s-token" type="password" placeholder="ghp_xxxxxxxxxxxx"></div>
-  <button class="btn-p" onclick="saveSetup()">Connect</button>
-  <button class="btn-s" onclick="document.getElementById('setup-panel').style.display='none'">Hide</button>
+<!-- GitHub Setup Banner -->
+<div id="setup-banner">
+  <div class="sf-group"><label class="sf-label">GitHub Username</label><input id="sf-owner" class="sf-input" placeholder="sumit3850"></div>
+  <div class="sf-group"><label class="sf-label">Repository Name</label><input id="sf-repo" class="sf-input" value="EST-v2.0"></div>
+  <div class="sf-group" style="flex:2;"><label class="sf-label">Personal Access Token</label><input id="sf-token" class="sf-input" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"></div>
+  <button class="sf-btn" onclick="saveSetup()">Connect</button>
+  <button class="sf-dismiss" onclick="toggleSetup()">Hide</button>
 </div>
 
-<div id="status-msg" style="display:none;" class="status info">Loading…</div>
+<div id="status-bar" class="status-bar"></div>
 
-<div class="stats">
-  <div class="stat"><div class="stat-lbl">Adult Surveys</div><div class="stat-val" id="st-adult">—</div></div>
-  <div class="stat"><div class="stat-lbl">Larval Surveys</div><div class="stat-val lv" id="st-larval">—</div></div>
-  <div class="stat"><div class="stat-lbl">Total Mosquitoes</div><div class="stat-val" id="st-mosq">—</div></div>
-  <div class="stat"><div class="stat-lbl">Locations Covered</div><div class="stat-val" id="st-loc">—</div></div>
-  <div class="stat"><div class="stat-lbl">Last Sync</div><div class="stat-val" id="st-sync" style="font-size:13px;">—</div></div>
+<!-- Stats row -->
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-label">Adult Surveys</div><div class="stat-value" id="st-adult">—</div><div class="trend">Resting + HLC</div></div>
+  <div class="stat-card"><div class="stat-label">Larval Surveys</div><div class="stat-value blue" id="st-larval">—</div><div class="trend">Container + Dipping</div></div>
+  <div class="stat-card"><div class="stat-label">Total Mosquitoes</div><div class="stat-value" id="st-mosq">—</div><div class="trend">Adult collections</div></div>
+  <div class="stat-card"><div class="stat-label">Positive Houses (Aedes)</div><div class="stat-value blue" id="st-hi">—</div><div class="trend">Avg HI% across surveys</div></div>
+  <div class="stat-card"><div class="stat-label">Locations Covered</div><div class="stat-value" id="st-loc">—</div><div class="trend">Unique survey sites</div></div>
+  <div class="stat-card"><div class="stat-label">Last Synced</div><div class="stat-value sm" id="st-sync">—</div><div class="trend">From GitHub repo</div></div>
 </div>
 
-<div class="tabs">
-  <button class="tab active" onclick="switchTab('adult',this)">Adult Surveillance</button>
-  <button class="tab" onclick="switchTab('larval',this)">Larval Surveillance</button>
-  <button class="tab" onclick="switchTab('users',this)">Manage Users</button>
+<!-- Tabs -->
+<div class="tab-bar">
+  <button class="tab-item active" onclick="switchTab('adult',this)">Adult Surveillance</button>
+  <button class="tab-item lv" onclick="switchTab('larval',this)">Larval Surveillance</button>
+  <button class="tab-item" onclick="switchTab('users',this)">Manage Users</button>
 </div>
 
-<!-- ADULT PANEL -->
+<!-- ── Adult Panel ── -->
 <div class="panel active" id="panel-adult">
-  <div class="search-bar">
-    <input id="search-adult" placeholder="Search location, district…" oninput="filterTable('adult')">
-    <select id="filter-adult-ct" onchange="filterTable('adult')">
-      <option value="">All types</option>
-      <option value="resting">Resting</option>
-      <option value="hlc">HLC</option>
+  <div class="panel-toolbar">
+    <input class="pt-search" id="search-adult" placeholder="🔍  Search location, district, officer…" oninput="filterTable('adult')">
+    <select class="pt-select" id="filter-type" onchange="filterTable('adult')">
+      <option value="">All Types</option><option value="resting">Resting</option><option value="hlc">HLC</option>
     </select>
-    <input id="filter-adult-date" type="date" onchange="filterTable('adult')">
-    <button onclick="selectAllRows('adult',true)" class="btn-s" style="height:38px;font-size:12px;">☑ All</button>
-    <button onclick="selectAllRows('adult',false)" class="btn-s" style="height:38px;font-size:12px;">☐ Clear</button>
-    <button onclick="exportSelectedCSV('adult')" class="btn-p" style="height:38px;font-size:12px;background:#1565c0;">Export Selected</button>
-    <button class="btn-p" style="height:38px;font-size:12px;" onclick="exportFilteredCSV('adult')">Export All</button>
+    <input type="date" class="pt-select" id="filter-adult-date" onchange="filterTable('adult')">
+    <button class="pt-btn ghost" onclick="selectAll('adult',true)">☑ All</button>
+    <button class="pt-btn ghost" onclick="selectAll('adult',false)">☐ Clear</button>
+    <button class="pt-btn blue" onclick="exportSelected('adult')">Export Selected</button>
+    <button class="pt-btn secondary" onclick="exportFiltered('adult')">Export Filtered</button>
   </div>
-  <table>
-    <thead><tr>
-      <th>#</th><th>Date</th><th>Location</th><th>State/UT</th><th>District</th><th>Type</th>
-      <th>Houses</th><th>Mosq</th><th>PMHD</th><th>TMHD</th><th>Non-Culex</th><th>Culex</th>
-      <th>Indoor</th><th>Outdoor</th><th>Man-Hrs</th><th>Collectors</th><th>Nights</th><th>Officer</th><th>GPS</th><th>Sync</th>
-    </tr></thead>
-    <tbody id="tbl-adult"><tr><td colspan="12" class="empty">Connect to GitHub to load data</td></tr></tbody>
-  </table>
+  <div class="tbl-wrap">
+    <table id="tbl-adult">
+      <thead><tr>
+        <th><input type="checkbox" class="row-cb" onchange="selectAll('adult',this.checked)"></th>
+        <th>#</th><th>Date</th><th>Location</th><th>State/UT</th><th>District</th>
+        <th>Type</th><th>Houses</th><th>Mosq</th><th>Non-Cx</th><th>Culex</th>
+        <th>PMHD</th><th>TMHD</th><th>Indoor Den</th><th>Outdoor Den</th><th>HBR</th>
+        <th>Collectors</th><th>Man-Hrs</th><th>Nights</th><th>Officer</th><th>GPS</th><th>Saved</th><th>Sync</th>
+      </tr></thead>
+      <tbody id="tbody-adult"><tr><td colspan="23" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+    </table>
+  </div>
 </div>
 
-<!-- LARVAL PANEL -->
+<!-- ── Larval Panel ── -->
 <div class="panel" id="panel-larval">
-  <div class="search-bar">
-    <input id="search-larval" placeholder="Search location, district…" oninput="filterTable('larval')">
-    <input id="filter-larval-date" type="date" onchange="filterTable('larval')">
-    <button onclick="selectAllRows('larval',true)" class="btn-s" style="height:38px;font-size:12px;">☑ All</button>
-    <button onclick="selectAllRows('larval',false)" class="btn-s" style="height:38px;font-size:12px;">☐ Clear</button>
-    <button onclick="exportSelectedCSV('larval')" class="btn-p" style="height:38px;font-size:12px;background:#1565c0;">Export Selected</button>
-    <button class="btn-p" style="height:38px;font-size:12px;" onclick="exportFilteredCSV('larval')">Export All</button>
+  <div class="panel-toolbar">
+    <input class="pt-search" id="search-larval" placeholder="🔍  Search location, district, officer…" oninput="filterTable('larval')">
+    <input type="date" class="pt-select" id="filter-larval-date" onchange="filterTable('larval')">
+    <button class="pt-btn ghost" onclick="selectAll('larval',true)">☑ All</button>
+    <button class="pt-btn ghost" onclick="selectAll('larval',false)">☐ Clear</button>
+    <button class="pt-btn blue" onclick="exportSelected('larval')">Export Selected</button>
+    <button class="pt-btn secondary" onclick="exportFiltered('larval')">Export Filtered</button>
   </div>
-  <table>
-    <thead class="lv"><tr>
-      <th>#</th><th>Date</th><th>Location</th><th>State/UT</th><th>District</th>
-      <th>Houses</th><th>HI%</th><th>CI%</th><th>BI</th><th>Pupal Idx</th>
-      <th>Larval Den</th><th>Pupal Den</th><th>Immature Den</th>
-      <th>Containers</th><th>+ve Cont</th><th>Total Larvae</th><th>Total Pupae</th><th>Total Dips</th>
-      <th>Workers</th><th>Officer</th><th>GPS</th><th>Sync</th>
-    </tr></thead>
-    <tbody id="tbl-larval"><tr><td colspan="13" class="empty">Connect to GitHub to load data</td></tr></tbody>
-  </table>
+  <div class="tbl-wrap">
+    <table id="tbl-larval">
+      <thead><tr class="blue-hd">
+        <th><input type="checkbox" class="row-cb" onchange="selectAll('larval',this.checked)"></th>
+        <th>#</th><th>Date</th><th>Location</th><th>State/UT</th><th>District</th>
+        <th>Houses</th><th>HI%</th><th>CI%</th><th>BI</th><th>Pupal Idx</th>
+        <th>Larval Den</th><th>Pupal Den</th><th>Immature Den</th>
+        <th>Containers</th><th>+ve Cont</th><th>Larvae</th><th>Pupae</th><th>Dips</th>
+        <th>Workers</th><th>Officer</th><th>GPS</th><th>Saved</th><th>Sync</th>
+      </tr></thead>
+      <tbody id="tbody-larval"><tr><td colspan="24" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+    </table>
+  </div>
 </div>
 
-<!-- USERS PANEL -->
+<!-- ── Users Panel ── -->
 <div class="panel" id="panel-users">
-  <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
-    <button class="btn-p" onclick="addUserRow()">+ Add User</button>
-    <button class="btn-s" onclick="saveCredentials()">Save to GitHub</button>
+  <div class="users-form">
+    <h3>User Management</h3>
+    <div id="users-list"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="pt-btn secondary" onclick="addUser()">+ Add User</button>
+      <button class="pt-btn primary" onclick="saveUsers()">💾 Save to GitHub</button>
+    </div>
   </div>
-  <table>
-    <thead><tr><th>#</th><th>Username</th><th>Password</th><th>Role</th><th>Active</th><th>Action</th></tr></thead>
-    <tbody id="tbl-users"><tr><td colspan="6" class="empty">Connect to GitHub to load users</td></tr></tbody>
-  </table>
-  <div style="background:#fff8e1;border:1px solid #f0c040;border-radius:8px;padding:12px;margin-top:12px;font-size:12px;color:#7a5c00;">
-    <strong>Note:</strong> After saving, all EST app users will see new credentials on next login (when online). Setting a user to inactive immediately prevents their login.
+  <div class="note-box">
+    <strong>How credentials work:</strong> The EST app checks GitHub's <code>config.json</code> on each login when online. 
+    Setting a user to <strong>Inactive</strong> immediately blocks their access on next online login.
+    The hardcoded admin (ANIENTO/2026) always works even offline.
   </div>
 </div>
+
+</div><!-- #app -->
 
 <script>
+const DASH_U='ANIENTO', DASH_P='2026', DASH_KEY='est_dash_creds';
+let GH={owner:'',repo:'EST-v2.0',token:''};
+let allAdult=[],allLarval=[],adultF=[],larvalF=[],usersCfg=[];
 
-const DASH_USER='ANIENTO', DASH_PASS='2026';
-const DASH_CRED_KEY='est_dash_creds';
-
-function dashLogin(){
-  const u=document.getElementById('dl-user').value.trim();
-  const p=document.getElementById('dl-pass').value;
-  const rem=document.getElementById('dl-rem').checked;
-  const err=document.getElementById('dl-err');
-  if(u!==DASH_USER||p!==DASH_PASS){err.style.display='block';document.getElementById('dl-pass').value='';return;}
-  err.style.display='none';
-  if(rem)localStorage.setItem(DASH_CRED_KEY,JSON.stringify({u,p}));
-  else localStorage.removeItem(DASH_CRED_KEY);
-  document.getElementById('dash-login').classList.add('hidden');
+/* ── AUTH ── */
+function doLogin(){
+  const u=document.getElementById('lf-user').value.trim();
+  const p=document.getElementById('lf-pass').value;
+  const rem=document.getElementById('lf-rem').checked;
+  if(u!==DASH_U||p!==DASH_P){document.getElementById('lf-err').style.display='block';document.getElementById('lf-pass').value='';return;}
+  if(rem)localStorage.setItem(DASH_KEY,JSON.stringify({u,p}));else localStorage.removeItem(DASH_KEY);
+  document.getElementById('login-screen').classList.add('gone');
+  document.getElementById('app').classList.add('show');
+  loadSetup();loadAll();
 }
-function checkDashAuth(){
-  try{
-    const c=JSON.parse(localStorage.getItem(DASH_CRED_KEY));
-    if(c&&c.u===DASH_USER&&c.p===DASH_PASS){
-      document.getElementById('dl-user').value=c.u;
-      document.getElementById('dl-pass').value=c.p;
-      document.getElementById('dl-rem').checked=true;
-      document.getElementById('dash-login').classList.add('hidden');
-    }
-  }catch(e){}
+function checkAuth(){
+  try{const c=JSON.parse(localStorage.getItem(DASH_KEY));if(c&&c.u===DASH_U&&c.p===DASH_P){document.getElementById('lf-user').value=c.u;document.getElementById('lf-pass').value=c.p;document.getElementById('lf-rem').checked=true;doLogin();}}catch(e){}
 }
+function doLogout(){localStorage.removeItem(DASH_KEY);document.getElementById('login-screen').classList.remove('gone');document.getElementById('app').classList.remove('show');}
 
-let GH={owner:'',repo:'est-db',token:''};
-let allAdult=[],allLarval=[],usersCfg=[];
-let adultFiltered=[],larvalFiltered=[];
-
+/* ── SETUP ── */
+function toggleSetup(){const b=document.getElementById('setup-banner');b.classList.toggle('hidden');}
 function saveSetup(){
-  GH.owner=document.getElementById('s-owner').value.trim();
-  GH.repo=document.getElementById('s-repo').value.trim()||'est-db';
-  GH.token=document.getElementById('s-token').value.trim();
+  GH.owner=document.getElementById('sf-owner').value.trim();
+  GH.repo=document.getElementById('sf-repo').value.trim()||'EST-v2.0';
+  GH.token=document.getElementById('sf-token').value.trim();
   localStorage.setItem('est_dash_cfg',JSON.stringify(GH));
+  document.getElementById('setup-banner').classList.add('hidden');
   loadAll();
 }
 function loadSetup(){
-  const s=localStorage.getItem('est_dash_cfg');
-  if(s){const c=JSON.parse(s);GH=c;document.getElementById('s-owner').value=c.owner||'';document.getElementById('s-repo').value=c.repo||'est-db';document.getElementById('s-token').value=c.token||'';}
+  try{const c=JSON.parse(localStorage.getItem('est_dash_cfg'));if(c){GH=c;document.getElementById('sf-owner').value=c.owner||'';document.getElementById('sf-repo').value=c.repo||'EST-v2.0';document.getElementById('sf-token').value=c.token||'';}}catch(e){}
 }
-function ghHdr(){const h={'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};if(GH.token)h['Authorization']='token '+GH.token;return h;}
+
+/* ── GITHUB API ── */
+function ghH(){const h={'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};if(GH.token)h['Authorization']='token '+GH.token;return h;}
 function b64d(s){return decodeURIComponent(escape(atob(s)));}
-function setStatus(msg,type='info'){const el=document.getElementById('status-msg');el.textContent=msg;el.className='status '+type;el.style.display=msg?'block':'none';}
+function b64e(s){return btoa(unescape(encodeURIComponent(s)));}
+async function ghGet(path){const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{headers:ghH(),cache:'no-store'});if(!r.ok)return null;return r.json();}
+async function ghPut(path,content,sha){const body={message:'[EST Dashboard] Update '+path,content:b64e(JSON.stringify(content,null,2)),branch:'main'};if(sha)body.sha=sha;const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{method:'PUT',headers:{...ghH(),'Content-Type':'application/json'},body:JSON.stringify(body)});return r.ok;}
 
-async function listFiles(prefix){
-  const url=`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${prefix}`;
-  const r=await fetch(url,{headers:ghHdr(),cache:'no-store'});
-  if(!r.ok)return [];
-  const items=await r.json();
-  return items;
-}
-async function fetchFile(path){
-  const url=`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`;
-  const r=await fetch(url,{headers:ghHdr(),cache:'no-store'});
-  if(!r.ok)return null;
-  const d=await r.json();
-  return JSON.parse(b64d(d.content));
-}
-async function putFile(path,content,sha){
-  const url=`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`;
-  const body={message:'[EST Dashboard] Update '+path,content:btoa(unescape(encodeURIComponent(JSON.stringify(content,null,2)))),branch:'main'};
-  if(sha)body.sha=sha;
-  const r=await fetch(url,{method:'PUT',headers:{...ghHdr(),'Content-Type':'application/json'},body:JSON.stringify(body)});
-  return r.ok;
-}
-
+/* ── LOAD ALL ── */
+function setStatus(msg,type){const el=document.getElementById('status-bar');el.textContent=msg;el.className='status-bar '+(type||'info');el.style.display=msg?'block':'none';}
 async function loadAll(){
-  if(!GH.owner||!GH.token){setStatus('Enter GitHub credentials above','info');return;}
-  setStatus('Loading surveys from GitHub…','info');
-  const badge=document.getElementById('conn-badge');badge.textContent='Connecting…';
+  if(!GH.owner||!GH.token){setStatus('Enter GitHub credentials above to load data','info');document.getElementById('setup-banner').classList.remove('hidden');return;}
+  setStatus('Loading from GitHub…','info');
+  const pill=document.getElementById('conn-pill');pill.textContent='Connecting…';pill.classList.remove('ok');
   try{
-    // List all month folders under data/
-    const root=await listFiles('data');
-    let adultFiles=[],larvalFiles=[];
-    for(const item of root){
-      if(item.type==='dir'){
-        const files=await listFiles(item.path);
-        files.forEach(f=>{
-          if(f.name.startsWith('adult-'))adultFiles.push(f.path);
-          else if(f.name.startsWith('larval-'))larvalFiles.push(f.path);
-        });
+    const root=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/data`,{headers:ghH(),cache:'no-store'});
+    if(!root.ok){setStatus('Cannot reach GitHub — check username/repo/token','err');pill.textContent='Connection failed';return;}
+    const dirs=await root.json();
+    let aFiles=[],lFiles=[];
+    for(const d of dirs){
+      if(d.type==='dir'){
+        const files=await(await fetch(d.url,{headers:ghH()})).json().catch(()=>[]);
+        files.forEach(f=>{if(f.name.startsWith('adult-'))aFiles.push(f.path);else if(f.name.startsWith('larval-'))lFiles.push(f.path);});
       }
     }
-    // Fetch all
-    allAdult=await Promise.all(adultFiles.map(f=>fetchFile(f).catch(()=>null)));
-    allAdult=allAdult.filter(Boolean);
-    allLarval=await Promise.all(larvalFiles.map(f=>fetchFile(f).catch(()=>null)));
-    allLarval=allLarval.filter(Boolean);
-    // Sort newest first
+    allAdult=(await Promise.all(aFiles.map(f=>ghGet(f).then(d=>JSON.parse(b64d(d.content))).catch(()=>null)))).filter(Boolean);
+    allLarval=(await Promise.all(lFiles.map(f=>ghGet(f).then(d=>JSON.parse(b64d(d.content))).catch(()=>null)))).filter(Boolean);
     allAdult.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
     allLarval.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
-    adultFiltered=[...allAdult];larvalFiltered=[...allLarval];
-    // Load users
-    const cfg=await fetchFile('config.json').catch(()=>null);
+    adultF=[...allAdult];larvalF=[...allLarval];
+    const cfg=await ghGet('config.json').then(d=>JSON.parse(b64d(d.content))).catch(()=>null);
     if(cfg)usersCfg=cfg.credentials||[];
-    // Update stats
-    updateStats();
-    renderAdult();renderLarval();renderUsers();
-    badge.textContent='Connected ✓';badge.style.background='rgba(104,250,221,.2)';
-    setStatus('');
+    updateStats();renderAdult();renderLarval();renderUsers();
+    pill.textContent='Connected ✓ ('+allAdult.length+'A + '+allLarval.length+'L)';pill.classList.add('ok');
     document.getElementById('st-sync').textContent=new Date().toLocaleTimeString();
-  }catch(e){
-    setStatus('Error: '+e.message,'err');
-    badge.textContent='Error';badge.style.background='rgba(186,26,26,.2)';
-  }
+    setStatus('');
+  }catch(e){setStatus('Error: '+e.message,'err');pill.textContent='Error';}
 }
-
 function updateStats(){
   document.getElementById('st-adult').textContent=allAdult.length;
   document.getElementById('st-larval').textContent=allLarval.length;
-  const totalMosq=allAdult.reduce((s,a)=>s+(a.totalMosq||0),0);
-  document.getElementById('st-mosq').textContent=totalMosq.toLocaleString();
-  const locs=new Set([...allAdult.map(a=>a.location),...allLarval.map(l=>l.location)].filter(Boolean));
-  document.getElementById('st-loc').textContent=locs.size;
+  document.getElementById('st-mosq').textContent=allAdult.reduce((s,a)=>s+(a.totalMosq||0),0).toLocaleString();
+  const hiVals=allLarval.map(l=>parseFloat(l.HI)).filter(v=>!isNaN(v));
+  document.getElementById('st-hi').textContent=hiVals.length?(hiVals.reduce((a,b)=>a+b,0)/hiVals.length).toFixed(1)+'%':'—';
+  document.getElementById('st-loc').textContent=new Set([...allAdult.map(a=>a.location),...allLarval.map(l=>l.location)].filter(Boolean)).size;
 }
 
+/* ── RENDER TABLES ── */
 function renderAdult(){
-  const tbody=document.getElementById('tbl-adult');
-  if(!adultFiltered.length){tbody.innerHTML='<tr><td colspan="12" class="empty">No adult surveys found</td></tr>';return;}
-  tbody.innerHTML=adultFiltered.map((s,i)=>{
-    const gps=s.lat&&s.lng?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
+  const tb=document.getElementById('tbody-adult');
+  if(!adultF.length){tb.innerHTML='<tr><td colspan="23" class="tbl-empty">No adult surveys found</td></tr>';return;}
+  tb.innerHTML=adultF.map((s,i)=>{
+    const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
+    const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
     return `<tr>
-    <td><input type="checkbox" class="row-check" data-idx="${i}" style="width:16px;height:16px;accent-color:#006b5c;cursor:pointer;"></td>
-    <td>${i+1}</td>
-    <td>${s.date||'-'}</td>
-    <td style="font-weight:600;">${s.location||'-'}</td>
-    <td>${s.state||'-'}</td>
-    <td>${s.district||'-'}</td>
-    <td><span class="badge synced">${s.collType==='resting'?'Resting':'HLC'}</span></td>
-    <td>${s.houses?.length||0}</td>
-    <td class="idx">${s.totalMosq||0}</td>
-    <td class="idx">${s.MHD||'-'}</td>
-    <td class="idx">${s.TMHD||'-'}</td>
-    <td>${s.totNonCulex||0}</td>
-    <td class="idx am">${s.totCulex||0}</td>
-    <td>${s.totIndoor||0}</td>
-    <td>${s.totOutdoor||0}</td>
-    <td>${s.totalManHours?.toFixed?s.totalManHours.toFixed(2):'-'}</td>
-    <td>${s.collectors||1}</td>
-    <td>${s.nights||1}</td>
-    <td>${s.officers||'-'}</td>
-    <td style="font-size:10px;font-family:monospace;">${gps}</td>
-    <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓':'⏳'}</span></td>
-  </tr>`;}).join('');
+      <td><input type="checkbox" class="row-cb adult-cb" data-idx="${i}"></td>
+      <td>${i+1}</td><td>${s.date||'-'}</td>
+      <td style="font-weight:600;min-width:120px;">${s.location||'-'}</td>
+      <td>${s.state||'-'}</td><td>${s.district||'-'}</td>
+      <td><span class="badge ${s.collType==='resting'?'rest':'hlc'}">${s.collType==='resting'?'Resting':'HLC'}</span></td>
+      <td>${s.houses?.length||0}</td>
+      <td class="idx-cell">${s.totalMosq||0}</td>
+      <td>${s.totNonCulex||0}</td>
+      <td class="idx-cell">${s.totCulex||0}</td>
+      <td class="idx-cell">${s.MHD||'-'}</td>
+      <td class="idx-cell">${s.TMHD||'-'}</td>
+      <td>${s.indoorDensity||'-'}</td>
+      <td>${s.outdoorDensity||'-'}</td>
+      <td>${s.HBR||'-'}</td>
+      <td>${s.collectors||1}</td>
+      <td>${s.totalManHours?.toFixed?s.totalManHours.toFixed(2):'-'}</td>
+      <td>${s.nights||1}</td>
+      <td>${s.officers||'-'}</td>
+      <td style="font-size:10px;font-family:monospace;">${gps}</td>
+      <td>${saved}</td>
+      <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓ Synced':'Local'}</span></td>
+    </tr>`;}).join('');
 }
-
 function renderLarval(){
-  const tbody=document.getElementById('tbl-larval');
-  if(!larvalFiltered.length){tbody.innerHTML='<tr><td colspan="13" class="empty">No larval surveys found</td></tr>';return;}
-  tbody.innerHTML=larvalFiltered.map((s,i)=>{
-    const gps=s.lat&&s.lng?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
+  const tb=document.getElementById('tbody-larval');
+  if(!larvalF.length){tb.innerHTML='<tr><td colspan="24" class="tbl-empty">No larval surveys found</td></tr>';return;}
+  tb.innerHTML=larvalF.map((s,i)=>{
+    const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
+    const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
     const imd=s.totalDips>0?(((s.totalLarvae+s.totalPupae)/s.totalDips)*100).toFixed(1):'-';
     return `<tr>
-    <td>${i+1}</td>
-    <td>${s.date||'-'}</td>
-    <td style="font-weight:600;">${s.location||'-'}</td>
-    <td>${s.state||'-'}</td>
-    <td>${s.district||'-'}</td>
-    <td>${s.houses?.length||0}</td>
-    <td class="idx lv">${s.HI||'-'}</td>
-    <td class="idx lv">${s.CI||'-'}</td>
-    <td class="idx lv">${s.BI||'-'}</td>
-    <td>${s.PI||'-'}</td>
-    <td class="idx lv">${s.LD||'-'}</td>
-    <td>${s.PD||'-'}</td>
-    <td>${imd}</td>
-    <td>${s.totalContainers||0}</td>
-    <td>${s.totalPositive||0}</td>
-    <td>${s.totalLarvae||0}</td>
-    <td>${s.totalPupae||0}</td>
-    <td>${s.totalDips||0}</td>
-    <td>${s.workers||'-'}</td>
-    <td>${s.officers||'-'}</td>
-    <td style="font-size:10px;font-family:monospace;">${gps}</td>
-    <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓':'⏳'}</span></td>
-  </tr>`;}).join('');
+      <td><input type="checkbox" class="row-cb larval-cb" data-idx="${i}"></td>
+      <td>${i+1}</td><td>${s.date||'-'}</td>
+      <td style="font-weight:600;min-width:120px;">${s.location||'-'}</td>
+      <td>${s.state||'-'}</td><td>${s.district||'-'}</td>
+      <td>${s.houses?.length||0}</td>
+      <td class="idx-cell blue">${s.HI||'-'}</td>
+      <td class="idx-cell blue">${s.CI||'-'}</td>
+      <td class="idx-cell blue">${s.BI||'-'}</td>
+      <td>${s.PI||'-'}</td>
+      <td class="idx-cell blue">${s.LD||'-'}</td>
+      <td>${s.PD||'-'}</td>
+      <td>${imd}</td>
+      <td>${s.totalContainers||0}</td>
+      <td>${s.totalPositive||0}</td>
+      <td>${s.totalLarvae||0}</td>
+      <td>${s.totalPupae||0}</td>
+      <td>${s.totalDips||0}</td>
+      <td>${s.workers||'-'}</td>
+      <td>${s.officers||'-'}</td>
+      <td style="font-size:10px;font-family:monospace;">${gps}</td>
+      <td>${saved}</td>
+      <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓ Synced':'Local'}</span></td>
+    </tr>`;}).join('');
 }
-
 function renderUsers(){
-  const tbody=document.getElementById('tbl-users');
-  if(!usersCfg.length){tbody.innerHTML='<tr><td colspan="6" class="empty">No users found. Connect to GitHub first.</td></tr>';return;}
-  tbody.innerHTML=usersCfg.map((u,i)=>`<tr>
-    <td>${i+1}</td>
-    <td><input value="${u.username}" onchange="usersCfg[${i}].username=this.value" style="border:1px solid #ccc;border-radius:6px;padding:4px 8px;font-family:monospace;font-size:13px;width:120px;"></td>
-    <td><input value="${u.password}" onchange="usersCfg[${i}].password=this.value" style="border:1px solid #ccc;border-radius:6px;padding:4px 8px;font-family:monospace;font-size:13px;width:100px;"></td>
-    <td><select onchange="usersCfg[${i}].role=this.value" style="border:1px solid #ccc;border-radius:6px;padding:4px;font-size:13px;">
-      <option ${u.role==='admin'?'selected':''}>admin</option>
-      <option ${u.role==='field'?'selected':''}>field</option>
-    </select></td>
-    <td><input type="checkbox" ${u.active!==false?'checked':''} onchange="usersCfg[${i}].active=this.checked" style="width:20px;height:20px;accent-color:#006b5c;cursor:pointer;"></td>
-    <td><button onclick="usersCfg.splice(${i},1);renderUsers()" style="padding:4px 10px;background:#ffdad6;border:1px solid #ba1a1a;border-radius:6px;font-size:11px;color:#ba1a1a;cursor:pointer;">Remove</button></td>
-  </tr>`).join('');
+  const el=document.getElementById('users-list');
+  if(!usersCfg.length){el.innerHTML='<p style="color:var(--muted);font-size:12px;margin-bottom:8px;">No users loaded. Connect to GitHub first.</p>';return;}
+  el.innerHTML=usersCfg.map((u,i)=>`
+    <div class="user-row">
+      <input value="${u.username||''}" placeholder="Username" onchange="usersCfg[${i}].username=this.value">
+      <input value="${u.password||''}" placeholder="Password" type="password" onchange="usersCfg[${i}].password=this.value">
+      <select onchange="usersCfg[${i}].role=this.value">
+        <option ${u.role==='admin'?'selected':''}>admin</option>
+        <option ${u.role==='field'?'selected':''}>field</option>
+      </select>
+      <label style="display:flex;align-items:center;gap:5px;font-size:12px;">
+        <input type="checkbox" ${u.active!==false?'checked':''} onchange="usersCfg[${i}].active=this.checked" style="accent-color:var(--teal);width:16px;height:16px;">Active
+      </label>
+      <button class="del-btn" onclick="usersCfg.splice(${i},1);renderUsers()">Remove</button>
+    </div>`).join('');
 }
-
-function addUserRow(){
-  usersCfg.push({username:'',password:'',role:'field',active:true});
-  renderUsers();
-}
-
-async function saveCredentials(){
+function addUser(){usersCfg.push({username:'',password:'',role:'field',active:true});renderUsers();}
+async function saveUsers(){
   if(!GH.owner||!GH.token){alert('Connect to GitHub first');return;}
-  setStatus('Saving credentials to GitHub…','info');
-  // Fetch current SHA
-  const url=`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/config.json`;
-  const r=await fetch(url,{headers:ghHdr()});
-  const sha=r.ok?(await r.json()).sha:undefined;
-  const content={credentials:usersCfg,updatedAt:new Date().toISOString()};
-  const ok=await putFile('config.json',content,sha);
-  setStatus(ok?'Credentials saved to GitHub ✓ — apps will use new creds on next online login':'Failed to save — check token permissions',ok?'ok':'err');
+  setStatus('Saving to GitHub…','info');
+  const existing=await ghGet('config.json').catch(()=>null);
+  const sha=existing?.sha;
+  const ok=await ghPut('config.json',{credentials:usersCfg,updatedAt:new Date().toISOString()},sha);
+  setStatus(ok?'✓ Credentials saved — apps will use new creds on next online login':'Failed to save — check token permissions',ok?'ok':'err');
 }
 
+/* ── FILTER ── */
 function filterTable(mod){
-  const q=document.getElementById('search-'+mod)?.value.toLowerCase()||'';
-  const dateF=document.getElementById('filter-'+mod+'-date')?.value||'';
-  const ctF=document.getElementById('filter-'+mod+'-ct')?.value||'';
+  const q=(document.getElementById('search-'+mod)?.value||'').toLowerCase();
+  const df=document.getElementById('filter-'+(mod==='adult'?'adult-date':'larval-date'))?.value||'';
+  const tf=document.getElementById('filter-type')?.value||'';
   const src=mod==='adult'?allAdult:allLarval;
   const filtered=src.filter(s=>{
-    const loc=(s.location+s.district+s.workers+s.officers).toLowerCase();
-    if(q&&!loc.includes(q))return false;
-    if(dateF&&s.date!==dateF)return false;
-    if(ctF&&s.collType!==ctF)return false;
+    if(q&&!(s.location+s.district+s.workers+s.officers+'').toLowerCase().includes(q))return false;
+    if(df&&s.date!==df)return false;
+    if(tf&&mod==='adult'&&s.collType!==tf)return false;
     return true;
   });
-  if(mod==='adult'){adultFiltered=filtered;renderAdult();}
-  else{larvalFiltered=filtered;renderLarval();}
+  if(mod==='adult'){adultF=filtered;renderAdult();}else{larvalF=filtered;renderLarval();}
 }
-
 function switchTab(tab,btn){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');
-  if(tab==='larval')btn.classList.add('lv');
   document.getElementById('panel-'+tab).classList.add('active');
 }
+function selectAll(mod,state){document.querySelectorAll('.'+mod+'-cb').forEach(c=>c.checked=state);}
 
+/* ── CSV EXPORT ── */
 function q(v){return '"'+String(v===null||v===undefined?'':v).replace(/"/g,'""')+'"';}
 function makeCSV(rows){return '\uFEFF'+rows.map(r=>r.map(q).join(',')).join('\r\n');}
-function dlCSV(csv,fname){const b=new Blob([csv],{type:'text/csv'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=fname;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);}
+function dlCSV(csv,name){const b=new Blob([csv],{type:'text/csv'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);}
 
-function buildAdultRows(surveys){
-  const rows=[];
-  rows.push(['=== ADULT MOSQUITO SURVEILLANCE ===']);
-  rows.push(['#','Date','State/UT','District','Location','GPS Lat','GPS Lng','Type','Workers','Collectors','Nights','Officer','Houses','Total Mosq','Non-Culex','Culex','Indoor','Outdoor','Rooms','PMHD','TMHD','Indoor Density','Outdoor Density','Room Density','HBR','HBR/hr','Man-Hours','Saved At']);
+function buildAdultCSV(surveys){
+  const rows=[['=== ADULT MOSQUITO SURVEILLANCE ==='],
+    ['#','Date','State/UT','District','Location','GPS Lat','GPS Lng','Type','Workers','Collectors','Nights','Officer','Houses','Total Mosq','Non-Culex','Culex','Indoor','Outdoor','Rooms','PMHD','TMHD','Indoor Density','Outdoor Density','Room Density','HBR','HBR/hr','Man-Hours','Saved At']];
   surveys.forEach((s,i)=>{rows.push([i+1,s.date||'',s.state||'',s.district||'',s.location||'',s.lat||'',s.lng||'',s.collType==='resting'?'Resting':'HLC',s.workers||'',s.collectors||1,s.nights||1,s.officers||'',s.houses?.length||0,s.totalMosq||0,s.totNonCulex||0,s.totCulex||0,s.totIndoor||0,s.totOutdoor||0,s.totalRooms||0,s.MHD||'-',s.TMHD||'-',s.indoorDensity||'-',s.outdoorDensity||'-',s.roomDensity||'-',s.HBR||'-',s.HBRHr||'-',s.totalManHours?.toFixed?s.totalManHours.toFixed(2):'-',s.savedAt||'']);});
-  rows.push([]);
-  rows.push(['=== SPECIES BREAKDOWN ===']);
-  rows.push(['Survey#','Date','Location','Species','Genus','Is Culex','Indoor','Outdoor','Total']);
+  rows.push([],['=== SPECIES BREAKDOWN ==='],['Survey#','Date','Location','Species','Genus','Is Culex','Indoor','Outdoor','Total']);
   surveys.forEach((s,i)=>{(s.speciesBreakdown||[]).forEach(sp=>{const t=(sp.indoor||0)+(sp.outdoor||0);if(t>0)rows.push([i+1,s.date,s.location,sp.name,sp.genus,sp.isCulex?'Yes':'No',sp.indoor||0,sp.outdoor||0,t]);});});
-  rows.push([]);
-  rows.push(['=== HOUSE/SITE DETAILS ===']);
-  rows.push(['Survey#','Date','Location','House/Site No','Rooms','Start','End','Hours','Indoor','Outdoor','Total']);
+  rows.push([],['=== HOUSE/SITE DETAILS ==='],['Survey#','Date','Location','House/Site','Rooms','Start','End','Hours','Indoor','Outdoor','Total']);
   surveys.forEach((s,i)=>{(s.houses||[]).forEach(h=>{const ind=(h.counts||[]).reduce((t,r)=>t+(r[0]||0),0);const out=(h.counts||[]).reduce((t,r)=>t+(r[1]||0),0);rows.push([i+1,s.date,s.location,h.houseNo,h.rooms,h.start,h.end,h.hours?.toFixed?h.hours.toFixed(2):0,ind,out,h.total]);});});
   return rows;
 }
-function buildLarvalRows(surveys){
-  const rows=[];
-  rows.push(['=== LARVAL MOSQUITO SURVEILLANCE ===']);
-  rows.push(['#','Date','State/UT','District','Location','GPS Lat','GPS Lng','Workers','Officer','Houses','HI%','CI%','BI','Pupal Idx','Larval Density','Pupal Density','Immature Density','Containers','Positive Containers','Larvae','Pupae','Dips','Saved At']);
+function buildLarvalCSV(surveys){
+  const rows=[['=== LARVAL MOSQUITO SURVEILLANCE ==='],
+    ['#','Date','State/UT','District','Location','GPS Lat','GPS Lng','Workers','Officer','Houses','HI%','CI%','BI','Pupal Idx','Larval Density','Pupal Density','Immature Density','Containers','Positive Containers','Larvae','Pupae','Dips','Saved At']];
   surveys.forEach((s,i)=>{const imd=s.totalDips>0?(((s.totalLarvae+s.totalPupae)/s.totalDips)*100).toFixed(1):'-';rows.push([i+1,s.date||'',s.state||'',s.district||'',s.location||'',s.lat||'',s.lng||'',s.workers||'',s.officers||'',s.houses?.length||0,s.HI||'-',s.CI||'-',s.BI||'-',s.PI||'-',s.LD||'-',s.PD||'-',imd,s.totalContainers||0,s.totalPositive||0,s.totalLarvae||0,s.totalPupae||0,s.totalDips||0,s.savedAt||'']);});
-  rows.push([]);
-  rows.push(['=== CONTAINER TYPE BREAKDOWN ===']);
-  rows.push(['Survey#','Date','Location','Container Type','Examined','Positive']);
+  rows.push([],['=== CONTAINER BREAKDOWN ==='],['Survey#','Date','Location','Container Type','Examined','Positive']);
   surveys.forEach((s,i)=>{(s.containerSummary||[]).forEach(ct=>{if(ct.examined>0||ct.positive>0)rows.push([i+1,s.date,s.location,ct.name,ct.examined||0,ct.positive||0]);});});
-  rows.push([]);
-  rows.push(['=== HOUSE-WISE DETAILS ===']);
-  rows.push(['Survey#','Date','Location','House No','Rooms','Start','End','Containers','Positive','Pupal+ve','House Positive']);
+  rows.push([],['=== HOUSE-WISE DETAILS ==='],['Survey#','Date','Location','House No','Rooms','Start','End','Containers','Positive','Pupal+ve','House Positive']);
   surveys.forEach((s,i)=>{(s.houses||[]).forEach(h=>{rows.push([i+1,s.date,s.location,h.houseNo,h.rooms,h.start,h.end,h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No']);});});
-  rows.push([]);
-  rows.push(['=== HOUSE-WISE DIPPING DATA ===']);
-  rows.push(['Survey#','Date','Location','House No','Dips','Larvae','Pupae','Total (L+P)']);
+  rows.push([],['=== HOUSE-WISE DIPPING DATA ==='],['Survey#','Date','Location','House No','Dips','Larvae','Pupae','L+P']);
   surveys.forEach((s,i)=>{(s.houses||[]).forEach(h=>{rows.push([i+1,s.date,s.location,h.houseNo,h.dips||0,h.larvae||0,h.pupae||0,(h.larvae||0)+(h.pupae||0)]);});});
   return rows;
 }
 function exportAllCSV(){
-  const rows=[...buildAdultRows(allAdult),[],...buildLarvalRows(allLarval)];
-  rows.push(['EST v2.0 Database Export — '+new Date().toLocaleString()]);
-  dlCSV(makeCSV(rows),'EST_Complete_Database_'+new Date().toISOString().slice(0,10)+'.csv');
+  const rows=[...buildAdultCSV(allAdult),[],...buildLarvalCSV(allLarval),['EST v2.0 Database Export — '+new Date().toLocaleString()]];
+  dlCSV(makeCSV(rows),'EST_Complete_'+new Date().toISOString().slice(0,10)+'.csv');
 }
-function exportFilteredCSV(mod){
-  const src=mod==='adult'?adultFiltered:larvalFiltered;
-  if(!src.length){alert('No data to export');return;}
-  const rows=mod==='adult'
-    ?[['#','Date','State','District','Location','GPS Lat','GPS Lng','Type','Workers','Collectors','Officer','Houses','Mosq','PMHD','TMHD','Non-Culex','Culex','Saved At']]
-    :[['#','Date','State','District','Location','GPS Lat','GPS Lng','Workers','Officer','Houses','HI%','CI%','BI','Pupal Index','Larval Den.','Pupal Den.','Total Larvae','Total Pupae','Total Dips','Saved At']];
-  src.forEach((s,i)=>{
-    if(mod==='adult') rows.push([i+1,s.date,s.state||'',s.district,s.location,s.lat,s.lng,s.collType,s.workers,s.collectors,s.officers,s.houses?.length||0,s.totalMosq||0,s.MHD||'-',s.TMHD||'-',s.totNonCulex||0,s.totCulex||0,s.savedAt||'']);
-    else rows.push([i+1,s.date,s.state||'',s.district,s.location,s.lat,s.lng,s.workers,s.officers,s.houses?.length||0,s.HI||'-',s.CI||'-',s.BI||'-',s.PI||'-',s.LD||'-',s.PD||'-',s.totalLarvae||0,s.totalPupae||0,s.totalDips||0,s.savedAt||'']);
-  });
-  const csv='\uFEFF'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
-  const b=new Blob([csv],{type:'text/csv'});const u=URL.createObjectURL(b);
-  const a=document.createElement('a');a.href=u;a.download='EST_'+mod+'_'+new Date().toISOString().slice(0,10)+'.csv';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);
+function exportFiltered(mod){
+  const src=mod==='adult'?adultF:larvalF;
+  if(!src.length){alert('No data');return;}
+  const rows=mod==='adult'?buildAdultCSV(src):buildLarvalCSV(src);
+  dlCSV(makeCSV(rows),'EST_'+mod+'_filtered_'+new Date().toISOString().slice(0,10)+'.csv');
+}
+function exportSelected(mod){
+  const checked=document.querySelectorAll('.'+mod+'-cb:checked');
+  if(!checked.length){alert('Tick rows first');return;}
+  const src=mod==='adult'?adultF:larvalF;
+  const selected=Array.from(checked).map(c=>src[parseInt(c.dataset.idx)]).filter(Boolean);
+  const rows=mod==='adult'?buildAdultCSV(selected):buildLarvalCSV(selected);
+  dlCSV(makeCSV(rows),'EST_'+mod+'_selected_'+new Date().toISOString().slice(0,10)+'.csv');
 }
 
-loadSetup();
-// Auto-load from localStorage if available
-const savedCfg = localStorage.getItem('est_dash_cfg');
-if(savedCfg){
-  try{
-    const c = JSON.parse(savedCfg);
-    if(c.owner && c.token){
-      setTimeout(()=>{loadAll();},500);
-    }
-  }catch(e){}
-}
+/* ── INIT ── */
+checkAuth();
 </script>
 </body>
 </html>
