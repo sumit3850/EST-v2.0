@@ -1,5 +1,5 @@
 /* EST v2.0 Service Worker — Offline-First */
-const CACHE_NAME = 'est-v2.0.5';
+const CACHE_NAME = 'est-v2.0.7';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -10,16 +10,16 @@ const STATIC_ASSETS = [
   './config.json'
 ];
 
-// Install — pre-cache all critical assets
+// Install — fetch fresh copies from network and cache them
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(STATIC_ASSETS))
+      .then(cache => cache.addAll(STATIC_ASSETS.map(url => new Request(url, { cache: 'no-store' }))))
       .then(() => self.skipWaiting())
   );
 });
 
-// Activate — remove old caches, claim clients immediately
+// Activate — delete ALL old caches, claim clients, then notify them to reload
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys()
@@ -27,39 +27,48 @@ self.addEventListener('activate', e => {
         keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
       ))
       .then(() => self.clients.claim())
+      .then(() => self.clients.matchAll({ includeUncontrolled: true }))
+      .then(clients => clients.forEach(c => c.postMessage({ type: 'UPDATE_AVAILABLE', version: CACHE_NAME })))
   );
 });
 
-// Fetch — cache-first for same-origin, network-only for external
+// Fetch — network-first for HTML (always get latest), cache-first for everything else
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
 
   const url = new URL(e.request.url);
 
-  // External: GitHub API, Google Fonts, GPS — always go to network, don't cache
+  // External: GitHub API, Google Fonts, GPS — pass through, never cache
   if (url.origin !== self.location.origin) return;
 
-  // Same-origin: cache-first
-  e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
+  const isHtml = url.pathname.endsWith('.html') || url.pathname.endsWith('/');
 
-      // Not in cache yet — fetch and cache for next time
-      return fetch(e.request).then(resp => {
-        if (resp && resp.ok) {
-          caches.open(CACHE_NAME).then(cache => cache.put(e.request, resp.clone()));
-        }
-        return resp;
-      }).catch(() => {
-        // Offline and not cached — show minimal fallback
-        const isHtml = e.request.headers.get('accept')?.includes('text/html');
-        if (isHtml) {
-          return caches.match('./index.html');
-        }
-        return new Response('', { status: 503 });
-      });
-    })
-  );
+  if (isHtml) {
+    // Network-first for HTML: always show latest, fall back to cache if offline
+    e.respondWith(
+      fetch(e.request, { cache: 'no-store' })
+        .then(resp => {
+          if (resp && resp.ok) {
+            caches.open(CACHE_NAME).then(cache => cache.put(e.request, resp.clone()));
+          }
+          return resp;
+        })
+        .catch(() => caches.match(e.request))
+    );
+  } else {
+    // Cache-first for JS/CSS/JSON: fast load, update in background
+    e.respondWith(
+      caches.match(e.request).then(cached => {
+        const networkFetch = fetch(e.request).then(resp => {
+          if (resp && resp.ok) {
+            caches.open(CACHE_NAME).then(cache => cache.put(e.request, resp.clone()));
+          }
+          return resp;
+        });
+        return cached || networkFetch.catch(() => new Response('', { status: 503 }));
+      })
+    );
+  }
 });
 
 self.addEventListener('message', e => {

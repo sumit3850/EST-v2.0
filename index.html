@@ -329,10 +329,33 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
       </div>
       <div class="login-err" id="login-err">Invalid credentials. Please try again.</div>
     </div>
-    <button class="launch-btn" onclick="doLogin()">
+    <button class="launch-btn" id="signin-btn" onclick="doLogin()">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
       SIGN IN
     </button>
+    <div id="reg-toggle-link" style="width:100%;max-width:340px;text-align:center;margin-top:6px;margin-bottom:2px;">
+      <button onclick="showRegisterForm()" style="background:none;border:none;color:rgba(255,255,255,.55);font-size:12px;cursor:pointer;text-decoration:underline;padding:4px 8px;">New user? Create an account</button>
+    </div>
+
+    <!-- Registration Card -->
+    <div class="login-card" id="reg-card" style="display:none;">
+      <div style="text-align:center;font-size:13px;font-weight:700;color:#fff;margin-bottom:12px;letter-spacing:.02em;">Create New Account</div>
+      <label class="login-label">Username</label>
+      <input class="login-inp" type="text" id="reg-user" placeholder="Choose a username" autocomplete="off">
+      <label class="login-label">Password</label>
+      <input class="login-inp" type="password" id="reg-pass" placeholder="Choose a password">
+      <label class="login-label">Confirm Password</label>
+      <input class="login-inp" type="password" id="reg-pass2" placeholder="Confirm password" onkeydown="if(event.key==='Enter')doRegister()">
+      <div class="login-err" id="reg-err">Error</div>
+    </div>
+    <button class="launch-btn" id="reg-btn" onclick="doRegister()" style="display:none;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      CREATE ACCOUNT
+    </button>
+    <div id="back-login-link" style="width:100%;max-width:340px;text-align:center;margin-top:6px;margin-bottom:2px;display:none;">
+      <button onclick="showLoginForm()" style="background:none;border:none;color:rgba(255,255,255,.55);font-size:12px;cursor:pointer;text-decoration:underline;padding:4px 8px;">Already have an account? Sign In</button>
+    </div>
+
     <div style="width:100%;max-width:340px;margin-top:10px;">
       <button onclick="showGhSettings()" id="splash-db-btn" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;background:rgba(255,255,255,.12);border:1.5px solid rgba(104,250,221,.4);border-radius:var(--rxl);color:var(--pb);font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all var(--tr);">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
@@ -1025,19 +1048,16 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
       <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
     </div>
     <div class="modal-title">GitHub Database Setup</div>
-    <div class="modal-sub" style="font-size:12px;color:var(--osv);">Connect to GitHub to sync surveys and manage users remotely.</div>
-    <div style="margin-bottom:9px;">
-      <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--osv);letter-spacing:.08em;display:block;margin-bottom:4px;">GitHub Username</label>
-      <input id="gh-owner-inp" type="text" placeholder="your-github-username" style="width:100%;height:42px;padding:0 12px;border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:14px;color:var(--os);background:var(--sfc);">
+    <div class="modal-sub" style="font-size:12px;color:var(--osv);">Connect to GitHub to sync surveys and enable user registration.</div>
+    <div style="background:var(--gbg);border:1px solid var(--pd);border-radius:var(--rmd);padding:8px 12px;margin-bottom:12px;font-size:11px;color:var(--primary);">
+      Database: <strong>sumit3850 / EST-v2.0</strong> (pre-configured)
     </div>
-    <div style="margin-bottom:9px;">
-      <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--osv);letter-spacing:.08em;display:block;margin-bottom:4px;">Database Repo Name</label>
-      <input id="gh-repo-inp" type="text" value="est-db" placeholder="est-db" style="width:100%;height:42px;padding:0 12px;border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:14px;color:var(--os);background:var(--sfc);font-family:var(--mono);">
-    </div>
+    <input id="gh-owner-inp" type="hidden" value="sumit3850">
+    <input id="gh-repo-inp" type="hidden" value="EST-v2.0">
     <div style="margin-bottom:14px;">
       <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--osv);letter-spacing:.08em;display:block;margin-bottom:4px;">Personal Access Token</label>
       <input id="gh-token-inp" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="width:100%;height:42px;padding:0 12px;border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:13px;color:var(--os);background:var(--sfc);font-family:var(--mono);">
-      <div style="font-size:10px;color:var(--osv);margin-top:4px;">Token is stored on this device only. Never shared.</div>
+      <div style="font-size:10px;color:var(--osv);margin-top:4px;">Token stored on this device only. Never shared. Needs repo write scope.</div>
     </div>
 
     <div class="modal-btns">
@@ -1290,7 +1310,7 @@ async function ghAutoSync(surveyData, mod){
 function showGhSettings(){
   const modal=document.getElementById('gh-settings-modal');
   if(modal){
-    document.getElementById('gh-owner-inp').value=GH_CONFIG.owner||'';
+    document.getElementById('gh-owner-inp').value=GH_CONFIG.owner||'sumit3850';
     document.getElementById('gh-repo-inp').value=GH_CONFIG.repo||'EST-v2.0';
     document.getElementById('gh-token-inp').value=GH_CONFIG.token||'';
     modal.classList.add('open');
@@ -1525,6 +1545,72 @@ function doLogin(){
     }
   },600);
   checkDrafts();
+}
+function showRegisterForm(){
+  document.getElementById('login-card').style.display='none';
+  document.getElementById('signin-btn').style.display='none';
+  document.getElementById('reg-toggle-link').style.display='none';
+  document.getElementById('reg-card').style.display='block';
+  document.getElementById('reg-btn').style.display='flex';
+  document.getElementById('back-login-link').style.display='block';
+  document.getElementById('login-err').style.display='none';
+  document.getElementById('reg-err').style.display='none';
+}
+function showLoginForm(){
+  document.getElementById('login-card').style.display='block';
+  document.getElementById('signin-btn').style.display='flex';
+  document.getElementById('reg-toggle-link').style.display='block';
+  document.getElementById('reg-card').style.display='none';
+  document.getElementById('reg-btn').style.display='none';
+  document.getElementById('back-login-link').style.display='none';
+}
+async function doRegister(){
+  const u=document.getElementById('reg-user').value.trim();
+  const p=document.getElementById('reg-pass').value;
+  const p2=document.getElementById('reg-pass2').value;
+  const errEl=document.getElementById('reg-err');
+  const btn=document.getElementById('reg-btn');
+  errEl.style.display='none';
+  if(!u||!p){errEl.textContent='Username and password are required.';errEl.style.display='block';return;}
+  if(p!==p2){errEl.textContent='Passwords do not match.';errEl.style.display='block';return;}
+  if(u.length<3){errEl.textContent='Username must be at least 3 characters.';errEl.style.display='block';return;}
+  if(p.length<4){errEl.textContent='Password must be at least 4 characters.';errEl.style.display='block';return;}
+  if(VALID_USERS.some(v=>v.username.toLowerCase()===u.toLowerCase())){errEl.textContent='Username already exists. Choose another.';errEl.style.display='block';return;}
+  if(!GH_CONFIG.token){errEl.textContent='Connect to GitHub database first (tap the GitHub button below).';errEl.style.display='block';return;}
+  if(!navigator.onLine){errEl.textContent='Registration requires an internet connection.';errEl.style.display='block';return;}
+  const origHTML=btn.innerHTML;
+  btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="spin"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8Z"/></svg> Registering…';
+  btn.disabled=true;
+  try{
+    const resp=await fetch(ghApiUrl(GH_CONFIG_PATH),{headers:ghHeaders(),cache:'no-store'});
+    if(!resp.ok) throw new Error('Cannot reach GitHub. Check your token.');
+    const data=await resp.json();
+    const cfg=JSON.parse(b64Decode(data.content));
+    if(cfg.credentials&&cfg.credentials.some(c=>(c.username||'').toLowerCase()===u.toLowerCase())){
+      errEl.textContent='Username already taken. Choose another.';errEl.style.display='block';return;
+    }
+    if(!cfg.credentials) cfg.credentials=[];
+    cfg.credentials.push({username:u,password:p,role:'field',active:true});
+    cfg.updatedAt=new Date().toISOString();
+    const putResp=await fetch(ghApiUrl(GH_CONFIG_PATH),{
+      method:'PUT',
+      headers:{...ghHeaders(),'Content-Type':'application/json'},
+      body:JSON.stringify({message:`[EST] Register user: ${u}`,content:b64Encode(JSON.stringify(cfg,null,2)),sha:data.sha,branch:GH_CONFIG.branch})
+    });
+    if(!putResp.ok) throw new Error('Failed to save. Check token has write permission.');
+    VALID_USERS.push({username:u,password:p,role:'field',active:true});
+    try{localStorage.setItem('est_gh_config',JSON.stringify(cfg));}catch(e){}
+    document.getElementById('reg-user').value='';
+    document.getElementById('reg-pass').value='';
+    document.getElementById('reg-pass2').value='';
+    showLoginForm();
+    document.getElementById('login-user').value=u;
+    showToast('Account created! You can now sign in.','check');
+  }catch(e){
+    errEl.textContent='Registration failed: '+e.message;errEl.style.display='block';
+  }finally{
+    btn.innerHTML=origHTML;btn.disabled=false;
+  }
 }
 function loadSavedCreds(){try{const c=JSON.parse(localStorage.getItem(CRED_KEY));if(c&&c.u&&c.p){document.getElementById('login-user').value=c.u;document.getElementById('login-pass').value=c.p;document.getElementById('remember-me').checked=true;}}catch(e){}}
 function showScreen(id){

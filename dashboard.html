@@ -217,9 +217,9 @@ tr:nth-child(even) td{background:#f8faf9;}
         <th>#</th><th>Date</th><th>Location</th><th>State/UT</th><th>District</th>
         <th>Type</th><th>Houses</th><th>Mosq</th><th>Non-Cx</th><th>Culex</th>
         <th>PMHD</th><th>TMHD</th><th>Indoor Den</th><th>Outdoor Den</th><th>HBR</th>
-        <th>Collectors</th><th>Man-Hrs</th><th>Nights</th><th>Officer</th><th>GPS</th><th>Saved</th><th>Sync</th>
+        <th>Collectors</th><th>Man-Hrs</th><th>Nights</th><th>Officer</th><th>GPS</th><th>Saved</th><th>Sync</th><th>Del</th>
       </tr></thead>
-      <tbody id="tbody-adult"><tr><td colspan="23" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+      <tbody id="tbody-adult"><tr><td colspan="24" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -242,9 +242,9 @@ tr:nth-child(even) td{background:#f8faf9;}
         <th>Houses</th><th>HI%</th><th>CI%</th><th>BI</th><th>Pupal Idx</th>
         <th>Larval Den</th><th>Pupal Den</th><th>Immature Den</th>
         <th>Containers</th><th>+ve Cont</th><th>Larvae</th><th>Pupae</th><th>Dips</th>
-        <th>Workers</th><th>Officer</th><th>GPS</th><th>Saved</th><th>Sync</th>
+        <th>Workers</th><th>Officer</th><th>GPS</th><th>Saved</th><th>Sync</th><th>Del</th>
       </tr></thead>
-      <tbody id="tbody-larval"><tr><td colspan="24" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+      <tbody id="tbody-larval"><tr><td colspan="25" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -356,8 +356,8 @@ async function loadAll(){
         files.forEach(f=>{if(f.name.startsWith('adult-'))aFiles.push(f.path);else if(f.name.startsWith('larval-'))lFiles.push(f.path);});
       }
     }
-    allAdult=(await Promise.all(aFiles.map(f=>ghGet(f).then(d=>JSON.parse(b64d(d.content))).catch(()=>null)))).filter(Boolean);
-    allLarval=(await Promise.all(lFiles.map(f=>ghGet(f).then(d=>JSON.parse(b64d(d.content))).catch(()=>null)))).filter(Boolean);
+    allAdult=(await Promise.all(aFiles.map(f=>ghGet(f).then(d=>{const s=JSON.parse(b64d(d.content));s._path=f;s._sha=d.sha;return s;}).catch(()=>null)))).filter(Boolean);
+    allLarval=(await Promise.all(lFiles.map(f=>ghGet(f).then(d=>{const s=JSON.parse(b64d(d.content));s._path=f;s._sha=d.sha;return s;}).catch(()=>null)))).filter(Boolean);
     allAdult.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
     allLarval.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
     adultF=[...allAdult];larvalF=[...allLarval];
@@ -381,10 +381,11 @@ function updateStats(){
 /* ── RENDER TABLES ── */
 function renderAdult(){
   const tb=document.getElementById('tbody-adult');
-  if(!adultF.length){tb.innerHTML='<tr><td colspan="23" class="tbl-empty">No adult surveys found</td></tr>';return;}
+  if(!adultF.length){tb.innerHTML='<tr><td colspan="24" class="tbl-empty">No adult surveys found</td></tr>';return;}
   tb.innerHTML=adultF.map((s,i)=>{
     const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
+    const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','adult')" title="Delete record" style="padding:0 8px;height:28px;">🗑</button>`:'—';
     return `<tr>
       <td><input type="checkbox" class="row-cb adult-cb" data-idx="${i}"></td>
       <td>${i+1}</td><td>${s.date||'-'}</td>
@@ -407,15 +408,17 @@ function renderAdult(){
       <td style="font-size:10px;font-family:monospace;">${gps}</td>
       <td>${saved}</td>
       <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓ Synced':'Local'}</span></td>
+      <td>${delBtn}</td>
     </tr>`;}).join('');
 }
 function renderLarval(){
   const tb=document.getElementById('tbody-larval');
-  if(!larvalF.length){tb.innerHTML='<tr><td colspan="24" class="tbl-empty">No larval surveys found</td></tr>';return;}
+  if(!larvalF.length){tb.innerHTML='<tr><td colspan="25" class="tbl-empty">No larval surveys found</td></tr>';return;}
   tb.innerHTML=larvalF.map((s,i)=>{
     const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
     const imd=s.totalDips>0?(((s.totalLarvae+s.totalPupae)/s.totalDips)*100).toFixed(1):'-';
+    const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','larval')" title="Delete record" style="padding:0 8px;height:28px;">🗑</button>`:'—';
     return `<tr>
       <td><input type="checkbox" class="row-cb larval-cb" data-idx="${i}"></td>
       <td>${i+1}</td><td>${s.date||'-'}</td>
@@ -439,6 +442,7 @@ function renderLarval(){
       <td style="font-size:10px;font-family:monospace;">${gps}</td>
       <td>${saved}</td>
       <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓ Synced':'Local'}</span></td>
+      <td>${delBtn}</td>
     </tr>`;}).join('');
 }
 function renderUsers(){
@@ -466,6 +470,20 @@ async function saveUsers(){
   const sha=existing?.sha;
   const ok=await ghPut('config.json',{credentials:usersCfg,updatedAt:new Date().toISOString()},sha);
   setStatus(ok?'✓ Credentials saved — apps will use new creds on next online login':'Failed to save — check token permissions',ok?'ok':'err');
+}
+async function deleteSurvey(path,sha,type){
+  if(!GH.owner||!GH.token){alert('Connect to GitHub first');return;}
+  if(!confirm(`Delete this ${type} survey record from GitHub?\nThis action cannot be undone.`))return;
+  setStatus('Deleting record…','info');
+  try{
+    const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{
+      method:'DELETE',
+      headers:{...ghH(),'Content-Type':'application/json'},
+      body:JSON.stringify({message:`[EST Dashboard] Delete ${type} survey`,sha,branch:'main'})
+    });
+    if(r.ok){setStatus('✓ Record deleted','ok');loadAll();}
+    else{const e=await r.json().catch(()=>({}));setStatus('Delete failed: '+(e.message||r.status),'err');}
+  }catch(e){setStatus('Delete failed: '+e.message,'err');}
 }
 
 /* ── FILTER ── */
