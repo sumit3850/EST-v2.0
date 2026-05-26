@@ -1179,10 +1179,8 @@ async function ghFetchConfig(){
     const config = JSON.parse(b64Decode(data.content));
     ghConfigCache = config;
     localStorage.setItem('est_gh_config', JSON.stringify(config));
-    // Also cache the credentials list for offline validation
-    if(config.credentials){
-      localStorage.setItem('est_gh_creds_list', JSON.stringify(config.credentials));
-    }
+    // Immediately extend VALID_USERS so new users work offline from this point
+    mergeConfigCreds(config);
     return config;
   }catch(e){ return null; }
 }
@@ -1318,12 +1316,41 @@ function loadGhSettings(){
   }catch(e){}
 }
 
-/* Permanent offline credentials — all users always work without network */
+/* Permanent offline credentials — baseline, always works with no network */
 const VALID_USERS=[
-  {username:'ANIENTO', password:'2026', role:'admin',  active:true},
-  {username:'USER-1',  password:'2026', role:'field',  active:true},
-  {username:'USER-2',  password:'2026', role:'field',  active:true}
+  {username:'ANIENTO', password:'2026', role:'admin', active:true},
+  {username:'USER-1',  password:'2026', role:'field', active:true},
+  {username:'USER-2',  password:'2026', role:'field', active:true}
 ];
+
+/* Merge credentials from a config object into VALID_USERS.
+   New users are added; existing entries are updated if changed. */
+function mergeConfigCreds(cfg){
+  if(!cfg||!Array.isArray(cfg.credentials)) return;
+  cfg.credentials.forEach(c=>{
+    if(!c.username) return;
+    const idx=VALID_USERS.findIndex(v=>v.username===c.username.trim());
+    if(idx>=0) VALID_USERS[idx]={...VALID_USERS[idx],...c};
+    else VALID_USERS.push({username:c.username.trim(),password:c.password,role:c.role||'field',active:c.active!==false});
+  });
+}
+
+/* Load config.json from SW cache (offline-safe) and from localStorage,
+   so VALID_USERS always reflects the latest saved credentials. */
+async function syncValidUsersFromCache(){
+  // 1. From SW cache (config.json pre-cached by service worker)
+  if('caches' in window){
+    try{
+      const cached=await caches.match('./config.json');
+      if(cached){ const cfg=await cached.json(); mergeConfigCreds(cfg); }
+    }catch(e){}
+  }
+  // 2. From localStorage (written by ghFetchConfig after online sync)
+  try{
+    const raw=localStorage.getItem('est_gh_config');
+    if(raw) mergeConfigCreds(JSON.parse(raw));
+  }catch(e){}
+}
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
   {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
@@ -2783,9 +2810,10 @@ window.addEventListener('beforeunload',(e)=>{
   }
 });
 document.addEventListener('DOMContentLoaded',()=>{
-  loadSavedCreds();
-  loadGhSettings(); // Load GitHub settings early
-  typeof updateGhButtonStatus==='function'&&updateGhButtonStatus(); // Update splash DB button
+  // Sync VALID_USERS from cached config.json before auth so all users work offline
+  syncValidUsersFromCache().then(()=>loadSavedCreds());
+  loadGhSettings();
+  typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();
   buildAdultMatrix();
   buildLarvalMatrix();
   buildContainerMatrix();
