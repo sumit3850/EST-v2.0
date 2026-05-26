@@ -789,56 +789,84 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
         <span style="font-size:11px;font-weight:700;color:var(--osv);white-space:nowrap;">Others:</span>
         <input type="text" id="l-other-name" placeholder="Species name…" style="flex:1;height:34px;padding:0 10px;border:1.5px solid var(--olv);border-radius:var(--rsm);font-size:13px;color:var(--os);background:var(--sfc);">
       </div>
-      <!-- ANOPHELES / CULEX DIPPING -->
-      <div style="background:rgba(0,107,92,.05);border:1px solid rgba(0,107,92,.2);border-radius:var(--rmd);padding:11px;margin-bottom:10px;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Anopheles / Culex — Dipping</div>
-        <div style="font-size:10px;color:var(--osv);margin-bottom:9px;">Larval Density · Pupal Density · Immature Density</div>
-        <!-- Running indices for An/Cx -->
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;">
-          <div style="background:rgba(0,107,92,.08);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
-            <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Larval Den.</div>
-            <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-ld">-</div>
-            <div style="font-size:8px;color:var(--osv);">/100 dips</div>
-          </div>
-          <div style="background:rgba(0,107,92,.08);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
-            <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Pupal Den.</div>
-            <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-pd">-</div>
-            <div style="font-size:8px;color:var(--osv);">/100 dips</div>
-          </div>
-          <div style="background:rgba(0,107,92,.08);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
-            <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Imm. Den.</div>
-            <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-id">-</div>
-            <div style="font-size:8px;color:var(--osv);">/100 dips</div>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0;">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,107,92,.1);">
-            <div style="font-size:12px;font-weight:700;color:var(--os);">Dips Taken</div>
-            <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('dips',-1)">-</button><div class="cnt-val" id="l-dips" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('dips',1)">+</button></div>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,107,92,.1);">
-            <div style="font-size:12px;font-weight:700;color:var(--os);">Larvae Collected</div>
-            <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('larvae',-1)">-</button><div class="cnt-val" id="l-larvae" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('larvae',1)">+</button></div>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;">
-            <div style="font-size:12px;font-weight:700;color:var(--os);">Pupae Collected</div>
-            <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('pupae',-1)">-</button><div class="cnt-val" id="l-pupae" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('pupae',1)">+</button></div>
-          </div>
-        </div>
-      </div>
-
-
       <div class="field" style="margin-bottom:9px;">
         <label class="flabel">End Time</label>
         <div class="time-now-row"><input type="time" id="l-end" class="time-inp" style="border-color:rgba(186,26,26,.35);"><button class="now-btn end" onclick="setNow('l','end')">NOW</button></div>
       </div>
       <button class="btn-p larval-btn" onclick="logLarvalHouse()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>Log <span id="l-log-btn-code">HH-001</span></button>
     </div>
+
     <div class="sec-hdr"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--larval)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="sec-lbl">Houses Logged</span></div>
     <div id="l-houses-empty" style="text-align:center;color:var(--osv);font-size:13px;padding:14px;background:var(--sfc);border-radius:var(--rmd);border:1px dashed rgba(21,101,192,.3);">No houses logged yet.</div>
     <div id="l-houses-list"></div>
+    <div class="divider" style="margin-top:4px;"></div>
+
+    <!-- ═══ ANOPHELES / CULEX DIPPING — SEPARATE SECTION ═══ -->
+    <div style="margin-top:6px;">
+      <div style="background:rgba(0,107,92,.07);border:2px solid rgba(0,107,92,.32);border-radius:var(--rmd);padding:13px;margin-bottom:8px;">
+        <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:2px;">&#x1F99F; Anopheles / Culex — Dipping</div>
+        <div style="font-size:10px;color:var(--osv);margin-bottom:10px;">Separate dipping records &middot; Larval &amp; Pupal Density per 100 dips</div>
+        <!-- Running live indices -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:11px;">
+          <div style="background:rgba(0,107,92,.1);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Larval Den.</div>
+            <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-ld">-</div>
+            <div style="font-size:8px;color:var(--osv);">/100 dips</div>
+          </div>
+          <div style="background:rgba(0,107,92,.1);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Pupal Den.</div>
+            <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-pd">-</div>
+            <div style="font-size:8px;color:var(--osv);">/100 dips</div>
+          </div>
+          <div style="background:rgba(0,107,92,.1);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Imm. Den.</div>
+            <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-id">-</div>
+            <div style="font-size:8px;color:var(--osv);">/100 dips</div>
+          </div>
+        </div>
+        <!-- Site No. -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,107,92,.12);">
+          <div style="font-size:12px;font-weight:700;color:var(--os);">Site No.</div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <button class="cnt-btn" style="color:var(--primary);" onclick="changeDipSN(-1)">-</button>
+            <div style="font-family:var(--mono);font-size:15px;font-weight:700;color:var(--primary);min-width:58px;text-align:center;background:rgba(0,107,92,.08);border:1px solid var(--pd);border-radius:var(--rsm);padding:3px 6px;" id="dip-site-disp">DS-001</div>
+            <button class="cnt-btn" style="color:var(--primary);" onclick="changeDipSN(1)">+</button>
+          </div>
+        </div>
+        <!-- Dips Taken -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,107,92,.12);">
+          <div style="font-size:12px;font-weight:700;color:var(--os);">Dips Taken</div>
+          <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeDipCnt('dips',-1)">-</button><div class="cnt-val" id="dip-dips" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeDipCnt('dips',1)">+</button></div>
+        </div>
+        <!-- Larvae Collected -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,107,92,.12);">
+          <div style="font-size:12px;font-weight:700;color:var(--os);">Larvae Collected</div>
+          <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeDipCnt('larvae',-1)">-</button><div class="cnt-val" id="dip-larvae" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeDipCnt('larvae',1)">+</button></div>
+        </div>
+        <!-- Pupae Collected -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,107,92,.12);">
+          <div style="font-size:12px;font-weight:700;color:var(--os);">Pupae Collected</div>
+          <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeDipCnt('pupae',-1)">-</button><div class="cnt-val" id="dip-pupae" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeDipCnt('pupae',1)">+</button></div>
+        </div>
+        <!-- Remark -->
+        <div style="padding:9px 0;">
+          <div style="font-size:12px;font-weight:700;color:var(--os);margin-bottom:6px;">Remark</div>
+          <input type="text" id="dip-remark" placeholder="Optional notes / observations&hellip;" style="width:100%;height:36px;padding:0 10px;border:1.5px solid rgba(0,107,92,.25);border-radius:var(--rsm);font-size:13px;color:var(--os);background:var(--sfc);">
+        </div>
+        <!-- Log Dipping button -->
+        <button class="btn-p larval-btn" style="margin-top:11px;" onclick="logDipping()">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          Log Dipping &mdash; <span id="dip-log-btn-code">DS-001</span>
+        </button>
+      </div>
+      <!-- Dipping Entries Logged -->
+      <div class="sec-hdr" style="margin-top:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg><span class="sec-lbl">Dipping Entries Logged</span></div>
+      <div id="dip-entries-empty" style="text-align:center;color:var(--osv);font-size:13px;padding:14px;background:var(--sfc);border-radius:var(--rmd);border:1px dashed rgba(0,107,92,.3);">No dipping entries logged yet.</div>
+      <div id="dip-entries-list"></div>
+    </div>
+    <!-- ═══ END DIPPING SECTION ═══ -->
+
     <div class="divider"></div>
-    <div class="alert warn" id="l-coll-warn" style="display:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>Log at least one house first.</div>
     <button class="btn-p larval-btn" onclick="proceedToLarvalReview()">Review &amp; Submit <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></button>
     <div style="margin-top:9px;"><button class="btn-s larval-s" onclick="goTo('survey')"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Metadata</button></div>
     <div style="height:14px;"></div>
@@ -1372,7 +1400,7 @@ const LSP=[
 const LNS=LSP.length;
 let activeModule=null,activeSavedTab='adult';
 const aS={collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,nights:1,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curCounts:Array.from({length:ANS},()=>[0,0,0]),curOther:''};
-const lS={date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],curHN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curCounts:Array.from({length:LNS},()=>[0,0]),curOther:''};
+const lS={date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipEntries:[],curHN:1,curDipSN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curDipDips:0,curDipLarvae:0,curDipPupae:0,curCounts:Array.from({length:LNS},()=>[0,0]),curOther:''};
 function aCols(){return aS.collType==='resting'?['Indoor','Outdoor']:['Landing Catch'];}
 function aTotSp(i){return aS.collType==='resting'?aS.houses.reduce((s,h)=>s+h.counts[i][0]+h.counts[i][1],0):aS.houses.reduce((s,h)=>s+h.counts[i][0],0);}
 function aTotAll(){let t=0;for(let i=0;i<ANS;i++)t+=aTotSp(i);return t;}
@@ -1393,9 +1421,9 @@ function calcHBRHr(){const t=aTotAll(),c=aS.collectors||1,h=aRawHours();return t
 function lTotContainers(){return lS.houses.reduce((s,h)=>s+h.containers,0);}
 function lTotPositive(){return lS.houses.reduce((s,h)=>s+h.positive,0);}
 function lTotPupal(){return lS.houses.reduce((s,h)=>s+h.pupal,0);}
-function lTotDips(){return lS.houses.reduce((s,h)=>s+h.dips,0);}
-function lTotLarvae(){return lS.houses.reduce((s,h)=>s+h.larvae,0);}
-function lTotPupae(){return lS.houses.reduce((s,h)=>s+h.pupae,0);}
+function lTotDips(){return (lS.dipEntries||[]).reduce((s,e)=>s+e.dips,0);}
+function lTotLarvae(){return (lS.dipEntries||[]).reduce((s,e)=>s+e.larvae,0);}
+function lTotPupae(){return (lS.dipEntries||[]).reduce((s,e)=>s+e.pupae,0);}
 function lPositiveHouses(){return lS.houses.filter(h=>h.housePositive||h.positive>0).length;}
 function calcHI(){const n=lS.houses.length;return n>0?((lPositiveHouses()/n)*100).toFixed(1)+'%':'—';}
 function calcCI(){const tot=lTotContainers(),pos=lTotPositive();return tot>0?((pos/tot)*100).toFixed(1)+'%':'—';}
@@ -2002,27 +2030,69 @@ function chgLSp(i,col,d){lS.curCounts[i][col]=Math.max(0,lS.curCounts[i][col]+d)
 
 /* ── LARVAL COUNTERS ────────────────────────────────────── */
 function changeLarvalCnt(type,d){
-  const map={pupal:'curPupal',dips:'curDips',larvae:'curLarvae',pupae:'curPupae'};
+  const map={pupal:'curPupal'};
   const key=map[type];if(!key)return;lS[key]=Math.max(0,lS[key]+d);
   const el=document.getElementById('l-'+type);if(el)el.textContent=lS[key];
-  // Live An/Cx density indices
-  const totD=lTotDips()+lS.curDips,totL=lTotLarvae()+lS.curLarvae,totP2=lTotPupae()+lS.curPupae;
-  const ldEl=document.getElementById('live-ld'),pdEl=document.getElementById('live-pd'),idEl=document.getElementById('live-id');
-  if(ldEl)ldEl.textContent=totD>0?((totL/totD)*100).toFixed(1):'-';
-  if(pdEl)pdEl.textContent=totD>0?((totP2/totD)*100).toFixed(1):'-';
-  if(idEl)idEl.textContent=totD>0?(((totL+totP2)/totD)*100).toFixed(1):'-';
-  // If pupal changed, also update Aedes live
   if(type==='pupal')updateContSummary();
 }
+function changeDipCnt(type,d){
+  const map={dips:'curDipDips',larvae:'curDipLarvae',pupae:'curDipPupae'};
+  const key=map[type];if(!key)return;lS[key]=Math.max(0,lS[key]+d);
+  const el=document.getElementById('dip-'+type);if(el)el.textContent=lS[key];
+  updateDipLive();
+}
+function changeDipSN(d){
+  lS.curDipSN=Math.max(1,lS.curDipSN+d);
+  const code='DS-'+String(lS.curDipSN).padStart(3,'0');
+  const sd=document.getElementById('dip-site-disp');if(sd)sd.textContent=code;
+  const lb=document.getElementById('dip-log-btn-code');if(lb)lb.textContent=code;
+}
+function updateDipLive(){
+  const totD=lTotDips()+lS.curDipDips,totL=lTotLarvae()+lS.curDipLarvae,totP=lTotPupae()+lS.curDipPupae;
+  const ldEl=document.getElementById('live-ld'),pdEl=document.getElementById('live-pd'),idEl=document.getElementById('live-id');
+  if(ldEl)ldEl.textContent=totD>0?((totL/totD)*100).toFixed(1):'-';
+  if(pdEl)pdEl.textContent=totD>0?((totP/totD)*100).toFixed(1):'-';
+  if(idEl)idEl.textContent=totD>0?(((totL+totP)/totD)*100).toFixed(1):'-';
+}
+function logDipping(){
+  const code='DS-'+String(lS.curDipSN).padStart(3,'0');
+  const remark=document.getElementById('dip-remark')?.value.trim()||'';
+  lS.dipEntries=lS.dipEntries||[];
+  lS.dipEntries.push({id:Date.now(),siteNo:code,dips:lS.curDipDips,larvae:lS.curDipLarvae,pupae:lS.curDipPupae,remark:remark});
+  lS.curDipSN++;
+  const newCode='DS-'+String(lS.curDipSN).padStart(3,'0');
+  const sd=document.getElementById('dip-site-disp');if(sd)sd.textContent=newCode;
+  const lb=document.getElementById('dip-log-btn-code');if(lb)lb.textContent=newCode;
+  const entry=lS.dipEntries[lS.dipEntries.length-1];
+  resetDipForm();renderDipEntries();updateDipLive();updateLarvalSummary();saveDraft('larval');
+  showToast(code+' logged — L:'+entry.larvae+' P:'+entry.pupae+' Dips:'+entry.dips+' ✓','check');
+}
+function resetDipForm(){
+  lS.curDipDips=0;lS.curDipLarvae=0;lS.curDipPupae=0;
+  ['dips','larvae','pupae'].forEach(t=>{const el=document.getElementById('dip-'+t);if(el)el.textContent='0';});
+  const re=document.getElementById('dip-remark');if(re)re.value='';
+}
+function renderDipEntries(){
+  const list=document.getElementById('dip-entries-list'),empty=document.getElementById('dip-entries-empty');
+  if(!list)return;list.innerHTML='';
+  if(!(lS.dipEntries||[]).length){if(empty)empty.style.display='block';return;}
+  if(empty)empty.style.display='none';
+  lS.dipEntries.forEach((e,idx)=>{
+    const div=document.createElement('div');div.className='hli';
+    div.innerHTML=`<div class="hli-hdr" onclick="toggleHLI('dip${e.id}')"><div class="hli-left"><div class="hli-num lrv">${idx+1}</div><div class="hli-info"><div class="hli-name" style="color:var(--primary);">${e.siteNo}</div><div class="hli-meta"><span>Dips:${e.dips}</span><span style="color:var(--larval);">L:${e.larvae}</span><span>P:${e.pupae}</span>${e.remark?'<span style="color:var(--osv);font-style:italic;">'+e.remark+'</span>':''}</div></div></div><div class="hli-right"><div style="text-align:right;"><div class="hli-total lrv">${e.larvae+e.pupae}</div><div style="font-size:9px;color:var(--osv)">L+P</div></div><button class="hli-del" onclick="event.stopPropagation();delDipEntry(${e.id})">${mkSvg('del',15)}</button><svg id="chevDip${e.id}" width="18" height="18" viewBox="0 0 24 24" fill="var(--ol)" style="transition:transform .2s;"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></div></div><div class="hli-body" id="hbdip${e.id}"><div style="display:flex;gap:10px;flex-wrap:wrap;font-size:11px;margin-bottom:4px;"><span>Dips: <strong>${e.dips}</strong></span><span>Larvae: <strong style="color:var(--larval);">${e.larvae}</strong></span><span>Pupae: <strong>${e.pupae}</strong></span><span>L+P: <strong>${e.larvae+e.pupae}</strong></span></div>${e.remark?`<div style="font-size:11px;color:var(--osv);font-style:italic;margin-top:2px;">Remark: ${e.remark}</div>`:''}</div>`;
+    list.appendChild(div);
+  });
+}
+function delDipEntry(id){lS.dipEntries=(lS.dipEntries||[]).filter(e=>e.id!==id);renderDipEntries();updateDipLive();updateLarvalSummary();saveDraft('larval');showToast('Dipping entry removed','del');}
 function resetLarvalCurForm(){
-  ['pupal','dips','larvae','pupae'].forEach(t=>{lS['cur'+t.charAt(0).toUpperCase()+t.slice(1)]=0;const el=document.getElementById('l-'+t);if(el)el.textContent='0';});
+  ['pupal'].forEach(t=>{lS['cur'+t.charAt(0).toUpperCase()+t.slice(1)]=0;const el=document.getElementById('l-'+t);if(el)el.textContent='0';});
   lS.curRooms=0;lS.curHousePos=0;
   const hp=document.getElementById('l-housepos-disp');if(hp)hp.textContent='0';
   lContainers=CONTAINERS.map(c=>({...c}));buildContainerMatrix();
   const se=document.getElementById('l-start');if(se)se.value='';const ee=document.getElementById('l-end');if(ee)ee.value='';const oe=document.getElementById('l-other-name');if(oe)oe.value='';
   lS.curCounts=Array.from({length:LNS},()=>[0,0]);buildLarvalMatrix();
-  // Reset live indices
-  ['live-hi','live-ci','live-bi','live-ld','live-pd','live-id'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='-';});
+  ['live-hi','live-ci','live-bi'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='-';});
+  updateDipLive();
 }
 
 /* ── LARVAL PHASES ──────────────────────────────────────── */
@@ -2031,7 +2101,7 @@ function proceedToLarvalCollect(){
   if(!date||!dist||!loc||!wrk||!offr){errEl.textContent='Please fill all required fields.';errEl.style.display='block';return;}
   const _lSv=document.getElementById('l-state')?.value||'';
   errEl.style.display='none';lS.state=_lSv;lS.date=date;lS.district=dist;lS.location=loc;lS.workers=wrk;lS.officers=offr;
-  buildLarvalMatrix();updateLarvalSummary();renderLarvalHouses();showScreen('larval-collect');
+  buildLarvalMatrix();updateLarvalSummary();renderLarvalHouses();renderDipEntries();updateDipLive();showScreen('larval-collect');
 }
 function logLarvalHouse(){
   const code=hCode(lS.curHN),start=document.getElementById('l-start')?.value||'',end=document.getElementById('l-end')?.value||'',other=document.getElementById('l-other-name')?.value.trim()||'';
@@ -2042,7 +2112,7 @@ function logLarvalHouse(){
   lS.curContainers=totExamined;lS.curPositive=totPositive;
   const hpDisp=document.getElementById('l-housepos-disp');
   const isHousePositive=(hpDisp?parseInt(hpDisp.textContent)>0:false)||(totPositive>0)||(lS.curPupal>0);
-  lS.houses.push({id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:lS.curPupal,dips:lS.curDips,larvae:lS.curLarvae,pupae:lS.curPupae,housePositive:isHousePositive,counts,contDetails:contSnap,otherName:other});
+  lS.houses.push({id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:lS.curPupal,housePositive:isHousePositive,counts,contDetails:contSnap,otherName:other});
   lS.curHN++;const nc=hCode(lS.curHN);
   const lhd=document.getElementById('l-hnum-disp');if(lhd)lhd.textContent=nc;
   const llb=document.getElementById('l-log-btn-code');if(llb)llb.textContent=nc;
@@ -2051,7 +2121,7 @@ function logLarvalHouse(){
   const h=lS.houses[lS.houses.length-1];resetLarvalCurForm();renderLarvalHouses();updateLarvalSummary();saveDraft('larval');
   showToast(code+' logged — L:'+h.larvae+' P:'+h.pupae+' ✓','check');
 }
-function proceedToLarvalReview(){if(!lS.houses.length){document.getElementById('l-coll-warn').style.display='flex';return;}document.getElementById('l-coll-warn').style.display='none';populateLarvalReview();showScreen('larval-review');}
+function proceedToLarvalReview(){populateLarvalReview();showScreen('larval-review');}
 
 /* ── LARVAL RENDER ──────────────────────────────────────── */
 function renderLarvalHouses(){
@@ -2104,13 +2174,17 @@ function populateLarvalReview(){
     if(tot>0){const tr=document.createElement('tr');const nm=(sp.oth&&lS.houses.some(h=>h.otherName))?'Others ('+lS.houses.map(h=>h.otherName).filter(Boolean).join(', ')+')':sp.n;tr.innerHTML=`<td>${nm}</td><td style="color:var(--larval);">${l||'-'}</td><td>${p||'-'}</td><td style="font-weight:700;">${tot}</td>`;sb.appendChild(tr);}});
   const tt=document.createElement('tr');tt.className='tot-tr';tt.innerHTML=`<td>TOTAL</td><td>${totL}</td><td>${totP}</td><td>${totL+totP}</td>`;sb.appendChild(tt);
   const hw=document.getElementById('r-l-house-wrap');
-  const hRows=lS.houses.map(h=>`<tr><td style="text-align:left;padding-left:10px;font-style:normal;font-weight:600;">${h.houseNo}</td><td>${h.containers}</td><td style="color:var(--larval);font-weight:600;">${h.positive}</td><td>${h.pupal}</td><td>${h.dips}</td><td>${h.larvae}</td><td>${h.pupae}</td><td style="font-weight:700;">${h.larvae+h.pupae}</td></tr>`).join('');
-  const tC=lS.houses.reduce((s,h)=>s+h.containers,0),tP=lS.houses.reduce((s,h)=>s+h.positive,0),tPu=lS.houses.reduce((s,h)=>s+h.pupal,0),tD=lS.houses.reduce((s,h)=>s+h.dips,0);
-  hw.innerHTML=`<table class="sp-rev-tbl lrv"><thead><tr><th style="text-align:left;padding-left:10px;">House</th><th>Cont.</th><th>Pos.</th><th>Pupal+</th><th>Dips</th><th>Larvae</th><th>Pupae</th><th>L+P</th></tr></thead><tbody>${hRows}<tr class="tot-tr"><td style="text-align:left;padding-left:10px;">TOTAL</td><td>${tC}</td><td>${tP}</td><td>${tPu}</td><td>${tD}</td><td>${lTotLarvae()}</td><td>${lTotPupae()}</td><td>${lTotLarvae()+lTotPupae()}</td></tr></tbody></table>`;
+  const hRows=lS.houses.map(h=>`<tr><td style="text-align:left;padding-left:10px;font-style:normal;font-weight:600;">${h.houseNo}</td><td>${h.containers}</td><td style="color:var(--larval);font-weight:600;">${h.positive}</td><td>${h.pupal}</td><td style="font-weight:700;">${h.housePositive?'Yes':'-'}</td></tr>`).join('');
+  const tC=lS.houses.reduce((s,h)=>s+h.containers,0),tP=lS.houses.reduce((s,h)=>s+h.positive,0),tPu=lS.houses.reduce((s,h)=>s+h.pupal,0);
+  const dipRevRows=(lS.dipEntries||[]).map(e=>`<tr><td style="text-align:left;padding-left:10px;font-style:normal;font-weight:600;color:var(--primary);">${e.siteNo}</td><td>${e.dips}</td><td style="color:var(--larval);font-weight:600;">${e.larvae}</td><td>${e.pupae}</td><td style="font-weight:700;">${e.larvae+e.pupae}</td><td style="color:var(--osv);font-size:11px;font-style:italic;">${e.remark||''}</td></tr>`).join('');
+  const tDips=lTotDips(),dipTotR=dipRevRows||'<tr><td colspan="6" style="text-align:center;color:var(--osv);">No dipping entries</td></tr>';
+  hw.innerHTML=`<table class="sp-rev-tbl lrv"><thead><tr><th style="text-align:left;padding-left:10px;">House</th><th>Cont.</th><th>Pos.</th><th>Pupal+</th><th>+ve House</th></tr></thead><tbody>${hRows}<tr class="tot-tr"><td style="text-align:left;padding-left:10px;">TOTAL</td><td>${tC}</td><td>${tP}</td><td>${tPu}</td><td></td></tr></tbody></table>
+<div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin:12px 0 6px;">An./Culex Dipping Entries</div>
+<table class="sp-rev-tbl lrv"><thead><tr style="background:var(--primary);"><th style="text-align:left;padding-left:10px;">Site No.</th><th>Dips</th><th>Larvae</th><th>Pupae</th><th>L+P</th><th style="text-align:left;">Remark</th></tr></thead><tbody>${dipTotR}<tr class="tot-tr"><td style="text-align:left;padding-left:10px;">TOTAL</td><td>${tDips}</td><td>${lTotLarvae()}</td><td>${lTotPupae()}</td><td>${lTotLarvae()+lTotPupae()}</td><td></td></tr></tbody></table>`;
 }
 function lSnap(){
   const allCont=lS.houses.reduce((acc,h)=>{(h.contDetails||[]).forEach((c,i)=>{if(!acc[i])acc[i]={name:c.name,examined:0,positive:0};acc[i].examined+=c.examined;acc[i].positive+=c.positive;});return acc;},{});
-  return {id:Date.now(),savedAt:new Date().toISOString(),appType:'larval',v:'2.0',date:lS.date,state:lS.state,district:lS.district,location:lS.location,workers:lS.workers,officers:lS.officers,lat:lS.lat,lng:lS.lng,houses:lS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),containerSummary:Object.values(allCont),HI:calcHI(),CI:calcCI(),BI:calcBI(),PI:calcPI(),LD:calcLD(),PD:calcPD(),totalLarvae:lTotLarvae(),totalPupae:lTotPupae(),totalDips:lTotDips(),totalContainers:lTotContainers(),totalPositive:lTotPositive()};
+  return {id:Date.now(),savedAt:new Date().toISOString(),appType:'larval',v:'2.0',date:lS.date,state:lS.state,district:lS.district,location:lS.location,workers:lS.workers,officers:lS.officers,lat:lS.lat,lng:lS.lng,houses:lS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),dipEntries:[...(lS.dipEntries||[])],containerSummary:Object.values(allCont),HI:calcHI(),CI:calcCI(),BI:calcBI(),PI:calcPI(),LD:calcLD(),PD:calcPD(),totalLarvae:lTotLarvae(),totalPupae:lTotPupae(),totalDips:lTotDips(),totalContainers:lTotContainers(),totalPositive:lTotPositive()};
 }
 function saveLarvalSurvey(){const s=lSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(L_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('larval');activeSavedTab='larval';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'larval');}
 
@@ -2307,10 +2381,10 @@ function buildLarvalCSV(s){
   });
   blank();
 
-  sep('HOUSE-WISE DIPPING DATA (ANOPHELES / CULEX)');
-  r('House No.','Dips Taken','Larvae Collected','Pupae Collected','Total (L+P)');
-  (s.houses||[]).forEach(h=>{
-    r(h.houseNo,h.dips||0,h.larvae||0,h.pupae||0,(h.larvae||0)+(h.pupae||0));
+  sep('ANOPHELES / CULEX DIPPING ENTRIES');
+  r('Site No.','Dips Taken','Larvae Collected','Pupae Collected','Total (L+P)','Remark');
+  (s.dipEntries||[]).forEach(e=>{
+    r(e.siteNo,e.dips||0,e.larvae||0,e.pupae||0,(e.larvae||0)+(e.pupae||0),e.remark||'');
   });
   blank();
 
@@ -2521,7 +2595,8 @@ function exportLarvalPDF(){
   LSP.forEach((sp,i)=>{const l=s.houses.reduce((t,h)=>t+h.counts[i][0],0),p=s.houses.reduce((t,h)=>t+h.counts[i][1],0);totL+=l;totP+=p;if(l+p>0){if(sp.g!==lastG){lastG=sp.g;spRows+=`<tr><td colspan="4" style="background:#e3f2fd;font-size:8pt;font-weight:700;text-transform:uppercase;color:#1565c0;padding:4px 8px;">${sp.g}</td></tr>`;}spRows+=`<tr><td><em>${sp.n}</em></td><td style="color:#1565c0;">${l}</td><td>${p}</td><td><strong>${l+p}</strong></td></tr>`;}});
   spRows+=`<tr style="background:#e3f2fd;font-weight:700;border-top:2px solid #1565c0;"><td>TOTAL</td><td>${totL}</td><td>${totP}</td><td>${totL+totP}</td></tr>`;
   let hRows='';s.houses.forEach(h=>{hRows+=`<tr><td>${h.houseNo}</td><td>${h.rooms}</td><td>${h.containers||0}</td><td style="color:#1565c0;"><strong>${h.positive||0}</strong></td><td>${h.pupal||0}</td><td style="font-weight:700;">${h.housePositive?'Yes':'-'}</td></tr>`;});
-  let dipRows='';s.houses.forEach(h=>{const lp=(h.larvae||0)+(h.pupae||0);dipRows+=`<tr><td>${h.houseNo}</td><td>${h.dips||0}</td><td>${h.larvae||0}</td><td>${h.pupae||0}</td><td style="font-weight:700;">${lp}</td></tr>`;});
+  if(!hRows)hRows='<tr><td colspan="6" style="text-align:center;color:#999;">No house data</td></tr>';
+  let dipRows='';(s.dipEntries||[]).forEach(e=>{const lp=(e.larvae||0)+(e.pupae||0);dipRows+=`<tr><td>${e.siteNo}</td><td>${e.dips||0}</td><td>${e.larvae||0}</td><td>${e.pupae||0}</td><td style="font-weight:700;">${lp}</td><td style="color:#666;font-style:italic;">${e.remark||''}</td></tr>`;});
   let contHRows='';(s.containerSummary||[]).forEach(ct=>{if(ct.examined>0||ct.positive>0)contHRows+=`<tr><td>${ct.name}</td><td>${ct.examined}</td><td>${ct.positive}</td></tr>`;});
   if(!contHRows)contHRows='<tr><td colspan="3" style="text-align:center;color:#999;">No container data</td></tr>';
   const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>EST Larval \u2014 ${s.district} \u2014 ${s.date}</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Times New Roman',serif;font-size:11pt;color:#111;}.page{width:210mm;min-height:297mm;margin:0 auto;padding:14mm 16mm 20mm;}.hd{border-bottom:3px double #1565c0;padding-bottom:10px;margin-bottom:12px;}.hd h2{font-size:14pt;font-weight:bold;color:#1565c0;}.hd p{font-size:9pt;color:#555;margin-top:2px;}.tb{text-align:center;border:2px solid #1565c0;border-radius:4px;padding:10px;margin-bottom:12px;}.tb h1{font-size:14pt;color:#1565c0;}.ref{display:flex;justify-content:space-between;font-size:9pt;color:#555;background:#e3f2fd;border-left:3px solid #1565c0;padding:5px 10px;margin-bottom:14px;}.sec{font-size:11pt;font-weight:bold;text-transform:uppercase;border-bottom:1.5px solid;padding-bottom:3px;margin:14px 0 8px;}.sec.ae{color:#1565c0;border-color:#64b5f6;}.sec.an{color:#006b5c;border-color:#00bfa5;}.mt{width:100%;border-collapse:collapse;}.mt td{padding:7px 10px;border:1px solid #ccc;font-size:10pt;}.mt td.lbl{background:#e3f2fd;font-weight:bold;font-size:8.5pt;color:#0d47a1;width:22%;}.iw{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:4px;}.ib{border:1px solid #90caf9;border-radius:4px;padding:9px 6px;text-align:center;flex:1;min-width:80px;background:#e3f2fd;}.ib.gn{border-color:var(--pd,#44ddc1);background:#e6f7f4;}.il{font-size:7.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:#555;margin-bottom:3px;}.iv{font-size:14pt;font-weight:bold;color:#1565c0;}.iv.gn{color:#006b5c;}.is{font-size:7pt;color:#777;margin-top:2px;}table{width:100%;border-collapse:collapse;}thead tr{background:#1565c0;color:#fff;}thead.gn tr{background:#006b5c;}thead th{padding:7px 8px;font-size:9pt;font-weight:bold;text-align:center;text-transform:uppercase;}thead th:first-child{text-align:left;}td{padding:5px 8px;border-bottom:1px solid #e0e0e0;font-size:10pt;text-align:center;}td:first-child{text-align:left;}.sig{display:flex;justify-content:space-between;gap:10px;margin-top:28px;padding-top:12px;border-top:1px solid #ccc;}.sb{flex:1;text-align:center;}.sl{border-top:1px solid #333;margin:0 auto 5px;width:88%;}.sn{font-size:9.5pt;font-weight:bold;}.sr{font-size:8pt;color:#555;margin-top:2px;}.footer{margin-top:14px;border-top:1px solid #ccc;padding-top:6px;font-size:8pt;color:#888;text-align:center;}.sb-fixed{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ccc;padding:10px;text-align:center;}.pb{background:#1565c0;color:#fff;border:none;padding:10px 30px;border-radius:6px;font-size:12pt;font-weight:bold;cursor:pointer;}@media print{.sb-fixed{display:none!important;}@page{size:A4;margin:12mm;}}</style></head><body>
@@ -2571,8 +2646,8 @@ function exportLarvalPDF(){
 <table><thead><tr><th style="text-align:left;">House</th><th>Rooms</th><th>Containers</th><th>Positive</th><th>Pupal+ve</th><th>+ve House</th></tr></thead>
 <tbody>${hRows}</tbody></table>
 
-<div class="sec an" style="color:#006b5c;border-color:#00bfa5;margin-top:12px;">7. House-wise Dipping Data (An./Culex)</div>
-<table><thead class="gn"><tr><th style="text-align:left;">House</th><th>Dips Taken</th><th>Larvae</th><th>Pupae</th><th>Total (L+P)</th></tr></thead>
+<div class="sec an" style="color:#006b5c;border-color:#00bfa5;margin-top:12px;">7. An./Culex Dipping Entries</div>
+<table><thead class="gn"><tr><th style="text-align:left;">Site No.</th><th>Dips Taken</th><th>Larvae</th><th>Pupae</th><th>Total (L+P)</th><th>Remark</th></tr></thead>
 <tbody>${dipRows}</tbody></table>
 
 <div class="sig"><div class="sb"><div class="sl"></div><div class="sn">${s.workers}</div><div class="sr">Surveillance Worker</div></div>
@@ -2639,7 +2714,8 @@ function buildLarvalText(s){
   // House summary
   if(s.houses&&s.houses.length){
     t+='\n*─── HOUSES ───*\n';
-    s.houses.forEach(h=>{t+=h.houseNo+': L='+h.larvae+' P='+h.pupae+' Dips='+h.dips+(h.housePositive?' ✓+ve':'')+'\n';});
+    s.houses.forEach(h=>{t+=h.houseNo+(h.housePositive?' ✓+ve':'')+'\n';});
+  if((s.dipEntries||[]).length){t+='*An/Cx Dipping Entries:*\n';s.dipEntries.forEach(e=>{t+=e.siteNo+': Dips='+e.dips+' L='+e.larvae+' P='+e.pupae+(e.remark?' ('+e.remark+')':'')+'\n';});}
   }
   t+='\n'+'─'.repeat(36)+'\nEST v2.0 · Entomological Surveillance Tool';
   return t;
@@ -2667,11 +2743,13 @@ function loadDraft(mod){
       setCollType(aS.collType||'resting');
       const nc=hCode(aS.curHN);document.getElementById('a-hnum-disp').textContent=nc;document.getElementById('a-log-btn-code').textContent=nc;document.getElementById('a-next-num').textContent=aS.curHN;
     }else{
-      Object.assign(lS,d);lS.curCounts=Array.isArray(lS.curCounts)?lS.curCounts:Array.from({length:LNS},()=>[0,0]);
-      buildLarvalMatrix();updateLarvalSummary();renderLarvalHouses();
+      Object.assign(lS,d);lS.curCounts=Array.isArray(lS.curCounts)?lS.curCounts:Array.from({length:LNS},()=>[0,0]);lS.dipEntries=Array.isArray(lS.dipEntries)?lS.dipEntries:[];lS.curDipSN=lS.curDipSN||1;lS.curDipDips=lS.curDipDips||0;lS.curDipLarvae=lS.curDipLarvae||0;lS.curDipPupae=lS.curDipPupae||0;
+      buildLarvalMatrix();updateLarvalSummary();renderLarvalHouses();renderDipEntries();
       ['l-date','l-location','l-workers','l-officers'].forEach(id=>{const k=id.replace('l-','');const el=document.getElementById(id);if(el)el.value=lS[k]||'';});
       document.getElementById('l-district').value=lS.district||'';
       const nc=hCode(lS.curHN);document.getElementById('l-hnum-disp').textContent=nc;document.getElementById('l-log-btn-code').textContent=nc;document.getElementById('l-next-num').textContent=lS.curHN;
+      const dipCode='DS-'+String(lS.curDipSN).padStart(3,'0');const sd2=document.getElementById('dip-site-disp');if(sd2)sd2.textContent=dipCode;const lb2=document.getElementById('dip-log-btn-code');if(lb2)lb2.textContent=dipCode;
+      updateDipLive();
     }
   }catch(e){console.warn('Draft load failed',e);}
 }
