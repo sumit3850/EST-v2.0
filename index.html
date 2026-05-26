@@ -333,37 +333,14 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
       SIGN IN
     </button>
-    <div id="reg-toggle-link" style="width:100%;max-width:340px;text-align:center;margin-top:6px;margin-bottom:2px;">
-      <button onclick="showRegisterForm()" style="background:none;border:none;color:rgba(255,255,255,.55);font-size:12px;cursor:pointer;text-decoration:underline;padding:4px 8px;">New user? Create an account</button>
+    <div style="width:100%;max-width:340px;text-align:center;margin-top:10px;">
+      <button onclick="document.getElementById('reg-modal').classList.add('open')" style="background:none;border:none;color:rgba(255,255,255,.6);font-size:13px;font-weight:600;cursor:pointer;padding:8px 16px;border:1.5px solid rgba(255,255,255,.2);border-radius:var(--rxl);width:100%;display:flex;align-items:center;justify-content:center;gap:8px;transition:all var(--tr);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        New User? Create Account
+      </button>
     </div>
 
-    <!-- Registration Card -->
-    <div class="login-card" id="reg-card" style="display:none;">
-      <div style="text-align:center;font-size:13px;font-weight:700;color:#fff;margin-bottom:12px;letter-spacing:.02em;">Create New Account</div>
-      <label class="login-label">Username</label>
-      <input class="login-inp" type="text" id="reg-user" placeholder="Choose a username" autocomplete="off">
-      <label class="login-label">Password</label>
-      <input class="login-inp" type="password" id="reg-pass" placeholder="Choose a password">
-      <label class="login-label">Confirm Password</label>
-      <input class="login-inp" type="password" id="reg-pass2" placeholder="Confirm password" onkeydown="if(event.key==='Enter')doRegister()">
-      <!-- Admin token row — shown only on first-ever registration when appToken not yet in config -->
-      <div id="reg-token-row" style="display:none;border-top:1px solid rgba(255,255,255,.15);margin-top:6px;padding-top:10px;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(251,191,36,.85);margin-bottom:5px;">⚙ One-time admin setup</div>
-        <div style="font-size:10px;color:rgba(255,255,255,.5);margin-bottom:8px;line-height:1.5;">Enter the admin GitHub token once to activate registration. It will be saved automatically — never asked again.</div>
-        <label class="login-label">GitHub Token (repo scope)</label>
-        <input class="login-inp" type="password" id="reg-token-inp" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="margin-bottom:4px;">
-      </div>
-      <div class="login-err" id="reg-err">Error</div>
-    </div>
-    <button class="launch-btn" id="reg-btn" onclick="doRegister()" style="display:none;">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-      CREATE ACCOUNT
-    </button>
-    <div id="back-login-link" style="width:100%;max-width:340px;text-align:center;margin-top:6px;margin-bottom:2px;display:none;">
-      <button onclick="showLoginForm()" style="background:none;border:none;color:rgba(255,255,255,.55);font-size:12px;cursor:pointer;text-decoration:underline;padding:4px 8px;">Already have an account? Sign In</button>
-    </div>
-
-    <div id="splash-db-status" style="text-align:center;font-size:10px;color:rgba(104,250,221,.55);margin-top:4px;display:none;" id="splash-db-status"></div>
+    <div id="splash-db-status" style="display:none;"></div>
     <span id="splash-db-btn" style="display:none;"></span><span id="splash-db-text" style="display:none;"></span>
     <div id="offline-login-badge" style="display:none;background:rgba(180,83,9,.25);border:1px solid rgba(251,191,36,.4);border-radius:8px;padding:7px 14px;font-size:11px;font-weight:600;color:#fde68a;text-align:center;margin-top:8px;margin-bottom:4px;width:100%;max-width:340px;">⚠ Offline — use pre-configured credentials</div>
     <div style="font-size:10px;color:rgba(255,255,255,.25);margin-top:10px;text-align:center;line-height:1.6;">Offline-capable · GPS enabled · Data stored locally<br>WHO-standard surveillance indices</div>
@@ -1100,6 +1077,42 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
   </div>
 </div>
 
+<!-- ══ REGISTRATION MODAL ══ -->
+<div class="modal-ov" id="reg-modal">
+  <div class="modal-box" style="max-width:360px;">
+    <div class="modal-icon" style="background:rgba(0,107,92,.1);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--primary)"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    </div>
+    <div class="modal-title">Create Account</div>
+    <div class="modal-sub" style="font-size:12px;color:var(--osv);">Register a new field user. Account is saved to the shared database.</div>
+    <div style="margin-bottom:12px;">
+      <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--osv);letter-spacing:.08em;display:block;margin-bottom:4px;">Username</label>
+      <input id="rm-user" type="text" placeholder="Choose a username" autocomplete="off" style="width:100%;height:42px;padding:0 12px;border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:13px;color:var(--os);background:var(--sfc);">
+    </div>
+    <div style="margin-bottom:12px;">
+      <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--osv);letter-spacing:.08em;display:block;margin-bottom:4px;">Password</label>
+      <input id="rm-pass" type="password" placeholder="Choose a password" style="width:100%;height:42px;padding:0 12px;border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:13px;color:var(--os);background:var(--sfc);">
+    </div>
+    <div style="margin-bottom:12px;">
+      <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--osv);letter-spacing:.08em;display:block;margin-bottom:4px;">Confirm Password</label>
+      <input id="rm-pass2" type="password" placeholder="Re-enter password" style="width:100%;height:42px;padding:0 12px;border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:13px;color:var(--os);background:var(--sfc);">
+    </div>
+    <div id="rm-token-row" style="display:none;margin-bottom:12px;padding:10px 12px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3);border-radius:var(--rmd);">
+      <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:#fbbf24;letter-spacing:.08em;display:block;margin-bottom:4px;">Admin GitHub Token (first-time setup)</label>
+      <input id="rm-token" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="width:100%;height:40px;padding:0 12px;border:1.5px solid rgba(251,191,36,.4);border-radius:var(--rmd);font-size:13px;color:var(--os);background:var(--sfc);font-family:var(--mono);">
+      <div style="font-size:10px;color:rgba(251,191,36,.8);margin-top:4px;">Only needed once. Saved automatically so future users don't need this.</div>
+    </div>
+    <div id="rm-err" style="display:none;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:var(--rmd);padding:8px 12px;font-size:12px;font-weight:600;color:#f87171;margin-bottom:12px;"></div>
+    <div class="modal-btns">
+      <button id="rm-btn" class="btn-p" onclick="doRegister()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px;"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        Create Account
+      </button>
+      <button onclick="document.getElementById('reg-modal').classList.remove('open')" style="margin-top:8px;padding:11px;background:var(--sf);border:1.5px solid var(--olv);border-radius:var(--rxl);font-size:14px;font-weight:600;color:var(--osv);cursor:pointer;width:100%;">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"><span id="toast-icon" style="display:flex;align-items:center;flex-shrink:0;"></span><span id="toast-msg"></span></div>
 
 <!-- SUCCESS MODAL -->
@@ -1353,7 +1366,7 @@ function saveGhSettings(){
   GH_CONFIG.owner=o||'sumit3850'; GH_CONFIG.repo=rp||'EST-v2.0'; GH_CONFIG.token=t;
   try{localStorage.setItem('est_gh_settings',JSON.stringify({owner:GH_CONFIG.owner,repo:GH_CONFIG.repo,token:t}));}catch(e){}
   document.getElementById('gh-settings-modal')?.classList.remove('open');
-  const regIsOpen=document.getElementById('reg-card')?.style.display!=='none';
+  const regIsOpen=document.getElementById('reg-modal')?.classList.contains('open');
   typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();
   if(t){
     ghFetchConfig().then(c=>{
@@ -1363,7 +1376,7 @@ function saveGhSettings(){
         if(regIsOpen) doRegister(); // resume pending registration
       }else{
         showToast('Could not connect — check your token','warn');
-        if(regIsOpen){const e=document.getElementById('reg-err');if(e){e.textContent='Invalid token. Try again.';e.style.display='block';}}
+        if(regIsOpen){const e=document.getElementById('rm-err');if(e){e.textContent='Invalid token. Try again.';e.style.display='block';}}
       }
     });
   }else{
@@ -1609,30 +1622,13 @@ function doLogin(){
   },600);
   checkDrafts();
 }
-function showRegisterForm(){
-  document.getElementById('login-card').style.display='none';
-  document.getElementById('signin-btn').style.display='none';
-  document.getElementById('reg-toggle-link').style.display='none';
-  document.getElementById('reg-card').style.display='block';
-  document.getElementById('reg-btn').style.display='flex';
-  document.getElementById('back-login-link').style.display='block';
-  document.getElementById('login-err').style.display='none';
-  document.getElementById('reg-err').style.display='none';
-}
-function showLoginForm(){
-  document.getElementById('login-card').style.display='block';
-  document.getElementById('signin-btn').style.display='flex';
-  document.getElementById('reg-toggle-link').style.display='block';
-  document.getElementById('reg-card').style.display='none';
-  document.getElementById('reg-btn').style.display='none';
-  document.getElementById('back-login-link').style.display='none';
-}
 async function doRegister(){
-  const u=document.getElementById('reg-user').value.trim();
-  const p=document.getElementById('reg-pass').value;
-  const p2=document.getElementById('reg-pass2').value;
-  const errEl=document.getElementById('reg-err');
-  const btn=document.getElementById('reg-btn');
+  const u=(document.getElementById('rm-user')?.value||'').trim();
+  const p=document.getElementById('rm-pass')?.value||'';
+  const p2=document.getElementById('rm-pass2')?.value||'';
+  const errEl=document.getElementById('rm-err');
+  const btn=document.getElementById('rm-btn');
+  if(!errEl||!btn) return;
   errEl.style.display='none';
   if(!u||!p){errEl.textContent='Username and password are required.';errEl.style.display='block';return;}
   if(p!==p2){errEl.textContent='Passwords do not match.';errEl.style.display='block';return;}
@@ -1642,18 +1638,16 @@ async function doRegister(){
   if(!navigator.onLine){errEl.textContent='Registration requires an internet connection.';errEl.style.display='block';return;}
   // Try to auto-load token from config.json (no auth needed)
   if(!GH_CONFIG.token) await loadAppToken();
-  // If still no token, show inline admin setup field
+  // If still no token, show inline admin token field
   if(!GH_CONFIG.token){
-    const tokenRow=document.getElementById('reg-token-row');
-    const tokenInp=document.getElementById('reg-token-inp');
-    const inlineToken=(tokenInp?.value||'').trim();
+    const tokenRow=document.getElementById('rm-token-row');
+    const inlineToken=(document.getElementById('rm-token')?.value||'').trim();
     if(!inlineToken){
       if(tokenRow) tokenRow.style.display='block';
-      errEl.textContent='First-time setup: enter the admin GitHub token in the field above, then tap CREATE ACCOUNT again.';
+      errEl.textContent='First-time setup: enter the admin GitHub token above, then tap Create Account again.';
       errEl.style.display='block';
       return;
     }
-    // Use the inline token
     GH_CONFIG.token=inlineToken;
     GH_CONFIG.owner='sumit3850';
     GH_CONFIG.repo='EST-v2.0';
@@ -1673,7 +1667,6 @@ async function doRegister(){
     if(!cfg.credentials) cfg.credentials=[];
     cfg.credentials.push({username:u,password:p,role:'field',active:true});
     cfg.updatedAt=new Date().toISOString();
-    // Save appToken in same write so all future registrations are automatic
     if(!cfg.appToken) cfg.appToken=GH_CONFIG.token;
     const putResp=await fetch(ghApiUrl(GH_CONFIG_PATH),{
       method:'PUT',
@@ -1683,15 +1676,15 @@ async function doRegister(){
     if(!putResp.ok) throw new Error('Write failed — check token has Contents write permission.');
     VALID_USERS.push({username:u,password:p,role:'field',active:true});
     try{localStorage.setItem('est_gh_config',JSON.stringify(cfg));}catch(e){}
-    // Hide admin token row after successful first setup
-    const tokenRow=document.getElementById('reg-token-row');
+    // Close modal and reset fields
+    document.getElementById('reg-modal')?.classList.remove('open');
+    document.getElementById('rm-user').value='';
+    document.getElementById('rm-pass').value='';
+    document.getElementById('rm-pass2').value='';
+    const tokenRow=document.getElementById('rm-token-row');
     if(tokenRow) tokenRow.style.display='none';
-    const tokenInp=document.getElementById('reg-token-inp');
+    const tokenInp=document.getElementById('rm-token');
     if(tokenInp) tokenInp.value='';
-    document.getElementById('reg-user').value='';
-    document.getElementById('reg-pass').value='';
-    document.getElementById('reg-pass2').value='';
-    showLoginForm();
     document.getElementById('login-user').value=u;
     showToast('Account created! You can now sign in.','check');
   }catch(e){
