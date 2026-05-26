@@ -1,22 +1,8 @@
 /**
  * EST v2.0 Offline Helper
  * Manages offline state detection and user notifications
+ * Note: Service Worker registration is handled by index.html
  */
-
-// Register Service Worker
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(reg => {
-        console.log('[EST] Service Worker registered:', reg.scope);
-        // Check for updates periodically
-        setInterval(() => reg.update(), 60000);
-      })
-      .catch(err => {
-        console.warn('[EST] Service Worker registration failed:', err);
-      });
-  });
-}
 
 // Track offline/online status
 let isOffline = !navigator.onLine;
