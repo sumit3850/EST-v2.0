@@ -1,12 +1,13 @@
 /* EST v2.0 Service Worker — Offline-First */
-const CACHE_NAME = 'est-v2.0.4';
+const CACHE_NAME = 'est-v2.0.5';
 const STATIC_ASSETS = [
   './',
   './index.html',
   './dashboard.html',
   './manifest.json',
   './offline-helper.js',
-  './offline-styles.css'
+  './offline-styles.css',
+  './config.json'
 ];
 
 // Install — pre-cache all critical assets
