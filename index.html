@@ -1098,9 +1098,9 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
       <input id="rm-pass2" type="password" placeholder="Re-enter password" style="width:100%;height:42px;padding:0 12px;border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:13px;color:var(--os);background:var(--sfc);">
     </div>
     <div id="rm-token-row" style="display:none;margin-bottom:12px;padding:10px 12px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3);border-radius:var(--rmd);">
-      <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:#fbbf24;letter-spacing:.08em;display:block;margin-bottom:4px;">Admin GitHub Token (first-time setup)</label>
+      <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:#fbbf24;letter-spacing:.08em;display:block;margin-bottom:4px;">Admin GitHub Token (one-time setup)</label>
       <input id="rm-token" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="width:100%;height:40px;padding:0 12px;border:1.5px solid rgba(251,191,36,.4);border-radius:var(--rmd);font-size:13px;color:var(--os);background:var(--sfc);font-family:var(--mono);">
-      <div style="font-size:10px;color:rgba(251,191,36,.8);margin-top:4px;">Only needed once. Saved automatically so future users don't need this.</div>
+      <div style="font-size:10px;color:rgba(251,191,36,.8);margin-top:6px;line-height:1.5;">Go to <strong>github.com → Settings → Developer settings → Personal access tokens → Classic</strong> → generate token with <strong>"repo" scope (full)</strong>. Paste above. Only needed once — saved for all users.</div>
     </div>
     <div id="rm-err" style="display:none;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:var(--rmd);padding:8px 12px;font-size:12px;font-weight:600;color:#f87171;margin-bottom:12px;"></div>
     <div class="modal-btns">
@@ -1658,7 +1658,12 @@ async function doRegister(){
   btn.disabled=true;
   try{
     const resp=await fetch(ghApiUrl(GH_CONFIG_PATH),{headers:ghHeaders(),cache:'no-store'});
-    if(!resp.ok) throw new Error('Cannot reach GitHub — check token permissions (needs repo write scope).');
+    if(!resp.ok){
+      const s=resp.status;
+      if(s===401) throw new Error('Token invalid or expired (401). Create a fresh GitHub PAT.');
+      if(s===403) throw new Error('Token lacks read access (403). PAT needs "repo" scope.');
+      throw new Error('Cannot reach GitHub (HTTP '+s+'). Check token and network.');
+    }
     const data=await resp.json();
     const cfg=JSON.parse(b64Decode(data.content));
     if(cfg.credentials&&cfg.credentials.some(c=>(c.username||'').toLowerCase()===u.toLowerCase())){
@@ -1673,7 +1678,13 @@ async function doRegister(){
       headers:{...ghHeaders(),'Content-Type':'application/json'},
       body:JSON.stringify({message:`[EST] Register user: ${u}`,content:b64Encode(JSON.stringify(cfg,null,2)),sha:data.sha,branch:GH_CONFIG.branch})
     });
-    if(!putResp.ok) throw new Error('Write failed — check token has Contents write permission.');
+    if(!putResp.ok){
+      const s=putResp.status;
+      if(s===401) throw new Error('Token invalid or expired (401). Create a new GitHub PAT with repo scope.');
+      if(s===403) throw new Error('Token is READ-ONLY (403). PAT must have "repo" scope (classic) or "Contents: write" (fine-grained).');
+      if(s===422) throw new Error('GitHub rejected write (422). Branch may be protected — check repo settings.');
+      throw new Error('Write failed (HTTP '+s+'). Token needs full repo write access.');
+    }
     VALID_USERS.push({username:u,password:p,role:'field',active:true});
     try{localStorage.setItem('est_gh_config',JSON.stringify(cfg));}catch(e){}
     // Close modal and reset fields
