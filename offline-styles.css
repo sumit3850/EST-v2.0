@@ -1,0 +1,108 @@
+/**
+ * EST v2.0 Offline Styles
+ * Styling for offline mode and notifications
+ */
+
+/* Offline mode body class */
+body.est-offline-mode {
+  /* Subtle visual indicator */
+}
+
+/* Offline notification styles */
+.est-offline-notify {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.est-offline-notify-warning {
+  background: linear-gradient(90deg, #ff9800, #ffb74d);
+  color: #fff;
+  border-bottom: 2px solid #ff6f00;
+}
+
+.est-offline-notify-success {
+  background: linear-gradient(90deg, #4caf50, #66bb6a);
+  color: #fff;
+  border-bottom: 2px solid #2e7d32;
+}
+
+.est-offline-notify-info {
+  background: linear-gradient(90deg, #2196f3, #42a5f5);
+  color: #fff;
+  border-bottom: 2px solid #1565c0;
+}
+
+.est-offline-notify-error {
+  background: linear-gradient(90deg, #f44336, #ef5350);
+  color: #fff;
+  border-bottom: 2px solid #c62828;
+}
+
+/* Animations */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+/* Offline indicator badge (optional) */
+.est-offline-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(255, 152, 0, 0.15);
+  border: 1px solid rgba(255, 152, 0, 0.4);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ff6f00;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+body.est-offline-mode .est-offline-badge::before {
+  content: '●';
+  display: inline-block;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Disabled state for online-only features when offline */
+body.est-offline-mode .est-online-only {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+body.est-offline-mode .est-online-only::after {
+  content: '(Offline)';
+  display: block;
+  font-size: 10px;
+  color: #ff9800;
+  margin-top: 2px;
+}

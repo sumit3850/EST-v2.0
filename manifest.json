@@ -1,0 +1,43 @@
+{
+  "name": "EST v2.0 — Entomological Surveillance Tool",
+  "short_name": "EST",
+  "description": "Offline-capable WHO-standard mosquito surveillance tool with GPS, data analysis, and PDF/CSV export. Works completely offline.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#006b5c",
+  "background_color": "#ffffff",
+  "prefer_related_applications": false,
+  "categories": ["health", "productivity"],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'%3E%3Crect fill='%23004d42' width='540' height='720'/%3E%3Ctext x='270' y='360' font-size='48' fill='%23fff' text-anchor='middle' font-family='monospace' font-weight='bold'%3EEST v2.0%3C/text%3E%3C/svg%3E",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1280 720'%3E%3Crect fill='%23004d42' width='1280' height='720'/%3E%3Ctext x='640' y='360' font-size='64' fill='%23fff' text-anchor='middle' font-family='monospace' font-weight='bold'%3EEST v2.0%3C/text%3E%3C/svg%3E",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Adult Surveillance",
+      "short_name": "Adult",
+      "description": "Start adult mosquito surveillance",
+      "url": "./",
+      "icons": []
+    },
+    {
+      "name": "Larval Surveillance",
+      "short_name": "Larval",
+      "description": "Start larval mosquito surveillance",
+      "url": "./",
+      "icons": []
+    }
+  ]
+}
