@@ -346,6 +346,13 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
       <input class="login-inp" type="password" id="reg-pass" placeholder="Choose a password">
       <label class="login-label">Confirm Password</label>
       <input class="login-inp" type="password" id="reg-pass2" placeholder="Confirm password" onkeydown="if(event.key==='Enter')doRegister()">
+      <!-- Admin token row — shown only on first-ever registration when appToken not yet in config -->
+      <div id="reg-token-row" style="display:none;border-top:1px solid rgba(255,255,255,.15);margin-top:6px;padding-top:10px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(251,191,36,.85);margin-bottom:5px;">⚙ One-time admin setup</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.5);margin-bottom:8px;line-height:1.5;">Enter the admin GitHub token once to activate registration. It will be saved automatically — never asked again.</div>
+        <label class="login-label">GitHub Token (repo scope)</label>
+        <input class="login-inp" type="password" id="reg-token-inp" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="margin-bottom:4px;">
+      </div>
       <div class="login-err" id="reg-err">Error</div>
     </div>
     <button class="launch-btn" id="reg-btn" onclick="doRegister()" style="display:none;">
@@ -1633,21 +1640,31 @@ async function doRegister(){
   if(p.length<4){errEl.textContent='Password must be at least 4 characters.';errEl.style.display='block';return;}
   if(VALID_USERS.some(v=>v.username.toLowerCase()===u.toLowerCase())){errEl.textContent='Username already exists. Choose another.';errEl.style.display='block';return;}
   if(!navigator.onLine){errEl.textContent='Registration requires an internet connection.';errEl.style.display='block';return;}
-  // Auto-load write token from public config.json
+  // Try to auto-load token from config.json (no auth needed)
   if(!GH_CONFIG.token) await loadAppToken();
+  // If still no token, show inline admin setup field
   if(!GH_CONFIG.token){
-    // No token available — prompt admin to enter PAT via settings modal
-    errEl.textContent='Enter your GitHub token first (tap the button that opens below).';
-    errEl.style.display='block';
-    showGhSettings();
-    return;
+    const tokenRow=document.getElementById('reg-token-row');
+    const tokenInp=document.getElementById('reg-token-inp');
+    const inlineToken=(tokenInp?.value||'').trim();
+    if(!inlineToken){
+      if(tokenRow) tokenRow.style.display='block';
+      errEl.textContent='First-time setup: enter the admin GitHub token in the field above, then tap CREATE ACCOUNT again.';
+      errEl.style.display='block';
+      return;
+    }
+    // Use the inline token
+    GH_CONFIG.token=inlineToken;
+    GH_CONFIG.owner='sumit3850';
+    GH_CONFIG.repo='EST-v2.0';
+    try{localStorage.setItem('est_gh_settings',JSON.stringify({owner:'sumit3850',repo:'EST-v2.0',token:inlineToken}));}catch(e){}
   }
   const origHTML=btn.innerHTML;
   btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="spin"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8Z"/></svg> Registering…';
   btn.disabled=true;
   try{
     const resp=await fetch(ghApiUrl(GH_CONFIG_PATH),{headers:ghHeaders(),cache:'no-store'});
-    if(!resp.ok) throw new Error('Cannot reach GitHub. Check your token.');
+    if(!resp.ok) throw new Error('Cannot reach GitHub — check token permissions (needs repo write scope).');
     const data=await resp.json();
     const cfg=JSON.parse(b64Decode(data.content));
     if(cfg.credentials&&cfg.credentials.some(c=>(c.username||'').toLowerCase()===u.toLowerCase())){
@@ -1656,14 +1673,21 @@ async function doRegister(){
     if(!cfg.credentials) cfg.credentials=[];
     cfg.credentials.push({username:u,password:p,role:'field',active:true});
     cfg.updatedAt=new Date().toISOString();
+    // Save appToken in same write so all future registrations are automatic
+    if(!cfg.appToken) cfg.appToken=GH_CONFIG.token;
     const putResp=await fetch(ghApiUrl(GH_CONFIG_PATH),{
       method:'PUT',
       headers:{...ghHeaders(),'Content-Type':'application/json'},
       body:JSON.stringify({message:`[EST] Register user: ${u}`,content:b64Encode(JSON.stringify(cfg,null,2)),sha:data.sha,branch:GH_CONFIG.branch})
     });
-    if(!putResp.ok) throw new Error('Failed to save. Check token has write permission.');
+    if(!putResp.ok) throw new Error('Write failed — check token has Contents write permission.');
     VALID_USERS.push({username:u,password:p,role:'field',active:true});
     try{localStorage.setItem('est_gh_config',JSON.stringify(cfg));}catch(e){}
+    // Hide admin token row after successful first setup
+    const tokenRow=document.getElementById('reg-token-row');
+    if(tokenRow) tokenRow.style.display='none';
+    const tokenInp=document.getElementById('reg-token-inp');
+    if(tokenInp) tokenInp.value='';
     document.getElementById('reg-user').value='';
     document.getElementById('reg-pass').value='';
     document.getElementById('reg-pass2').value='';

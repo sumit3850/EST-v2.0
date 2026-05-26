@@ -332,16 +332,18 @@ async function saveSetup(){
   localStorage.setItem('est_dash_cfg',JSON.stringify(GH));
   document.getElementById('setup-banner').classList.add('hidden');
   if(GH.token){
-    setStatus('Saving token to database…','info');
+    setStatus('Connecting…','info');
     try{
       const existing=await ghGet('config.json');
       if(existing){
         const cfg=JSON.parse(b64d(existing.content));
         cfg.appToken=GH.token;cfg.updatedAt=new Date().toISOString();
         const ok=await ghPut('config.json',cfg,existing.sha);
-        if(ok)setStatus('✓ Token saved — all devices will auto-connect next load','ok');
+        setStatus(ok?'✓ Connected and token saved — all devices will auto-connect':'Connected but failed to save token — check token has Contents write permission',ok?'ok':'err');
+      }else{
+        setStatus('Connected but config.json not found in repo','err');
       }
-    }catch(e){}
+    }catch(e){setStatus('Error: '+e.message,'err');}
   }
   loadAll();
 }
