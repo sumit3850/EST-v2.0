@@ -23,8 +23,14 @@
       "password": "12345",
       "role": "field",
       "active": true
+    },
+    {
+      "username": "USER-4",
+      "password": "2026",
+      "role": "field",
+      "active": true
     }
   ],
-  "updatedAt": "2026-05-26T17:50:22.028Z",
+  "updatedAt": "2026-05-26T17:56:56.790Z",
   "appToken": "IjskKV5DAgx4eA44BioGV0YCcwceMVBcVSR4MVIZMi56VAFXEQE4Ow=="
 }
