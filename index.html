@@ -1657,9 +1657,11 @@ async function doRegister(){
   btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="spin"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8Z"/></svg> Registering…';
   btn.disabled=true;
   try{
-    // Fetch+write with one automatic retry on 409 (SHA conflict)
+    // Fetch+write with retry on 409 (SHA conflict)
     let written=false;
-    for(let attempt=0;attempt<2&&!written;attempt++){
+    let lastErr='';
+    for(let attempt=0;attempt<3&&!written;attempt++){
+      if(attempt>0) await new Promise(r=>setTimeout(r,800)); // wait before retry
       const resp=await fetch(ghApiUrl(GH_CONFIG_PATH),{headers:ghHeaders(),cache:'no-store'});
       if(!resp.ok){
         const s=resp.status;
@@ -1673,30 +1675,32 @@ async function doRegister(){
         errEl.textContent='Username already taken. Choose another.';errEl.style.display='block';return;
       }
       if(!cfg.credentials) cfg.credentials=[];
-      // Remove any duplicate entry then add fresh
       const existing=cfg.credentials.findIndex(c=>(c.username||'').toLowerCase()===u.toLowerCase());
       if(existing>-1) cfg.credentials.splice(existing,1);
       cfg.credentials.push({username:u,password:p,role:'field',active:true});
       cfg.updatedAt=new Date().toISOString();
       if(!cfg.appToken) cfg.appToken=GH_CONFIG.token;
+      const putBody={message:`[EST] Register user: ${u}`,content:b64Encode(JSON.stringify(cfg,null,2)),sha:data.sha};
       const putResp=await fetch(ghApiUrl(GH_CONFIG_PATH),{
         method:'PUT',
         headers:{...ghHeaders(),'Content-Type':'application/json'},
-        body:JSON.stringify({message:`[EST] Register user: ${u}`,content:b64Encode(JSON.stringify(cfg,null,2)),sha:data.sha,branch:GH_CONFIG.branch})
+        body:JSON.stringify(putBody)
       });
-      if(putResp.status===409&&attempt===0) continue; // SHA conflict — retry with fresh SHA
       if(!putResp.ok){
+        const errBody=await putResp.json().catch(()=>({}));
+        const ghMsg=(errBody.message||'').substring(0,120);
         const s=putResp.status;
-        if(s===401) throw new Error('Token invalid or expired (401). Create a new GitHub PAT with repo scope.');
-        if(s===403) throw new Error('Token is READ-ONLY (403). PAT must have "repo" scope (classic) or "Contents: write" (fine-grained).');
-        if(s===422) throw new Error('GitHub rejected write (422). Branch may be protected.');
-        throw new Error('Write failed (HTTP '+s+').');
+        if(s===409){lastErr=`409 conflict — ${ghMsg||'SHA mismatch'}`;continue;} // retry
+        if(s===401) throw new Error('Token invalid or expired (401).');
+        if(s===403) throw new Error(`Token READ-ONLY (403) — needs repo write scope. GitHub: ${ghMsg}`);
+        if(s===422) throw new Error(`Write rejected (422) — ${ghMsg||'branch may be protected'}`);
+        throw new Error(`Write failed (${s}) — ${ghMsg}`);
       }
       VALID_USERS.push({username:u,password:p,role:'field',active:true});
       try{localStorage.setItem('est_gh_config',JSON.stringify(cfg));}catch(e){}
       written=true;
     }
-    if(!written) throw new Error('SHA conflict — please try again.');
+    if(!written) throw new Error(lastErr||'SHA conflict after 3 attempts — please try again.');
     // Close modal and reset fields
     document.getElementById('reg-modal')?.classList.remove('open');
     document.getElementById('rm-user').value='';
