@@ -11,32 +11,7 @@
       "password": "2026",
       "role": "field",
       "active": true
-    },
-    {
-      "username": "USER-2",
-      "password": "2026",
-      "role": "field",
-      "active": true
-    },
-    {
-      "username": "USER-3",
-      "password": "12345",
-      "role": "field",
-      "active": true
-    },
-    {
-      "username": "USER-4",
-      "password": "2026",
-      "role": "field",
-      "active": true
-    },
-    {
-      "username": "USER-5",
-      "password": "2026",
-      "role": "field",
-      "active": true
     }
   ],
-  "updatedAt": "2026-05-26T19:15:26.416Z",
-  "appToken": "IjskKV5DAgx4eA44BioGV0YCcwceMVBcVSR4MVIZMi56VAFXEQE4Ow=="
+  "updatedAt": "2026-05-26T19:15:53.719Z"
 }
