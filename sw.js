@@ -1,5 +1,5 @@
 /* EST v2.0 Service Worker — Offline-First */
-const CACHE_NAME = 'est-v2.0.13';
+const CACHE_NAME = 'est-v2.0.14';
 const STATIC_ASSETS = [
   './',
   './index.html',
