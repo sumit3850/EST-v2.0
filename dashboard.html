@@ -171,10 +171,14 @@ tr:nth-child(even) td{background:#f8faf9;}
 
 <!-- GitHub Setup Banner -->
 <div id="setup-banner">
-  <div class="sf-group"><label class="sf-label">GitHub Username</label><input id="sf-owner" class="sf-input" placeholder="sumit3850"></div>
-  <div class="sf-group"><label class="sf-label">Repository Name</label><input id="sf-repo" class="sf-input" value="EST-v2.0"></div>
-  <div class="sf-group" style="flex:2;"><label class="sf-label">Personal Access Token</label><input id="sf-token" class="sf-input" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"></div>
-  <button class="sf-btn" onclick="saveSetup()">Connect</button>
+  <input type="hidden" id="sf-owner" value="sumit3850">
+  <input type="hidden" id="sf-repo" value="EST-v2.0">
+  <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);white-space:nowrap;">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--teal)"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+    Database: <strong style="color:var(--teal);">sumit3850 / EST-v2.0</strong>
+  </div>
+  <div class="sf-group" style="flex:2;"><label class="sf-label">Personal Access Token (repo scope)</label><input id="sf-token" class="sf-input" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"></div>
+  <button class="sf-btn" onclick="saveSetup()">Connect &amp; Save</button>
   <button class="sf-dismiss" onclick="toggleSetup()">Hide</button>
 </div>
 
@@ -270,7 +274,7 @@ tr:nth-child(even) td{background:#f8faf9;}
 
 <script>
 const DASH_U='ANIENTO', DASH_P='2026', DASH_KEY='est_dash_creds';
-let GH={owner:'',repo:'EST-v2.0',token:''};
+let GH={owner:'sumit3850',repo:'EST-v2.0',token:''};
 let allAdult=[],allLarval=[],adultF=[],larvalF=[],usersCfg=[];
 
 /* ── AUTH ── */
@@ -288,13 +292,13 @@ function validateDashLogin(u,p){
   }catch(e){}
   return false;
 }
-function doLogin(){
+async function doLogin(){
   const u=document.getElementById('lf-user').value.trim();
   const p=document.getElementById('lf-pass').value;
   const rem=document.getElementById('lf-rem').checked;
   const errEl=document.getElementById('lf-err');
   if(!validateDashLogin(u,p)){
-    errEl.textContent='Invalid credentials. Use ANIENTO / 2026 or configured GitHub credentials.';
+    errEl.textContent='Invalid credentials. Use ANIENTO / 2026 or configured admin credentials.';
     errEl.style.display='block';
     document.getElementById('lf-pass').value='';
     return;
@@ -303,7 +307,9 @@ function doLogin(){
   if(rem)localStorage.setItem(DASH_KEY,JSON.stringify({u,p}));else localStorage.removeItem(DASH_KEY);
   document.getElementById('login-screen').classList.add('gone');
   document.getElementById('app').classList.add('show');
-  loadSetup();loadAll();
+  loadSetup();
+  await autoConnect();
+  loadAll();
 }
 function checkAuth(){
   try{
@@ -320,16 +326,30 @@ function doLogout(){localStorage.removeItem(DASH_KEY);document.getElementById('l
 
 /* ── SETUP ── */
 function toggleSetup(){const b=document.getElementById('setup-banner');b.classList.toggle('hidden');}
-function saveSetup(){
-  GH.owner=document.getElementById('sf-owner').value.trim();
-  GH.repo=document.getElementById('sf-repo').value.trim()||'EST-v2.0';
+async function saveSetup(){
+  GH.owner='sumit3850';GH.repo='EST-v2.0';
   GH.token=document.getElementById('sf-token').value.trim();
   localStorage.setItem('est_dash_cfg',JSON.stringify(GH));
   document.getElementById('setup-banner').classList.add('hidden');
+  if(GH.token){
+    setStatus('Saving token to database…','info');
+    try{
+      const existing=await ghGet('config.json');
+      if(existing){
+        const cfg=JSON.parse(b64d(existing.content));
+        cfg.appToken=GH.token;cfg.updatedAt=new Date().toISOString();
+        const ok=await ghPut('config.json',cfg,existing.sha);
+        if(ok)setStatus('✓ Token saved — all devices will auto-connect next load','ok');
+      }
+    }catch(e){}
+  }
   loadAll();
 }
 function loadSetup(){
-  try{const c=JSON.parse(localStorage.getItem('est_dash_cfg'));if(c){GH=c;document.getElementById('sf-owner').value=c.owner||'';document.getElementById('sf-repo').value=c.repo||'EST-v2.0';document.getElementById('sf-token').value=c.token||'';}}catch(e){}
+  try{const c=JSON.parse(localStorage.getItem('est_dash_cfg'));if(c){GH=Object.assign({owner:'sumit3850',repo:'EST-v2.0'},c);}}catch(e){}
+  document.getElementById('sf-owner').value=GH.owner;
+  document.getElementById('sf-repo').value=GH.repo;
+  document.getElementById('sf-token').value=GH.token||'';
 }
 
 /* ── GITHUB API ── */
@@ -337,6 +357,20 @@ function ghH(){const h={'Accept':'application/vnd.github+json','X-GitHub-Api-Ver
 function b64d(s){return decodeURIComponent(escape(atob(s)));}
 function b64e(s){return btoa(unescape(encodeURIComponent(s)));}
 async function ghGet(path){const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{headers:ghH(),cache:'no-store'});if(!r.ok)return null;return r.json();}
+async function autoConnect(){
+  if(GH.token)return;
+  try{
+    const r=await fetch('https://raw.githubusercontent.com/sumit3850/EST-v2.0/main/config.json',{cache:'no-store'});
+    if(r.ok){
+      const cfg=await r.json();
+      if(cfg.appToken){
+        GH.token=cfg.appToken;GH.owner='sumit3850';GH.repo='EST-v2.0';
+        localStorage.setItem('est_dash_cfg',JSON.stringify(GH));
+        const tf=document.getElementById('sf-token');if(tf)tf.value=GH.token;
+      }
+    }
+  }catch(e){}
+}
 async function ghPut(path,content,sha){const body={message:'[EST Dashboard] Update '+path,content:b64e(JSON.stringify(content,null,2)),branch:'main'};if(sha)body.sha=sha;const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{method:'PUT',headers:{...ghH(),'Content-Type':'application/json'},body:JSON.stringify(body)});return r.ok;}
 
 /* ── LOAD ALL ── */

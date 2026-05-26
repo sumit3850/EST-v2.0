@@ -356,13 +356,8 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
       <button onclick="showLoginForm()" style="background:none;border:none;color:rgba(255,255,255,.55);font-size:12px;cursor:pointer;text-decoration:underline;padding:4px 8px;">Already have an account? Sign In</button>
     </div>
 
-    <div style="width:100%;max-width:340px;margin-top:10px;">
-      <button onclick="showGhSettings()" id="splash-db-btn" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;background:rgba(255,255,255,.12);border:1.5px solid rgba(104,250,221,.4);border-radius:var(--rxl);color:var(--pb);font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all var(--tr);">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-        <span id="splash-db-text">Connect GitHub Database</span>
-      </button>
-      <div id="splash-db-status" style="text-align:center;font-size:10px;color:rgba(255,255,255,.4);margin-top:6px;display:none;"></div>
-    </div>
+    <div id="splash-db-status" style="text-align:center;font-size:10px;color:rgba(104,250,221,.55);margin-top:4px;display:none;" id="splash-db-status"></div>
+    <span id="splash-db-btn" style="display:none;"></span><span id="splash-db-text" style="display:none;"></span>
     <div id="offline-login-badge" style="display:none;background:rgba(180,83,9,.25);border:1px solid rgba(251,191,36,.4);border-radius:8px;padding:7px 14px;font-size:11px;font-weight:600;color:#fde68a;text-align:center;margin-top:8px;margin-bottom:4px;width:100%;max-width:340px;">⚠ Offline — use pre-configured credentials</div>
     <div style="font-size:10px;color:rgba(255,255,255,.25);margin-top:10px;text-align:center;line-height:1.6;">Offline-capable · GPS enabled · Data stored locally<br>WHO-standard surveillance indices</div>
   </div>
@@ -1187,9 +1182,9 @@ function populateDistricts(stateId,distId){
 
 /* ── GITHUB CONFIGURATION — EDIT THESE ──────────────────── */
 const GH_CONFIG = {
-  owner: '',          // Your GitHub username  e.g. 'sumitrao'
+  owner: 'sumit3850',  // pre-configured repository owner
   repo:  'EST-v2.0',  // Your database repo name
-  token: '',          // GitHub Personal Access Token (classic, repo scope)
+  token: '',          // loaded automatically from config.json
   branch: 'main'
 };
 
@@ -1364,6 +1359,24 @@ function loadGhSettings(){
   }catch(e){}
 }
 
+/* Auto-load write token from public config.json — no PAT needed from user */
+async function loadAppToken(){
+  if(GH_CONFIG.token) return;
+  if(!navigator.onLine) return;
+  try{
+    const r=await fetch('https://raw.githubusercontent.com/sumit3850/EST-v2.0/main/config.json',{cache:'no-store'});
+    if(r.ok){
+      const cfg=await r.json();
+      if(cfg.appToken){
+        GH_CONFIG.token=cfg.appToken;
+        GH_CONFIG.owner='sumit3850';
+        GH_CONFIG.repo='EST-v2.0';
+        try{localStorage.setItem('est_gh_settings',JSON.stringify({owner:'sumit3850',repo:'EST-v2.0',token:cfg.appToken}));}catch(e){}
+      }
+    }
+  }catch(e){}
+}
+
 /* Permanent offline credentials — baseline, always works with no network */
 const VALID_USERS=[
   {username:'ANIENTO', password:'2026', role:'admin', active:true},
@@ -1398,6 +1411,8 @@ async function syncValidUsersFromCache(){
     const raw=localStorage.getItem('est_gh_config');
     if(raw) mergeConfigCreds(JSON.parse(raw));
   }catch(e){}
+  // 3. Auto-load write token from public config.json (no auth required)
+  await loadAppToken();
 }
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
@@ -1604,8 +1619,10 @@ async function doRegister(){
   if(u.length<3){errEl.textContent='Username must be at least 3 characters.';errEl.style.display='block';return;}
   if(p.length<4){errEl.textContent='Password must be at least 4 characters.';errEl.style.display='block';return;}
   if(VALID_USERS.some(v=>v.username.toLowerCase()===u.toLowerCase())){errEl.textContent='Username already exists. Choose another.';errEl.style.display='block';return;}
-  if(!GH_CONFIG.token){errEl.textContent='Connect to GitHub database first (tap the GitHub button below).';errEl.style.display='block';return;}
   if(!navigator.onLine){errEl.textContent='Registration requires an internet connection.';errEl.style.display='block';return;}
+  // Auto-load write token if not already available
+  if(!GH_CONFIG.token) await loadAppToken();
+  if(!GH_CONFIG.token){errEl.textContent='Database not configured. Ask admin to connect GitHub in the dashboard first.';errEl.style.display='block';return;}
   const origHTML=btn.innerHTML;
   btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="spin"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8Z"/></svg> Registering…';
   btn.disabled=true;
@@ -2974,10 +2991,9 @@ window.addEventListener('beforeunload',(e)=>{
   }
 });
 document.addEventListener('DOMContentLoaded',()=>{
-  // Sync VALID_USERS from cached config.json before auth so all users work offline
-  syncValidUsersFromCache().then(()=>loadSavedCreds());
+  // Sync VALID_USERS + auto-load app token, then update UI
   loadGhSettings();
-  typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();
+  syncValidUsersFromCache().then(()=>{loadSavedCreds();updateGhButtonStatus();});
   buildAdultMatrix();
   buildLarvalMatrix();
   buildContainerMatrix();
