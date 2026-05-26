@@ -1070,8 +1070,8 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
     <div class="modal-icon" style="background:rgba(0,107,92,.1);">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
     </div>
-    <div class="modal-title">GitHub Database Setup</div>
-    <div class="modal-sub" style="font-size:12px;color:var(--osv);">Connect to GitHub to sync surveys and enable user registration.</div>
+    <div class="modal-title">GitHub Token Required</div>
+    <div class="modal-sub" style="font-size:12px;color:var(--osv);">Enter your Personal Access Token to enable registration and database sync. This is a one-time setup — saved on this device.</div>
     <div style="background:var(--gbg);border:1px solid var(--pd);border-radius:var(--rmd);padding:8px 12px;margin-bottom:12px;font-size:11px;color:var(--primary);">
       Database: <strong>sumit3850 / EST-v2.0</strong> (pre-configured)
     </div>
@@ -1343,12 +1343,25 @@ function saveGhSettings(){
   const o=document.getElementById('gh-owner-inp')?.value.trim()||'';
   const rp=document.getElementById('gh-repo-inp')?.value.trim()||'EST-v2.0';
   const t=document.getElementById('gh-token-inp')?.value.trim()||'';
-  GH_CONFIG.owner=o; GH_CONFIG.repo=rp; GH_CONFIG.token=t;
-  try{localStorage.setItem('est_gh_settings',JSON.stringify({owner:o,repo:rp,token:t}));}catch(e){}
+  GH_CONFIG.owner=o||'sumit3850'; GH_CONFIG.repo=rp||'EST-v2.0'; GH_CONFIG.token=t;
+  try{localStorage.setItem('est_gh_settings',JSON.stringify({owner:GH_CONFIG.owner,repo:GH_CONFIG.repo,token:t}));}catch(e){}
   document.getElementById('gh-settings-modal')?.classList.remove('open');
-  typeof updateGhButtonStatus==='function'&&updateGhButtonStatus(); // Refresh splash button
-  showToast('GitHub settings saved','check');
-  if(o&&t){ ghFetchConfig().then(c=>{ if(c){showToast('Connected to GitHub ✓','check');typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();} else showToast('Check your token/repo name','warn');}); }
+  const regIsOpen=document.getElementById('reg-card')?.style.display!=='none';
+  typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();
+  if(t){
+    ghFetchConfig().then(c=>{
+      if(c){
+        showToast('Connected to GitHub ✓','check');
+        updateGhButtonStatus();
+        if(regIsOpen) doRegister(); // resume pending registration
+      }else{
+        showToast('Could not connect — check your token','warn');
+        if(regIsOpen){const e=document.getElementById('reg-err');if(e){e.textContent='Invalid token. Try again.';e.style.display='block';}}
+      }
+    });
+  }else{
+    showToast('GitHub token saved','check');
+  }
 }
 function loadGhSettings(){
   try{
@@ -1620,9 +1633,15 @@ async function doRegister(){
   if(p.length<4){errEl.textContent='Password must be at least 4 characters.';errEl.style.display='block';return;}
   if(VALID_USERS.some(v=>v.username.toLowerCase()===u.toLowerCase())){errEl.textContent='Username already exists. Choose another.';errEl.style.display='block';return;}
   if(!navigator.onLine){errEl.textContent='Registration requires an internet connection.';errEl.style.display='block';return;}
-  // Auto-load write token if not already available
+  // Auto-load write token from public config.json
   if(!GH_CONFIG.token) await loadAppToken();
-  if(!GH_CONFIG.token){errEl.textContent='Database not configured. Ask admin to connect GitHub in the dashboard first.';errEl.style.display='block';return;}
+  if(!GH_CONFIG.token){
+    // No token available — prompt admin to enter PAT via settings modal
+    errEl.textContent='Enter your GitHub token first (tap the button that opens below).';
+    errEl.style.display='block';
+    showGhSettings();
+    return;
+  }
   const origHTML=btn.innerHTML;
   btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="spin"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8Z"/></svg> Registering…';
   btn.disabled=true;

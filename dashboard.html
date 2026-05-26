@@ -376,12 +376,26 @@ async function ghPut(path,content,sha){const body={message:'[EST Dashboard] Upda
 /* ── LOAD ALL ── */
 function setStatus(msg,type){const el=document.getElementById('status-bar');el.textContent=msg;el.className='status-bar '+(type||'info');el.style.display=msg?'block':'none';}
 async function loadAll(){
-  if(!GH.owner||!GH.token){setStatus('Enter GitHub credentials above to load data','info');document.getElementById('setup-banner').classList.remove('hidden');return;}
+  if(!GH.owner||!GH.token){setStatus('Enter your GitHub token above to connect','info');document.getElementById('setup-banner').classList.remove('hidden');return;}
   setStatus('Loading from GitHub…','info');
   const pill=document.getElementById('conn-pill');pill.textContent='Connecting…';pill.classList.remove('ok');
   try{
     const root=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/data`,{headers:ghH(),cache:'no-store'});
-    if(!root.ok){setStatus('Cannot reach GitHub — check username/repo/token','err');pill.textContent='Connection failed';return;}
+    if(root.status===404){
+      // data/ directory doesn't exist yet — repo connected but no surveys synced
+      allAdult=[];allLarval=[];adultF=[];larvalF=[];
+      const cfg=await ghGet('config.json').then(d=>JSON.parse(b64d(d.content))).catch(()=>null);
+      if(cfg)usersCfg=cfg.credentials||[];
+      updateStats();renderAdult();renderLarval();renderUsers();
+      pill.textContent='Connected ✓ (no surveys yet)';pill.classList.add('ok');
+      document.getElementById('st-sync').textContent=new Date().toLocaleTimeString();
+      setStatus('');return;
+    }
+    if(!root.ok){
+      const s=root.status;
+      setStatus(s===401?'Invalid token — check your Personal Access Token':s===403?'Token lacks repo access — needs Contents read/write permission':'GitHub error '+s+' — verify owner, repo and token','err');
+      pill.textContent='Connection failed';return;
+    }
     const dirs=await root.json();
     let aFiles=[],lFiles=[];
     for(const d of dirs){
