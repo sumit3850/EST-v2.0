@@ -1,0 +1,958 @@
+{
+  "id": 1779774483020,
+  "savedAt": "2026-05-26T05:48:03.020Z",
+  "appType": "adult",
+  "v": "2.0",
+  "collType": "resting",
+  "date": "26-05-2026",
+  "state": "Andaman and Nicobar Islands",
+  "district": "Nicobar",
+  "location": "Sawai , car Nicobar",
+  "workers": "Shivan and shiva",
+  "officers": "Sumit",
+  "collectors": 2,
+  "nights": 1,
+  "lat": "9.214046",
+  "lng": "92.731123",
+  "houses": [
+    {
+      "id": 1779768367170,
+      "houseNo": "HH-001",
+      "rooms": 3,
+      "start": "09:31",
+      "end": "09:36",
+      "hours": 0.0833,
+      "counts": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "total": 0,
+      "otherName": ""
+    },
+    {
+      "id": 1779768566953,
+      "houseNo": "HH-002",
+      "rooms": 3,
+      "start": "09:36",
+      "end": "09:39",
+      "hours": 0.05,
+      "counts": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "total": 0,
+      "otherName": ""
+    },
+    {
+      "id": 1779769560232,
+      "houseNo": "HH-003",
+      "rooms": 9,
+      "start": "09:43",
+      "end": "09:55",
+      "hours": 0.2,
+      "counts": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "total": 1,
+      "otherName": ""
+    },
+    {
+      "id": 1779770195862,
+      "houseNo": "HH-004",
+      "rooms": 6,
+      "start": "10:00",
+      "end": "10:06",
+      "hours": 0.1,
+      "counts": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "total": 0,
+      "otherName": ""
+    },
+    {
+      "id": 1779772189933,
+      "houseNo": "HH-005",
+      "rooms": 9,
+      "start": "10:29",
+      "end": "10:39",
+      "hours": 0.1667,
+      "counts": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "total": 5,
+      "otherName": ""
+    }
+  ],
+  "speciesBreakdown": [
+    {
+      "name": "Ae. aegypti",
+      "genus": "AEDES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Ae. albopictus",
+      "genus": "AEDES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Ae. niveus",
+      "genus": "AEDES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. culicifacies",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. stephensi",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. fluviatilis",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. philippinensis",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. sundaicus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. dirus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. minimus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. varuna",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. annularis",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. barbirostris",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. hyrcanus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. subpictus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. kochi",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. quinquefasciatus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 6,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. vishnui",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. pseudovishnui",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. tritaeniorhynchus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. gelidus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. fuscocephala",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. whitmorei",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. epidesmus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. bitaeniorhynchus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Ph. argentipes",
+      "genus": "OTHER VECTORS",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Others",
+      "genus": "OTHERS",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    }
+  ],
+  "MHD": "0.00",
+  "TMHD": "50.00",
+  "indoorDensity": "1.20",
+  "outdoorDensity": "0.00",
+  "roomDensity": "0.20",
+  "HBR": "3.00",
+  "totalMosq": 6,
+  "totIndoor": 6,
+  "totOutdoor": 0,
+  "totNonCulex": 0,
+  "totCulex": 6,
+  "totalRooms": 30,
+  "totalManHours": 1.2
+}
