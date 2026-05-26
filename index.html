@@ -1443,11 +1443,10 @@ function doLogin(){
   const result=validateCredentials(u,p);
 
   if(!result.valid){
-    const r2=validateCredentials(u,p);
     let msg='Invalid username or password.';
-    if(r2.reason==='inactive') msg='This account has been deactivated. Contact admin.';
-    else if(r2.reason==='empty') msg='Please enter username and password.';
-    else if(!navigator.onLine) msg='Invalid credentials. (Offline — only ANIENTO/2026 works offline)';
+    if(result.reason==='inactive') msg='This account has been deactivated. Contact admin.';
+    else if(result.reason==='empty') msg='Please enter username and password.';
+    else if(!navigator.onLine) msg='Invalid credentials. Offline — use ANIENTO/2026, or any user you logged in with while online.';
     err.textContent=msg;
     err.style.display='block';
     document.getElementById('login-pass').value='';return;
