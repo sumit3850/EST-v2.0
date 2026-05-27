@@ -1,0 +1,66 @@
+{
+  "id": 1779871119513,
+  "savedAt": "2026-05-27T08:38:39.513Z",
+  "appType": "larval",
+  "v": "2.0",
+  "date": "",
+  "state": "Andaman and Nicobar Islands",
+  "district": "South Andaman",
+  "location": "",
+  "workers": "",
+  "officers": "",
+  "lat": "9.174750",
+  "lng": "92.816076",
+  "houses": [],
+  "dipSites": [],
+  "containerSummary": [],
+  "HI": "—",
+  "CI": "—",
+  "BI": "—",
+  "PI": "—",
+  "LD": "—",
+  "PD": "—",
+  "totalLarvae": 0,
+  "totalPupae": 0,
+  "totalDips": 0,
+  "totalContainers": 0,
+  "totalPositive": 0,
+  "track": {
+    "waypoints": [
+      {
+        "lat": 9.1747495,
+        "lng": 92.8160762,
+        "ts": 1779871078198
+      },
+      {
+        "lat": 9.1749683,
+        "lng": 92.8162383,
+        "ts": 1779871078581
+      },
+      {
+        "lat": 9.1748883,
+        "lng": 92.8162083,
+        "ts": 1779871080079
+      },
+      {
+        "lat": 9.17519,
+        "lng": 92.8165067,
+        "ts": 1779871084765
+      },
+      {
+        "lat": 9.17496,
+        "lng": 92.816345,
+        "ts": 1779871086767
+      },
+      {
+        "lat": 9.1748367,
+        "lng": 92.816365,
+        "ts": 1779871091774
+      }
+    ],
+    "distanceKm": 0.132,
+    "durationSec": 42,
+    "startTime": "2026-05-27T08:37:57.112Z",
+    "endTime": "2026-05-27T08:38:39.513Z"
+  }
+}
