@@ -294,6 +294,10 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
 .login-err{display:none;color:#ffb4ab;font-size:12px;text-align:center;margin-bottom:9px;}
 .launch-btn{width:100%;max-width:340px;height:54px;background:var(--pb);color:#00201a;border:none;border-radius:var(--rxl);font-family:var(--mono);font-size:15px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;box-shadow:0 4px 24px rgba(104,250,221,.3);transition:all var(--tr);}
 .launch-btn:active{transform:scale(.97);}
+
+.sit-views{display:flex;gap:6px;margin-bottom:7px;}
+.sit-vbtn{flex:1;height:30px;font-size:11px;font-weight:700;border:1.5px solid var(--pl);border-radius:var(--rmd);background:rgba(0,107,92,.07);color:var(--primary);cursor:pointer;letter-spacing:.03em;}
+.sit-vbtn:active{background:rgba(0,107,92,.18);}
 </style>
 </head>
 <body>
@@ -567,6 +571,13 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
         <div class="hec-lbl"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Log New House / Site</div>
         <div class="hec-badge">Entry #<span id="a-next-num">1</span></div>
       </div>
+      <div class="field" style="margin-bottom:10px;">
+        <label class="flabel">Start Time</label>
+        <div class="time-now-row">
+          <input type="time" id="a-start" class="time-inp" oninput="updateTimeCalc('a')">
+          <button class="now-btn start" onclick="setNow('a','start')">NOW</button>
+        </div>
+      </div>
       <div class="hnum-bar" id="a-hnum-bar">
         <button class="cnt-btn" id="a-hnum-minus" onclick="changeHouseN('a',-1)">-</button>
         <div>
@@ -582,13 +593,6 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       <div style="display:flex;align-items:center;justify-content:space-between;background:var(--sfc);border:1px solid var(--olv);border-radius:var(--rmd);padding:9px 14px;margin-bottom:11px;">
         <span style="font-size:12px;font-weight:700;">Rooms Inspected</span>
         <div class="cnt-row"><button class="cnt-btn" onclick="changeRms('a',-1)">-</button><div class="cnt-val" id="a-rooms-disp">0</div><button class="cnt-btn" onclick="changeRms('a',1)">+</button></div>
-      </div>
-      <div class="field" style="margin-bottom:10px;">
-        <label class="flabel">Start Time</label>
-        <div class="time-now-row">
-          <input type="time" id="a-start" class="time-inp" oninput="updateTimeCalc('a')">
-          <button class="now-btn start" onclick="setNow('a','start')">NOW</button>
-        </div>
       </div>
       <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--osv);margin-bottom:7px;">Collection Count by Species</div>
       <div class="matrix-wrap"><table class="mtbl" id="a-mtbl"><thead><tr id="a-mtbl-head"><th style="text-align:left;padding-left:10px;">Species</th></tr></thead><tbody id="a-sp-body"></tbody></table></div>
@@ -1123,6 +1127,25 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
   </div>
   <div id="smap-body" style="flex:1;min-height:0;"></div>
 </div>
+
+<!-- PDF PREVIEW MODAL -->
+<div id="pdf-preview-modal" style="display:none;position:fixed;inset:0;z-index:3000;flex-direction:column;background:#1a1a2e;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#111827;flex-shrink:0;gap:10px;">
+    <span style="color:#fff;font-weight:700;font-size:13px;">Report Preview</span>
+    <div style="display:flex;gap:8px;">
+      <button onclick="printPdfPreview()" style="background:#006b5c;color:#fff;border:none;border-radius:7px;padding:8px 18px;font-size:12px;font-weight:700;cursor:pointer;">&#x1F5A8; Print / Save PDF</button>
+      <button onclick="closePdfPreview()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:34px;height:34px;border-radius:7px;cursor:pointer;font-size:18px;line-height:1;">&#x2715;</button>
+    </div>
+  </div>
+  <iframe id="pdf-preview-frame" style="flex:1;border:none;background:#fff;"></iframe>
+</div>
+
+<!-- VIEW MODE BAR -->
+<div id="view-mode-bar" style="display:none;position:fixed;bottom:64px;left:0;right:0;z-index:1500;background:#e65100;color:#fff;padding:9px 16px;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 -2px 12px rgba(0,0,0,.3);">
+  <span style="font-size:12px;font-weight:700;">VIEW MODE — Saved Survey</span>
+  <button onclick="exitViewMode()" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:7px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;">&#x2190; Back to Saved</button>
+</div>
+
 
 <script>
 'use strict';
@@ -1903,7 +1926,7 @@ const TrackRecorder=(()=>{
       if(navigator.geolocation){
         _wid=navigator.geolocation.watchPosition(pos=>{
           const{latitude:la,longitude:lo}=pos.coords,ts=Date.now();
-          if(_last){const d=_hav(_last.la,_last.lo,la,lo);if(d<0.005)return;_dist+=d;}
+          if(_last){const d=_hav(_last.la,_last.lo,la,lo);const acc=pos.coords.accuracy||999;if(d<0.015||acc>50)return;_dist+=d;}
           _pts.push({lat:la,lng:lo,ts});_last={la,lo};_ui();
         },()=>{},{enableHighAccuracy:true,timeout:20000,maximumAge:5000});
       }
@@ -2106,7 +2129,7 @@ function populateAdultReview(){
   hw.innerHTML=`<table class="sp-rev-tbl"><thead><tr><th style="text-align:left;padding-left:10px;">House</th><th>Rooms</th><th>Hours</th>${hCols}<th>Total</th></tr></thead><tbody>${hRows}<tr class="tot-tr"><td style="text-align:left;padding-left:10px;">TOTAL</td><td>${totR}</td><td>${totH.toFixed(2)}</td>${isR?`<td>${totIA}</td><td>${totOA}</td>`:`<td>${totIA}</td>`}<td>${aTotAll()}</td></tr></tbody></table>`;
   const miss=[];if(!aS.date)miss.push('Date');if(!aS.district)miss.push('District');if(!aS.houses.length)miss.push('Collection data');
   document.getElementById('a-val-alert').style.display=miss.length?'flex':'none';if(miss.length)document.getElementById('a-val-msg').textContent='Incomplete: '+miss.join(', ');
-  renderTrackPreview('a-track-preview',aS.houses);
+  renderTrackPreview('a-track-preview',aS.houses.map(h=>({...h,housePositive:h.total>0})));
 }
 function aSnap(){
   const isR=aS.collType==='resting';
@@ -2363,7 +2386,7 @@ function buildAdultCSV(s){
   const h=(...cols)=>rows.push(cols);
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
-  const sep=label=>rows.push(['=== '+label+' ===']);
+  const sep=label=>rows.push([label]);
 
   // HEADER
   r('EST v2.0 — Adult Mosquito Surveillance Report');
@@ -2393,15 +2416,15 @@ function buildAdultCSV(s){
   // DENSITY INDICES
   sep('DENSITY INDICES');
   h('Index','Value','Formula');
-  r('Man-Hour Density — Non-Culex (PMHD)',s.MHD,'(Non-Culex ÷ Collectors × Time) × 100');
-  r('Total Man-Hour Density — Culex (TMHD)',s.TMHD,'(Culex ÷ Man-hours) × 10');
+  r('Man-Hour Density — Non-Culex (PMHD)',s.MHD,'(Non-Culex / Collectors x Time) x 100');
+  r('Total Man-Hour Density — Culex (TMHD)',s.TMHD,'(Culex / Man-hours) x 10');
   if(isR){
-    r('Indoor Resting Density',s.indoorDensity,'Indoor mosq ÷ (Houses × Nights)');
-    r('Outdoor Resting Density',s.outdoorDensity,'Outdoor mosq ÷ (Houses × Nights)');
-    r('Room Density',s.roomDensity,'Total mosq ÷ Total rooms');
+    r('Indoor Resting Density',s.indoorDensity,'Indoor mosq / (Houses x Nights)');
+    r('Outdoor Resting Density',s.outdoorDensity,'Outdoor mosq / (Houses x Nights)');
+    r('Room Density',s.roomDensity,'Total mosq / Total rooms');
   }else{
-    r('Human Biting Rate (HBR)',s.HBR,'Mosquitoes ÷ No. of collectors');
-    r('Human Biting Rate per Collector per Hour',s.HBRHr||'-','Mosquitoes ÷ (Collectors × Hours)');
+    r('Human Biting Rate (HBR)',s.HBR,'Mosquitoes / No. of collectors');
+    r('Human Biting Rate per Collector per Hour',s.HBRHr||'-','Mosquitoes / (Collectors x Hours)');
   }
   blank();
 
@@ -2476,7 +2499,7 @@ function buildLarvalCSV(s){
   const rows=[];
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
-  const sep=label=>rows.push(['=== '+label+' ===']);
+  const sep=label=>rows.push([label]);
 
   r('EST v2.0 \u2014 Larval Mosquito Surveillance Report');
   r('Generated:',new Date().toLocaleString('en-IN'));
@@ -2499,20 +2522,20 @@ function buildLarvalCSV(s){
 
   sep('AEDES LARVAL SURVEILLANCE INDICES');
   r('Index','Value','Formula');
-  r('House Index (HI)',s.HI,'(Positive houses \u00f7 Total houses) \u00d7 100');
-  r('Container Index (CI)',s.CI,'(Positive containers \u00f7 Total containers) \u00d7 100');
-  r('Breteau Index (BI)',s.BI,'(Positive containers \u00f7 Total houses) \u00d7 100');
-  r('Pupal Index',s.PI,'(Pupal +ve containers \u00f7 Total houses) \u00d7 100');
+  r('House Index (HI)',s.HI,'(Positive houses / Total houses) x 100');
+  r('Container Index (CI)',s.CI,'(Positive containers / Total containers) x 100');
+  r('Breteau Index (BI)',s.BI,'(Positive containers / Total houses) x 100');
+  r('Pupal Index',s.PI,'(Pupal +ve containers / Total houses) x 100');
   r('Total Containers Inspected',s.totalContainers||0,'');
   r('Total Positive Containers',s.totalPositive||0,'');
   blank();
 
   sep('ANOPHELES / CULEX DIPPING INDICES');
   r('Index','Value','Formula');
-  r('Larval Density',s.LD,'(Total larvae \u00f7 Total dips) \u00d7 100');
-  r('Pupal Density',s.PD,'(Total pupae \u00f7 Total dips) \u00d7 100');
+  r('Larval Density',s.LD,'(Total larvae / Total dips) x 100');
+  r('Pupal Density',s.PD,'(Total pupae / Total dips) x 100');
   const imd=s.totalDips>0?(((s.totalLarvae+s.totalPupae)/s.totalDips)*100).toFixed(1):'\u2014';
-  r('Immature Density',imd,'((Larvae + Pupae) \u00f7 Total dips) \u00d7 100');
+  r('Immature Density',imd,'((Larvae + Pupae) / Total dips) x 100');
   r('Total Larvae',s.totalLarvae||0,'');
   r('Total Pupae',s.totalPupae||0,'');
   r('Total Dips Taken',s.totalDips||0,'');
@@ -2809,9 +2832,7 @@ tr:nth-child(even) td{background:#f9fdf9;}
 <button class="print-btn" onclick="window.print()">🖨 Print / Save PDF</button>
 </body></html>`;
 
-  const _pwin=window.open('','_blank');
-  if(_pwin){_pwin.document.write(reportHtml);_pwin.document.close();showToast('PDF report opened — use the Print button','pdf');}
-  else{const blob=new Blob([reportHtml],{type:'text/html;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='EST_Adult_'+(s.location||s.district||'survey').replace(/[^a-zA-Z0-9]/g,'_').substring(0,20)+'_'+s.date+'.html';a.style.display='none';document.body.appendChild(a);setTimeout(()=>{a.click();setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},800);},50);showToast('Report downloaded — open file then Print → Save as PDF','pdf');}
+  showPdfPreview(reportHtml);showToast('Tap Print to save as PDF','pdf');
 }
 
 function exportLarvalPDF(){
@@ -2881,9 +2902,7 @@ function exportLarvalPDF(){
 <div class="footer">EST v2.0 \u00b7 Entomological Surveillance Tool | Report ID: EST-L-${s.id} | Generated: ${new Date().toLocaleString('en-IN')}</div>
 </div><div class="sb-fixed"><button class="pb" onclick="window.print()">Save as PDF / Print</button></div>
 </body></html>`;
-  const _lpwin=window.open('','_blank');
-  if(_lpwin){_lpwin.document.write(html);_lpwin.document.close();showToast('PDF report opened — use the Print button','pdf');}
-  else{const blob=new Blob([html],{type:'text/html;charset=utf-8'});const url=URL.createObjectURL(blob);const a2=document.createElement('a');a2.href=url;a2.download='EST_Larval_'+s.district+'_'+s.date+'.html';document.body.appendChild(a2);a2.click();document.body.removeChild(a2);setTimeout(()=>URL.revokeObjectURL(url),2000);showToast('Report downloaded — open in browser then Print → Save as PDF','pdf');}
+  showPdfPreview(html);showToast('Tap Print to save as PDF','pdf');
 }
 
 /* ── EMAIL & WHATSAPP ───────────────────────────────────── */
@@ -3028,7 +3047,7 @@ function renderSavedMod(mod){
     const meta=(s.state||'')+(s.state&&s.district?' · ':'')+( s.district||'')+(s.date?' · '+s.date:'')+( savedTime?' · '+savedTime:'');
     const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');div.dataset.sid=String(s.id);
     const serialNo=surveyIdx+1;
-    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?('Synced '+new Date(s.syncedAt||'').toLocaleDateString('en-IN')):'Not synced to GitHub'}</div><div class="sit-acts"><button class="sit-act" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} CSV</button><button class="sit-act" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
+    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?('Synced '+new Date(s.syncedAt||'').toLocaleDateString('en-IN')):'Not synced to GitHub'}</div><div class="sit-views"><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','survey')">Survey</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','collect')">Collect</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','review')">Review</button></div><div class="sit-acts"><button class="sit-act" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} CSV</button><button class="sit-act" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
     list.appendChild(div);
   });
 }
@@ -3335,6 +3354,77 @@ document.addEventListener('DOMContentLoaded', () => {
   updateOnlineStatus();
   console.log('[EST] v' + EST_VERSION + ' loaded. Online:', navigator.onLine);
 });
+/* ── PDF PREVIEW ──────────────────────────────────────────── */
+function showPdfPreview(html){
+  const modal=document.getElementById('pdf-preview-modal');
+  const frame=document.getElementById('pdf-preview-frame');
+  if(!modal||!frame)return;
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  if(modal._blobUrl)URL.revokeObjectURL(modal._blobUrl);
+  modal._blobUrl=url;
+  frame.src=url;
+  modal.style.display='flex';
+}
+function closePdfPreview(){
+  const modal=document.getElementById('pdf-preview-modal');
+  const frame=document.getElementById('pdf-preview-frame');
+  if(modal){modal.style.display='none';if(modal._blobUrl){URL.revokeObjectURL(modal._blobUrl);modal._blobUrl=null;}}
+  if(frame)frame.src='about:blank';
+}
+function printPdfPreview(){
+  const frame=document.getElementById('pdf-preview-frame');
+  if(frame&&frame.contentWindow)frame.contentWindow.print();
+}
+
+/* ── VIEW SAVED SURVEY ─────────────────────────────────────── */
+let _savedViewMode=false;
+function viewSavedSurvey(mod,id,view){
+  const s=getSavedById(mod,id);if(!s){showToast('Survey not found','warn');return;}
+  _savedViewMode=true;activeModule=mod;
+  if(mod==='adult'){
+    Object.assign(aS,s);
+    aS.houses=(s.houses||[]).map(h=>({...h,counts:(h.counts||[]).map(r=>[...r])}));
+    aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);
+    aS.curRooms=0;aS.curHN=(s.houses?.length||0)+1;
+    setCollType(s.collType==='hlc'?'hlc':'resting');
+    if(view==='review'){populateAdultReview();showScreen('adult-review');}
+    else if(view==='collect'){buildAdultMatrix();renderAdultHouses();updateAdultSummary();updateTimeCalc('a');showScreen('adult-collect');}
+    else{
+      const d=document.getElementById('a-date');if(d)d.value=s.date||'';
+      const st=document.getElementById('a-state');if(st){st.value=s.state||'';populateDistricts('a-state','a-district');}
+      setTimeout(()=>{const di=document.getElementById('a-district');if(di)di.value=s.district||'';},60);
+      const lo=document.getElementById('a-location');if(lo)lo.value=s.location||'';
+      const wo=document.getElementById('a-workers');if(wo)wo.value=s.workers||'';
+      const of=document.getElementById('a-officers');if(of)of.value=s.officers||'';
+      showScreen('adult-survey');
+    }
+  }else{
+    Object.assign(lS,s);
+    lS.houses=(s.houses||[]).map(h=>({...h,counts:(h.counts||[]).map(r=>[...r])}));
+    lS.dipSites=(s.dipSites||[]).map(d=>({...d}));
+    lS.curCounts=Array.from({length:LNS},()=>[0,0]);
+    lS.curHN=(s.houses?.length||0)+1;
+    if(view==='review'){populateLarvalReview();showScreen('larval-review');}
+    else if(view==='collect'){buildLarvalMatrix();renderLarvalHouses();renderDipSites();updateLarvalSummary();showScreen('larval-collect');}
+    else{
+      const d=document.getElementById('l-date');if(d)d.value=s.date||'';
+      const st=document.getElementById('l-state');if(st){st.value=s.state||'';populateDistricts('l-state','l-district');}
+      setTimeout(()=>{const di=document.getElementById('l-district');if(di)di.value=s.district||'';},60);
+      const lo=document.getElementById('l-location');if(lo)lo.value=s.location||'';
+      const wo=document.getElementById('l-workers');if(wo)wo.value=s.workers||'';
+      const of=document.getElementById('l-officers');if(of)of.value=s.officers||'';
+      showScreen('larval-survey');
+    }
+  }
+  const bar=document.getElementById('view-mode-bar');if(bar)bar.style.display='flex';
+}
+function exitViewMode(){
+  _savedViewMode=false;
+  const bar=document.getElementById('view-mode-bar');if(bar)bar.style.display='none';
+  showSavedTab(activeSavedTab);showScreen('saved');
+}
+
 </script>
 </body>
 </html>
