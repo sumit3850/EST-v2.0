@@ -604,7 +604,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
         </div>
       </div>
       <div class="time-calc" id="a-time-calc"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg><span id="a-time-txt">Tap NOW on Start, collect, tap NOW on End</span></div>
-      <button class="btn-p" onclick="logAdultHouse()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>Log <span id="a-log-btn-code">HH-001</span></button>
+      <button class="btn-p" id="a-log-btn" onclick="logAdultHouse()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>Log <span id="a-log-btn-code">HH-001</span></button>
     </div>
     <div class="sec-hdr"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="sec-lbl" id="a-log-list-lbl">Houses / Sites Logged</span></div>
     <div id="a-houses-empty" style="text-align:center;color:var(--osv);font-size:13px;padding:14px;background:var(--sfc);border-radius:var(--rmd);border:1px dashed var(--olv);">No entries logged yet.</div>
@@ -822,7 +822,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
         <label class="flabel">End Time</label>
         <div class="time-now-row"><input type="time" id="l-end" class="time-inp" style="border-color:rgba(186,26,26,.35);"><button class="now-btn end" onclick="setNow('l','end')">NOW</button></div>
       </div>
-      <button class="btn-p larval-btn" onclick="logLarvalHouse()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>Log <span id="l-log-btn-code">HH-001</span></button>
+      <button class="btn-p larval-btn" id="l-log-btn" onclick="logLarvalHouse()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>Log <span id="l-log-btn-code">HH-001</span></button>
     </div>
     <div class="sec-hdr"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--larval)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="sec-lbl">Houses Logged</span></div>
     <div id="l-houses-empty" style="text-align:center;color:var(--osv);font-size:13px;padding:14px;background:var(--sfc);border-radius:var(--rmd);border:1px dashed rgba(21,101,192,.3);">No houses logged yet.</div>
@@ -871,7 +871,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
           <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('pupae',-1)">-</button><div class="cnt-val" id="l-pupae" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('pupae',1)">+</button></div>
         </div>
       </div>
-      <button class="btn-p larval-btn" style="background:var(--primary);" onclick="logDipSite()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>Log <span id="ds-log-btn-code">DS-001</span></button>
+      <button class="btn-p larval-btn" id="ds-log-btn" style="background:var(--primary);" onclick="logDipSite()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>Log <span id="ds-log-btn-code">DS-001</span></button>
       <div class="sec-hdr" style="margin-top:12px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M9 2v6.59l-4.17 8.43A2 2 0 0 0 6.59 20h10.82a2 2 0 0 0 1.76-2.98L15 8.59V2H9zm2 2h2v5h-2V4z"/></svg><span class="sec-lbl">Dip Sites Logged</span></div>
       <div id="ds-empty" style="text-align:center;color:var(--osv);font-size:13px;padding:14px;background:var(--sfc);border-radius:var(--rmd);border:1px dashed rgba(0,107,92,.3);">No dip sites logged yet.</div>
       <div id="ds-list"></div>
@@ -1108,6 +1108,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
     <div class="modal-title">Survey Saved!</div>
     <div class="modal-sub">Data stored on this device and preserved on reload.</div>
     <div class="modal-btns">
+      <button class="btn-p" onclick="document.getElementById('success-modal').classList.remove('open');reviewLastSaved();" style="margin-bottom:6px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>Review This Submission</button>
       <button class="btn-p" onclick="document.getElementById('success-modal').classList.remove('open');showSavedTab(activeSavedTab);renderSaved();showScreen('saved');"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg>View Saved Surveys</button>
       <button class="btn-s" onclick="document.getElementById('success-modal').classList.remove('open');goTo('dash')" style="margin-top:7px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Back to Dashboard</button>
     </div>
@@ -1428,7 +1429,7 @@ const LSP=[
   {n:'Cx. quinquefasciatus',g:'CULEX'},{n:'Others',g:'OTHERS',oth:true}
 ];
 const LNS=LSP.length;
-let activeModule=null,activeSavedTab='adult';
+let activeModule=null,activeSavedTab='adult',lastSavedId=null,lastSavedType=null;
 const aS={collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,nights:1,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curCounts:Array.from({length:ANS},()=>[0,0,0]),curOther:''};
 const lS={date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipSites:[],curHN:1,curSiteN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curCounts:Array.from({length:LNS},()=>[0,0]),curOther:''};
 function aCols(){return aS.collType==='resting'?['Indoor','Outdoor']:['Landing Catch'];}
@@ -1970,22 +1971,36 @@ function proceedToAdultCollect(){
   const nrEl=document.getElementById('a-nights-row');if(nrEl)nrEl.style.display=aS.collType==='resting'?'grid':'none';
   buildAdultMatrix();renderAdultHouses();updateAdultSummary();showScreen('adult-collect');
 }
+function getSnapPos(cb){
+  if(!navigator.geolocation){cb(TrackRecorder.getLastPos());return;}
+  const t=setTimeout(()=>cb(TrackRecorder.getLastPos()),4000);
+  navigator.geolocation.getCurrentPosition(
+    p=>{clearTimeout(t);cb({lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy});},
+    ()=>{clearTimeout(t);cb(TrackRecorder.getLastPos());},
+    {enableHighAccuracy:true,maximumAge:0,timeout:7000}
+  );
+}
 function logAdultHouse(){
+  const btn=document.getElementById('a-log-btn');if(btn&&btn.disabled)return;
+  if(btn)btn.disabled=true;
   const code=hCode(aS.curHN),start=document.getElementById('a-start').value,end=document.getElementById('a-end').value;
   const hours=calcHrs(start,end),counts=aS.curCounts.map(r=>[...r]);
   const total=aS.collType==='resting'?counts.reduce((s,r)=>s+r[0]+r[1],0):counts.reduce((s,r)=>s+r[0],0);
   const other=document.getElementById('a-other-name')?.value.trim()||'';
-  const _apos=TrackRecorder.getLastPos();aS.houses.push({id:Date.now(),houseNo:code,rooms:aS.curRooms,start:start||'-',end:end||'-',hours,counts,total,otherName:other,lat:_apos?.lat||'',lng:_apos?.lng||''});
-  aS.curHN++;const nc=hCode(aS.curHN);
-  const hd=document.getElementById('a-hnum-disp');if(hd)hd.textContent=nc;
-  const lbc=document.getElementById('a-log-btn-code');if(lbc)lbc.textContent=nc;
-  const nn=document.getElementById('a-next-num');if(nn)nn.textContent=aS.curHN;
-  document.getElementById('a-start').value='';document.getElementById('a-end').value='';
-  const oe=document.getElementById('a-other-name');if(oe)oe.value='';
-  aS.curRooms=0;const ard=document.getElementById('a-rooms-disp');if(ard)ard.textContent='0';
-  aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);
-  buildAdultMatrix();updateTimeCalc('a');renderAdultHouses();updateAdultSummary();saveDraft('adult');
-  showToast(code+' logged — '+total+' mosquito'+(total!==1?'es':'')+' ✓','check');
+  getSnapPos(pos=>{
+    if(btn)btn.disabled=false;
+    aS.houses.push({id:Date.now(),houseNo:code,rooms:aS.curRooms,start:start||'-',end:end||'-',hours,counts,total,otherName:other,lat:pos?.lat||'',lng:pos?.lng||''});
+    aS.curHN++;const nc=hCode(aS.curHN);
+    const hd=document.getElementById('a-hnum-disp');if(hd)hd.textContent=nc;
+    const lbc=document.getElementById('a-log-btn-code');if(lbc)lbc.textContent=nc;
+    const nn=document.getElementById('a-next-num');if(nn)nn.textContent=aS.curHN;
+    document.getElementById('a-start').value='';document.getElementById('a-end').value='';
+    const oe=document.getElementById('a-other-name');if(oe)oe.value='';
+    aS.curRooms=0;const ard=document.getElementById('a-rooms-disp');if(ard)ard.textContent='0';
+    aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);
+    buildAdultMatrix();updateTimeCalc('a');renderAdultHouses();updateAdultSummary();saveDraft('adult');
+    showToast(code+' logged — '+total+' mosquito'+(total!==1?'es':'')+' ✓','check');
+  });
 }
 function proceedToAdultReview(){if(!aS.houses.length){document.getElementById('a-coll-warn').style.display='flex';return;}document.getElementById('a-coll-warn').style.display='none';TrackRecorder.stop();populateAdultReview();showScreen('adult-review');}
 function renderAdultHouses(){
@@ -2098,7 +2113,7 @@ function aSnap(){
   const spB=ASP.map((sp,i)=>({name:sp.n,genus:sp.g,isCulex:!!sp.cx,indoor:aS.houses.reduce((s,h)=>s+h.counts[i][0],0),outdoor:isR?aS.houses.reduce((s,h)=>s+h.counts[i][1],0):0}));
   return {id:Date.now(),savedAt:new Date().toISOString(),appType:'adult',v:'2.0',collType:aS.collType,date:aS.date,state:(aS.state||''),district:aS.district,location:aS.location,workers:aS.workers,officers:aS.officers,collectors:aS.collectors,nights:aS.nights,lat:aS.lat,lng:aS.lng,houses:aS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),speciesBreakdown:spB,MHD:calcMHD(),TMHD:calcTMHD(),indoorDensity:calcIndoorDensity(),outdoorDensity:calcOutdoorDensity(),roomDensity:calcRoomDensity(),HBR:calcHBR(),totalMosq:aTotAll(),totIndoor:aTotIndoor(),totOutdoor:aTotOutdoor(),totNonCulex:aTotNonCulex(),totCulex:aTotCulex(),totalRooms:aTotRooms(),totalManHours:aManHours(),track:TrackRecorder.getTrack()};
 }
-function saveAdultSurvey(){TrackRecorder.stop();const s=aSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(A_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('adult');activeSavedTab='adult';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'adult');}
+function saveAdultSurvey(){TrackRecorder.stop();const s=aSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(A_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('adult');activeSavedTab='adult';lastSavedId=s.id;lastSavedType='adult';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'adult');}
 
 
 /* ── CONTAINER TYPES ────────────────────────────────────── */
@@ -2221,6 +2236,8 @@ function proceedToLarvalCollect(){
   buildLarvalMatrix();updateLarvalSummary();renderLarvalHouses();showScreen('larval-collect');
 }
 function logLarvalHouse(){
+  const btn=document.getElementById('l-log-btn');if(btn&&btn.disabled)return;
+  if(btn)btn.disabled=true;
   const code=hCode(lS.curHN),start=document.getElementById('l-start')?.value||'',end=document.getElementById('l-end')?.value||'',other=document.getElementById('l-other-name')?.value.trim()||'';
   const counts=lS.curCounts.map(r=>[...r]);
   const contSnap=lContainers.map(c=>({...c}));
@@ -2229,30 +2246,36 @@ function logLarvalHouse(){
   lS.curContainers=totExamined;lS.curPositive=totPositive;
   const hpDisp=document.getElementById('l-housepos-disp');
   const isHousePositive=(hpDisp?parseInt(hpDisp.textContent)>0:false)||(totPositive>0)||(lS.curPupal>0);
-  const _lpos=TrackRecorder.getLastPos();
-  lS.houses.push({id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:lS.curPupal,dips:0,larvae:0,pupae:0,housePositive:isHousePositive,counts,contDetails:contSnap,otherName:other,lat:_lpos?.lat||'',lng:_lpos?.lng||''});
-  lS.curHN++;const nc=hCode(lS.curHN);
-  const lhd=document.getElementById('l-hnum-disp');if(lhd)lhd.textContent=nc;
-  const llb=document.getElementById('l-log-btn-code');if(llb)llb.textContent=nc;
-  const lnn=document.getElementById('l-next-num');if(lnn)lnn.textContent=lS.curHN;
-  lS.curRooms=0;
-  const h=lS.houses[lS.houses.length-1];resetLarvalCurForm();renderLarvalHouses();updateLarvalSummary();saveDraft('larval');
-  showToast(code+' logged — Cont:'+h.containers+' +ve:'+h.positive+(isHousePositive?' ★':'')+'  ✓','check');
+  getSnapPos(pos=>{
+    if(btn)btn.disabled=false;
+    lS.houses.push({id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:lS.curPupal,dips:0,larvae:0,pupae:0,housePositive:isHousePositive,counts,contDetails:contSnap,otherName:other,lat:pos?.lat||'',lng:pos?.lng||''});
+    lS.curHN++;const nc=hCode(lS.curHN);
+    const lhd=document.getElementById('l-hnum-disp');if(lhd)lhd.textContent=nc;
+    const llb=document.getElementById('l-log-btn-code');if(llb)llb.textContent=nc;
+    const lnn=document.getElementById('l-next-num');if(lnn)lnn.textContent=lS.curHN;
+    lS.curRooms=0;
+    const h=lS.houses[lS.houses.length-1];resetLarvalCurForm();renderLarvalHouses();updateLarvalSummary();saveDraft('larval');
+    showToast(code+' logged — Cont:'+h.containers+' +ve:'+h.positive+(isHousePositive?' ★':'')+'  ✓','check');
+  });
 }
 function proceedToLarvalReview(){if(!lS.houses.length){document.getElementById('l-coll-warn').style.display='flex';return;}document.getElementById('l-coll-warn').style.display='none';TrackRecorder.stop();populateLarvalReview();showScreen('larval-review');}
 function changeSiteN(d){lS.curSiteN=Math.max(1,lS.curSiteN+d);const code=dsCode(lS.curSiteN);const sd=document.getElementById('ds-num-disp');if(sd)sd.textContent=code;const slb=document.getElementById('ds-log-btn-code');if(slb)slb.textContent=code;const snn=document.getElementById('ds-next-num');if(snn)snn.textContent=lS.curSiteN;}
 function logDipSite(){
+  const btn=document.getElementById('ds-log-btn');if(btn&&btn.disabled)return;
+  if(btn)btn.disabled=true;
   const d=lS.curDips,l=lS.curLarvae,p=lS.curPupae;
   const code=dsCode(lS.curSiteN);
-  const _dpos=TrackRecorder.getLastPos();
-  lS.dipSites.push({id:Date.now(),siteNo:code,dips:d,larvae:l,pupae:p,lat:_dpos?.lat||'',lng:_dpos?.lng||''});
-  lS.curSiteN++;
-  const nc=dsCode(lS.curSiteN);
-  const sd=document.getElementById('ds-num-disp');if(sd)sd.textContent=nc;
-  const slb=document.getElementById('ds-log-btn-code');if(slb)slb.textContent=nc;
-  const snn=document.getElementById('ds-next-num');if(snn)snn.textContent=lS.curSiteN;
-  resetDipForm();renderDipSites();updateLarvalSummary();saveDraft('larval');
-  showToast(code+' logged — D:'+d+' L:'+l+' P:'+p+' ✓','check');
+  getSnapPos(pos=>{
+    if(btn)btn.disabled=false;
+    lS.dipSites.push({id:Date.now(),siteNo:code,dips:d,larvae:l,pupae:p,lat:pos?.lat||'',lng:pos?.lng||''});
+    lS.curSiteN++;
+    const nc=dsCode(lS.curSiteN);
+    const sd=document.getElementById('ds-num-disp');if(sd)sd.textContent=nc;
+    const slb=document.getElementById('ds-log-btn-code');if(slb)slb.textContent=nc;
+    const snn=document.getElementById('ds-next-num');if(snn)snn.textContent=lS.curSiteN;
+    resetDipForm();renderDipSites();updateLarvalSummary();saveDraft('larval');
+    showToast(code+' logged — D:'+d+' L:'+l+' P:'+p+' ✓','check');
+  });
 }
 function renderDipSites(){
   const list=document.getElementById('ds-list'),empty=document.getElementById('ds-empty');
@@ -2330,7 +2353,7 @@ function lSnap(){
   const allCont=lS.houses.reduce((acc,h)=>{(h.contDetails||[]).forEach((c,i)=>{if(!acc[i])acc[i]={name:c.name,examined:0,positive:0};acc[i].examined+=c.examined;acc[i].positive+=c.positive;});return acc;},{});
   return {id:Date.now(),savedAt:new Date().toISOString(),appType:'larval',v:'2.0',date:lS.date,state:lS.state,district:lS.district,location:lS.location,workers:lS.workers,officers:lS.officers,lat:lS.lat,lng:lS.lng,houses:lS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),dipSites:lS.dipSites||[],containerSummary:Object.values(allCont),HI:calcHI(),CI:calcCI(),BI:calcBI(),PI:calcPI(),LD:calcLD(),PD:calcPD(),totalLarvae:lTotLarvae(),totalPupae:lTotPupae(),totalDips:lTotDips(),totalContainers:lTotContainers(),totalPositive:lTotPositive(),track:TrackRecorder.getTrack()};
 }
-function saveLarvalSurvey(){TrackRecorder.stop();const s=lSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(L_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('larval');activeSavedTab='larval';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'larval');}
+function saveLarvalSurvey(){TrackRecorder.stop();const s=lSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(L_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('larval');activeSavedTab='larval';lastSavedId=s.id;lastSavedType='larval';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'larval');}
 
 /* ── CSV EXPORT ─────────────────────────────────────────── */
 function buildAdultCSV(s){
@@ -2370,15 +2393,15 @@ function buildAdultCSV(s){
   // DENSITY INDICES
   sep('DENSITY INDICES');
   h('Index','Value','Formula');
-  r('PMHD (non-Culex)',s.MHD,'(Non-Culex ÷ Collectors × Time) × 100');
-  r('Culex TMHD',s.TMHD,'(Culex ÷ Man-hours) × 10');
+  r('Man-Hour Density — Non-Culex (PMHD)',s.MHD,'(Non-Culex ÷ Collectors × Time) × 100');
+  r('Total Man-Hour Density — Culex (TMHD)',s.TMHD,'(Culex ÷ Man-hours) × 10');
   if(isR){
     r('Indoor Resting Density',s.indoorDensity,'Indoor mosq ÷ (Houses × Nights)');
     r('Outdoor Resting Density',s.outdoorDensity,'Outdoor mosq ÷ (Houses × Nights)');
     r('Room Density',s.roomDensity,'Total mosq ÷ Total rooms');
   }else{
     r('Human Biting Rate (HBR)',s.HBR,'Mosquitoes ÷ No. of collectors');
-    r('HBR per Hour',s.HBRHr||'-','Mosquitoes ÷ (Collectors × Hours)');
+    r('Human Biting Rate per Collector per Hour',s.HBRHr||'-','Mosquitoes ÷ (Collectors × Hours)');
   }
   blank();
 
@@ -2397,8 +2420,8 @@ function buildAdultCSV(s){
 
   // SPECIES BREAKDOWN
   sep('SPECIES BREAKDOWN');
-  if(isR) h('Species','Genus','Is Culex','Indoor Count','Outdoor Count','Total');
-  else h('Species','Genus','Is Culex','Landing Catch','Total');
+  if(isR) h('Species','Genus','Culex Group','Indoor Mosquitoes','Outdoor Mosquitoes','Total');
+  else h('Species','Genus','Culex Group','Human Landing Catch','Total');
   (s.speciesBreakdown||[]).forEach(sp=>{
     const tot=(sp.indoor||0)+(sp.outdoor||0);
     if(tot>0){
@@ -2410,8 +2433,8 @@ function buildAdultCSV(s){
 
   // HOUSE/SITE DETAILS
   sep('HOUSE / SITE DETAILS');
-  if(isR) h('House/Site No.','Rooms Inspected','Start Time','End Time','Hours Spent','Indoor','Outdoor','Total Mosquitoes');
-  else h('Site No.','Start Time','End Time','Hours Spent','Landing Catch','Total Mosquitoes');
+  if(isR) h('House/Site No.','Rooms Inspected','Start Time','End Time','Hours Spent','Indoor Mosquitoes','Outdoor Mosquitoes','Total Mosquitoes');
+  else h('Site No.','Start Time','End Time','Hours Spent','Human Landing Catch','Total Mosquitoes');
   (s.houses||[]).forEach(h2=>{
     const ind=(h2.counts||[]).reduce((t,r2)=>t+(r2[0]||0),0);
     const out=isR?(h2.counts||[]).reduce((t,r2)=>t+(r2[1]||0),0):0;
@@ -2519,7 +2542,7 @@ function buildLarvalCSV(s){
   blank();
 
   sep('HOUSE-WISE DETAILS (CONTAINER INSPECTION)');
-  r('House No.','Rooms','Start Time','End Time','Containers Inspected','Positive Containers','Pupal +ve Containers','House Positive','GPS Latitude','GPS Longitude','Google Maps Link');
+  r('House No.','Rooms Inspected','Start Time','End Time','Containers Inspected','Positive Containers','Pupal-Positive Containers','House Positive (Aedes)','GPS Latitude','GPS Longitude','Google Maps Link');
   (s.houses||[]).forEach(h=>{
     const lat=h.lat||'';const lng=h.lng||'';const mapsLink=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
     r(h.houseNo,h.rooms,h.start,h.end,h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No',lat,lng,mapsLink);
@@ -2527,7 +2550,7 @@ function buildLarvalCSV(s){
   blank();
 
   sep('DIP SITE DATA (ANOPHELES / CULEX)');
-  r('Site No.','Dips Taken','Larvae Collected','Pupae Collected','Total (L+P)','GPS Latitude','GPS Longitude','Google Maps Link');
+  r('Dip Site No. (An./Cx.)','Dips Taken','Larvae Collected','Pupae Collected','Total Immatures (L+P)','GPS Latitude','GPS Longitude','Google Maps Link');
   if(s.dipSites&&s.dipSites.length){
     (s.dipSites||[]).forEach(d=>{const lat=d.lat||'';const lng=d.lng||'';const mapsLink=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';r(d.siteNo,d.dips||0,d.larvae||0,d.pupae||0,(d.larvae||0)+(d.pupae||0),lat,lng,mapsLink);});
   }else{
@@ -2549,7 +2572,7 @@ function buildLarvalCSV(s){
   }
 
   sep('PER HOUSE SPECIES BREAKDOWN');
-  r('House No.','Species','Larvae','Pupae','Total');
+  r('House No.','Species','Larvae Collected','Pupae Collected','Total Immatures');
   (s.houses||[]).forEach(h=>{
     (h.counts||[]).forEach((cnt,i)=>{
       const tot=(cnt[0]||0)+(cnt[1]||0);
@@ -2564,40 +2587,51 @@ function buildLarvalCSV(s){
 }
 
 function exportLarvalCSV(){const s=lSnap();const fn='EST_Larval_'+(s.location||s.district||'survey').replace(/[^a-zA-Z0-9]/g,'_').substring(0,20)+'_'+s.date+'.csv';dlFile(buildLarvalCSV(s),fn,'text/csv;charset=utf-8;');}
-function exportLarvalKML(){
-  const s=lSnap();
-  const trk=s.track;
-  const hasTrack=trk&&trk.waypoints&&trk.waypoints.length;
-  const allHouseGps=(s.houses||[]).filter(h=>h.lat&&h.lng);
-  const allDipGps=(s.dipSites||[]).filter(d=>d.lat&&d.lng);
-  if(!hasTrack&&!allHouseGps.length&&!allDipGps.length){showToast('No GPS data to export','warn');return;}
-  // ── KML document ──
+function buildKML(s){
+  const trk=s.track,hasTrack=trk&&trk.waypoints&&trk.waypoints.length;
   const escX=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const housePl=allHouseGps.map(h=>`<Placemark><name>${escX(h.houseNo)}</name><description><![CDATA[<b>${h.housePositive?'✓ POSITIVE':'Negative'}</b><br>Containers: ${h.containers||0} | Positive: ${h.positive||0}<br>Pupal+: ${h.pupal||0}]]></description><Style><IconStyle><color>${h.housePositive?'ff1400ff':'ffff8800'}</color><scale>1.0</scale></IconStyle></Style><Point><coordinates>${h.lng},${h.lat},0</coordinates></Point></Placemark>`).join('\n');
-  const dipPl=allDipGps.map(d=>`<Placemark><name>${escX(d.siteNo)}</name><description><![CDATA[<b>Dip Site</b><br>Dips: ${d.dips||0} | Larvae: ${d.larvae||0} | Pupae: ${d.pupae||0}]]></description><Style><IconStyle><color>ffff9900</color><scale>0.9</scale></IconStyle></Style><Point><coordinates>${d.lng},${d.lat},0</coordinates></Point></Placemark>`).join('\n');
-  const pathPl=hasTrack?`<Placemark><name>Survey Path</name><description><![CDATA[Distance: ${trk.distanceKm} km | Duration: ${Math.floor(trk.durationSec/60)}m ${trk.durationSec%60}s<br>HI: ${s.HI} | CI: ${s.CI} | BI: ${s.BI}]]></description><Style><LineStyle><color>ff00d7ff</color><width>3</width></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style><LineString><tessellate>1</tessellate><coordinates>\n${trk.waypoints.map(p=>p.lng.toFixed(7)+','+p.lat.toFixed(7)+',0').join('\n')}\n</coordinates></LineString></Placemark>`:'';
-  const kml=`<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">\n<Document>\n<name>EST Larval — ${escX(s.district||'Survey')} — ${s.date}</name>\n<description><![CDATA[EST v2.0 Larval Mosquito Surveillance<br>HI: ${s.HI} | CI: ${s.CI} | BI: ${s.BI} | PI: ${s.PI}<br>LD: ${s.LD} | PD: ${s.PD}<br>Houses: ${(s.houses||[]).length} | Dip Sites: ${(s.dipSites||[]).length}]]></description>\n${pathPl}\n${housePl}\n${dipPl}\n</Document>\n</kml>`;
-  dlFile(kml,'EST_Larval_'+(s.district||'Survey')+'_'+s.date+'.kml','application/vnd.google-earth.kml+xml');
-  // ── Google Maps URL (up to 10 waypoints) for cross-device sharing ──
-  const allPts=[...(hasTrack?trk.waypoints:[]),...allHouseGps.map(h=>({lat:parseFloat(h.lat),lng:parseFloat(h.lng)}))];
+  const fld=(name,open,content)=>content?`<Folder><name>${escX(name)}</name><open>${open?1:0}</open>\n${content}\n</Folder>`:'';
+  const pm=(name,sid,desc,lat,lng)=>`<Placemark><name>${escX(String(name))}</name><styleUrl>#${sid}</styleUrl>${desc?`<description><![CDATA[${desc}]]></description>`:''}<Point><coordinates>${parseFloat(lng).toFixed(7)},${parseFloat(lat).toFixed(7)},0</coordinates></Point></Placemark>`;
+  const styles=`<Style id="s-path"><LineStyle><color>ff00d7ff</color><width>3</width></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+<Style id="s-hpos"><IconStyle><color>ff0000ff</color><scale>1.1</scale></IconStyle><LabelStyle><scale>0.8</scale></LabelStyle></Style>
+<Style id="s-hneg"><IconStyle><color>ffff5500</color><scale>0.9</scale></IconStyle><LabelStyle><scale>0.7</scale></LabelStyle></Style>
+<Style id="s-dpos"><IconStyle><color>ff00ffff</color><scale>1.1</scale></IconStyle><LabelStyle><scale>0.8</scale></LabelStyle></Style>
+<Style id="s-dneg"><IconStyle><color>ff888888</color><scale>0.8</scale></IconStyle><LabelStyle><scale>0.6</scale></LabelStyle></Style>
+<Style id="s-start"><IconStyle><color>ff00cc00</color><scale>1.3</scale></IconStyle></Style>
+<Style id="s-end"><IconStyle><color>ff5500ff</color><scale>1.3</scale></IconStyle></Style>`;
+  const pathFld=hasTrack?fld('Survey Path / Tracking Route',true,
+    `<Placemark><name>Survey Track</name><styleUrl>#s-path</styleUrl><description><![CDATA[Distance: ${trk.distanceKm} km | Duration: ${Math.floor(trk.durationSec/60)}m ${trk.durationSec%60}s | Waypoints: ${trk.waypoints.length}<br>HI: ${s.HI} | CI: ${s.CI} | BI: ${s.BI}]]></description><LineString><tessellate>1</tessellate><coordinates>\n${trk.waypoints.map(p=>p.lng.toFixed(7)+','+p.lat.toFixed(7)+',0').join('\n')}\n</coordinates></LineString></Placemark>`):'';
+  const startFld=hasTrack?fld('Start Point',true,pm('START','s-start',`Survey start point<br>Lat: ${trk.waypoints[0].lat.toFixed(7)}<br>Lng: ${trk.waypoints[0].lng.toFixed(7)}`,trk.waypoints[0].lat,trk.waypoints[0].lng)):'';
+  const endFld=hasTrack&&trk.waypoints.length>=2?fld('End Point',true,pm('END','s-end',`Survey end point<br>Lat: ${trk.waypoints[trk.waypoints.length-1].lat.toFixed(7)}<br>Lng: ${trk.waypoints[trk.waypoints.length-1].lng.toFixed(7)}`,trk.waypoints[trk.waypoints.length-1].lat,trk.waypoints[trk.waypoints.length-1].lng)):'';
+  const allH=(s.houses||[]).filter(h=>h.lat&&h.lng);
+  const posH=allH.filter(h=>h.housePositive);
+  const hExamFld=allH.length?fld('Houses Examined',false,allH.map(h=>pm(h.houseNo,h.housePositive?'s-hpos':'s-hneg',`${h.housePositive?'&#10003; POSITIVE HOUSE':'Negative House'}<br>Containers Inspected: ${h.containers||0}<br>Positive Containers: ${h.positive||0}<br>Pupal +ve: ${h.pupal||0}`,h.lat,h.lng)).join('\n')):'';
+  const posHFld=posH.length?fld('Positive Houses (Aedes)',true,posH.map(h=>pm(h.houseNo,'s-hpos',`&#10003; POSITIVE HOUSE<br>Containers: ${h.containers||0} | +ve: ${h.positive||0} | Pupal: ${h.pupal||0}`,h.lat,h.lng)).join('\n')):'';
+  const allD=(s.dipSites||[]).filter(d=>d.lat&&d.lng);
+  const posD=allD.filter(d=>(d.larvae||0)+(d.pupae||0)>0);
+  const dAllFld=allD.length?fld('Dip Sites (An./Cx.)',false,allD.map(d=>pm(d.siteNo,(d.larvae||0)+(d.pupae||0)>0?'s-dpos':'s-dneg',`${(d.larvae||0)+(d.pupae||0)>0?'&#10003; DIP-POSITIVE':'Dip Negative'}<br>Dips: ${d.dips||0} | Larvae: ${d.larvae||0} | Pupae: ${d.pupae||0}`,d.lat,d.lng)).join('\n')):'';
+  const posDFld=posD.length?fld('Dip-Positive Sites (An./Cx.)',true,posD.map(d=>pm(d.siteNo,'s-dpos',`&#10003; DIP-POSITIVE<br>Dips: ${d.dips||0} | Larvae: ${d.larvae||0} | Pupae: ${d.pupae||0}`,d.lat,d.lng)).join('\n')):'';
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n<name>EST Larval — ${escX(s.district||'Survey')} — ${s.date||''}</name>\n<description><![CDATA[EST v2.0 Larval Surveillance<br>HI: ${s.HI} | CI: ${s.CI} | BI: ${s.BI} | PI: ${s.PI}<br>LD: ${s.LD} | PD: ${s.PD}<br>Houses: ${(s.houses||[]).length} | Dip Sites: ${(s.dipSites||[]).length}]]></description>\n${styles}\n${pathFld}\n${startFld}\n${endFld}\n${hExamFld}\n${posHFld}\n${dAllFld}\n${posDFld}\n</Document>\n</kml>`;
+}
+function exportLarvalKML(){
+  const s=lSnap();const trk=s.track;
+  const hasTrack=trk&&trk.waypoints&&trk.waypoints.length;
+  const hGps=(s.houses||[]).filter(h=>h.lat&&h.lng);
+  const dGps=(s.dipSites||[]).filter(d=>d.lat&&d.lng);
+  if(!hasTrack&&!hGps.length&&!dGps.length){showToast('No GPS data to export','warn');return;}
+  dlFile(buildKML(s),'EST_Larval_'+(s.district||'Survey')+'_'+s.date+'.kml','application/vnd.google-earth.kml+xml');
+  const allPts=[...(hasTrack?trk.waypoints:[]),...hGps.map(h=>({lat:parseFloat(h.lat),lng:parseFloat(h.lng)}))];
   if(allPts.length){
-    const step=Math.max(1,Math.floor(allPts.length/8));
-    const wps=[];for(let i=0;i<allPts.length;i+=step){wps.push(allPts[i].lat.toFixed(6)+','+allPts[i].lng.toFixed(6));}
-    if(allPts.length>1&&wps[wps.length-1]!==allPts[allPts.length-1].lat.toFixed(6)+','+allPts[allPts.length-1].lng.toFixed(6))wps.push(allPts[allPts.length-1].lat.toFixed(6)+','+allPts[allPts.length-1].lng.toFixed(6));
-    const mapsUrl='https://www.google.com/maps/dir/'+wps.join('/');
-    // Show a modal/toast with the link that user can open
+    const step=Math.max(1,Math.floor(allPts.length/8));const wps=[];
+    for(let i=0;i<allPts.length;i+=step)wps.push(allPts[i].lat.toFixed(6)+','+allPts[i].lng.toFixed(6));
+    const last=allPts[allPts.length-1];const lastStr=last.lat.toFixed(6)+','+last.lng.toFixed(6);
+    if(wps.length>1&&wps[wps.length-1]!==lastStr)wps.push(lastStr);
     showToast('KML downloaded. Opening Maps link...','pdf');
-    setTimeout(()=>{if(confirm('Open survey path in Google Maps?\n('+wps.length+' waypoints)')){ window.open(mapsUrl,'_blank');}},600);
-  }else{showToast('KML exported','pdf');}
+    setTimeout(()=>{if(confirm('Open survey path in Google Maps?\n('+wps.length+' waypoints)'))window.open('https://www.google.com/maps/dir/'+wps.join('/'),'_blank');},600);
+  }else showToast('KML exported','pdf');
 }
 function exportLarvalKMLSilent(s){
-  if(!s)return;const trk=s.track;const hasTrack=trk&&trk.waypoints&&trk.waypoints.length;
-  const escX=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const housePl=(s.houses||[]).filter(h=>h.lat&&h.lng).map(h=>`<Placemark><name>${escX(h.houseNo)}</name><Style><IconStyle><color>${h.housePositive?'ff1400ff':'ffff8800'}</color></IconStyle></Style><Point><coordinates>${h.lng},${h.lat},0</coordinates></Point></Placemark>`).join('\n');
-  const dipPl=(s.dipSites||[]).filter(d=>d.lat&&d.lng).map(d=>`<Placemark><name>${escX(d.siteNo)}</name><Style><IconStyle><color>ffff9900</color></IconStyle></Style><Point><coordinates>${d.lng},${d.lat},0</coordinates></Point></Placemark>`).join('\n');
-  const pathPl=hasTrack?`<Placemark><name>Survey Path</name><Style><LineStyle><color>ff00d7ff</color><width>3</width></LineStyle></Style><LineString><tessellate>1</tessellate><coordinates>\n${trk.waypoints.map(p=>p.lng.toFixed(7)+','+p.lat.toFixed(7)+',0').join('\n')}\n</coordinates></LineString></Placemark>`:'';
-  const kml=`<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n<name>EST Larval — ${escX(s.district||'Survey')} — ${s.date}</name>\n${pathPl}\n${housePl}\n${dipPl}\n</Document>\n</kml>`;
-  dlFile(kml,'EST_Larval_'+(s.district||'Survey')+'_'+s.date+'.kml','application/vnd.google-earth.kml+xml');
+  if(!s)return;dlFile(buildKML(s),'EST_Larval_'+(s.district||'Survey')+'_'+s.date+'.kml','application/vnd.google-earth.kml+xml');
 }
 
 /* ── PDF EXPORT ─────────────────────────────────────────── */
@@ -2992,7 +3026,7 @@ function renderSavedMod(mod){
     const isSel=sel.has(String(s.id)),ac=mod==='adult';
     const savedTime=s.savedAt?new Date(s.savedAt).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true}):'';
     const meta=(s.state||'')+(s.state&&s.district?' · ':'')+( s.district||'')+(s.date?' · '+s.date:'')+( savedTime?' · '+savedTime:'');
-    const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');
+    const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');div.dataset.sid=String(s.id);
     const serialNo=surveyIdx+1;
     div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?('Synced '+new Date(s.syncedAt||'').toLocaleDateString('en-IN')):'Not synced to GitHub'}</div><div class="sit-acts"><button class="sit-act" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} CSV</button><button class="sit-act" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
     list.appendChild(div);
@@ -3034,6 +3068,14 @@ function showSavedTab(tab){
     else{badge.className='hmod-badge larval';badge.textContent='Larval Surveillance';}
   }
   renderSavedMod(tab);
+}
+function reviewLastSaved(){
+  if(!lastSavedId||!lastSavedType){showSavedTab(activeSavedTab);renderSaved();showScreen('saved');return;}
+  showSavedTab(lastSavedType);renderSaved();showScreen('saved');
+  setTimeout(()=>{
+    const el=document.querySelector('[data-sid="'+lastSavedId+'"]');
+    if(el){el.scrollIntoView({behavior:'smooth',block:'nearest'});el.style.outline='2.5px solid var(--primary)';el.style.outlineOffset='3px';setTimeout(()=>{el.style.outline='';el.style.outlineOffset='';},2500);}
+  },350);
 }
 
 /* ── SHARE EMAIL ────────────────────────────────────────── */

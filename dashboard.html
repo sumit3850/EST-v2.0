@@ -261,9 +261,9 @@ tr:nth-child(even) td{background:#f8faf9;}
         <th>#</th><th>Date</th><th>Location</th><th>State/UT</th><th>District</th>
         <th>Type</th><th>Houses</th><th>Mosq</th><th>Non-Cx</th><th>Culex</th>
         <th>PMHD</th><th>TMHD</th><th>Indoor Den</th><th>Outdoor Den</th><th>HBR</th>
-        <th>Collectors</th><th>Man-Hrs</th><th>Nights</th><th>Officer</th><th>GPS</th><th>Saved</th><th>Sync</th><th>Del</th>
+        <th>Collectors</th><th>Man-Hrs</th><th>Nights</th><th>Officer</th><th>GPS</th><th>Map</th><th>Saved</th><th>Sync</th><th>Del</th>
       </tr></thead>
-      <tbody id="tbody-adult"><tr><td colspan="24" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+      <tbody id="tbody-adult"><tr><td colspan="25" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -292,9 +292,9 @@ tr:nth-child(even) td{background:#f8faf9;}
         <th>Houses</th><th>HI%</th><th>CI%</th><th>BI</th><th>Pupal Idx</th>
         <th>Larval Den</th><th>Pupal Den</th><th>Immature Den</th>
         <th>Containers</th><th>+ve Cont</th><th>Larvae</th><th>Pupae</th><th>Dips</th>
-        <th>Workers</th><th>Officer</th><th>GPS</th><th>Saved</th><th>Sync</th><th>Del</th>
+        <th>Workers</th><th>Officer</th><th>GPS</th><th>Map</th><th>Saved</th><th>Sync</th><th>Del</th>
       </tr></thead>
-      <tbody id="tbody-larval"><tr><td colspan="25" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+      <tbody id="tbody-larval"><tr><td colspan="26" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -442,11 +442,12 @@ function updateStats(){
 /* ── RENDER TABLES ── */
 function renderAdult(){
   const tb=document.getElementById('tbody-adult');
-  if(!adultF.length){tb.innerHTML='<tr><td colspan="24" class="tbl-empty">No adult surveys found</td></tr>';return;}
+  if(!adultF.length){tb.innerHTML='<tr><td colspan="25" class="tbl-empty">No adult surveys found</td></tr>';return;}
   tb.innerHTML=adultF.map((s,i)=>{
     const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
     const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','adult')" title="Delete record" style="padding:0 8px;height:28px;">🗑</button>`:'—';
+    const mapBtn=(s.track&&s.track.waypoints&&s.track.waypoints.length>=2)?`<button class="pt-btn ghost" style="padding:0 7px;height:26px;font-size:11px;" onclick="showTrackMap(${i},'adult')" title="View survey map">🗺</button>`:`<span style="color:var(--muted);">—</span>`;
     return `<tr>
       <td><input type="checkbox" class="row-cb adult-cb" data-idx="${i}"></td>
       <td>${i+1}</td><td>${s.date||'-'}</td>
@@ -467,6 +468,7 @@ function renderAdult(){
       <td>${s.nights||1}</td>
       <td>${s.officers||'-'}</td>
       <td style="font-size:10px;font-family:monospace;">${gps}</td>
+      <td>${mapBtn}</td>
       <td>${saved}</td>
       <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓ Synced':'Local'}</span></td>
       <td>${delBtn}</td>
@@ -474,12 +476,13 @@ function renderAdult(){
 }
 function renderLarval(){
   const tb=document.getElementById('tbody-larval');
-  if(!larvalF.length){tb.innerHTML='<tr><td colspan="25" class="tbl-empty">No larval surveys found</td></tr>';return;}
+  if(!larvalF.length){tb.innerHTML='<tr><td colspan="26" class="tbl-empty">No larval surveys found</td></tr>';return;}
   tb.innerHTML=larvalF.map((s,i)=>{
     const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
     const imd=s.totalDips>0?(((s.totalLarvae+s.totalPupae)/s.totalDips)*100).toFixed(1):'-';
     const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','larval')" title="Delete record" style="padding:0 8px;height:28px;">🗑</button>`:'—';
+    const mapBtn=(s.track&&s.track.waypoints&&s.track.waypoints.length>=2)?`<button class="pt-btn ghost" style="padding:0 7px;height:26px;font-size:11px;" onclick="showTrackMap(${i},'larval')" title="View survey map">🗺</button>`:`<span style="color:var(--muted);">—</span>`;
     return `<tr>
       <td><input type="checkbox" class="row-cb larval-cb" data-idx="${i}"></td>
       <td>${i+1}</td><td>${s.date||'-'}</td>
@@ -501,6 +504,7 @@ function renderLarval(){
       <td>${s.workers||'-'}</td>
       <td>${s.officers||'-'}</td>
       <td style="font-size:10px;font-family:monospace;">${gps}</td>
+      <td>${mapBtn}</td>
       <td>${saved}</td>
       <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓ Synced':'Local'}</span></td>
       <td>${delBtn}</td>
