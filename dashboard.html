@@ -171,14 +171,10 @@ tr:nth-child(even) td{background:#f8faf9;}
 
 <!-- GitHub Setup Banner -->
 <div id="setup-banner">
-  <input type="hidden" id="sf-owner" value="sumit3850">
-  <input type="hidden" id="sf-repo" value="EST-v2.0">
-  <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);white-space:nowrap;">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--teal)"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-    Database: <strong style="color:var(--teal);">sumit3850 / EST-v2.0</strong>
-  </div>
-  <div class="sf-group" style="flex:2;"><label class="sf-label">Personal Access Token (repo scope)</label><input id="sf-token" class="sf-input" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"></div>
-  <button class="sf-btn" onclick="saveSetup()">Connect &amp; Save</button>
+  <div class="sf-group"><label class="sf-label">GitHub Username</label><input id="sf-owner" class="sf-input" placeholder="sumit3850"></div>
+  <div class="sf-group"><label class="sf-label">Repository Name</label><input id="sf-repo" class="sf-input" value="EST-v2.0"></div>
+  <div class="sf-group" style="flex:2;"><label class="sf-label">Personal Access Token</label><input id="sf-token" class="sf-input" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"></div>
+  <button class="sf-btn" onclick="saveSetup()">Connect</button>
   <button class="sf-dismiss" onclick="toggleSetup()">Hide</button>
 </div>
 
@@ -221,9 +217,9 @@ tr:nth-child(even) td{background:#f8faf9;}
         <th>#</th><th>Date</th><th>Location</th><th>State/UT</th><th>District</th>
         <th>Type</th><th>Houses</th><th>Mosq</th><th>Non-Cx</th><th>Culex</th>
         <th>PMHD</th><th>TMHD</th><th>Indoor Den</th><th>Outdoor Den</th><th>HBR</th>
-        <th>Collectors</th><th>Man-Hrs</th><th>Nights</th><th>Officer</th><th>GPS</th><th>Saved</th><th>Sync</th><th>Path</th><th>Del</th>
+        <th>Collectors</th><th>Man-Hrs</th><th>Nights</th><th>Officer</th><th>GPS</th><th>Saved</th><th>Sync</th><th>Del</th>
       </tr></thead>
-      <tbody id="tbody-adult"><tr><td colspan="25" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+      <tbody id="tbody-adult"><tr><td colspan="24" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -246,9 +242,9 @@ tr:nth-child(even) td{background:#f8faf9;}
         <th>Houses</th><th>HI%</th><th>CI%</th><th>BI</th><th>Pupal Idx</th>
         <th>Larval Den</th><th>Pupal Den</th><th>Immature Den</th>
         <th>Containers</th><th>+ve Cont</th><th>Larvae</th><th>Pupae</th><th>Dips</th>
-        <th>Workers</th><th>Officer</th><th>GPS</th><th>Saved</th><th>Sync</th><th>Path</th><th>Del</th>
+        <th>Workers</th><th>Officer</th><th>GPS</th><th>Saved</th><th>Sync</th><th>Del</th>
       </tr></thead>
-      <tbody id="tbody-larval"><tr><td colspan="26" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+      <tbody id="tbody-larval"><tr><td colspan="25" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -274,7 +270,7 @@ tr:nth-child(even) td{background:#f8faf9;}
 
 <script>
 const DASH_U='ANIENTO', DASH_P='2026', DASH_KEY='est_dash_creds';
-let GH={owner:'sumit3850',repo:'EST-v2.0',token:''};
+let GH={owner:'',repo:'EST-v2.0',token:''};
 let allAdult=[],allLarval=[],adultF=[],larvalF=[],usersCfg=[];
 
 /* ── AUTH ── */
@@ -292,13 +288,13 @@ function validateDashLogin(u,p){
   }catch(e){}
   return false;
 }
-async function doLogin(){
+function doLogin(){
   const u=document.getElementById('lf-user').value.trim();
   const p=document.getElementById('lf-pass').value;
   const rem=document.getElementById('lf-rem').checked;
   const errEl=document.getElementById('lf-err');
   if(!validateDashLogin(u,p)){
-    errEl.textContent='Invalid credentials. Use ANIENTO / 2026 or configured admin credentials.';
+    errEl.textContent='Invalid credentials. Use ANIENTO / 2026 or configured GitHub credentials.';
     errEl.style.display='block';
     document.getElementById('lf-pass').value='';
     return;
@@ -307,9 +303,7 @@ async function doLogin(){
   if(rem)localStorage.setItem(DASH_KEY,JSON.stringify({u,p}));else localStorage.removeItem(DASH_KEY);
   document.getElementById('login-screen').classList.add('gone');
   document.getElementById('app').classList.add('show');
-  loadSetup();
-  await autoConnect();
-  loadAll();
+  loadSetup();loadAll();
 }
 function checkAuth(){
   try{
@@ -326,82 +320,34 @@ function doLogout(){localStorage.removeItem(DASH_KEY);document.getElementById('l
 
 /* ── SETUP ── */
 function toggleSetup(){const b=document.getElementById('setup-banner');b.classList.toggle('hidden');}
-async function saveSetup(){
-  GH.owner='sumit3850';GH.repo='EST-v2.0';
+function saveSetup(){
+  GH.owner=document.getElementById('sf-owner').value.trim();
+  GH.repo=document.getElementById('sf-repo').value.trim()||'EST-v2.0';
   GH.token=document.getElementById('sf-token').value.trim();
   localStorage.setItem('est_dash_cfg',JSON.stringify(GH));
   document.getElementById('setup-banner').classList.add('hidden');
-  if(GH.token){
-    setStatus('Connecting…','info');
-    try{
-      const existing=await ghGet('config.json');
-      if(existing){
-        const cfg=JSON.parse(b64d(existing.content));
-        cfg.appToken=_enc(GH.token);cfg.updatedAt=new Date().toISOString();
-        const ok=await ghPut('config.json',cfg,existing.sha);
-        setStatus(ok?'✓ Connected and token saved — all devices will auto-connect':'Connected but failed to save token — check token has Contents write permission',ok?'ok':'err');
-      }else{
-        setStatus('Connected but config.json not found in repo','err');
-      }
-    }catch(e){setStatus('Error: '+e.message,'err');}
-  }
   loadAll();
 }
 function loadSetup(){
-  try{const c=JSON.parse(localStorage.getItem('est_dash_cfg'));if(c){GH=Object.assign({owner:'sumit3850',repo:'EST-v2.0'},c);}}catch(e){}
-  document.getElementById('sf-owner').value=GH.owner;
-  document.getElementById('sf-repo').value=GH.repo;
-  document.getElementById('sf-token').value=GH.token||'';
+  try{const c=JSON.parse(localStorage.getItem('est_dash_cfg'));if(c){GH=c;document.getElementById('sf-owner').value=c.owner||'';document.getElementById('sf-repo').value=c.repo||'EST-v2.0';document.getElementById('sf-token').value=c.token||'';}}catch(e){}
 }
 
 /* ── GITHUB API ── */
 function ghH(){const h={'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};if(GH.token)h['Authorization']='token '+GH.token;return h;}
 function b64d(s){return decodeURIComponent(escape(atob(s)));}
 function b64e(s){return btoa(unescape(encodeURIComponent(s)));}
-const _EK='ESTv2.0ANIento2026';
-function _enc(t){try{return btoa([...t].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^_EK.charCodeAt(i%_EK.length))).join(''));}catch(e){return t;}}
-function _dec(s){try{return[...atob(s)].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^_EK.charCodeAt(i%_EK.length))).join('');}catch(e){return s;}}
 async function ghGet(path){const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{headers:ghH(),cache:'no-store'});if(!r.ok)return null;return r.json();}
-async function autoConnect(){
-  if(GH.token)return;
-  try{
-    const r=await fetch('https://raw.githubusercontent.com/sumit3850/EST-v2.0/main/config.json',{cache:'no-store'});
-    if(r.ok){
-      const cfg=await r.json();
-      if(cfg.appToken){
-        const tok=_dec(cfg.appToken);
-        GH.token=tok;GH.owner='sumit3850';GH.repo='EST-v2.0';
-        localStorage.setItem('est_dash_cfg',JSON.stringify(GH));
-        const tf=document.getElementById('sf-token');if(tf)tf.value=tok;
-      }
-    }
-  }catch(e){}
-}
-async function ghPut(path,content,sha){const body={message:'[EST Dashboard] Update '+path,content:b64e(JSON.stringify(content,null,2))};if(sha)body.sha=sha;const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{method:'PUT',headers:{...ghH(),'Content-Type':'application/json'},body:JSON.stringify(body)});return r.ok;}
+async function ghPut(path,content,sha){const body={message:'[EST Dashboard] Update '+path,content:b64e(JSON.stringify(content,null,2)),branch:'main'};if(sha)body.sha=sha;const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{method:'PUT',headers:{...ghH(),'Content-Type':'application/json'},body:JSON.stringify(body)});return r.ok;}
 
 /* ── LOAD ALL ── */
 function setStatus(msg,type){const el=document.getElementById('status-bar');el.textContent=msg;el.className='status-bar '+(type||'info');el.style.display=msg?'block':'none';}
 async function loadAll(){
-  if(!GH.owner||!GH.token){setStatus('Enter your GitHub token above to connect','info');document.getElementById('setup-banner').classList.remove('hidden');return;}
+  if(!GH.owner||!GH.token){setStatus('Enter GitHub credentials above to load data','info');document.getElementById('setup-banner').classList.remove('hidden');return;}
   setStatus('Loading from GitHub…','info');
   const pill=document.getElementById('conn-pill');pill.textContent='Connecting…';pill.classList.remove('ok');
   try{
     const root=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/data`,{headers:ghH(),cache:'no-store'});
-    if(root.status===404){
-      // data/ directory doesn't exist yet — repo connected but no surveys synced
-      allAdult=[];allLarval=[];adultF=[];larvalF=[];
-      const cfg=await ghGet('config.json').then(d=>JSON.parse(b64d(d.content))).catch(()=>null);
-      if(cfg)usersCfg=cfg.credentials||[];
-      updateStats();renderAdult();renderLarval();renderUsers();
-      pill.textContent='Connected ✓ (no surveys yet)';pill.classList.add('ok');
-      document.getElementById('st-sync').textContent=new Date().toLocaleTimeString();
-      setStatus('');return;
-    }
-    if(!root.ok){
-      const s=root.status;
-      setStatus(s===401?'Invalid token — check your Personal Access Token':s===403?'Token lacks repo access — needs Contents read/write permission':'GitHub error '+s+' — verify owner, repo and token','err');
-      pill.textContent='Connection failed';return;
-    }
+    if(!root.ok){setStatus('Cannot reach GitHub — check username/repo/token','err');pill.textContent='Connection failed';return;}
     const dirs=await root.json();
     let aFiles=[],lFiles=[];
     for(const d of dirs){
@@ -435,15 +381,11 @@ function updateStats(){
 /* ── RENDER TABLES ── */
 function renderAdult(){
   const tb=document.getElementById('tbody-adult');
-  if(!adultF.length){tb.innerHTML='<tr><td colspan="25" class="tbl-empty">No adult surveys found</td></tr>';return;}
+  if(!adultF.length){tb.innerHTML='<tr><td colspan="24" class="tbl-empty">No adult surveys found</td></tr>';return;}
   tb.innerHTML=adultF.map((s,i)=>{
     const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
     const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','adult')" title="Delete record" style="padding:0 8px;height:28px;">🗑</button>`:'—';
-    const hasTrack=s.track?.waypoints?.length>1;
-    const trackCell=hasTrack
-      ?`<button onclick="showTrackMap(${i},'adult')" title="View path on map" style="display:flex;align-items:center;gap:4px;padding:3px 8px;background:#e6f7f4;border:1px solid #00bfa5;border-radius:6px;font-size:11px;font-weight:700;color:#006b5c;cursor:pointer;white-space:nowrap;">🗺 ${s.track.distanceKm.toFixed(2)}km</button>`
-      :`<span style="color:#bbb;font-size:11px;">—</span>`;
     return `<tr>
       <td><input type="checkbox" class="row-cb adult-cb" data-idx="${i}"></td>
       <td>${i+1}</td><td>${s.date||'-'}</td>
@@ -466,22 +408,17 @@ function renderAdult(){
       <td style="font-size:10px;font-family:monospace;">${gps}</td>
       <td>${saved}</td>
       <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓ Synced':'Local'}</span></td>
-      <td>${trackCell}</td>
       <td>${delBtn}</td>
     </tr>`;}).join('');
 }
 function renderLarval(){
   const tb=document.getElementById('tbody-larval');
-  if(!larvalF.length){tb.innerHTML='<tr><td colspan="26" class="tbl-empty">No larval surveys found</td></tr>';return;}
+  if(!larvalF.length){tb.innerHTML='<tr><td colspan="25" class="tbl-empty">No larval surveys found</td></tr>';return;}
   tb.innerHTML=larvalF.map((s,i)=>{
     const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
     const imd=s.totalDips>0?(((s.totalLarvae+s.totalPupae)/s.totalDips)*100).toFixed(1):'-';
     const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','larval')" title="Delete record" style="padding:0 8px;height:28px;">🗑</button>`:'—';
-    const hasTrack=s.track?.waypoints?.length>1;
-    const trackCell=hasTrack
-      ?`<button onclick="showTrackMap(${i},'larval')" title="View path on map" style="display:flex;align-items:center;gap:4px;padding:3px 8px;background:#e3f2fd;border:1px solid #64b5f6;border-radius:6px;font-size:11px;font-weight:700;color:#1565c0;cursor:pointer;white-space:nowrap;">🗺 ${s.track.distanceKm.toFixed(2)}km</button>`
-      :`<span style="color:#bbb;font-size:11px;">—</span>`;
     return `<tr>
       <td><input type="checkbox" class="row-cb larval-cb" data-idx="${i}"></td>
       <td>${i+1}</td><td>${s.date||'-'}</td>
@@ -505,7 +442,6 @@ function renderLarval(){
       <td style="font-size:10px;font-family:monospace;">${gps}</td>
       <td>${saved}</td>
       <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓ Synced':'Local'}</span></td>
-      <td>${trackCell}</td>
       <td>${delBtn}</td>
     </tr>`;}).join('');
 }
@@ -654,9 +590,12 @@ const _TileMap=(()=>{
         lbl+=`<text x="${(s.x+5).toFixed(1)}" y="${(s.y+4).toFixed(1)}" font-size="9" font-family="system-ui,sans-serif" font-weight="700" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">${h.houseNo}</text>`;
       });
       c+=lbl;
+      if(pts.length>=1){
+        const s0=scr(pts[0].lat,pts[0].lng);
+        c+=`<circle cx="${s0.x.toFixed(1)}" cy="${s0.y.toFixed(1)}" r="6" fill="#43a047" stroke="#fff" stroke-width="2"/><text x="${(s0.x+8).toFixed(1)}" y="${(s0.y+4).toFixed(1)}" font-size="9" font-family="system-ui,sans-serif" font-weight="700" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">${pts.length>1?'S':'GPS'}</text>`;
+      }
       if(pts.length>=2){
-        const s0=scr(pts[0].lat,pts[0].lng),sN=scr(pts[pts.length-1].lat,pts[pts.length-1].lng);
-        c+=`<circle cx="${s0.x.toFixed(1)}" cy="${s0.y.toFixed(1)}" r="6" fill="#43a047" stroke="#fff" stroke-width="2"/><text x="${(s0.x+8).toFixed(1)}" y="${(s0.y+4).toFixed(1)}" font-size="9" font-family="system-ui,sans-serif" font-weight="700" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">S</text>`;
+        const sN=scr(pts[pts.length-1].lat,pts[pts.length-1].lng);
         c+=`<circle cx="${sN.x.toFixed(1)}" cy="${sN.y.toFixed(1)}" r="6" fill="#43a047" stroke="#fff" stroke-width="2"/><text x="${(sN.x+8).toFixed(1)}" y="${(sN.y+4).toFixed(1)}" font-size="9" font-family="system-ui,sans-serif" font-weight="700" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">E</text>`;
       }
       svg.setAttribute('viewBox',`0 0 ${W()} ${H()}`);svg.innerHTML=c;
@@ -699,28 +638,5 @@ function showTrackMap(idx,type){
 function _fmtDur(s){if(!s)return'—';const m=Math.floor(s/60),h=Math.floor(m/60);return h>0?h+'h '+String(m%60).padStart(2,'0')+'m':m+'m '+String(s%60).padStart(2,'0')+'s';}
 function closeMapModal(){document.getElementById('map-modal').style.display='none';}
 </script>
-
-<!-- ══ TRACK MAP MODAL ══ -->
-<div id="map-modal" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.6);align-items:center;justify-content:center;padding:16px;">
-  <div style="background:#fff;border-radius:14px;width:100%;max-width:700px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4);">
-    <div style="padding:14px 16px;background:var(--teal);display:flex;align-items:center;justify-content:space-between;gap:12px;">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-        <span style="font-weight:700;color:#fff;font-size:14px;">Survey Path</span>
-      </div>
-      <div id="map-meta" style="font-size:12px;color:rgba(255,255,255,.85);flex:1;"></div>
-      <button onclick="closeMapModal()" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:50%;width:30px;height:30px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✕</button>
-    </div>
-    <div id="map-body" style="flex:1;min-height:420px;"></div>
-    <div style="padding:9px 14px;background:#0a1628;border-top:1px solid #1e3a5f;font-size:11px;color:#90caf9;display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#43a047;vertical-align:middle;margin-right:3px;"></span>S=Start / E=End</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#e53935;vertical-align:middle;margin-right:3px;"></span>Positive</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1565c0;vertical-align:middle;margin-right:3px;"></span>House</span>
-      <span><span style="display:inline-block;width:20px;height:2px;background:#ffd600;vertical-align:middle;border-radius:2px;margin-right:3px;"></span>Path</span>
-      <span style="margin-left:auto;font-size:9px;color:#546e7a;">Imagery © Google · drag to pan · +/− to zoom</span>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>

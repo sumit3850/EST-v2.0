@@ -274,10 +274,6 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
 .spin{animation:spinA .8s linear infinite;}
 @keyframes spinA{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 @keyframes gpsp{0%{box-shadow:0 0 0 0 rgba(0,191,165,.45);}70%{box-shadow:0 0 0 12px rgba(0,191,165,0);}100%{box-shadow:0 0 0 0 rgba(0,191,165,0);}}
-@keyframes recpulse{0%,100%{opacity:1;}50%{opacity:.3;}}
-#track-rec-bar{display:none;position:fixed;bottom:var(--nh);left:0;right:0;z-index:190;background:rgba(0,55,46,.96);backdrop-filter:blur(8px);padding:7px 16px;align-items:center;justify-content:space-between;border-top:1.5px solid rgba(0,191,165,.35);height:42px;}
-.trk-dot{width:9px;height:9px;border-radius:50%;background:#ff4d4d;box-shadow:0 0 6px #ff4d4d;animation:recpulse 1.1s infinite;flex-shrink:0;}
-body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!important;}
 .num-field{display:flex;align-items:center;gap:10px;}
 .num-field input{width:72px;height:var(--touch);text-align:center;padding:0 8px;background:var(--sfc);border:2px solid var(--olv);border-radius:var(--rmd);font-family:var(--mono);font-size:16px;color:var(--os);appearance:none;}
 .num-field input:focus{outline:none;border-color:var(--primary);}
@@ -337,15 +333,36 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
       SIGN IN
     </button>
-    <div style="width:100%;max-width:340px;text-align:center;margin-top:10px;">
-      <button onclick="document.getElementById('reg-modal').classList.add('open')" style="background:none;border:none;color:rgba(255,255,255,.6);font-size:13px;font-weight:600;cursor:pointer;padding:8px 16px;border:1.5px solid rgba(255,255,255,.2);border-radius:var(--rxl);width:100%;display:flex;align-items:center;justify-content:center;gap:8px;transition:all var(--tr);">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-        New User? Create Account
-      </button>
+    <div id="reg-toggle-link" style="width:100%;max-width:340px;text-align:center;margin-top:6px;margin-bottom:2px;">
+      <button onclick="showRegisterForm()" style="background:none;border:none;color:rgba(255,255,255,.55);font-size:12px;cursor:pointer;text-decoration:underline;padding:4px 8px;">New user? Create an account</button>
     </div>
 
-    <div id="splash-db-status" style="display:none;"></div>
-    <span id="splash-db-btn" style="display:none;"></span><span id="splash-db-text" style="display:none;"></span>
+    <!-- Registration Card -->
+    <div class="login-card" id="reg-card" style="display:none;">
+      <div style="text-align:center;font-size:13px;font-weight:700;color:#fff;margin-bottom:12px;letter-spacing:.02em;">Create New Account</div>
+      <label class="login-label">Username</label>
+      <input class="login-inp" type="text" id="reg-user" placeholder="Choose a username" autocomplete="off">
+      <label class="login-label">Password</label>
+      <input class="login-inp" type="password" id="reg-pass" placeholder="Choose a password">
+      <label class="login-label">Confirm Password</label>
+      <input class="login-inp" type="password" id="reg-pass2" placeholder="Confirm password" onkeydown="if(event.key==='Enter')doRegister()">
+      <div class="login-err" id="reg-err">Error</div>
+    </div>
+    <button class="launch-btn" id="reg-btn" onclick="doRegister()" style="display:none;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      CREATE ACCOUNT
+    </button>
+    <div id="back-login-link" style="width:100%;max-width:340px;text-align:center;margin-top:6px;margin-bottom:2px;display:none;">
+      <button onclick="showLoginForm()" style="background:none;border:none;color:rgba(255,255,255,.55);font-size:12px;cursor:pointer;text-decoration:underline;padding:4px 8px;">Already have an account? Sign In</button>
+    </div>
+
+    <div style="width:100%;max-width:340px;margin-top:10px;">
+      <button onclick="showGhSettings()" id="splash-db-btn" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;background:rgba(255,255,255,.12);border:1.5px solid rgba(104,250,221,.4);border-radius:var(--rxl);color:var(--pb);font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all var(--tr);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        <span id="splash-db-text">Connect GitHub Database</span>
+      </button>
+      <div id="splash-db-status" style="text-align:center;font-size:10px;color:rgba(255,255,255,.4);margin-top:6px;display:none;"></div>
+    </div>
     <div id="offline-login-badge" style="display:none;background:rgba(180,83,9,.25);border:1px solid rgba(251,191,36,.4);border-radius:8px;padding:7px 14px;font-size:11px;font-weight:600;color:#fde68a;text-align:center;margin-top:8px;margin-bottom:4px;width:100%;max-width:340px;">⚠ Offline — use pre-configured credentials</div>
     <div style="font-size:10px;color:rgba(255,255,255,.25);margin-top:10px;text-align:center;line-height:1.6;">Offline-capable · GPS enabled · Data stored locally<br>WHO-standard surveillance indices</div>
   </div>
@@ -607,7 +624,6 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       <button onclick="goTo('collect')" style="flex:1;height:38px;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--sfc);border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:12px;font-weight:600;color:var(--osv);cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Ph 2: Collection</button>
     </div>
     <div class="alert warn" id="a-val-alert" style="display:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg><span id="a-val-msg">Incomplete.</span></div>
-    <div id="a-track-preview"></div>
     <div class="sec-hdr"><svg width="17" height="17" viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg><span class="sec-lbl">Survey Metadata</span></div>
     <div class="r-card">
       <div class="r-row"><span class="r-key">Date</span><span class="r-val mono" id="r-a-date">-</span></div>
@@ -796,84 +812,56 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
         <span style="font-size:11px;font-weight:700;color:var(--osv);white-space:nowrap;">Others:</span>
         <input type="text" id="l-other-name" placeholder="Species name…" style="flex:1;height:34px;padding:0 10px;border:1.5px solid var(--olv);border-radius:var(--rsm);font-size:13px;color:var(--os);background:var(--sfc);">
       </div>
+      <!-- ANOPHELES / CULEX DIPPING -->
+      <div style="background:rgba(0,107,92,.05);border:1px solid rgba(0,107,92,.2);border-radius:var(--rmd);padding:11px;margin-bottom:10px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Anopheles / Culex — Dipping</div>
+        <div style="font-size:10px;color:var(--osv);margin-bottom:9px;">Larval Density · Pupal Density · Immature Density</div>
+        <!-- Running indices for An/Cx -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;">
+          <div style="background:rgba(0,107,92,.08);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Larval Den.</div>
+            <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-ld">-</div>
+            <div style="font-size:8px;color:var(--osv);">/100 dips</div>
+          </div>
+          <div style="background:rgba(0,107,92,.08);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Pupal Den.</div>
+            <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-pd">-</div>
+            <div style="font-size:8px;color:var(--osv);">/100 dips</div>
+          </div>
+          <div style="background:rgba(0,107,92,.08);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Imm. Den.</div>
+            <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-id">-</div>
+            <div style="font-size:8px;color:var(--osv);">/100 dips</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,107,92,.1);">
+            <div style="font-size:12px;font-weight:700;color:var(--os);">Dips Taken</div>
+            <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('dips',-1)">-</button><div class="cnt-val" id="l-dips" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('dips',1)">+</button></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,107,92,.1);">
+            <div style="font-size:12px;font-weight:700;color:var(--os);">Larvae Collected</div>
+            <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('larvae',-1)">-</button><div class="cnt-val" id="l-larvae" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('larvae',1)">+</button></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;">
+            <div style="font-size:12px;font-weight:700;color:var(--os);">Pupae Collected</div>
+            <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('pupae',-1)">-</button><div class="cnt-val" id="l-pupae" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('pupae',1)">+</button></div>
+          </div>
+        </div>
+      </div>
+
+
       <div class="field" style="margin-bottom:9px;">
         <label class="flabel">End Time</label>
         <div class="time-now-row"><input type="time" id="l-end" class="time-inp" style="border-color:rgba(186,26,26,.35);"><button class="now-btn end" onclick="setNow('l','end')">NOW</button></div>
       </div>
       <button class="btn-p larval-btn" onclick="logLarvalHouse()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>Log <span id="l-log-btn-code">HH-001</span></button>
     </div>
-
     <div class="sec-hdr"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--larval)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="sec-lbl">Houses Logged</span></div>
     <div id="l-houses-empty" style="text-align:center;color:var(--osv);font-size:13px;padding:14px;background:var(--sfc);border-radius:var(--rmd);border:1px dashed rgba(21,101,192,.3);">No houses logged yet.</div>
     <div id="l-houses-list"></div>
-    <div class="divider" style="margin-top:4px;"></div>
-
-    <!-- ═══ ANOPHELES / CULEX DIPPING — SEPARATE SECTION ═══ -->
-    <div style="margin-top:6px;">
-      <div style="background:rgba(0,107,92,.07);border:2px solid rgba(0,107,92,.32);border-radius:var(--rmd);padding:13px;margin-bottom:8px;">
-        <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:2px;">&#x1F99F; Anopheles / Culex — Dipping</div>
-        <div style="font-size:10px;color:var(--osv);margin-bottom:10px;">Separate dipping records &middot; Larval &amp; Pupal Density per 100 dips</div>
-        <!-- Running live indices -->
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:11px;">
-          <div style="background:rgba(0,107,92,.1);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
-            <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Larval Den.</div>
-            <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-ld">-</div>
-            <div style="font-size:8px;color:var(--osv);">/100 dips</div>
-          </div>
-          <div style="background:rgba(0,107,92,.1);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
-            <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Pupal Den.</div>
-            <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-pd">-</div>
-            <div style="font-size:8px;color:var(--osv);">/100 dips</div>
-          </div>
-          <div style="background:rgba(0,107,92,.1);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
-            <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Imm. Den.</div>
-            <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-id">-</div>
-            <div style="font-size:8px;color:var(--osv);">/100 dips</div>
-          </div>
-        </div>
-        <!-- Site No. -->
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,107,92,.12);">
-          <div style="font-size:12px;font-weight:700;color:var(--os);">Site No.</div>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <button class="cnt-btn" style="color:var(--primary);" onclick="changeDipSN(-1)">-</button>
-            <div style="font-family:var(--mono);font-size:15px;font-weight:700;color:var(--primary);min-width:58px;text-align:center;background:rgba(0,107,92,.08);border:1px solid var(--pd);border-radius:var(--rsm);padding:3px 6px;" id="dip-site-disp">DS-001</div>
-            <button class="cnt-btn" style="color:var(--primary);" onclick="changeDipSN(1)">+</button>
-          </div>
-        </div>
-        <!-- Dips Taken -->
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,107,92,.12);">
-          <div style="font-size:12px;font-weight:700;color:var(--os);">Dips Taken</div>
-          <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeDipCnt('dips',-1)">-</button><div class="cnt-val" id="dip-dips" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeDipCnt('dips',1)">+</button></div>
-        </div>
-        <!-- Larvae Collected -->
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,107,92,.12);">
-          <div style="font-size:12px;font-weight:700;color:var(--os);">Larvae Collected</div>
-          <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeDipCnt('larvae',-1)">-</button><div class="cnt-val" id="dip-larvae" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeDipCnt('larvae',1)">+</button></div>
-        </div>
-        <!-- Pupae Collected -->
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,107,92,.12);">
-          <div style="font-size:12px;font-weight:700;color:var(--os);">Pupae Collected</div>
-          <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeDipCnt('pupae',-1)">-</button><div class="cnt-val" id="dip-pupae" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeDipCnt('pupae',1)">+</button></div>
-        </div>
-        <!-- Remark -->
-        <div style="padding:9px 0;">
-          <div style="font-size:12px;font-weight:700;color:var(--os);margin-bottom:6px;">Remark</div>
-          <input type="text" id="dip-remark" placeholder="Optional notes / observations&hellip;" style="width:100%;height:36px;padding:0 10px;border:1.5px solid rgba(0,107,92,.25);border-radius:var(--rsm);font-size:13px;color:var(--os);background:var(--sfc);">
-        </div>
-        <!-- Log Dipping button -->
-        <button class="btn-p larval-btn" style="margin-top:11px;" onclick="logDipping()">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-          Log Dipping &mdash; <span id="dip-log-btn-code">DS-001</span>
-        </button>
-      </div>
-      <!-- Dipping Entries Logged -->
-      <div class="sec-hdr" style="margin-top:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg><span class="sec-lbl">Dipping Entries Logged</span></div>
-      <div id="dip-entries-empty" style="text-align:center;color:var(--osv);font-size:13px;padding:14px;background:var(--sfc);border-radius:var(--rmd);border:1px dashed rgba(0,107,92,.3);">No dipping entries logged yet.</div>
-      <div id="dip-entries-list"></div>
-    </div>
-    <!-- ═══ END DIPPING SECTION ═══ -->
-
     <div class="divider"></div>
+    <div class="alert warn" id="l-coll-warn" style="display:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>Log at least one house first.</div>
     <button class="btn-p larval-btn" onclick="proceedToLarvalReview()">Review &amp; Submit <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></button>
     <div style="margin-top:9px;"><button class="btn-s larval-s" onclick="goTo('survey')"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Metadata</button></div>
     <div style="height:14px;"></div>
@@ -891,7 +879,6 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       <button onclick="goTo('survey')" style="flex:1;height:38px;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--sfc);border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:12px;font-weight:600;color:var(--osv);cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Ph 1: Metadata</button>
       <button onclick="goTo('collect')" style="flex:1;height:38px;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--sfc);border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:12px;font-weight:600;color:var(--osv);cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Ph 2: Collection</button>
     </div>
-    <div id="l-track-preview"></div>
     <div class="sec-hdr"><svg width="17" height="17" viewBox="0 0 24 24" fill="var(--larval)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg><span class="sec-lbl">Survey Metadata</span></div>
     <div class="r-card">
       <div class="r-row"><span class="r-key">Date</span><span class="r-val mono" id="r-l-date">-</span></div>
@@ -1060,8 +1047,8 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
     <div class="modal-icon" style="background:rgba(0,107,92,.1);">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
     </div>
-    <div class="modal-title">GitHub Token Required</div>
-    <div class="modal-sub" style="font-size:12px;color:var(--osv);">Enter your Personal Access Token to enable registration and database sync. This is a one-time setup — saved on this device.</div>
+    <div class="modal-title">GitHub Database Setup</div>
+    <div class="modal-sub" style="font-size:12px;color:var(--osv);">Connect to GitHub to sync surveys and enable user registration.</div>
     <div style="background:var(--gbg);border:1px solid var(--pd);border-radius:var(--rmd);padding:8px 12px;margin-bottom:12px;font-size:11px;color:var(--primary);">
       Database: <strong>sumit3850 / EST-v2.0</strong> (pre-configured)
     </div>
@@ -1080,54 +1067,6 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       </button>
       <button onclick="document.getElementById('gh-settings-modal').classList.remove('open')" style="margin-top:8px;padding:11px;background:var(--sf);border:1.5px solid var(--olv);border-radius:var(--rxl);font-size:14px;font-weight:600;color:var(--osv);cursor:pointer;width:100%;">Cancel</button>
     </div>
-  </div>
-</div>
-
-<!-- ══ REGISTRATION MODAL ══ -->
-<div class="modal-ov" id="reg-modal" style="z-index:10000;">
-  <div class="modal-box" style="max-width:360px;">
-    <div class="modal-icon" style="background:rgba(0,107,92,.1);">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--primary)"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-    </div>
-    <div class="modal-title">Create Account</div>
-    <div class="modal-sub" style="font-size:12px;color:var(--osv);">Register a new field user. Account is saved to the shared database.</div>
-    <div style="margin-bottom:12px;">
-      <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--osv);letter-spacing:.08em;display:block;margin-bottom:4px;">Username</label>
-      <input id="rm-user" type="text" placeholder="Choose a username" autocomplete="off" style="width:100%;height:42px;padding:0 12px;border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:13px;color:var(--os);background:var(--sfc);">
-    </div>
-    <div style="margin-bottom:12px;">
-      <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--osv);letter-spacing:.08em;display:block;margin-bottom:4px;">Password</label>
-      <input id="rm-pass" type="password" placeholder="Choose a password" style="width:100%;height:42px;padding:0 12px;border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:13px;color:var(--os);background:var(--sfc);">
-    </div>
-    <div style="margin-bottom:12px;">
-      <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--osv);letter-spacing:.08em;display:block;margin-bottom:4px;">Confirm Password</label>
-      <input id="rm-pass2" type="password" placeholder="Re-enter password" style="width:100%;height:42px;padding:0 12px;border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:13px;color:var(--os);background:var(--sfc);">
-    </div>
-    <div id="rm-token-row" style="display:none;margin-bottom:12px;padding:10px 12px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3);border-radius:var(--rmd);">
-      <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:#fbbf24;letter-spacing:.08em;display:block;margin-bottom:4px;">Admin GitHub Token (one-time setup)</label>
-      <input id="rm-token" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="width:100%;height:40px;padding:0 12px;border:1.5px solid rgba(251,191,36,.4);border-radius:var(--rmd);font-size:13px;color:var(--os);background:var(--sfc);font-family:var(--mono);">
-      <div style="font-size:10px;color:rgba(251,191,36,.8);margin-top:6px;line-height:1.5;">Go to <strong>github.com → Settings → Developer settings → Personal access tokens → Classic</strong> → generate token with <strong>"repo" scope (full)</strong>. Paste above. Only needed once — saved for all users.</div>
-    </div>
-    <div id="rm-err" style="display:none;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:var(--rmd);padding:8px 12px;font-size:12px;font-weight:600;color:#f87171;margin-bottom:12px;"></div>
-    <div class="modal-btns">
-      <button id="rm-btn" class="btn-p" onclick="doRegister()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px;"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-        Create Account
-      </button>
-      <button onclick="document.getElementById('reg-modal').classList.remove('open')" style="margin-top:8px;padding:11px;background:var(--sf);border:1.5px solid var(--olv);border-radius:var(--rxl);font-size:14px;font-weight:600;color:var(--osv);cursor:pointer;width:100%;">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══ TRACK RECORDING BAR ══ -->
-<div id="track-rec-bar">
-  <div style="display:flex;align-items:center;gap:8px;">
-    <span class="trk-dot"></span>
-    <span style="font-size:11px;font-weight:700;color:#fff;letter-spacing:.07em;text-transform:uppercase;">Recording Path</span>
-  </div>
-  <div style="display:flex;align-items:center;gap:14px;">
-    <span style="font-size:14px;font-weight:700;color:#68fadd;" id="trk-dist">0.00 km</span>
-    <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,.55);" id="trk-time">00:00</span>
   </div>
 </div>
 
@@ -1220,9 +1159,9 @@ function populateDistricts(stateId,distId){
 
 /* ── GITHUB CONFIGURATION — EDIT THESE ──────────────────── */
 const GH_CONFIG = {
-  owner: 'sumit3850',  // pre-configured repository owner
+  owner: '',          // Your GitHub username  e.g. 'sumitrao'
   repo:  'EST-v2.0',  // Your database repo name
-  token: '',          // loaded automatically from config.json
+  token: '',          // GitHub Personal Access Token (classic, repo scope)
   branch: 'main'
 };
 
@@ -1381,25 +1320,12 @@ function saveGhSettings(){
   const o=document.getElementById('gh-owner-inp')?.value.trim()||'';
   const rp=document.getElementById('gh-repo-inp')?.value.trim()||'EST-v2.0';
   const t=document.getElementById('gh-token-inp')?.value.trim()||'';
-  GH_CONFIG.owner=o||'sumit3850'; GH_CONFIG.repo=rp||'EST-v2.0'; GH_CONFIG.token=t;
-  try{localStorage.setItem('est_gh_settings',JSON.stringify({owner:GH_CONFIG.owner,repo:GH_CONFIG.repo,token:t}));}catch(e){}
+  GH_CONFIG.owner=o; GH_CONFIG.repo=rp; GH_CONFIG.token=t;
+  try{localStorage.setItem('est_gh_settings',JSON.stringify({owner:o,repo:rp,token:t}));}catch(e){}
   document.getElementById('gh-settings-modal')?.classList.remove('open');
-  const regIsOpen=document.getElementById('reg-modal')?.classList.contains('open');
-  typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();
-  if(t){
-    ghFetchConfig().then(c=>{
-      if(c){
-        showToast('Connected to GitHub ✓','check');
-        updateGhButtonStatus();
-        if(regIsOpen) doRegister(); // resume pending registration
-      }else{
-        showToast('Could not connect — check your token','warn');
-        if(regIsOpen){const e=document.getElementById('rm-err');if(e){e.textContent='Invalid token. Try again.';e.style.display='block';}}
-      }
-    });
-  }else{
-    showToast('GitHub token saved','check');
-  }
+  typeof updateGhButtonStatus==='function'&&updateGhButtonStatus(); // Refresh splash button
+  showToast('GitHub settings saved','check');
+  if(o&&t){ ghFetchConfig().then(c=>{ if(c){showToast('Connected to GitHub ✓','check');typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();} else showToast('Check your token/repo name','warn');}); }
 }
 function loadGhSettings(){
   try{
@@ -1407,30 +1333,6 @@ function loadGhSettings(){
     if(s.owner)GH_CONFIG.owner=s.owner;
     if(s.repo)GH_CONFIG.repo=s.repo;
     if(s.token)GH_CONFIG.token=s.token;
-  }catch(e){}
-}
-
-/* Token obfuscation — prevents GitHub secret scanning from blocking config.json writes */
-const _EK='ESTv2.0ANIento2026';
-function _enc(t){try{return btoa([...t].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^_EK.charCodeAt(i%_EK.length))).join(''));}catch(e){return t;}}
-function _dec(s){try{return[...atob(s)].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^_EK.charCodeAt(i%_EK.length))).join('');}catch(e){return s;}}
-
-/* Auto-load write token from public config.json — no PAT needed from user */
-async function loadAppToken(){
-  if(GH_CONFIG.token) return;
-  if(!navigator.onLine) return;
-  try{
-    const r=await fetch('https://raw.githubusercontent.com/sumit3850/EST-v2.0/main/config.json',{cache:'no-store'});
-    if(r.ok){
-      const cfg=await r.json();
-      if(cfg.appToken){
-        const tok=_dec(cfg.appToken);
-        GH_CONFIG.token=tok;
-        GH_CONFIG.owner='sumit3850';
-        GH_CONFIG.repo='EST-v2.0';
-        try{localStorage.setItem('est_gh_settings',JSON.stringify({owner:'sumit3850',repo:'EST-v2.0',token:tok}));}catch(e){}
-      }
-    }
   }catch(e){}
 }
 
@@ -1468,8 +1370,6 @@ async function syncValidUsersFromCache(){
     const raw=localStorage.getItem('est_gh_config');
     if(raw) mergeConfigCreds(JSON.parse(raw));
   }catch(e){}
-  // 3. Auto-load write token from public config.json (no auth required)
-  await loadAppToken();
 }
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
@@ -1492,7 +1392,7 @@ const LSP=[
 const LNS=LSP.length;
 let activeModule=null,activeSavedTab='adult';
 const aS={collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,nights:1,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curCounts:Array.from({length:ANS},()=>[0,0,0]),curOther:''};
-const lS={date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipEntries:[],curHN:1,curDipSN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curDipDips:0,curDipLarvae:0,curDipPupae:0,curCounts:Array.from({length:LNS},()=>[0,0]),curOther:''};
+const lS={date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],curHN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curCounts:Array.from({length:LNS},()=>[0,0]),curOther:''};
 function aCols(){return aS.collType==='resting'?['Indoor','Outdoor']:['Landing Catch'];}
 function aTotSp(i){return aS.collType==='resting'?aS.houses.reduce((s,h)=>s+h.counts[i][0]+h.counts[i][1],0):aS.houses.reduce((s,h)=>s+h.counts[i][0],0);}
 function aTotAll(){let t=0;for(let i=0;i<ANS;i++)t+=aTotSp(i);return t;}
@@ -1513,9 +1413,9 @@ function calcHBRHr(){const t=aTotAll(),c=aS.collectors||1,h=aRawHours();return t
 function lTotContainers(){return lS.houses.reduce((s,h)=>s+h.containers,0);}
 function lTotPositive(){return lS.houses.reduce((s,h)=>s+h.positive,0);}
 function lTotPupal(){return lS.houses.reduce((s,h)=>s+h.pupal,0);}
-function lTotDips(){return (lS.dipEntries||[]).reduce((s,e)=>s+e.dips,0);}
-function lTotLarvae(){return (lS.dipEntries||[]).reduce((s,e)=>s+e.larvae,0);}
-function lTotPupae(){return (lS.dipEntries||[]).reduce((s,e)=>s+e.pupae,0);}
+function lTotDips(){return lS.houses.reduce((s,h)=>s+h.dips,0);}
+function lTotLarvae(){return lS.houses.reduce((s,h)=>s+h.larvae,0);}
+function lTotPupae(){return lS.houses.reduce((s,h)=>s+h.pupae,0);}
 function lPositiveHouses(){return lS.houses.filter(h=>h.housePositive||h.positive>0).length;}
 function calcHI(){const n=lS.houses.length;return n>0?((lPositiveHouses()/n)*100).toFixed(1)+'%':'—';}
 function calcCI(){const tot=lTotContainers(),pos=lTotPositive();return tot>0?((pos/tot)*100).toFixed(1)+'%':'—';}
@@ -1646,94 +1546,64 @@ function doLogin(){
   },600);
   checkDrafts();
 }
+function showRegisterForm(){
+  document.getElementById('login-card').style.display='none';
+  document.getElementById('signin-btn').style.display='none';
+  document.getElementById('reg-toggle-link').style.display='none';
+  document.getElementById('reg-card').style.display='block';
+  document.getElementById('reg-btn').style.display='flex';
+  document.getElementById('back-login-link').style.display='block';
+  document.getElementById('login-err').style.display='none';
+  document.getElementById('reg-err').style.display='none';
+}
+function showLoginForm(){
+  document.getElementById('login-card').style.display='block';
+  document.getElementById('signin-btn').style.display='flex';
+  document.getElementById('reg-toggle-link').style.display='block';
+  document.getElementById('reg-card').style.display='none';
+  document.getElementById('reg-btn').style.display='none';
+  document.getElementById('back-login-link').style.display='none';
+}
 async function doRegister(){
-  const u=(document.getElementById('rm-user')?.value||'').trim();
-  const p=document.getElementById('rm-pass')?.value||'';
-  const p2=document.getElementById('rm-pass2')?.value||'';
-  const errEl=document.getElementById('rm-err');
-  const btn=document.getElementById('rm-btn');
-  if(!errEl||!btn) return;
+  const u=document.getElementById('reg-user').value.trim();
+  const p=document.getElementById('reg-pass').value;
+  const p2=document.getElementById('reg-pass2').value;
+  const errEl=document.getElementById('reg-err');
+  const btn=document.getElementById('reg-btn');
   errEl.style.display='none';
   if(!u||!p){errEl.textContent='Username and password are required.';errEl.style.display='block';return;}
   if(p!==p2){errEl.textContent='Passwords do not match.';errEl.style.display='block';return;}
   if(u.length<3){errEl.textContent='Username must be at least 3 characters.';errEl.style.display='block';return;}
   if(p.length<4){errEl.textContent='Password must be at least 4 characters.';errEl.style.display='block';return;}
   if(VALID_USERS.some(v=>v.username.toLowerCase()===u.toLowerCase())){errEl.textContent='Username already exists. Choose another.';errEl.style.display='block';return;}
+  if(!GH_CONFIG.token){errEl.textContent='Connect to GitHub database first (tap the GitHub button below).';errEl.style.display='block';return;}
   if(!navigator.onLine){errEl.textContent='Registration requires an internet connection.';errEl.style.display='block';return;}
-  // Try to auto-load token from config.json (no auth needed)
-  if(!GH_CONFIG.token) await loadAppToken();
-  // If still no token, show inline admin token field
-  if(!GH_CONFIG.token){
-    const tokenRow=document.getElementById('rm-token-row');
-    const inlineToken=(document.getElementById('rm-token')?.value||'').trim();
-    if(!inlineToken){
-      if(tokenRow) tokenRow.style.display='block';
-      errEl.textContent='First-time setup: enter the admin GitHub token above, then tap Create Account again.';
-      errEl.style.display='block';
-      return;
-    }
-    GH_CONFIG.token=inlineToken;
-    GH_CONFIG.owner='sumit3850';
-    GH_CONFIG.repo='EST-v2.0';
-    try{localStorage.setItem('est_gh_settings',JSON.stringify({owner:'sumit3850',repo:'EST-v2.0',token:inlineToken}));}catch(e){}
-  }
   const origHTML=btn.innerHTML;
   btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="spin"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8Z"/></svg> Registering…';
   btn.disabled=true;
   try{
-    // Fetch+write with retry on 409 (SHA conflict)
-    let written=false;
-    let lastErr='';
-    for(let attempt=0;attempt<3&&!written;attempt++){
-      if(attempt>0) await new Promise(r=>setTimeout(r,800)); // wait before retry
-      const resp=await fetch(ghApiUrl(GH_CONFIG_PATH),{headers:ghHeaders(),cache:'no-store'});
-      if(!resp.ok){
-        const s=resp.status;
-        if(s===401) throw new Error('Token invalid or expired (401). Create a fresh GitHub PAT with repo scope.');
-        if(s===403) throw new Error('Token lacks read access (403). PAT needs "repo" scope.');
-        throw new Error('Cannot reach GitHub (HTTP '+s+'). Check token and network.');
-      }
-      const data=await resp.json();
-      const cfg=JSON.parse(b64Decode(data.content));
-      if(attempt===0&&cfg.credentials&&cfg.credentials.some(c=>(c.username||'').toLowerCase()===u.toLowerCase())){
-        errEl.textContent='Username already taken. Choose another.';errEl.style.display='block';return;
-      }
-      if(!cfg.credentials) cfg.credentials=[];
-      const existing=cfg.credentials.findIndex(c=>(c.username||'').toLowerCase()===u.toLowerCase());
-      if(existing>-1) cfg.credentials.splice(existing,1);
-      cfg.credentials.push({username:u,password:p,role:'field',active:true});
-      cfg.updatedAt=new Date().toISOString();
-      if(!cfg.appToken) cfg.appToken=_enc(GH_CONFIG.token);
-      const putBody={message:`[EST] Register user: ${u}`,content:b64Encode(JSON.stringify(cfg,null,2)),sha:data.sha};
-      const putResp=await fetch(ghApiUrl(GH_CONFIG_PATH),{
-        method:'PUT',
-        headers:{...ghHeaders(),'Content-Type':'application/json'},
-        body:JSON.stringify(putBody)
-      });
-      if(!putResp.ok){
-        const errBody=await putResp.json().catch(()=>({}));
-        const ghMsg=(errBody.message||'').substring(0,120);
-        const s=putResp.status;
-        if(s===409){lastErr=`409 conflict — ${ghMsg||'SHA mismatch'}`;continue;} // retry
-        if(s===401) throw new Error('Token invalid or expired (401).');
-        if(s===403) throw new Error(`Token READ-ONLY (403) — needs repo write scope. GitHub: ${ghMsg}`);
-        if(s===422) throw new Error(`Write rejected (422) — ${ghMsg||'branch may be protected'}`);
-        throw new Error(`Write failed (${s}) — ${ghMsg}`);
-      }
-      VALID_USERS.push({username:u,password:p,role:'field',active:true});
-      try{localStorage.setItem('est_gh_config',JSON.stringify(cfg));}catch(e){}
-      written=true;
+    const resp=await fetch(ghApiUrl(GH_CONFIG_PATH),{headers:ghHeaders(),cache:'no-store'});
+    if(!resp.ok) throw new Error('Cannot reach GitHub. Check your token.');
+    const data=await resp.json();
+    const cfg=JSON.parse(b64Decode(data.content));
+    if(cfg.credentials&&cfg.credentials.some(c=>(c.username||'').toLowerCase()===u.toLowerCase())){
+      errEl.textContent='Username already taken. Choose another.';errEl.style.display='block';return;
     }
-    if(!written) throw new Error(lastErr||'SHA conflict after 3 attempts — please try again.');
-    // Close modal and reset fields
-    document.getElementById('reg-modal')?.classList.remove('open');
-    document.getElementById('rm-user').value='';
-    document.getElementById('rm-pass').value='';
-    document.getElementById('rm-pass2').value='';
-    const tokenRow=document.getElementById('rm-token-row');
-    if(tokenRow) tokenRow.style.display='none';
-    const tokenInp=document.getElementById('rm-token');
-    if(tokenInp) tokenInp.value='';
+    if(!cfg.credentials) cfg.credentials=[];
+    cfg.credentials.push({username:u,password:p,role:'field',active:true});
+    cfg.updatedAt=new Date().toISOString();
+    const putResp=await fetch(ghApiUrl(GH_CONFIG_PATH),{
+      method:'PUT',
+      headers:{...ghHeaders(),'Content-Type':'application/json'},
+      body:JSON.stringify({message:`[EST] Register user: ${u}`,content:b64Encode(JSON.stringify(cfg,null,2)),sha:data.sha,branch:GH_CONFIG.branch})
+    });
+    if(!putResp.ok) throw new Error('Failed to save. Check token has write permission.');
+    VALID_USERS.push({username:u,password:p,role:'field',active:true});
+    try{localStorage.setItem('est_gh_config',JSON.stringify(cfg));}catch(e){}
+    document.getElementById('reg-user').value='';
+    document.getElementById('reg-pass').value='';
+    document.getElementById('reg-pass2').value='';
+    showLoginForm();
     document.getElementById('login-user').value=u;
     showToast('Account created! You can now sign in.','check');
   }catch(e){
@@ -1785,11 +1655,11 @@ function goTo(key){
   if(!activeModule){showToast('Select a module first','warn');return;}
   if(key==='survey'){showScreen(activeModule+'-survey');return;}
   if(key==='collect'){showScreen(activeModule+'-collect');return;}
-  if(key==='review'){TrackRecorder.stop();if(activeModule==='adult'){populateAdultReview();showScreen('adult-review');}else{populateLarvalReview();showScreen('larval-review');}return;}
+  if(key==='review'){if(activeModule==='adult'){populateAdultReview();showScreen('adult-review');}else{populateLarvalReview();showScreen('larval-review');}return;}
 }
 function startModule(mod,mode){
   activeModule=mod;
-  if(mode==='draft'){loadDraft(mod);showScreen(mod+'-collect');TrackRecorder.start();}
+  if(mode==='draft'){loadDraft(mod);showScreen(mod+'-collect');}
   else{
     if(mode==='new')resetStateOnly(mod);
     if(mod==='adult'){document.getElementById('a-date').value=todayStr();buildAdultMatrix();
@@ -1800,10 +1670,10 @@ function startModule(mod,mode){
       // Ensure state/district dropdowns are populated
       if(document.getElementById('a-state')&&!document.getElementById('a-state').options.length){populateStates('a-state');}
       if(document.getElementById('a-state')&&document.getElementById('a-state').options.length<2){populateStates('a-state');}
-      showScreen('adult-survey');setTimeout(()=>{getGPS('a');TrackRecorder.start();},400);}
+      showScreen('adult-survey');setTimeout(()=>getGPS('a'),400);}
     else{document.getElementById('l-date').value=todayStr();buildLarvalMatrix();buildContainerMatrix();
       if(document.getElementById('l-state')&&!document.getElementById('l-state').options.length){populateStates('l-state');}
-      showScreen('larval-survey');setTimeout(()=>{getGPS('l');TrackRecorder.start();},400);}
+      showScreen('larval-survey');setTimeout(()=>getGPS('l'),400);}
   }
 }
 function resetStateOnly(mod){
@@ -1977,53 +1847,6 @@ function openGoogleMaps(){
   showToast('Opening Google Maps — zoom to location, long-press to get coordinates','check');
   window.open('https://maps.google.com','_blank');
 }
-
-/* ── GPS PATH RECORDER ─────────────────────────────────── */
-const TrackRecorder=(()=>{
-  let _wid=null,_pts=[],_dist=0,_t0=0,_t1=0,_timer=null,_on=false;
-  function _hav(a,b,c,d){
-    const R=6371,dA=(c-a)*Math.PI/180,dB=(d-b)*Math.PI/180;
-    const x=Math.sin(dA/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dB/2)**2;
-    return R*2*Math.asin(Math.sqrt(x));
-  }
-  function _fmt(s){const m=Math.floor(s/60),h=Math.floor(m/60);return h>0?h+':'+String(m%60).padStart(2,'0')+':'+String(s%60).padStart(2,'0'):String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
-  function _ui(){
-    const d=document.getElementById('trk-dist'),t=document.getElementById('trk-time');
-    if(d)d.textContent=_dist.toFixed(2)+' km';
-    if(t)t.textContent=_fmt(Math.floor((Date.now()-_t0)/1000));
-  }
-  return{
-    start(){
-      if(_wid!==null)navigator.geolocation.clearWatch(_wid);
-      clearInterval(_timer);
-      _pts=[];_dist=0;_t0=Date.now();_t1=0;_on=true;
-      let _last=null;
-      const bar=document.getElementById('track-rec-bar');
-      if(bar)bar.style.display='flex';
-      document.body.classList.add('tracking');
-      if(navigator.geolocation){
-        _wid=navigator.geolocation.watchPosition(pos=>{
-          const{latitude:la,longitude:lo}=pos.coords,ts=Date.now();
-          if(_last){const d=_hav(_last.la,_last.lo,la,lo);if(d<0.005)return;_dist+=d;}
-          _pts.push({lat:la,lng:lo,ts});_last={la,lo};_ui();
-        },()=>{},{enableHighAccuracy:true,timeout:20000,maximumAge:5000});
-      }
-      _timer=setInterval(_ui,1000);
-    },
-    stop(){
-      if(_wid!==null){navigator.geolocation.clearWatch(_wid);_wid=null;}
-      clearInterval(_timer);_timer=null;_on=false;_t1=Date.now();
-      const bar=document.getElementById('track-rec-bar');
-      if(bar)bar.style.display='none';
-      document.body.classList.remove('tracking');
-    },
-    getLastPos(){return _pts.length?{lat:_pts[_pts.length-1].lat,lng:_pts[_pts.length-1].lng}:null;},
-    getTrack(){
-      const end=_on?Date.now():(_t1||Date.now());
-      return{waypoints:[..._pts],distanceKm:parseFloat(_dist.toFixed(3)),durationSec:Math.floor((end-_t0)/1000),startTime:new Date(_t0).toISOString(),endTime:new Date(end).toISOString()};
-    }
-  };
-})();
 function liveCoords(pfx){const lat=parseFloat(document.getElementById(pfx+'-mlat').value);const lng=parseFloat(document.getElementById(pfx+'-mlng').value);if(!isNaN(lat)&&!isNaN(lng)){const s=pfx==='a'?aS:lS;s.lat=lat.toFixed(6);s.lng=lng.toFixed(6);document.getElementById(pfx+'-gps-status').textContent='Manual Location';document.getElementById(pfx+'-gps-coords').textContent=lat.toFixed(5)+'N  '+lng.toFixed(5)+'E';setGpsPill(pfx,'Manual coordinates set','ok');}}
 function applyCoords(pfx){const lat=parseFloat(document.getElementById(pfx+'-mlat').value);const lng=parseFloat(document.getElementById(pfx+'-mlng').value);if(isNaN(lat)||isNaN(lng)){showToast('Enter valid coordinates','warn');return;}const s=pfx==='a'?aS:lS;s.lat=lat.toFixed(6);s.lng=lng.toFixed(6);document.getElementById(pfx+'-gps-status').textContent='Manual Location';document.getElementById(pfx+'-gps-coords').textContent=lat.toFixed(5)+'N  '+lng.toFixed(5)+'E';setGpsPill(pfx,'Coordinates applied','ok');showToast('Coordinates applied','check');}
 function setNow(pfx,which){const now=new Date();const ts=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');const el=document.getElementById(pfx+'-'+which);if(el)el.value=ts;if(pfx==='a')updateTimeCalc('a');showToast((which==='start'?'Start':'End')+': '+ts,'check');}
@@ -2081,8 +1904,7 @@ function logAdultHouse(){
   const hours=calcHrs(start,end),counts=aS.curCounts.map(r=>[...r]);
   const total=aS.collType==='resting'?counts.reduce((s,r)=>s+r[0]+r[1],0):counts.reduce((s,r)=>s+r[0],0);
   const other=document.getElementById('a-other-name')?.value.trim()||'';
-  const _apos=TrackRecorder.getLastPos();
-  aS.houses.push({id:Date.now(),houseNo:code,rooms:aS.curRooms,start:start||'-',end:end||'-',hours,counts,total,otherName:other,lat:_apos?.lat||null,lng:_apos?.lng||null});
+  aS.houses.push({id:Date.now(),houseNo:code,rooms:aS.curRooms,start:start||'-',end:end||'-',hours,counts,total,otherName:other});
   aS.curHN++;const nc=hCode(aS.curHN);
   const hd=document.getElementById('a-hnum-disp');if(hd)hd.textContent=nc;
   const lbc=document.getElementById('a-log-btn-code');if(lbc)lbc.textContent=nc;
@@ -2094,7 +1916,7 @@ function logAdultHouse(){
   buildAdultMatrix();updateTimeCalc('a');renderAdultHouses();updateAdultSummary();saveDraft('adult');
   showToast(code+' logged — '+total+' mosquito'+(total!==1?'es':'')+' ✓','check');
 }
-function proceedToAdultReview(){if(!aS.houses.length){document.getElementById('a-coll-warn').style.display='flex';return;}document.getElementById('a-coll-warn').style.display='none';TrackRecorder.stop();populateAdultReview();showScreen('adult-review');}
+function proceedToAdultReview(){if(!aS.houses.length){document.getElementById('a-coll-warn').style.display='flex';return;}document.getElementById('a-coll-warn').style.display='none';populateAdultReview();showScreen('adult-review');}
 function renderAdultHouses(){
   const list=document.getElementById('a-houses-list'),empty=document.getElementById('a-houses-empty');
   list.innerHTML='';if(!aS.houses.length){empty.style.display='block';return;}empty.style.display='none';
@@ -2122,7 +1944,7 @@ function _fmtDurSec(s){if(!s||s<1)return'—';const m=Math.floor(s/60),h=Math.fl
 function renderTrackPreview(containerId,houses){
   const el=document.getElementById(containerId);if(!el)return;
   const trk=TrackRecorder.getTrack();
-  const hasPts=trk.waypoints&&trk.waypoints.length>=2;
+  const hasPts=trk.waypoints&&trk.waypoints.length>=1;
   if(hasPts)_prevCache[containerId]={track:trk,houses};
   const distStr=hasPts?trk.distanceKm.toFixed(2)+' km · '+_fmtDurSec(trk.durationSec):'—';
   const mapBody=hasPts
@@ -2165,7 +1987,6 @@ function populateAdultReview(){
   document.getElementById('r-a-offr').textContent=aS.officers||'-';
   document.getElementById('r-a-hcount').textContent=aS.houses.length;
   document.getElementById('r-a-mhrs').textContent=aManHours().toFixed(2)+' hrs';
-  renderTrackPreview('a-track-preview',aS.houses);
   const ig=document.getElementById('r-a-idx-grid'),cg=document.getElementById('r-a-col-grid');
   if(isR){ig.innerHTML=`<div class="idx-card hl"><div class="idx-lbl">PMHD (non-Culex)</div><div class="idx-val">${calcMHD()}</div><div class="idx-sub">Non-Culex ÷ (Collectors × Time hrs) × 100</div></div><div class="idx-card am"><div class="idx-lbl">Culex TMHD (×10)</div><div class="idx-val am">${calcTMHD()}</div><div class="idx-sub">(Culex ÷ man-hours) × 10</div></div><div class="idx-card"><div class="idx-lbl">Indoor Resting Density</div><div class="idx-val">${calcIndoorDensity()}</div><div class="idx-sub">mosq/house/night</div></div><div class="idx-card"><div class="idx-lbl">Outdoor Resting Density</div><div class="idx-val">${calcOutdoorDensity()}</div><div class="idx-sub">mosq/house/night</div></div><div class="idx-card"><div class="idx-lbl">Room Density</div><div class="idx-val">${calcRoomDensity()}</div><div class="idx-sub">mosq/room</div></div><div class="idx-card"><div class="idx-lbl">Total Mosquitoes</div><div class="idx-val">${aTotAll()}</div><div class="idx-sub">all species combined</div></div>`;cg.innerHTML=`<div class="idx-card hl"><div class="idx-lbl">Indoor</div><div class="idx-val">${aTotIndoor()}</div></div><div class="idx-card"><div class="idx-lbl">Outdoor</div><div class="idx-val">${aTotOutdoor()}</div></div><div class="idx-card"><div class="idx-lbl">Non-Culex</div><div class="idx-val">${aTotNonCulex()}</div></div>`;}
   else{
@@ -2202,9 +2023,9 @@ function populateAdultReview(){
 function aSnap(){
   const isR=aS.collType==='resting';
   const spB=ASP.map((sp,i)=>({name:sp.n,genus:sp.g,isCulex:!!sp.cx,indoor:aS.houses.reduce((s,h)=>s+h.counts[i][0],0),outdoor:isR?aS.houses.reduce((s,h)=>s+h.counts[i][1],0):0}));
-  return {id:Date.now(),savedAt:new Date().toISOString(),appType:'adult',v:'2.0',collType:aS.collType,date:aS.date,state:(aS.state||''),district:aS.district,location:aS.location,workers:aS.workers,officers:aS.officers,collectors:aS.collectors,nights:aS.nights,lat:aS.lat,lng:aS.lng,houses:aS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),speciesBreakdown:spB,MHD:calcMHD(),TMHD:calcTMHD(),indoorDensity:calcIndoorDensity(),outdoorDensity:calcOutdoorDensity(),roomDensity:calcRoomDensity(),HBR:calcHBR(),totalMosq:aTotAll(),totIndoor:aTotIndoor(),totOutdoor:aTotOutdoor(),totNonCulex:aTotNonCulex(),totCulex:aTotCulex(),totalRooms:aTotRooms(),totalManHours:aManHours(),track:TrackRecorder.getTrack()};
+  return {id:Date.now(),savedAt:new Date().toISOString(),appType:'adult',v:'2.0',collType:aS.collType,date:aS.date,state:(aS.state||''),district:aS.district,location:aS.location,workers:aS.workers,officers:aS.officers,collectors:aS.collectors,nights:aS.nights,lat:aS.lat,lng:aS.lng,houses:aS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),speciesBreakdown:spB,MHD:calcMHD(),TMHD:calcTMHD(),indoorDensity:calcIndoorDensity(),outdoorDensity:calcOutdoorDensity(),roomDensity:calcRoomDensity(),HBR:calcHBR(),totalMosq:aTotAll(),totIndoor:aTotIndoor(),totOutdoor:aTotOutdoor(),totNonCulex:aTotNonCulex(),totCulex:aTotCulex(),totalRooms:aTotRooms(),totalManHours:aManHours()};
 }
-function saveAdultSurvey(){TrackRecorder.stop();const s=aSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(A_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('adult');activeSavedTab='adult';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'adult');}
+function saveAdultSurvey(){const s=aSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(A_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('adult');activeSavedTab='adult';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'adult');}
 
 
 /* ── CONTAINER TYPES ────────────────────────────────────── */
@@ -2292,69 +2113,27 @@ function chgLSp(i,col,d){lS.curCounts[i][col]=Math.max(0,lS.curCounts[i][col]+d)
 
 /* ── LARVAL COUNTERS ────────────────────────────────────── */
 function changeLarvalCnt(type,d){
-  const map={pupal:'curPupal'};
+  const map={pupal:'curPupal',dips:'curDips',larvae:'curLarvae',pupae:'curPupae'};
   const key=map[type];if(!key)return;lS[key]=Math.max(0,lS[key]+d);
   const el=document.getElementById('l-'+type);if(el)el.textContent=lS[key];
-  if(type==='pupal')updateContSummary();
-}
-function changeDipCnt(type,d){
-  const map={dips:'curDipDips',larvae:'curDipLarvae',pupae:'curDipPupae'};
-  const key=map[type];if(!key)return;lS[key]=Math.max(0,lS[key]+d);
-  const el=document.getElementById('dip-'+type);if(el)el.textContent=lS[key];
-  updateDipLive();
-}
-function changeDipSN(d){
-  lS.curDipSN=Math.max(1,lS.curDipSN+d);
-  const code='DS-'+String(lS.curDipSN).padStart(3,'0');
-  const sd=document.getElementById('dip-site-disp');if(sd)sd.textContent=code;
-  const lb=document.getElementById('dip-log-btn-code');if(lb)lb.textContent=code;
-}
-function updateDipLive(){
-  const totD=lTotDips()+lS.curDipDips,totL=lTotLarvae()+lS.curDipLarvae,totP=lTotPupae()+lS.curDipPupae;
+  // Live An/Cx density indices
+  const totD=lTotDips()+lS.curDips,totL=lTotLarvae()+lS.curLarvae,totP2=lTotPupae()+lS.curPupae;
   const ldEl=document.getElementById('live-ld'),pdEl=document.getElementById('live-pd'),idEl=document.getElementById('live-id');
   if(ldEl)ldEl.textContent=totD>0?((totL/totD)*100).toFixed(1):'-';
-  if(pdEl)pdEl.textContent=totD>0?((totP/totD)*100).toFixed(1):'-';
-  if(idEl)idEl.textContent=totD>0?(((totL+totP)/totD)*100).toFixed(1):'-';
+  if(pdEl)pdEl.textContent=totD>0?((totP2/totD)*100).toFixed(1):'-';
+  if(idEl)idEl.textContent=totD>0?(((totL+totP2)/totD)*100).toFixed(1):'-';
+  // If pupal changed, also update Aedes live
+  if(type==='pupal')updateContSummary();
 }
-function logDipping(){
-  const code='DS-'+String(lS.curDipSN).padStart(3,'0');
-  const remark=document.getElementById('dip-remark')?.value.trim()||'';
-  lS.dipEntries=lS.dipEntries||[];
-  lS.dipEntries.push({id:Date.now(),siteNo:code,dips:lS.curDipDips,larvae:lS.curDipLarvae,pupae:lS.curDipPupae,remark:remark});
-  lS.curDipSN++;
-  const newCode='DS-'+String(lS.curDipSN).padStart(3,'0');
-  const sd=document.getElementById('dip-site-disp');if(sd)sd.textContent=newCode;
-  const lb=document.getElementById('dip-log-btn-code');if(lb)lb.textContent=newCode;
-  const entry=lS.dipEntries[lS.dipEntries.length-1];
-  resetDipForm();renderDipEntries();updateDipLive();updateLarvalSummary();saveDraft('larval');
-  showToast(code+' logged — L:'+entry.larvae+' P:'+entry.pupae+' Dips:'+entry.dips+' ✓','check');
-}
-function resetDipForm(){
-  lS.curDipDips=0;lS.curDipLarvae=0;lS.curDipPupae=0;
-  ['dips','larvae','pupae'].forEach(t=>{const el=document.getElementById('dip-'+t);if(el)el.textContent='0';});
-  const re=document.getElementById('dip-remark');if(re)re.value='';
-}
-function renderDipEntries(){
-  const list=document.getElementById('dip-entries-list'),empty=document.getElementById('dip-entries-empty');
-  if(!list)return;list.innerHTML='';
-  if(!(lS.dipEntries||[]).length){if(empty)empty.style.display='block';return;}
-  if(empty)empty.style.display='none';
-  lS.dipEntries.forEach((e,idx)=>{
-    const div=document.createElement('div');div.className='hli';
-    div.innerHTML=`<div class="hli-hdr" onclick="toggleHLI('dip${e.id}')"><div class="hli-left"><div class="hli-num lrv">${idx+1}</div><div class="hli-info"><div class="hli-name" style="color:var(--primary);">${e.siteNo}</div><div class="hli-meta"><span>Dips:${e.dips}</span><span style="color:var(--larval);">L:${e.larvae}</span><span>P:${e.pupae}</span>${e.remark?'<span style="color:var(--osv);font-style:italic;">'+e.remark+'</span>':''}</div></div></div><div class="hli-right"><div style="text-align:right;"><div class="hli-total lrv">${e.larvae+e.pupae}</div><div style="font-size:9px;color:var(--osv)">L+P</div></div><button class="hli-del" onclick="event.stopPropagation();delDipEntry(${e.id})">${mkSvg('del',15)}</button><svg id="chevDip${e.id}" width="18" height="18" viewBox="0 0 24 24" fill="var(--ol)" style="transition:transform .2s;"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></div></div><div class="hli-body" id="hbdip${e.id}"><div style="display:flex;gap:10px;flex-wrap:wrap;font-size:11px;margin-bottom:4px;"><span>Dips: <strong>${e.dips}</strong></span><span>Larvae: <strong style="color:var(--larval);">${e.larvae}</strong></span><span>Pupae: <strong>${e.pupae}</strong></span><span>L+P: <strong>${e.larvae+e.pupae}</strong></span></div>${e.remark?`<div style="font-size:11px;color:var(--osv);font-style:italic;margin-top:2px;">Remark: ${e.remark}</div>`:''}</div>`;
-    list.appendChild(div);
-  });
-}
-function delDipEntry(id){lS.dipEntries=(lS.dipEntries||[]).filter(e=>e.id!==id);renderDipEntries();updateDipLive();updateLarvalSummary();saveDraft('larval');showToast('Dipping entry removed','del');}
 function resetLarvalCurForm(){
-  ['pupal'].forEach(t=>{lS['cur'+t.charAt(0).toUpperCase()+t.slice(1)]=0;const el=document.getElementById('l-'+t);if(el)el.textContent='0';});
+  ['pupal','dips','larvae','pupae'].forEach(t=>{lS['cur'+t.charAt(0).toUpperCase()+t.slice(1)]=0;const el=document.getElementById('l-'+t);if(el)el.textContent='0';});
   lS.curRooms=0;lS.curHousePos=0;
   const hp=document.getElementById('l-housepos-disp');if(hp)hp.textContent='0';
   lContainers=CONTAINERS.map(c=>({...c}));buildContainerMatrix();
   const se=document.getElementById('l-start');if(se)se.value='';const ee=document.getElementById('l-end');if(ee)ee.value='';const oe=document.getElementById('l-other-name');if(oe)oe.value='';
   lS.curCounts=Array.from({length:LNS},()=>[0,0]);buildLarvalMatrix();
-  ['live-hi','live-ci','live-bi'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='-';});
-  updateDipLive();
+  // Reset live indices
+  ['live-hi','live-ci','live-bi','live-ld','live-pd','live-id'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='-';});
 }
 
 /* ── LARVAL PHASES ──────────────────────────────────────── */
@@ -2363,7 +2142,7 @@ function proceedToLarvalCollect(){
   if(!date||!dist||!loc||!wrk||!offr){errEl.textContent='Please fill all required fields.';errEl.style.display='block';return;}
   const _lSv=document.getElementById('l-state')?.value||'';
   errEl.style.display='none';lS.state=_lSv;lS.date=date;lS.district=dist;lS.location=loc;lS.workers=wrk;lS.officers=offr;
-  buildLarvalMatrix();updateLarvalSummary();renderLarvalHouses();renderDipEntries();updateDipLive();showScreen('larval-collect');
+  buildLarvalMatrix();updateLarvalSummary();renderLarvalHouses();showScreen('larval-collect');
 }
 function logLarvalHouse(){
   const code=hCode(lS.curHN),start=document.getElementById('l-start')?.value||'',end=document.getElementById('l-end')?.value||'',other=document.getElementById('l-other-name')?.value.trim()||'';
@@ -2374,8 +2153,7 @@ function logLarvalHouse(){
   lS.curContainers=totExamined;lS.curPositive=totPositive;
   const hpDisp=document.getElementById('l-housepos-disp');
   const isHousePositive=(hpDisp?parseInt(hpDisp.textContent)>0:false)||(totPositive>0)||(lS.curPupal>0);
-  const _lpos=TrackRecorder.getLastPos();
-  lS.houses.push({id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:lS.curPupal,housePositive:isHousePositive,counts,contDetails:contSnap,otherName:other,lat:_lpos?.lat||null,lng:_lpos?.lng||null});
+  lS.houses.push({id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:lS.curPupal,dips:lS.curDips,larvae:lS.curLarvae,pupae:lS.curPupae,housePositive:isHousePositive,counts,contDetails:contSnap,otherName:other});
   lS.curHN++;const nc=hCode(lS.curHN);
   const lhd=document.getElementById('l-hnum-disp');if(lhd)lhd.textContent=nc;
   const llb=document.getElementById('l-log-btn-code');if(llb)llb.textContent=nc;
@@ -2384,7 +2162,7 @@ function logLarvalHouse(){
   const h=lS.houses[lS.houses.length-1];resetLarvalCurForm();renderLarvalHouses();updateLarvalSummary();saveDraft('larval');
   showToast(code+' logged — L:'+h.larvae+' P:'+h.pupae+' ✓','check');
 }
-function proceedToLarvalReview(){TrackRecorder.stop();populateLarvalReview();showScreen('larval-review');}
+function proceedToLarvalReview(){if(!lS.houses.length){document.getElementById('l-coll-warn').style.display='flex';return;}document.getElementById('l-coll-warn').style.display='none';populateLarvalReview();showScreen('larval-review');}
 
 /* ── LARVAL RENDER ──────────────────────────────────────── */
 function renderLarvalHouses(){
@@ -2437,20 +2215,15 @@ function populateLarvalReview(){
     if(tot>0){const tr=document.createElement('tr');const nm=(sp.oth&&lS.houses.some(h=>h.otherName))?'Others ('+lS.houses.map(h=>h.otherName).filter(Boolean).join(', ')+')':sp.n;tr.innerHTML=`<td>${nm}</td><td style="color:var(--larval);">${l||'-'}</td><td>${p||'-'}</td><td style="font-weight:700;">${tot}</td>`;sb.appendChild(tr);}});
   const tt=document.createElement('tr');tt.className='tot-tr';tt.innerHTML=`<td>TOTAL</td><td>${totL}</td><td>${totP}</td><td>${totL+totP}</td>`;sb.appendChild(tt);
   const hw=document.getElementById('r-l-house-wrap');
-  const hRows=lS.houses.map(h=>`<tr><td style="text-align:left;padding-left:10px;font-style:normal;font-weight:600;">${h.houseNo}</td><td>${h.containers}</td><td style="color:var(--larval);font-weight:600;">${h.positive}</td><td>${h.pupal}</td><td style="font-weight:700;">${h.housePositive?'Yes':'-'}</td></tr>`).join('');
-  const tC=lS.houses.reduce((s,h)=>s+h.containers,0),tP=lS.houses.reduce((s,h)=>s+h.positive,0),tPu=lS.houses.reduce((s,h)=>s+h.pupal,0);
-  const dipRevRows=(lS.dipEntries||[]).map(e=>`<tr><td style="text-align:left;padding-left:10px;font-style:normal;font-weight:600;color:var(--primary);">${e.siteNo}</td><td>${e.dips}</td><td style="color:var(--larval);font-weight:600;">${e.larvae}</td><td>${e.pupae}</td><td style="font-weight:700;">${e.larvae+e.pupae}</td><td style="color:var(--osv);font-size:11px;font-style:italic;">${e.remark||''}</td></tr>`).join('');
-  const tDips=lTotDips(),dipTotR=dipRevRows||'<tr><td colspan="6" style="text-align:center;color:var(--osv);">No dipping entries</td></tr>';
-  hw.innerHTML=`<table class="sp-rev-tbl lrv"><thead><tr><th style="text-align:left;padding-left:10px;">House</th><th>Cont.</th><th>Pos.</th><th>Pupal+</th><th>+ve House</th></tr></thead><tbody>${hRows}<tr class="tot-tr"><td style="text-align:left;padding-left:10px;">TOTAL</td><td>${tC}</td><td>${tP}</td><td>${tPu}</td><td></td></tr></tbody></table>
-<div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin:12px 0 6px;">An./Culex Dipping Entries</div>
-<table class="sp-rev-tbl lrv"><thead><tr style="background:var(--primary);"><th style="text-align:left;padding-left:10px;">Site No.</th><th>Dips</th><th>Larvae</th><th>Pupae</th><th>L+P</th><th style="text-align:left;">Remark</th></tr></thead><tbody>${dipTotR}<tr class="tot-tr"><td style="text-align:left;padding-left:10px;">TOTAL</td><td>${tDips}</td><td>${lTotLarvae()}</td><td>${lTotPupae()}</td><td>${lTotLarvae()+lTotPupae()}</td><td></td></tr></tbody></table>`;
-  renderTrackPreview('l-track-preview',lS.houses);
+  const hRows=lS.houses.map(h=>`<tr><td style="text-align:left;padding-left:10px;font-style:normal;font-weight:600;">${h.houseNo}</td><td>${h.containers}</td><td style="color:var(--larval);font-weight:600;">${h.positive}</td><td>${h.pupal}</td><td>${h.dips}</td><td>${h.larvae}</td><td>${h.pupae}</td><td style="font-weight:700;">${h.larvae+h.pupae}</td></tr>`).join('');
+  const tC=lS.houses.reduce((s,h)=>s+h.containers,0),tP=lS.houses.reduce((s,h)=>s+h.positive,0),tPu=lS.houses.reduce((s,h)=>s+h.pupal,0),tD=lS.houses.reduce((s,h)=>s+h.dips,0);
+  hw.innerHTML=`<table class="sp-rev-tbl lrv"><thead><tr><th style="text-align:left;padding-left:10px;">House</th><th>Cont.</th><th>Pos.</th><th>Pupal+</th><th>Dips</th><th>Larvae</th><th>Pupae</th><th>L+P</th></tr></thead><tbody>${hRows}<tr class="tot-tr"><td style="text-align:left;padding-left:10px;">TOTAL</td><td>${tC}</td><td>${tP}</td><td>${tPu}</td><td>${tD}</td><td>${lTotLarvae()}</td><td>${lTotPupae()}</td><td>${lTotLarvae()+lTotPupae()}</td></tr></tbody></table>`;
 }
 function lSnap(){
   const allCont=lS.houses.reduce((acc,h)=>{(h.contDetails||[]).forEach((c,i)=>{if(!acc[i])acc[i]={name:c.name,examined:0,positive:0};acc[i].examined+=c.examined;acc[i].positive+=c.positive;});return acc;},{});
-  return {id:Date.now(),savedAt:new Date().toISOString(),appType:'larval',v:'2.0',date:lS.date,state:lS.state,district:lS.district,location:lS.location,workers:lS.workers,officers:lS.officers,lat:lS.lat,lng:lS.lng,houses:lS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),dipEntries:[...(lS.dipEntries||[])],containerSummary:Object.values(allCont),HI:calcHI(),CI:calcCI(),BI:calcBI(),PI:calcPI(),LD:calcLD(),PD:calcPD(),totalLarvae:lTotLarvae(),totalPupae:lTotPupae(),totalDips:lTotDips(),totalContainers:lTotContainers(),totalPositive:lTotPositive(),track:TrackRecorder.getTrack()};
+  return {id:Date.now(),savedAt:new Date().toISOString(),appType:'larval',v:'2.0',date:lS.date,state:lS.state,district:lS.district,location:lS.location,workers:lS.workers,officers:lS.officers,lat:lS.lat,lng:lS.lng,houses:lS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),containerSummary:Object.values(allCont),HI:calcHI(),CI:calcCI(),BI:calcBI(),PI:calcPI(),LD:calcLD(),PD:calcPD(),totalLarvae:lTotLarvae(),totalPupae:lTotPupae(),totalDips:lTotDips(),totalContainers:lTotContainers(),totalPositive:lTotPositive()};
 }
-function saveLarvalSurvey(){TrackRecorder.stop();const s=lSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(L_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('larval');activeSavedTab='larval';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'larval');}
+function saveLarvalSurvey(){const s=lSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(L_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('larval');activeSavedTab='larval';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'larval');}
 
 /* ── CSV EXPORT ─────────────────────────────────────────── */
 function buildAdultCSV(s){
@@ -2485,10 +2258,6 @@ function buildAdultCSV(s){
   r('Total Houses/Sites',s.houses?.length||0);
   r('Total Man-Hours',(s.totalManHours?.toFixed?s.totalManHours.toFixed(2):0)+' hrs');
   r('Survey Saved At',s.savedAt?new Date(s.savedAt).toLocaleString('en-IN'):'-');
-  r('Survey Start Time',s.track?.startTime?new Date(s.track.startTime).toLocaleString('en-IN'):'-');
-  r('Survey End Time',s.track?.endTime?new Date(s.track.endTime).toLocaleString('en-IN'):'-');
-  r('Survey Duration',s.track?.durationSec?_fmtDurSec(s.track.durationSec):'-');
-  r('Distance Covered',s.track?.distanceKm?s.track.distanceKm.toFixed(2)+' km':'-');
   blank();
 
   // DENSITY INDICES
@@ -2534,25 +2303,16 @@ function buildAdultCSV(s){
 
   // HOUSE/SITE DETAILS
   sep('HOUSE / SITE DETAILS');
-  if(isR) h('House/Site No.','Rooms Inspected','Start Time','End Time','Hours Spent','Indoor','Outdoor','Total Mosquitoes','GPS Latitude','GPS Longitude');
-  else h('Site No.','Start Time','End Time','Hours Spent','Landing Catch','Total Mosquitoes','GPS Latitude','GPS Longitude');
+  if(isR) h('House/Site No.','Rooms Inspected','Start Time','End Time','Hours Spent','Indoor','Outdoor','Total Mosquitoes');
+  else h('Site No.','Start Time','End Time','Hours Spent','Landing Catch','Total Mosquitoes');
   (s.houses||[]).forEach(h2=>{
     const ind=(h2.counts||[]).reduce((t,r2)=>t+(r2[0]||0),0);
     const out=isR?(h2.counts||[]).reduce((t,r2)=>t+(r2[1]||0),0):0;
     const hrs=h2.hours?.toFixed?h2.hours.toFixed(2):0;
-    if(isR) r(h2.houseNo,h2.rooms,h2.start,h2.end,hrs,ind,out,h2.total,h2.lat||'',h2.lng||'');
-    else r(h2.houseNo,h2.start,h2.end,hrs,ind,h2.total,h2.lat||'',h2.lng||'');
+    if(isR) r(h2.houseNo,h2.rooms,h2.start,h2.end,hrs,ind,out,h2.total);
+    else r(h2.houseNo,h2.start,h2.end,hrs,ind,h2.total);
   });
   blank();
-
-  // POSITIVE HOUSES GPS
-  const posHouses=(s.houses||[]).filter(h2=>(h2.total>0)&&h2.lat&&h2.lng);
-  if(posHouses.length){
-    sep('POSITIVE HOUSE / SITE GPS COORDINATES');
-    h('House/Site No.','Total Mosquitoes','GPS Latitude','GPS Longitude','Google Maps Link');
-    posHouses.forEach(h2=>r(h2.houseNo,h2.total,h2.lat,h2.lng,'https://maps.google.com/?q='+h2.lat+','+h2.lng));
-    blank();
-  }
 
   // PER-HOUSE SPECIES BREAKDOWN
   sep('PER HOUSE/SITE SPECIES BREAKDOWN');
@@ -2605,10 +2365,6 @@ function buildLarvalCSV(s){
   r('Senior Officer',s.officers||'-');
   r('Total Houses Inspected',s.houses?.length||0);
   r('Survey Saved At',s.savedAt?new Date(s.savedAt).toLocaleString('en-IN'):'-');
-  r('Survey Start Time',s.track?.startTime?new Date(s.track.startTime).toLocaleString('en-IN'):'-');
-  r('Survey End Time',s.track?.endTime?new Date(s.track.endTime).toLocaleString('en-IN'):'-');
-  r('Survey Duration',s.track?.durationSec?_fmtDurSec(s.track.durationSec):'-');
-  r('Distance Covered',s.track?.distanceKm?s.track.distanceKm.toFixed(2)+' km':'-');
   blank();
 
   sep('AEDES LARVAL SURVEILLANCE INDICES');
@@ -2656,25 +2412,16 @@ function buildLarvalCSV(s){
   blank();
 
   sep('HOUSE-WISE DETAILS (CONTAINER INSPECTION)');
-  r('House No.','Rooms','Start Time','End Time','Containers Inspected','Positive Containers','Pupal +ve Containers','House Positive','GPS Latitude','GPS Longitude');
+  r('House No.','Rooms','Start Time','End Time','Containers Inspected','Positive Containers','Pupal +ve Containers','House Positive');
   (s.houses||[]).forEach(h=>{
-    r(h.houseNo,h.rooms,h.start,h.end,h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No',h.lat||'',h.lng||'');
+    r(h.houseNo,h.rooms,h.start,h.end,h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No');
   });
   blank();
 
-  // POSITIVE HOUSES GPS
-  const posHouses=(s.houses||[]).filter(h=>h.housePositive&&h.lat&&h.lng);
-  if(posHouses.length){
-    sep('POSITIVE HOUSE GPS COORDINATES');
-    r('House No.','Positive Containers','Pupal +ve','GPS Latitude','GPS Longitude','Google Maps Link');
-    posHouses.forEach(h=>r(h.houseNo,h.positive||0,h.pupal||0,h.lat,h.lng,'https://maps.google.com/?q='+h.lat+','+h.lng));
-    blank();
-  }
-
-  sep('ANOPHELES / CULEX DIPPING ENTRIES');
-  r('Site No.','Dips Taken','Larvae Collected','Pupae Collected','Total (L+P)','Remark');
-  (s.dipEntries||[]).forEach(e=>{
-    r(e.siteNo,e.dips||0,e.larvae||0,e.pupae||0,(e.larvae||0)+(e.pupae||0),e.remark||'');
+  sep('HOUSE-WISE DIPPING DATA (ANOPHELES / CULEX)');
+  r('House No.','Dips Taken','Larvae Collected','Pupae Collected','Total (L+P)');
+  (s.houses||[]).forEach(h=>{
+    r(h.houseNo,h.dips||0,h.larvae||0,h.pupae||0,(h.larvae||0)+(h.pupae||0));
   });
   blank();
 
@@ -2885,8 +2632,7 @@ function exportLarvalPDF(){
   LSP.forEach((sp,i)=>{const l=s.houses.reduce((t,h)=>t+h.counts[i][0],0),p=s.houses.reduce((t,h)=>t+h.counts[i][1],0);totL+=l;totP+=p;if(l+p>0){if(sp.g!==lastG){lastG=sp.g;spRows+=`<tr><td colspan="4" style="background:#e3f2fd;font-size:8pt;font-weight:700;text-transform:uppercase;color:#1565c0;padding:4px 8px;">${sp.g}</td></tr>`;}spRows+=`<tr><td><em>${sp.n}</em></td><td style="color:#1565c0;">${l}</td><td>${p}</td><td><strong>${l+p}</strong></td></tr>`;}});
   spRows+=`<tr style="background:#e3f2fd;font-weight:700;border-top:2px solid #1565c0;"><td>TOTAL</td><td>${totL}</td><td>${totP}</td><td>${totL+totP}</td></tr>`;
   let hRows='';s.houses.forEach(h=>{hRows+=`<tr><td>${h.houseNo}</td><td>${h.rooms}</td><td>${h.containers||0}</td><td style="color:#1565c0;"><strong>${h.positive||0}</strong></td><td>${h.pupal||0}</td><td style="font-weight:700;">${h.housePositive?'Yes':'-'}</td></tr>`;});
-  if(!hRows)hRows='<tr><td colspan="6" style="text-align:center;color:#999;">No house data</td></tr>';
-  let dipRows='';(s.dipEntries||[]).forEach(e=>{const lp=(e.larvae||0)+(e.pupae||0);dipRows+=`<tr><td>${e.siteNo}</td><td>${e.dips||0}</td><td>${e.larvae||0}</td><td>${e.pupae||0}</td><td style="font-weight:700;">${lp}</td><td style="color:#666;font-style:italic;">${e.remark||''}</td></tr>`;});
+  let dipRows='';s.houses.forEach(h=>{const lp=(h.larvae||0)+(h.pupae||0);dipRows+=`<tr><td>${h.houseNo}</td><td>${h.dips||0}</td><td>${h.larvae||0}</td><td>${h.pupae||0}</td><td style="font-weight:700;">${lp}</td></tr>`;});
   let contHRows='';(s.containerSummary||[]).forEach(ct=>{if(ct.examined>0||ct.positive>0)contHRows+=`<tr><td>${ct.name}</td><td>${ct.examined}</td><td>${ct.positive}</td></tr>`;});
   if(!contHRows)contHRows='<tr><td colspan="3" style="text-align:center;color:#999;">No container data</td></tr>';
   const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>EST Larval \u2014 ${s.district} \u2014 ${s.date}</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Times New Roman',serif;font-size:11pt;color:#111;}.page{width:210mm;min-height:297mm;margin:0 auto;padding:14mm 16mm 20mm;}.hd{border-bottom:3px double #1565c0;padding-bottom:10px;margin-bottom:12px;}.hd h2{font-size:14pt;font-weight:bold;color:#1565c0;}.hd p{font-size:9pt;color:#555;margin-top:2px;}.tb{text-align:center;border:2px solid #1565c0;border-radius:4px;padding:10px;margin-bottom:12px;}.tb h1{font-size:14pt;color:#1565c0;}.ref{display:flex;justify-content:space-between;font-size:9pt;color:#555;background:#e3f2fd;border-left:3px solid #1565c0;padding:5px 10px;margin-bottom:14px;}.sec{font-size:11pt;font-weight:bold;text-transform:uppercase;border-bottom:1.5px solid;padding-bottom:3px;margin:14px 0 8px;}.sec.ae{color:#1565c0;border-color:#64b5f6;}.sec.an{color:#006b5c;border-color:#00bfa5;}.mt{width:100%;border-collapse:collapse;}.mt td{padding:7px 10px;border:1px solid #ccc;font-size:10pt;}.mt td.lbl{background:#e3f2fd;font-weight:bold;font-size:8.5pt;color:#0d47a1;width:22%;}.iw{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:4px;}.ib{border:1px solid #90caf9;border-radius:4px;padding:9px 6px;text-align:center;flex:1;min-width:80px;background:#e3f2fd;}.ib.gn{border-color:var(--pd,#44ddc1);background:#e6f7f4;}.il{font-size:7.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:#555;margin-bottom:3px;}.iv{font-size:14pt;font-weight:bold;color:#1565c0;}.iv.gn{color:#006b5c;}.is{font-size:7pt;color:#777;margin-top:2px;}table{width:100%;border-collapse:collapse;}thead tr{background:#1565c0;color:#fff;}thead.gn tr{background:#006b5c;}thead th{padding:7px 8px;font-size:9pt;font-weight:bold;text-align:center;text-transform:uppercase;}thead th:first-child{text-align:left;}td{padding:5px 8px;border-bottom:1px solid #e0e0e0;font-size:10pt;text-align:center;}td:first-child{text-align:left;}.sig{display:flex;justify-content:space-between;gap:10px;margin-top:28px;padding-top:12px;border-top:1px solid #ccc;}.sb{flex:1;text-align:center;}.sl{border-top:1px solid #333;margin:0 auto 5px;width:88%;}.sn{font-size:9.5pt;font-weight:bold;}.sr{font-size:8pt;color:#555;margin-top:2px;}.footer{margin-top:14px;border-top:1px solid #ccc;padding-top:6px;font-size:8pt;color:#888;text-align:center;}.sb-fixed{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ccc;padding:10px;text-align:center;}.pb{background:#1565c0;color:#fff;border:none;padding:10px 30px;border-radius:6px;font-size:12pt;font-weight:bold;cursor:pointer;}@media print{.sb-fixed{display:none!important;}@page{size:A4;margin:12mm;}}</style></head><body>
@@ -2936,8 +2682,8 @@ function exportLarvalPDF(){
 <table><thead><tr><th style="text-align:left;">House</th><th>Rooms</th><th>Containers</th><th>Positive</th><th>Pupal+ve</th><th>+ve House</th></tr></thead>
 <tbody>${hRows}</tbody></table>
 
-<div class="sec an" style="color:#006b5c;border-color:#00bfa5;margin-top:12px;">7. An./Culex Dipping Entries</div>
-<table><thead class="gn"><tr><th style="text-align:left;">Site No.</th><th>Dips Taken</th><th>Larvae</th><th>Pupae</th><th>Total (L+P)</th><th>Remark</th></tr></thead>
+<div class="sec an" style="color:#006b5c;border-color:#00bfa5;margin-top:12px;">7. House-wise Dipping Data (An./Culex)</div>
+<table><thead class="gn"><tr><th style="text-align:left;">House</th><th>Dips Taken</th><th>Larvae</th><th>Pupae</th><th>Total (L+P)</th></tr></thead>
 <tbody>${dipRows}</tbody></table>
 
 <div class="sig"><div class="sb"><div class="sl"></div><div class="sn">${s.workers}</div><div class="sr">Surveillance Worker</div></div>
@@ -3004,8 +2750,7 @@ function buildLarvalText(s){
   // House summary
   if(s.houses&&s.houses.length){
     t+='\n*─── HOUSES ───*\n';
-    s.houses.forEach(h=>{t+=h.houseNo+(h.housePositive?' ✓+ve':'')+'\n';});
-  if((s.dipEntries||[]).length){t+='*An/Cx Dipping Entries:*\n';s.dipEntries.forEach(e=>{t+=e.siteNo+': Dips='+e.dips+' L='+e.larvae+' P='+e.pupae+(e.remark?' ('+e.remark+')':'')+'\n';});}
+    s.houses.forEach(h=>{t+=h.houseNo+': L='+h.larvae+' P='+h.pupae+' Dips='+h.dips+(h.housePositive?' ✓+ve':'')+'\n';});
   }
   t+='\n'+'─'.repeat(36)+'\nEST v2.0 · Entomological Surveillance Tool';
   return t;
@@ -3033,13 +2778,11 @@ function loadDraft(mod){
       setCollType(aS.collType||'resting');
       const nc=hCode(aS.curHN);document.getElementById('a-hnum-disp').textContent=nc;document.getElementById('a-log-btn-code').textContent=nc;document.getElementById('a-next-num').textContent=aS.curHN;
     }else{
-      Object.assign(lS,d);lS.curCounts=Array.isArray(lS.curCounts)?lS.curCounts:Array.from({length:LNS},()=>[0,0]);lS.dipEntries=Array.isArray(lS.dipEntries)?lS.dipEntries:[];lS.curDipSN=lS.curDipSN||1;lS.curDipDips=lS.curDipDips||0;lS.curDipLarvae=lS.curDipLarvae||0;lS.curDipPupae=lS.curDipPupae||0;
-      buildLarvalMatrix();updateLarvalSummary();renderLarvalHouses();renderDipEntries();
+      Object.assign(lS,d);lS.curCounts=Array.isArray(lS.curCounts)?lS.curCounts:Array.from({length:LNS},()=>[0,0]);
+      buildLarvalMatrix();updateLarvalSummary();renderLarvalHouses();
       ['l-date','l-location','l-workers','l-officers'].forEach(id=>{const k=id.replace('l-','');const el=document.getElementById(id);if(el)el.value=lS[k]||'';});
       document.getElementById('l-district').value=lS.district||'';
       const nc=hCode(lS.curHN);document.getElementById('l-hnum-disp').textContent=nc;document.getElementById('l-log-btn-code').textContent=nc;document.getElementById('l-next-num').textContent=lS.curHN;
-      const dipCode='DS-'+String(lS.curDipSN).padStart(3,'0');const sd2=document.getElementById('dip-site-disp');if(sd2)sd2.textContent=dipCode;const lb2=document.getElementById('dip-log-btn-code');if(lb2)lb2.textContent=dipCode;
-      updateDipLive();
     }
   }catch(e){console.warn('Draft load failed',e);}
 }
@@ -3178,9 +2921,10 @@ window.addEventListener('beforeunload',(e)=>{
   }
 });
 document.addEventListener('DOMContentLoaded',()=>{
-  // Sync VALID_USERS + auto-load app token, then update UI
+  // Sync VALID_USERS from cached config.json before auth so all users work offline
+  syncValidUsersFromCache().then(()=>loadSavedCreds());
   loadGhSettings();
-  syncValidUsersFromCache().then(()=>{loadSavedCreds();updateGhButtonStatus();});
+  typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();
   buildAdultMatrix();
   buildLarvalMatrix();
   buildContainerMatrix();
@@ -3227,9 +2971,12 @@ const _TileMap=(()=>{
         lbl+=`<text x="${(s.x+5).toFixed(1)}" y="${(s.y+4).toFixed(1)}" font-size="9" font-family="system-ui,sans-serif" font-weight="700" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">${h.houseNo}</text>`;
       });
       c+=lbl;
+      if(pts.length>=1){
+        const s0=scr(pts[0].lat,pts[0].lng);
+        c+=`<circle cx="${s0.x.toFixed(1)}" cy="${s0.y.toFixed(1)}" r="6" fill="#43a047" stroke="#fff" stroke-width="2"/><text x="${(s0.x+8).toFixed(1)}" y="${(s0.y+4).toFixed(1)}" font-size="9" font-family="system-ui,sans-serif" font-weight="700" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">${pts.length>1?'S':'GPS'}</text>`;
+      }
       if(pts.length>=2){
-        const s0=scr(pts[0].lat,pts[0].lng),sN=scr(pts[pts.length-1].lat,pts[pts.length-1].lng);
-        c+=`<circle cx="${s0.x.toFixed(1)}" cy="${s0.y.toFixed(1)}" r="6" fill="#43a047" stroke="#fff" stroke-width="2"/><text x="${(s0.x+8).toFixed(1)}" y="${(s0.y+4).toFixed(1)}" font-size="9" font-family="system-ui,sans-serif" font-weight="700" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">S</text>`;
+        const sN=scr(pts[pts.length-1].lat,pts[pts.length-1].lng);
         c+=`<circle cx="${sN.x.toFixed(1)}" cy="${sN.y.toFixed(1)}" r="6" fill="#43a047" stroke="#fff" stroke-width="2"/><text x="${(sN.x+8).toFixed(1)}" y="${(sN.y+4).toFixed(1)}" font-size="9" font-family="system-ui,sans-serif" font-weight="700" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">E</text>`;
       }
       svg.setAttribute('viewBox',`0 0 ${W()} ${H()}`);svg.innerHTML=c;
@@ -3269,8 +3016,7 @@ function closeSurveyMap(){document.getElementById('survey-map-modal').style.disp
 </script>
 
 
-═══════════════════════════════════════════════════════ */
-
+<script>
 /* ── Update splash DB button based on connection status ── */
 function updateGhButtonStatus(){
   const btn=document.getElementById('splash-db-btn');
@@ -3311,26 +3057,23 @@ function registerSW() {
 }
 
 
-/* ── Update banner — auto-reloads after 6 s ────────── */
+/* ── Update banner ─────────────────────────────────── */
 function showUpdateBanner(newVersion) {
-  if (document.getElementById('est-update-banner')) return;
-  let secs = 6;
+  const existing = document.getElementById('est-update-banner');
+  if (existing) return;
   const banner = document.createElement('div');
   banner.id = 'est-update-banner';
-  banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:19999;background:linear-gradient(135deg,#004d42,#006b5c);color:#fff;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 2px 16px rgba(0,0,0,.4);';
+  banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#004d42,#006b5c);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 2px 16px rgba(0,0,0,.3);';
   banner.innerHTML = `
     <div>
-      <div style="font-weight:700;font-size:13px;">🔄 EST Updated — reloading in <span id="_uc">${secs}</span>s</div>
-      <div style="font-size:11px;opacity:.85;">Your saved data is safe. Tap <b>Now</b> to reload immediately.</div>
+      <div style="font-weight:700;font-size:13px;">EST Update Available (v${newVersion})</div>
+      <div style="font-size:11px;opacity:.8;">Tap Reload to install. All your saved data is safe.</div>
     </div>
-    <button onclick="window.location.reload(true)" style="height:34px;padding:0 16px;background:#68fadd;border:none;border-radius:8px;color:#00201a;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;">Now</button>`;
+    <div style="display:flex;gap:8px;flex-shrink:0;">
+      <button onclick="document.getElementById('est-update-banner').remove()" style="height:34px;padding:0 12px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;">Later</button>
+      <button onclick="window.location.reload(true)" style="height:34px;padding:0 14px;background:#68fadd;border:none;border-radius:8px;color:#00201a;font-size:12px;font-weight:700;cursor:pointer;">Reload</button>
+    </div>`;
   document.body.prepend(banner);
-  const t = setInterval(() => {
-    secs--;
-    const el = document.getElementById('_uc');
-    if (el) el.textContent = secs;
-    if (secs <= 0) { clearInterval(t); window.location.reload(true); }
-  }, 1000);
 }
 
 /* ── PWA Manifest (dynamic, so icon path doesn't break) ── */
@@ -3389,26 +3132,5 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('[EST] v' + EST_VERSION + ' loaded. Online:', navigator.onLine);
 });
 </script>
-
-<!-- ══ SURVEY PATH MAP MODAL (Google Satellite) ══ -->
-<div id="survey-map-modal" style="display:none;position:fixed;inset:0;z-index:10002;background:rgba(0,0,0,.78);align-items:center;justify-content:center;padding:12px;">
-  <div style="background:#111;border-radius:14px;width:100%;max-width:480px;height:80vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.7);">
-    <div style="padding:11px 16px;background:#0a1628;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="#64b5f6"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-        <span style="font-weight:700;color:#fff;font-size:14px;">Survey Path — Satellite View</span>
-      </div>
-      <button onclick="closeSurveyMap()" style="background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:50%;width:28px;height:28px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
-    </div>
-    <div id="smap-body" style="flex:1;min-height:320px;"></div>
-    <div style="padding:8px 14px;background:#0a1628;border-top:1px solid #1e3a5f;font-size:10px;color:#90caf9;display:flex;gap:14px;align-items:center;flex-wrap:wrap;flex-shrink:0;">
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#43a047;vertical-align:middle;margin-right:3px;"></span>Start / End</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#e53935;vertical-align:middle;margin-right:3px;"></span>Positive</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1976d2;vertical-align:middle;margin-right:3px;"></span>House</span>
-      <span><span style="display:inline-block;width:22px;height:3px;background:#ffd600;vertical-align:middle;border-radius:2px;margin-right:3px;"></span>Path</span>
-      <span style="margin-left:auto;font-size:9px;color:#546e7a;">Imagery © Google</span>
-    </div>
-  </div>
-</div>
 </body>
 </html>
