@@ -17,8 +17,14 @@
       "password": "2510",
       "role": "field",
       "active": true
+    },
+    {
+      "username": "Shivan",
+      "password": "886748",
+      "role": "field",
+      "active": true
     }
   ],
-  "updatedAt": "2026-05-27T01:57:29.546Z",
+  "updatedAt": "2026-05-27T01:58:07.005Z",
   "appToken": "IjskKV5DAgx4eA44BioGV0YCcwceMVBcVSR4MVIZMi56VAFXEQE4Ow=="
 }
