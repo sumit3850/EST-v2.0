@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>EST v2.0 — Database Dashboard</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23006b5c'/%3E%3Cg transform='translate(50,52)' fill='rgba(255,255,255,.92)'%3E%3Cellipse cx='0' cy='4' rx='5' ry='14'/%3E%3Ccircle cy='-13' r='5'/%3E%3Cellipse cx='-16' cy='-3' rx='14' ry='5' transform='rotate(-18 -16 -3)' opacity='.75'/%3E%3Cellipse cx='16' cy='-3' rx='14' ry='5' transform='rotate(18 16 -3)' opacity='.75'/%3E%3Cline x1='-5' y1='8' x2='-22' y2='18' stroke='rgba(255,255,255,.92)' stroke-width='1.5'/%3E%3Cline x1='5' y1='8' x2='22' y2='18' stroke='rgba(255,255,255,.92)' stroke-width='1.5'/%3E%3Cline x1='-4' y1='-17' x2='-12' y2='-27' stroke='rgba(255,255,255,.92)' stroke-width='1.5'/%3E%3Cline x1='4' y1='-17' x2='12' y2='-27' stroke='rgba(255,255,255,.92)' stroke-width='1.5'/%3E%3C/g%3E%3C/svg%3E">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--teal:#006b5c;--teal-dk:#004d42;--teal-lt:#e6f7f4;--blue:#1565c0;--blue-lt:#e3f2fd;--gold:#f59e0b;--err:#ba1a1a;--bg:#f0f5f4;--card:#fff;--bdr:#e0e8e5;--txt:#191c1d;--muted:#6c7a76;}
@@ -38,7 +39,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .top-bar-actions{display:flex;gap:8px;align-items:center;}
 #conn-pill{font-size:11px;padding:4px 12px;border-radius:12px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);}
 #conn-pill.ok{background:rgba(0,191,165,.25);border-color:rgba(0,191,165,.5);}
-.tb-btn{height:34px;padding:0 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;}
+.tb-btn{height:34px;padding:0 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;}
 .tb-btn.primary{background:#68fadd;color:#00201a;}
 .tb-btn.ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);}
 /* ─ SETUP BANNER ─ */
@@ -105,6 +106,36 @@ tr:nth-child(even) td{background:#f8faf9;}
 .status-bar.ok{background:var(--teal-lt);color:var(--teal);border:1px solid #a5d6a7;}
 .status-bar.err{background:#ffdad6;color:var(--err);border:1px solid #ba1a1a;}
 .status-bar.info{background:#fff8e1;color:#7a5c00;border:1px solid #f0c040;}
+/* ─ DATE RANGE ─ */
+.date-range-group{display:flex;align-items:center;gap:4px;flex-wrap:nowrap;}
+.date-range-group label{font-size:10px;font-weight:700;color:var(--muted);white-space:nowrap;}
+/* ─ DELETE SELECTED ─ */
+.pt-btn.danger{background:#ffdad6;color:var(--err);border:1px solid #ba1a1a;}
+/* ─ MAP MODAL ─ */
+#map-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:center;justify-content:center;padding:16px;}
+.map-modal-box{background:#1a1a2e;border-radius:14px;overflow:hidden;width:100%;max-width:760px;max-height:90vh;display:flex;flex-direction:column;}
+.map-modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#111827;color:#fff;flex-shrink:0;}
+#map-meta{font-size:12px;color:rgba(255,255,255,.8);}
+#map-body{flex:1;min-height:420px;}
+/* ─ RESPONSIVE ─ */
+@media(max-width:640px){
+  .top-bar{height:auto;padding:8px 12px;flex-wrap:wrap;gap:8px;}
+  .top-bar-actions{flex-wrap:wrap;gap:6px;}
+  .top-bar h1{font-size:14px;}
+  .top-bar p{display:none;}
+  .tb-btn{height:30px;padding:0 10px;font-size:11px;}
+  .tb-lbl{display:none;}
+  #conn-pill{font-size:10px;padding:3px 8px;}
+  .stats-row{grid-template-columns:repeat(2,1fr);padding:10px 12px;}
+  .panel{padding:10px 12px;}
+  .panel-toolbar{gap:6px;}
+  .pt-search{min-width:0;flex:1 1 100%;}
+  .pt-select{flex:1 1 calc(50% - 3px);}
+  .date-range-group{flex:1 1 100%;overflow-x:auto;}
+  .pt-btn{height:34px;flex:1 1 calc(50% - 4px);justify-content:center;display:flex;align-items:center;padding:0 8px;}
+  .tab-item{padding:10px 10px;font-size:11px;}
+  .stat-value{font-size:22px;}
+}
 </style>
 </head>
 <body>
@@ -151,21 +182,28 @@ tr:nth-child(even) td{background:#f8faf9;}
 <div class="top-bar">
   <div class="top-bar-left">
     <div class="top-bar-logo">
-      <svg width="20" height="20" viewBox="0 0 100 100" fill="rgba(255,255,255,.9)">
-        <ellipse cx="50" cy="56" rx="7" ry="19"/><circle cx="50" cy="33" r="7"/>
+      <svg width="22" height="22" viewBox="0 0 100 100" fill="rgba(255,255,255,.9)">
+        <ellipse cx="50" cy="56" rx="7" ry="19"/>
+        <circle cx="50" cy="33" r="7"/>
         <line x1="50" y1="40" x2="50" y2="88" stroke="rgba(255,255,255,.9)" stroke-width="2.5"/>
         <ellipse cx="28" cy="46" rx="19" ry="7" transform="rotate(-18 28 46)" opacity=".75"/>
         <ellipse cx="72" cy="46" rx="19" ry="7" transform="rotate(18 72 46)" opacity=".75"/>
+        <line x1="43" y1="60" x2="18" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
+        <line x1="57" y1="60" x2="82" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
+        <line x1="43" y1="66" x2="16" y2="82" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
+        <line x1="57" y1="66" x2="84" y2="82" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
+        <line x1="45" y1="27" x2="34" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
+        <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
       </svg>
     </div>
     <div><h1>EST Database</h1><p>Entomological Surveillance · A&N Islands</p></div>
   </div>
   <div class="top-bar-actions">
     <span id="conn-pill">Not connected</span>
-    <button class="tb-btn ghost" onclick="toggleSetup()">⚙ Setup</button>
-    <button class="tb-btn primary" onclick="loadAll()">↻ Refresh</button>
-    <button class="tb-btn primary" onclick="exportAllCSV()">⬇ Export All CSV</button>
-    <button class="tb-btn ghost" onclick="doLogout()">Sign Out</button>
+    <button class="tb-btn ghost" onclick="toggleSetup()" title="Setup">⚙ <span class="tb-lbl">Setup</span></button>
+    <button class="tb-btn primary" onclick="loadAll()" title="Refresh">↻ <span class="tb-lbl">Refresh</span></button>
+    <button class="tb-btn primary" onclick="exportAllCSV()" title="Export All">⬇ <span class="tb-lbl">Export All</span></button>
+    <button class="tb-btn ghost" onclick="doLogout()" title="Sign Out">⎋ <span class="tb-lbl">Sign Out</span></button>
   </div>
 </div>
 
@@ -201,14 +239,20 @@ tr:nth-child(even) td{background:#f8faf9;}
 <div class="panel active" id="panel-adult">
   <div class="panel-toolbar">
     <input class="pt-search" id="search-adult" placeholder="🔍  Search location, district, officer…" oninput="filterTable('adult')">
-    <select class="pt-select" id="filter-type" onchange="filterTable('adult')">
+    <select class="pt-select" id="filter-type" onchange="filterTable('adult')" style="flex:0 0 auto;">
       <option value="">All Types</option><option value="resting">Resting</option><option value="hlc">HLC</option>
     </select>
-    <input type="date" class="pt-select" id="filter-adult-date" onchange="filterTable('adult')">
+    <div class="date-range-group">
+      <label>From</label>
+      <input type="date" class="pt-select" id="filter-adult-from" onchange="filterTable('adult')" style="flex:0 0 auto;">
+      <label>To</label>
+      <input type="date" class="pt-select" id="filter-adult-to" onchange="filterTable('adult')" style="flex:0 0 auto;">
+    </div>
     <button class="pt-btn ghost" onclick="selectAll('adult',true)">☑ All</button>
     <button class="pt-btn ghost" onclick="selectAll('adult',false)">☐ Clear</button>
-    <button class="pt-btn blue" onclick="exportSelected('adult')">Export Selected</button>
-    <button class="pt-btn secondary" onclick="exportFiltered('adult')">Export Filtered</button>
+    <button class="pt-btn blue" onclick="exportSelected('adult')">⬇ Export Sel.</button>
+    <button class="pt-btn secondary" onclick="exportFiltered('adult')">⬇ Export Filtered</button>
+    <button class="pt-btn danger" onclick="deleteSelected('adult')">🗑 Delete Sel.</button>
   </div>
   <div class="tbl-wrap">
     <table id="tbl-adult">
@@ -228,11 +272,17 @@ tr:nth-child(even) td{background:#f8faf9;}
 <div class="panel" id="panel-larval">
   <div class="panel-toolbar">
     <input class="pt-search" id="search-larval" placeholder="🔍  Search location, district, officer…" oninput="filterTable('larval')">
-    <input type="date" class="pt-select" id="filter-larval-date" onchange="filterTable('larval')">
+    <div class="date-range-group">
+      <label>From</label>
+      <input type="date" class="pt-select" id="filter-larval-from" onchange="filterTable('larval')" style="flex:0 0 auto;">
+      <label>To</label>
+      <input type="date" class="pt-select" id="filter-larval-to" onchange="filterTable('larval')" style="flex:0 0 auto;">
+    </div>
     <button class="pt-btn ghost" onclick="selectAll('larval',true)">☑ All</button>
     <button class="pt-btn ghost" onclick="selectAll('larval',false)">☐ Clear</button>
-    <button class="pt-btn blue" onclick="exportSelected('larval')">Export Selected</button>
-    <button class="pt-btn secondary" onclick="exportFiltered('larval')">Export Filtered</button>
+    <button class="pt-btn blue" onclick="exportSelected('larval')">⬇ Export Sel.</button>
+    <button class="pt-btn secondary" onclick="exportFiltered('larval')">⬇ Export Filtered</button>
+    <button class="pt-btn danger" onclick="deleteSelected('larval')">🗑 Delete Sel.</button>
   </div>
   <div class="tbl-wrap">
     <table id="tbl-larval">
@@ -267,6 +317,17 @@ tr:nth-child(even) td{background:#f8faf9;}
 </div>
 
 </div><!-- #app -->
+
+<!-- Map Modal -->
+<div id="map-modal">
+  <div class="map-modal-box">
+    <div class="map-modal-hdr">
+      <div id="map-meta">Survey track</div>
+      <button onclick="closeMapModal()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:16px;line-height:1;">✕</button>
+    </div>
+    <div id="map-body" style="flex:1;min-height:420px;"></div>
+  </div>
+</div>
 
 <script>
 const DASH_U='ANIENTO', DASH_P='2026', DASH_KEY='est_dash_creds';
@@ -489,16 +550,40 @@ async function deleteSurvey(path,sha,type){
 /* ── FILTER ── */
 function filterTable(mod){
   const q=(document.getElementById('search-'+mod)?.value||'').toLowerCase();
-  const df=document.getElementById('filter-'+(mod==='adult'?'adult-date':'larval-date'))?.value||'';
+  const fromD=document.getElementById('filter-'+mod+'-from')?.value||'';
+  const toD=document.getElementById('filter-'+mod+'-to')?.value||'';
   const tf=document.getElementById('filter-type')?.value||'';
   const src=mod==='adult'?allAdult:allLarval;
   const filtered=src.filter(s=>{
     if(q&&!(s.location+s.district+s.workers+s.officers+'').toLowerCase().includes(q))return false;
-    if(df&&s.date!==df)return false;
+    if(fromD&&s.date&&s.date<fromD)return false;
+    if(toD&&s.date&&s.date>toD)return false;
     if(tf&&mod==='adult'&&s.collType!==tf)return false;
     return true;
   });
   if(mod==='adult'){adultF=filtered;renderAdult();}else{larvalF=filtered;renderLarval();}
+}
+async function deleteSelected(mod){
+  if(!GH.owner||!GH.token){alert('Connect to GitHub first');return;}
+  const checked=document.querySelectorAll('.'+mod+'-cb:checked');
+  if(!checked.length){alert('Tick rows to select records first');return;}
+  const src=mod==='adult'?adultF:larvalF;
+  const toDelete=Array.from(checked).map(c=>src[parseInt(c.dataset.idx)]).filter(s=>s&&s._path&&s._sha);
+  if(!toDelete.length){alert('No deletable records selected (records must be synced to GitHub)');return;}
+  if(!confirm(`Delete ${toDelete.length} selected ${mod} survey record(s) from GitHub?\nThis cannot be undone.`))return;
+  setStatus('Deleting '+toDelete.length+' record(s)…','info');
+  let ok=0,fail=0;
+  for(const s of toDelete){
+    try{
+      const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${s._path}`,{
+        method:'DELETE',headers:{...ghH(),'Content-Type':'application/json'},
+        body:JSON.stringify({message:`[EST Dashboard] Delete ${mod} survey`,sha:s._sha,branch:'main'})
+      });
+      if(r.ok)ok++;else fail++;
+    }catch(e){fail++;}
+  }
+  setStatus(`✓ Deleted ${ok} record(s)${fail?' — '+fail+' failed':''}`,fail?'err':'ok');
+  loadAll();
 }
 function switchTab(tab,btn){
   document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
