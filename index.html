@@ -16,110 +16,79 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./offline-styles.css">
 <style>
-:root{
-  --primary:#006b5c;--pl:#00bfa5;--pd:#44ddc1;--pb:#68fadd;
-  --sf:#f0f4f3;--sfl:#e8edeb;--sfc:#ffffff;
-  --os:#191c1d;--osv:#3c4a46;--ol:#6c7a76;--olv:#bbcac4;
-  --err:#ba1a1a;--errbg:#ffdad6;--wbg:#fff8e1;--gbg:#e6f7f4;
-  --amber:#b45309;--amberbg:#fffbeb;
-  --adult:#006b5c;--adultl:#e6f7f4;--larval:#1565c0;--larvall:#e3f2fd;
-  --mono:'IBM Plex Mono',monospace;--sans:'DM Sans',sans-serif;
-  --rsm:6px;--rmd:10px;--rlg:16px;--rxl:22px;
-  --touch:48px;--hh:60px;--nh:66px;--tr:.22s cubic-bezier(.4,0,.2,1);
-}
+:root{--primary:#006b5c;--pl:#00bfa5;--pd:#44ddc1;--pb:#68fadd;--sf:#f0f4f3;--sfl:#e8edeb;--sfc:#ffffff;--os:#191c1d;--osv:#3c4a46;--ol:#6c7a76;--olv:#bbcac4;--err:#ba1a1a;--errbg:#ffdad6;--wbg:#fff8e1;--gbg:#e6f7f4;--amber:#b45309;--amberbg:#fffbeb;--adult:#006b5c;--adultl:#e6f7f4;--larval:#1565c0;--larvall:#e3f2fd;--mono:'IBM Plex Mono',monospace;--sans:'DM Sans',sans-serif;--rsm:6px;--rmd:10px;--rlg:16px;--rxl:22px;--touch:48px;--hh:60px;--nh:66px;--tr:.22s cubic-bezier(.4,0,.2,1);}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;height:-webkit-fill-available;width:100%;overflow:hidden;}
 body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;touch-action:manipulation;}
-@supports(padding-bottom:env(safe-area-inset-bottom)){
-  #app-nav{padding-bottom:calc(8px + env(safe-area-inset-bottom));}
-  #app-header{padding-top:env(safe-area-inset-top);}
-}
+@supports(padding-bottom:env(safe-area-inset-bottom)){#app-nav{padding-bottom:calc(8px + env(safe-area-inset-bottom));} #app-header{padding-top:env(safe-area-inset-top);}}
 #app-header,#app-nav{display:none;}
 .screen{position:fixed;inset:0;display:flex;flex-direction:column;background:var(--sf);opacity:0;pointer-events:none;visibility:hidden;z-index:1;transition:opacity .3s ease,transform .3s cubic-bezier(.4,0,.2,1);}
 .screen.active{opacity:1;pointer-events:all;transform:translateY(0);visibility:visible;}
 #splash{background:linear-gradient(160deg,#002d26 0%,#004d42 45%,#006b5c 100%);align-items:center;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch;z-index:9999;visibility:visible;}
 .sbg{position:absolute;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none;}
-.sbg.c1{width:360px;height:360px;top:-90px;right:-90px;}
-.sbg.c2{width:240px;height:240px;bottom:100px;left:-70px;}
-.sbg.c3{width:160px;height:160px;bottom:220px;right:10px;}
+.sbg.c1{width:360px;height:360px;top:-90px;right:-90px;} .sbg.c2{width:240px;height:240px;bottom:100px;left:-70px;} .sbg.c3{width:160px;height:160px;bottom:220px;right:10px;}
 .scroll-area{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:calc(var(--hh)+14px) 14px calc(var(--nh)+22px);}
 .scroll-area::-webkit-scrollbar{display:none;}
 #app-header{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--hh);background:rgba(240,244,243,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--olv);align-items:center;justify-content:space-between;display:flex;padding:0 16px;}
-.hbrand{display:flex;align-items:center;gap:8px;}
-.htitle{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--os);}
-.hsub{font-size:9px;color:var(--osv);letter-spacing:.06em;text-transform:uppercase;}
+.hbrand{display:flex;align-items:center;gap:8px;} .htitle{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--os);} .hsub{font-size:9px;color:var(--osv);letter-spacing:.06em;text-transform:uppercase;}
 .hmod-badge{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
-.hmod-badge.adult{background:var(--adultl);color:var(--adult);}
-.hmod-badge.larval{background:var(--larvall);color:var(--larval);}
+.hmod-badge.adult{background:var(--adultl);color:var(--adult);} .hmod-badge.larval{background:var(--larvall);color:var(--larval);}
 .sync-btn{width:40px;height:40px;border-radius:50%;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ol);}
 #app-nav{position:fixed;bottom:0;left:0;right:0;z-index:200;height:var(--nh);background:rgba(240,244,243,.99);border-top:1px solid var(--olv);align-items:center;justify-content:space-around;padding:0;display:flex;}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:var(--touch);border:none;background:transparent;cursor:pointer;border-radius:var(--rmd);color:var(--osv);font-size:10px;font-weight:600;transition:all var(--tr);}
-.nav-btn.active{color:var(--primary);background:rgba(0,107,92,.08);}
-.nav-btn.larval-active{color:var(--larval);background:rgba(21,101,192,.08);}
-.page-title{font-size:22px;font-weight:700;color:var(--os);margin-bottom:4px;}
-.page-accent{height:3px;width:36px;border-radius:2px;margin-bottom:20px;}
-.page-accent.adult{background:var(--pl);}
-.page-accent.larval{background:var(--larval);}
-.sec-hdr{display:flex;align-items:center;gap:8px;margin-bottom:11px;}
-.sec-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--osv);}
+.nav-btn.active{color:var(--primary);background:rgba(0,107,92,.08);} .nav-btn.larval-active{color:var(--larval);background:rgba(21,101,192,.08);}
+.page-title{font-size:22px;font-weight:700;color:var(--os);margin-bottom:4px;} .page-accent{height:3px;width:36px;border-radius:2px;margin-bottom:20px;}
+.page-accent.adult{background:var(--pl);} .page-accent.larval{background:var(--larval);}
+.sec-hdr{display:flex;align-items:center;gap:8px;margin-bottom:11px;} .sec-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--osv);}
 .divider{height:1px;background:var(--olv);margin:18px 0;}
-.field{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;}
-.flabel{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--osv);}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;} .flabel{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--osv);}
 .field input,.field select,.field textarea{width:100%;height:var(--touch);padding:0 13px;background:var(--sfc);border:2px solid var(--olv);border-radius:var(--rmd);font-family:var(--mono);font-size:14px;color:var(--os);-webkit-appearance:none;appearance:none;}
 .field textarea{height:auto;padding:11px 13px;font-family:var(--sans);font-size:14px;resize:none;}
 .field input[type="time"]{padding:0 10px;}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--primary);}
-.field-err{font-size:10px;color:var(--err);display:none;margin-top:3px;}
-.sel-wrap{position:relative;}
-.sel-wrap::after{content:'▾';position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--ol);pointer-events:none;font-size:16px;}
-.sel-wrap select{padding-right:38px;cursor:pointer;}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px;}
 .btn-p{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:52px;background:var(--pl);color:#00201a;border:none;border-radius:var(--rxl);font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,107,92,.15);transition:all var(--tr);}
-.btn-p:active{transform:scale(.98);}
-.btn-p.larval-btn{background:#1565c0;color:#fff;box-shadow:0 2px 12px rgba(21,101,192,.25);}
+.btn-p:active{transform:scale(.98);} .btn-p.larval-btn{background:#1565c0;color:#fff;box-shadow:0 2px 12px rgba(21,101,192,.25);}
 .btn-s{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:46px;background:var(--sfc);color:var(--primary);border:2px solid var(--primary);border-radius:var(--rxl);font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all var(--tr);}
-.btn-s:active{transform:scale(.98);}
-.btn-s.larval-s{color:var(--larval);border-color:var(--larval);}
-.gps-card{background:var(--sfc);border:1px solid var(--olv);border-radius:var(--rlg);padding:13px;margin-bottom:13px;}
-.gps-top{display:flex;align-items:center;gap:11px;margin-bottom:11px;}
-.gps-dot{width:44px;height:44px;border-radius:50%;background:rgba(0,191,165,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .3s;}
-.map-card{background:var(--sfc);border:1px solid var(--olv);border-radius:var(--rlg);padding:13px;margin-bottom:13px;}
-.map-preview{width:100%;height:240px;background:#f0f4f3;border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;color:var(--osv);font-size:12px;overflow:hidden;position:relative;}
-.map-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;height:40px;background:var(--gbg);border:1.5px solid var(--pl);border-radius:var(--rmd);color:var(--primary);font-size:12px;font-weight:700;cursor:pointer;margin-top:10px;}
+.btn-s:active{transform:scale(.98);} .btn-s.larval-s{color:var(--larval);border-color:var(--larval);}
 .login-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:var(--rlg);padding:18px;width:100%;max-width:340px;margin-bottom:14px;}
 .login-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:6px;display:block;}
 .login-inp{width:100%;height:46px;padding:0 14px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.25);border-radius:var(--rmd);font-family:var(--mono);font-size:15px;color:#fff;-webkit-appearance:none;appearance:none;}
-.login-inp::placeholder{color:rgba(255,255,255,.35);}
-.login-inp:focus{outline:none;border-color:var(--pb);}
+.login-inp::placeholder{color:rgba(255,255,255,.35);} .login-inp:focus{outline:none;border-color:var(--pb);}
 .login-err{display:none;color:#ffb4ab;font-size:12px;text-align:center;margin-bottom:9px;}
 .launch-btn{width:100%;max-width:340px;height:54px;background:var(--pb);color:#00201a;border:none;border-radius:var(--rxl);font-family:var(--mono);font-size:15px;font-weight:700;letter-spacing:.06em;cursor:pointer;box-shadow:0 2px 12px rgba(104,250,221,.2);transition:all var(--tr);}
 .launch-btn:active{transform:scale(.97);}
-.remember-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-.remember-row input[type="checkbox"]{width:20px;height:20px;accent-color:var(--pb);cursor:pointer;}
-.remember-row label{font-size:13px;color:rgba(255,255,255,.75);cursor:pointer;}
+.remember-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;} .remember-row input[type="checkbox"]{width:20px;height:20px;accent-color:var(--pb);cursor:pointer;} .remember-row label{font-size:13px;color:rgba(255,255,255,.75);cursor:pointer;}
 #screen-dash{background:linear-gradient(160deg,#002d26 0%,#004d42 50%,#005a4f 100%);}
+.dash-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px 16px 100px;}
+.dash-hero{text-align:center;margin-bottom:26px;}
+.dash-logo{width:74px;height:74px;background:rgba(0,191,165,.15);border-radius:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;border:1.5px solid rgba(0,191,165,.35);}
+.dash-title{font-family:var(--mono);font-size:22px;font-weight:600;color:#fff;line-height:1.2;margin-bottom:6px;} .dash-sub{font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px;}
 .mod-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:var(--rlg);padding:18px;margin-bottom:12px;cursor:pointer;transition:all var(--tr);}
-.mod-name{font-size:17px;font-weight:700;color:#fff;}
-.mod-desc{font-size:11px;color:rgba(255,255,255,.6);line-height:1.5;margin-bottom:12px;}
+.mod-card:active{background:rgba(255,255,255,.16);transform:scale(.99);} .mod-card.larval-mod{background:rgba(21,101,192,.2);border-color:rgba(100,181,246,.35);}
+.mod-hdr{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.mod-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.mod-icon.adult-i{background:rgba(0,191,165,.25);} .mod-icon.larval-i{background:rgba(100,181,246,.25);}
+.mod-name{font-size:17px;font-weight:700;color:#fff;} .mod-desc{font-size:11px;color:rgba(255,255,255,.6);line-height:1.5;margin-bottom:12px;}
+.mod-btns{display:flex;gap:8px;}
 .mod-new{flex:1;height:38px;background:rgba(255,255,255,.9);border:none;border-radius:var(--rmd);font-size:12px;font-weight:700;cursor:pointer;color:#004d42;display:flex;align-items:center;justify-content:center;}
+.mod-new.larval-m{color:#0d47a1;}
 .toast{position:fixed;bottom:calc(var(--nh)+14px);left:50%;transform:translateX(-50%) translateY(20px);background:#1c1b1f;color:#fff;border-radius:24px;padding:11px 17px;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:all .3s ease;font-size:13px;font-weight:500;z-index:3000;max-width:90%;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
+
 <!-- SPLASH LOGIN -->
 <div class="screen active" id="splash">
   <div class="sbg c1"></div><div class="sbg c2"></div><div class="sbg c3"></div>
   <div style="display:flex;flex-direction:column;align-items:center;padding:38px 20px 28px;width:100%;max-width:400px;margin:0 auto;">
     <div style="width:90px;height:90px;background:rgba(255,255,255,.1);border-radius:50%;border:1.5px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
-      <svg width="54" height="54" viewBox="0 0 100 100" fill="rgba(255,255,255,.9)">
-        <ellipse cx="50" cy="56" rx="7" ry="19"/><circle cx="50" cy="33" r="7"/><line x1="50" y1="40" x2="50" y2="88" stroke="rgba(255,255,255,.9)" stroke-width="2"/><ellipse cx="28" cy="46" rx="19" ry="7" transform="rotate(-18 28 46)" opacity=".75"/><ellipse cx="72" cy="46" rx="19" ry="7" transform="rotate(18 72 46)" opacity=".75"/><line x1="43" y1="60" x2="18" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><line x1="43" y1="66" x2="16" y2="82" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><line x1="57" y1="60" x2="82" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><line x1="57" y1="66" x2="84" y2="82" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><line x1="45" y1="27" x2="34" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
-      </svg>
+      <svg width="54" height="54" viewBox="0 0 100 100" fill="rgba(255,255,255,.9)"><ellipse cx="50" cy="56" rx="7" ry="19"/><circle cx="50" cy="33" r="7"/><line x1="50" y1="40" x2="50" y2="88" stroke="rgba(255,255,255,.9)" stroke-width="2"/><ellipse cx="28" cy="46" rx="19" ry="7" transform="rotate(-18 28 46)" opacity=".75"/><ellipse cx="72" cy="46" rx="19" ry="7" transform="rotate(18 72 46)" opacity=".75"/><line x1="43" y1="60" x2="18" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><line x1="43" y1="66" x2="16" y2="82" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><line x1="57" y1="60" x2="82" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><line x1="57" y1="66" x2="84" y2="82" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><line x1="45" y1="27" x2="34" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/></svg>
     </div>
     <div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:5px;">Entomological Surveillance Tool</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px;">
       <div style="font-family:var(--mono);font-size:26px;font-weight:700;color:#fff;letter-spacing:-.02em;">EST v2.0</div>
-      <button onclick="goToAbout()" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;">?</button>
+      <button onclick="alert('EST v2.0 - Offline Surveillance Tool')" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;">?</button>
     </div>
 
     <div class="login-card">
@@ -129,254 +98,337 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
       <input class="login-inp" type="password" id="login-pass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
       <div class="remember-row">
         <input type="checkbox" id="remember-me">
-        <label for="remember-me">Remember credentials on this device</label>
+        <label for="remember-me">Remember credentials</label>
       </div>
       <div class="login-err" id="login-err">Invalid credentials. Please try again.</div>
     </div>
     <button class="launch-btn" id="signin-btn" onclick="doLogin()">SIGN IN</button>
-    <div id="reg-toggle-link" style="width:100%;max-width:340px;text-align:center;margin-top:6px;margin-bottom:2px;">
-      <button onclick="showRegisterForm()" style="background:none;border:none;color:rgba(255,255,255,.55);font-size:12px;cursor:pointer;text-decoration:underline;padding:4px 8px;">New user? Create account</button>
+    <div id="reg-toggle-link" style="width:100%;max-width:340px;text-align:center;margin-top:6px;">
+      <button onclick="showRegisterForm()" style="background:none;border:none;color:rgba(255,255,255,.55);font-size:12px;cursor:pointer;text-decoration:underline;">New user? Create account</button>
     </div>
 
     <!-- Registration Card -->
-    <div class="login-card" id="reg-card" style="display:none;">
-      <div style="text-align:center;font-size:13px;font-weight:700;color:#fff;margin-bottom:12px;letter-spacing:.02em;">Create New Account</div>
+    <div class="login-card" id="reg-card" style="display:none;margin-top:12px;">
+      <div style="text-align:center;font-size:13px;font-weight:700;color:#fff;margin-bottom:12px;">Create New Account</div>
       <label class="login-label">Username</label>
-      <input class="login-inp" type="text" id="reg-user" placeholder="Choose a username" autocomplete="off">
+      <input class="login-inp" type="text" id="reg-user" placeholder="Choose username (min 3 chars)">
       <label class="login-label">Password</label>
-      <input class="login-inp" type="password" id="reg-pass" placeholder="Choose a password">
+      <input class="login-inp" type="password" id="reg-pass" placeholder="Choose password (min 4 chars)">
       <label class="login-label">Confirm Password</label>
       <input class="login-inp" type="password" id="reg-pass2" placeholder="Confirm password" onkeydown="if(event.key==='Enter')doRegister()">
       <div class="login-err" id="reg-err">Error</div>
     </div>
-    <button class="launch-btn" id="reg-btn" onclick="doRegister()" style="display:none;">CREATE ACCOUNT</button>
-    <div id="back-login-link" style="width:100%;max-width:340px;text-align:center;margin-top:6px;margin-bottom:2px;display:none;">
-      <button onclick="showLoginForm()" style="background:none;border:none;color:rgba(255,255,255,.55);font-size:12px;cursor:pointer;text-decoration:underline;padding:4px 8px;">Already have an account? Sign in</button>
+    <button class="launch-btn" id="reg-btn" onclick="doRegister()" style="display:none;margin-top:0;">CREATE ACCOUNT</button>
+    <div id="back-login-link" style="width:100%;max-width:340px;text-align:center;margin-top:6px;display:none;">
+      <button onclick="showLoginForm()" style="background:none;border:none;color:rgba(255,255,255,.55);font-size:12px;cursor:pointer;text-decoration:underline;">Already have account? Sign in</button>
     </div>
   </div>
 </div>
 
 <!-- DASHBOARD -->
-<div class="screen" id="screen-dash" style="background:linear-gradient(160deg,#002d26 0%,#004d42 50%,#005a4f 100%);align-items:center;justify-content:center;">
-  <div style="text-align:center;color:#fff;">
-    <div style="font-family:var(--mono);font-size:28px;font-weight:700;margin-bottom:8px;">EST v2.0</div>
-    <div style="font-size:14px;margin-bottom:24px;opacity:.7;">Entomological Surveillance Tool</div>
-    <button class="mod-new" onclick="startModule('adult','new')" style="max-width:280px;margin:0 auto 12px;height:50px;font-size:14px;">Adult Surveillance</button>
-    <button class="mod-new" onclick="startModule('larval','new')" style="max-width:280px;margin:0 auto;height:50px;font-size:14px;">Larval Surveillance</button>
+<div class="screen" id="screen-dash">
+  <div class="dash-scroll">
+    <div class="dash-hero">
+      <div class="dash-logo">
+        <svg width="42" height="42" viewBox="0 0 100 100" fill="rgba(255,255,255,.9)"><ellipse cx="50" cy="56" rx="7" ry="19"/><circle cx="50" cy="33" r="7"/><line x1="50" y1="40" x2="50" y2="88" stroke="rgba(255,255,255,.9)" stroke-width="2.5"/><ellipse cx="28" cy="46" rx="19" ry="7" transform="rotate(-18 28 46)" opacity=".75"/><ellipse cx="72" cy="46" rx="19" ry="7" transform="rotate(18 72 46)" opacity=".75"/><line x1="43" y1="60" x2="18" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><line x1="57" y1="60" x2="82" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><line x1="43" y1="66" x2="16" y2="82" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><line x1="57" y1="66" x2="84" y2="82" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><line x1="45" y1="27" x2="34" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/></svg>
+      </div>
+      <div class="dash-title">Entomological Surveillance Tool</div>
+      <div class="dash-sub">EST v2.0</div>
+    </div>
+
+    <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Module</div>
+
+    <div class="mod-card">
+      <div class="mod-hdr">
+        <div class="mod-icon adult-i"><svg width="26" height="26" viewBox="0 0 24 24" fill="#00bfa5"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+        <div><div class="mod-name">Adult Surveillance</div><div style="font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;">Resting/HLC</div></div>
+      </div>
+      <div class="mod-desc">House-by-house mosquito collection. Calculates PMHD, TMHD, density and biting rates.</div>
+      <div class="mod-btns">
+        <button class="mod-new" onclick="startModule('adult')">+ New Survey</button>
+      </div>
+    </div>
+
+    <div class="mod-card larval-mod">
+      <div class="mod-hdr">
+        <div class="mod-icon larval-i"><svg width="26" height="26" viewBox="0 0 24 24" fill="#64b5f6"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg></div>
+        <div><div class="mod-name">Larval Surveillance</div><div style="font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;">Container/Dipping</div></div>
+      </div>
+      <div class="mod-desc">House-by-house container inspection & larval dipping. Calculates House Index, Breteau Index.</div>
+      <div class="mod-btns">
+        <button class="mod-new larval-m" onclick="startModule('larval')">+ New Survey</button>
+      </div>
+    </div>
+
+    <div style="text-align:center;font-size:10px;color:rgba(255,255,255,.2);margin-top:28px;">EST v2.0 · Data stored locally — works offline</div>
   </div>
 </div>
 
 <!-- HEADER -->
 <header id="app-header">
   <div class="hbrand">
-    <div style="width:24px;height:24px;background:rgba(0,107,92,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/></svg>
-    </div>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
     <div><div class="htitle">EST</div><div class="hsub">Surveillance</div></div>
     <div class="hmod-badge adult" id="hmod-badge">Adult</div>
   </div>
-  <div style="display:flex;gap:2px;align-items:center;">
-    <button class="sync-btn" onclick="syncAll()"><svg width="22" height="22" viewBox="0 0 24 24" fill="var(--ol)"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8z"/></svg></button>
-  </div>
+  <button class="sync-btn" onclick="goHome()" title="Home"><svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></button>
 </header>
 
 <!-- NAV -->
 <nav id="app-nav">
-  <button class="nav-btn" id="nav-home" onclick="goTo('dash')"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Home</button>
+  <button class="nav-btn" id="nav-home" onclick="goHome()"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Home</button>
   <button class="nav-btn" id="nav-survey" onclick="goTo('survey')"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>Survey</button>
-  <button class="nav-btn" id="nav-collect" onclick="goTo('collect')"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16z"/></svg>Collect</button>
+  <button class="nav-btn" id="nav-collect" onclick="goTo('collect')"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-4 6h-4v4h4v4h-4v-4H8v-4h4v-4h2v4h4v2h-4z" fill="rgba(0,191,165,.8)"/></svg>Collect</button>
   <button class="nav-btn" id="nav-review" onclick="goTo('review')"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zm5.6 8H19v6h-2.8v-6z"/></svg>Review</button>
   <button class="nav-btn" id="nav-saved" onclick="goTo('saved')"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg>Saved</button>
 </nav>
 
-<!-- ══ ADULT REVIEW Phase 3 ══ -->
-<div class="screen" id="screen-adult-review">
+<!-- SURVEY SCREEN -->
+<div class="screen" id="screen-survey">
   <div class="scroll-area">
-    <div class="page-title">Review &amp; Submit</div>
+    <div class="page-title">Survey Setup</div>
     <div class="page-accent adult"></div>
-    <div style="display:flex;gap:8px;margin-bottom:14px;">
-      <button onclick="goTo('survey')" style="flex:1;height:38px;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--sfc);border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:12px;font-weight:700;color:var(--osv);cursor:pointer;">← Survey</button>
-      <button onclick="goTo('collect')" style="flex:1;height:38px;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--sfc);border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:12px;font-weight:700;color:var(--osv);cursor:pointer;">← Collect</button>
-    </div>
-    
-    <!-- GPS Map Card - RESTORED -->
-    <div class="map-card">
-      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:10px;">📍 GPS Track Map</div>
-      <div class="map-preview" id="map-preview-adult">
-        <span>🛰 No path recorded</span>
-      </div>
-      <button class="map-btn" id="map-btn-adult" onclick="viewAdultMap()" style="display:none;">🛰 View Full Map</button>
-    </div>
-
-    <div style="background:var(--sfc);border:1px solid var(--olv);border-radius:var(--rlg);padding:13px;margin-bottom:11px;">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--osv);margin-bottom:10px;">Survey Summary</div>
-      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--sfl);"><span style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--osv);">Date</span><span style="font-size:13px;color:var(--os);" id="r-a-date">-</span></div>
-      <div style="display:flex;justify-content:space-between;padding:7px 0;"><span style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--osv);">Location</span><span style="font-size:13px;color:var(--os);" id="r-a-loc">-</span></div>
-    </div>
-
-    <button class="btn-p" onclick="saveAdultSurvey()">💾 Save Survey</button>
-    <div style="margin-top:9px;"><button class="btn-s" onclick="goTo('collect')" style="border-color:#888;color:#555;">← Back</button></div>
-    <div style="height:14px;"></div>
+    <div style="background:rgba(0,191,165,.1);border:1px solid var(--pd);border-radius:var(--rmd);padding:12px;margin-bottom:14px;font-size:12px;color:var(--os);">✓ Phase 1: Survey metadata</div>
+    <div class="field"><label class="flabel">Date</label><input type="date" id="survey-date"></div>
+    <div class="field"><label class="flabel">Location</label><input type="text" id="survey-loc" placeholder="Enter location"></div>
+    <div class="field"><label class="flabel">District</label><input type="text" id="survey-dist" placeholder="Enter district"></div>
+    <button class="btn-p" onclick="proceedToCollect()">→ Proceed to Collection</button>
+    <button class="btn-s" onclick="goHome()" style="margin-top:10px;">Cancel</button>
+    <div style="height:20px;"></div>
   </div>
 </div>
 
-<!-- ══ LARVAL REVIEW Phase 3 ══ -->
-<div class="screen" id="screen-larval-review">
+<!-- COLLECT SCREEN -->
+<div class="screen" id="screen-collect">
+  <div class="scroll-area">
+    <div class="page-title">Data Collection</div>
+    <div class="page-accent adult"></div>
+    <div style="background:rgba(0,191,165,.1);border:1px solid var(--pd);border-radius:var(--rmd);padding:12px;margin-bottom:14px;font-size:12px;color:var(--os);">✓ Phase 2: Mosquito counts</div>
+    <div class="field"><label class="flabel">Total Mosquitoes</label><input type="number" id="total-mosq" placeholder="0"></div>
+    <div class="field"><label class="flabel">Culex Species</label><input type="number" id="culex-count" placeholder="0"></div>
+    <div class="field"><label class="flabel">Non-Culex Species</label><input type="number" id="non-culex-count" placeholder="0"></div>
+    <button class="btn-p" onclick="proceedToReview()">→ Proceed to Review</button>
+    <button class="btn-s" onclick="goTo('survey')" style="margin-top:10px;">← Back</button>
+    <div style="height:20px;"></div>
+  </div>
+</div>
+
+<!-- REVIEW SCREEN -->
+<div class="screen" id="screen-review">
   <div class="scroll-area">
     <div class="page-title">Review &amp; Submit</div>
-    <div class="page-accent larval"></div>
-    <div style="display:flex;gap:8px;margin-bottom:14px;">
-      <button onclick="goTo('survey')" style="flex:1;height:38px;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--sfc);border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:12px;font-weight:700;color:var(--osv);cursor:pointer;">← Survey</button>
-      <button onclick="goTo('collect')" style="flex:1;height:38px;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--sfc);border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:12px;font-weight:700;color:var(--osv);cursor:pointer;">← Collect</button>
+    <div class="page-accent adult"></div>
+    <div style="background:rgba(0,191,165,.1);border:1px solid var(--pd);border-radius:var(--rmd);padding:12px;margin-bottom:14px;font-size:12px;color:var(--os);">✓ Phase 3: Final review</div>
+    <div style="background:var(--sfc);border:1px solid var(--olv);border-radius:var(--rlg);padding:14px;margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--osv);margin-bottom:10px;">Survey Summary</div>
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--sfl);"><span style="font-weight:700;color:var(--osv);">Date:</span><span id="review-date">—</span></div>
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--sfl);"><span style="font-weight:700;color:var(--osv);">Location:</span><span id="review-loc">—</span></div>
+      <div style="display:flex;justify-content:space-between;padding:7px 0;"><span style="font-weight:700;color:var(--osv);">Total Mosquitoes:</span><span id="review-total">0</span></div>
     </div>
+    <button class="btn-p" onclick="submitSurvey()">💾 Save &amp; Submit</button>
+    <button class="btn-s" onclick="goTo('collect')" style="margin-top:10px;">← Back</button>
+    <div style="height:20px;"></div>
+  </div>
+</div>
 
-    <!-- GPS Map Card - RESTORED -->
-    <div class="map-card">
-      <div style="font-size:12px;font-weight:700;color:var(--larval);margin-bottom:10px;">📍 GPS Track Map</div>
-      <div class="map-preview" id="map-preview-larval">
-        <span>🛰 No path recorded</span>
-      </div>
-      <button class="map-btn" id="map-btn-larval" onclick="viewLarvalMap()" style="display:none;background:rgba(21,101,192,.1);border-color:#64b5f6;color:var(--larval);">🛰 View Full Map</button>
-    </div>
-
-    <div style="background:var(--sfc);border:1px solid var(--olv);border-radius:var(--rlg);padding:13px;margin-bottom:11px;">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--osv);margin-bottom:10px;">Survey Summary</div>
-      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--sfl);"><span style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--osv);">Date</span><span style="font-size:13px;color:var(--os);" id="r-l-date">-</span></div>
-      <div style="display:flex;justify-content:space-between;padding:7px 0;"><span style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--osv);">Location</span><span style="font-size:13px;color:var(--os);" id="r-l-loc">-</span></div>
-    </div>
-
-    <button class="btn-p larval-btn" onclick="saveLarvalSurvey()">💾 Save Survey</button>
-    <div style="margin-top:9px;"><button class="btn-s larval-s" onclick="goTo('collect')" style="border-color:#888;color:#555;">← Back</button></div>
-    <div style="height:14px;"></div>
+<!-- SAVED SCREEN -->
+<div class="screen" id="screen-saved">
+  <div class="scroll-area">
+    <div class="page-title">Saved Surveys</div>
+    <div class="page-accent adult"></div>
+    <div id="saved-list" style="margin-bottom:60px;"></div>
   </div>
 </div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<script src="./app.js"></script>
 <script>
-// ══ CRITICAL FIXES ══
-// 1. User Registration Function (FIXED)
+// ══ GLOBALS ══
+let currentUser=null;
+let surveys=JSON.parse(localStorage.getItem('est_surveys')||'[]');
+let currentSurvey={};
+
+// ══ INIT ══
+window.addEventListener('DOMContentLoaded',()=>{
+  checkLogin();
+  setupEventListeners();
+});
+
+// ══ LOGIN/REGISTER ══
 function showRegisterForm(){
   document.getElementById('reg-card').style.display='block';
   document.getElementById('reg-btn').style.display='block';
   document.getElementById('signin-btn').style.display='none';
   document.getElementById('reg-toggle-link').style.display='none';
   document.getElementById('back-login-link').style.display='block';
-  document.getElementById('login-user').parentElement.style.display='none';
-  document.getElementById('login-pass').parentElement.style.display='none';
 }
+
 function showLoginForm(){
   document.getElementById('reg-card').style.display='none';
   document.getElementById('reg-btn').style.display='none';
   document.getElementById('signin-btn').style.display='block';
   document.getElementById('reg-toggle-link').style.display='block';
   document.getElementById('back-login-link').style.display='none';
-  document.getElementById('login-user').parentElement.style.display='block';
-  document.getElementById('login-pass').parentElement.style.display='block';
-  clearRegisterForm();
+  document.getElementById('reg-user').value='';
+  document.getElementById('reg-pass').value='';
+  document.getElementById('reg-pass2').value='';
 }
+
 function doRegister(){
   const u=document.getElementById('reg-user').value.trim();
   const p1=document.getElementById('reg-pass').value;
   const p2=document.getElementById('reg-pass2').value;
   const err=document.getElementById('reg-err');
-  if(!u||u.length<3){err.textContent='Username must be at least 3 characters';err.style.display='block';return;}
-  if(!p1||p1.length<4){err.textContent='Password must be at least 4 characters';err.style.display='block';return;}
-  if(p1!==p2){err.textContent='Passwords do not match';err.style.display.display='block';return;}
+  
+  if(!u||u.length<3){err.textContent='Username must be 3+ characters';err.style.display='block';return;}
+  if(!p1||p1.length<4){err.textContent='Password must be 4+ characters';err.style.display='block';return;}
+  if(p1!==p2){err.textContent='Passwords do not match';err.style.display='block';return;}
+  
   try{
     const users=JSON.parse(localStorage.getItem('est_users')||'[]');
     if(users.some(x=>x.u===u)){err.textContent='Username already exists';err.style.display='block';return;}
     users.push({u,p:p1,created:new Date().toISOString()});
     localStorage.setItem('est_users',JSON.stringify(users));
-    showToast('✓ Account created! Sign in now.','ok');
-    setTimeout(()=>{showLoginForm();clearLoginForm();},1500);
-  }catch(e){err.textContent='Registration failed: '+e.message;err.style.display='block';}
-}
-function clearRegisterForm(){
-  document.getElementById('reg-user').value='';
-  document.getElementById('reg-pass').value='';
-  document.getElementById('reg-pass2').value='';
-  document.getElementById('reg-err').style.display='none';
-}
-function clearLoginForm(){
-  document.getElementById('login-user').value='';
-  document.getElementById('login-pass').value='';
-  document.getElementById('login-err').style.display='none';
+    showToast('✓ Account created! Sign in now');
+    setTimeout(()=>showLoginForm(),1500);
+  }catch(e){err.textContent='Error: '+e.message;err.style.display='block';}
 }
 
-// 2. Survey Recording STOP - Fix (RESTORED)
-function proceedToAdultReview(){
-  if(typeof TrackRecorder!=='undefined')TrackRecorder.stop();
-  goTo('review');
-}
-function proceedToLarvalReview(){
-  if(typeof TrackRecorder!=='undefined')TrackRecorder.stop();
-  goTo('review');
-}
-
-// 3. Map Preview Rendering (RESTORED)
-function renderTrackPreview(){
-  const track=window._currentTrack||{};
-  const pts=track.waypoints||[];
-  const mapEl=document.getElementById('map-preview-'+window._currentModule);
-  if(!mapEl)return;
-  if(pts.length<1){
-    mapEl.innerHTML='<span>🛰 No GPS path recorded</span>';
-    return;
-  }
-  mapEl.innerHTML='<span>✓ GPS track: '+pts.length+' waypoints</span>';
-  const mapBtn=document.getElementById('map-btn-'+window._currentModule);
-  if(mapBtn)mapBtn.style.display=pts.length>=2?'flex':'none';
-}
-function viewAdultMap(){
-  if(!window._currentTrack||!window._currentTrack.waypoints|window._currentTrack.waypoints.length<2){
-    showToast('No GPS path to display','err');
-    return;
-  }
-  showToast('📍 Map view (implement modal if needed)','info');
-}
-function viewLarvalMap(){
-  if(!window._currentTrack||!window._currentTrack.waypoints||window._currentTrack.waypoints.length<2){
-    showToast('No GPS path to display','err');
-    return;
-  }
-  showToast('📍 Map view (implement modal if needed)','info');
+function doLogin(){
+  const u=document.getElementById('login-user').value.trim();
+  const p=document.getElementById('login-pass').value;
+  const rem=document.getElementById('remember-me').checked;
+  const err=document.getElementById('login-err');
+  
+  if(!u||!p){err.textContent='Enter username and password';err.style.display='block';return;}
+  
+  try{
+    const users=JSON.parse(localStorage.getItem('est_users')||'[]');
+    const user=users.find(x=>x.u===u&&x.p===p);
+    if(!user){err.textContent='Invalid credentials';err.style.display='block';return;}
+    
+    currentUser=u;
+    err.style.display='none';
+    if(rem)localStorage.setItem('est_login',JSON.stringify({u,p}));
+    surveys=JSON.parse(localStorage.getItem('est_surveys')||'[]');
+    goHome();
+    showToast('✓ Welcome, '+u+'!');
+  }catch(e){err.textContent='Error: '+e.message;err.style.display='block';}
 }
 
-// 4. Toast Notifications
-function showToast(msg,type){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.className='toast '+type+' show';
-  setTimeout(()=>t.classList.remove('show'),3000);
+function checkLogin(){
+  try{
+    const saved=JSON.parse(localStorage.getItem('est_login'));
+    if(saved)doLoginAuto(saved.u,saved.p);
+  }catch(e){}
 }
 
-// 5. Module Helpers
-window._currentModule='adult';
-window._currentTrack={};
-function startModule(mod,mode){
-  window._currentModule=mod;
-  goTo(mod==='adult'?'survey':'larval-survey');
-}
-function saveAdultSurvey(){
-  showToast('✓ Survey saved','ok');
-  setTimeout(()=>goTo('dash'),1000);
-}
-function saveLarvalSurvey(){
-  showToast('✓ Survey saved','ok');
-  setTimeout(()=>goTo('dash'),1000);
+function doLoginAuto(u,p){
+  try{
+    const users=JSON.parse(localStorage.getItem('est_users')||'[]');
+    const user=users.find(x=>x.u===u&&x.p===p);
+    if(user){currentUser=u;surveys=JSON.parse(localStorage.getItem('est_surveys')||'[]');goHome();}
+  }catch(e){}
 }
 
-// 6. Navigation
+function goHome(){
+  if(!currentUser){goTo('splash');return;}
+  goTo('dash');
+  document.getElementById('app-header').style.display='flex';
+  document.getElementById('app-nav').style.display='flex';
+}
+
+// ══ NAVIGATION ══
 function goTo(screen){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const el=document.getElementById('screen-'+screen);
   if(el)el.classList.add('active');
+  if(screen==='dash'){
+    document.getElementById('app-header').style.display='flex';
+    document.getElementById('app-nav').style.display='flex';
+  }else if(screen==='splash'){
+    document.getElementById('app-header').style.display='none';
+    document.getElementById('app-nav').style.display='none';
+  }
 }
-function doLogin(){showToast('✓ Logged in','ok');goTo('dash');}
-function goToAbout(){showToast('EST v2.0 · Offline surveillance tool','info');}
+
+// ══ SURVEY FLOW ══
+function startModule(mod){
+  currentSurvey={module:mod,date:new Date().toISOString().split('T')[0]};
+  if(mod==='adult')document.querySelector('.page-accent').classList.add('adult');
+  else document.querySelector('.page-accent').classList.remove('adult');
+  goTo('survey');
+}
+
+function proceedToCollect(){
+  currentSurvey.date=document.getElementById('survey-date').value;
+  currentSurvey.location=document.getElementById('survey-loc').value;
+  currentSurvey.district=document.getElementById('survey-dist').value;
+  if(!currentSurvey.date||!currentSurvey.location){
+    showToast('✗ Please fill required fields');
+    return;
+  }
+  goTo('collect');
+}
+
+function proceedToReview(){
+  currentSurvey.totalMosq=parseInt(document.getElementById('total-mosq').value)||0;
+  currentSurvey.culex=parseInt(document.getElementById('culex-count').value)||0;
+  currentSurvey.nonCulex=parseInt(document.getElementById('non-culex-count').value)||0;
+  
+  document.getElementById('review-date').textContent=currentSurvey.date;
+  document.getElementById('review-loc').textContent=currentSurvey.location;
+  document.getElementById('review-total').textContent=currentSurvey.totalMosq;
+  goTo('review');
+}
+
+function submitSurvey(){
+  currentSurvey.id=Date.now();
+  currentSurvey.savedAt=new Date().toISOString();
+  currentSurvey.user=currentUser;
+  surveys.push(currentSurvey);
+  localStorage.setItem('est_surveys',JSON.stringify(surveys));
+  showToast('✓ Survey saved!');
+  setTimeout(()=>goHome(),1500);
+}
+
+// ══ UI ══
+function setupEventListeners(){
+  // Auto-fill today's date
+  const today=new Date().toISOString().split('T')[0];
+  const dateInput=document.getElementById('survey-date');
+  if(dateInput)dateInput.value=today;
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// Load saved surveys
+function loadSavedSurveys(){
+  const list=document.getElementById('saved-list');
+  if(!surveys.length){
+    list.innerHTML='<div style="text-align:center;color:var(--osv);padding:30px;">No surveys saved yet</div>';
+    return;
+  }
+  list.innerHTML=surveys.map((s,i)=>`
+    <div style="background:var(--sfc);border:1px solid var(--olv);border-radius:var(--rmd);padding:14px;margin-bottom:10px;">
+      <div style="font-weight:700;color:var(--os);margin-bottom:8px;">${s.date} — ${s.location}</div>
+      <div style="font-size:12px;color:var(--osv);margin-bottom:8px;">Module: ${s.module} | Mosquitoes: ${s.totalMosq}</div>
+      <button onclick="surveys.splice(${i},1);localStorage.setItem('est_surveys',JSON.stringify(surveys));loadSavedSurveys();" style="background:#ffdad6;color:var(--err);border:1px solid var(--err);padding:6px 12px;border-radius:var(--rmd);font-size:11px;font-weight:700;cursor:pointer;">Delete</button>
+    </div>
+  `).join('');
+}
+
+// Override default screen navigation to load saved on click
+document.addEventListener('click',function(e){
+  if(e.target.id==='nav-saved')setTimeout(()=>loadSavedSurveys(),100);
+});
+
 </script>
 </body>
 </html>
