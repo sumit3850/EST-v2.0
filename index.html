@@ -317,7 +317,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
       </svg>
     </div>
-    <div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:5px;">Entomological Surveillance Tool</div>
+    <div style="font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;word-spacing:0;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:5px;">Entomological&nbsp;Surveillance&nbsp;Tool</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px;">
       <div style="font-family:var(--mono);font-size:26px;font-weight:700;color:#fff;letter-spacing:-.02em;">EST v2.0</div>
       <button onclick="goToAbout()" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;" title="About this app">&#x2139;</button>
@@ -2568,13 +2568,36 @@ function exportLarvalKML(){
   const s=lSnap();
   const trk=s.track;
   const hasTrack=trk&&trk.waypoints&&trk.waypoints.length;
-  const housePl=(s.houses||[]).filter(h=>h.lat&&h.lng).map(h=>`<Placemark><name>${h.houseNo}</name><description>${h.housePositive?'POSITIVE':'Negative'} House | Containers: ${h.containers||0} | Positive: ${h.positive||0}</description><Style><IconStyle><color>${h.housePositive?'ff0000ff':'ffff0000'}</color><scale>0.8</scale></IconStyle></Style><Point><coordinates>${h.lng},${h.lat},0</coordinates></Point></Placemark>`).join('\n');
-  const dipPl=(s.dipSites||[]).filter(d=>d.lat&&d.lng).map(d=>`<Placemark><name>${d.siteNo}</name><description>Dips: ${d.dips||0} | Larvae: ${d.larvae||0} | Pupae: ${d.pupae||0}</description><Style><IconStyle><color>ffff9900</color><scale>0.8</scale></IconStyle></Style><Point><coordinates>${d.lng},${d.lat},0</coordinates></Point></Placemark>`).join('\n');
-  const pathPl=hasTrack?`<Placemark><name>Survey Path</name><description>Distance: ${trk.distanceKm} km | Duration: ${trk.durationSec}s</description><Style><LineStyle><color>ff00d7ff</color><width>3</width></LineStyle></Style><LineString><tessellate>1</tessellate><coordinates>${trk.waypoints.map(p=>p.lng+','+p.lat+',0').join('\n')}</coordinates></LineString></Placemark>`:'';
-  const kml=`<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n<name>EST Larval Survey — ${s.district||'Survey'} — ${s.date}</name>\n<description>EST v2.0 Larval Mosquito Surveillance | HI: ${s.HI} | CI: ${s.CI} | BI: ${s.BI}</description>\n${pathPl}\n${housePl}\n${dipPl}\n</Document>\n</kml>`;
-  if(!hasTrack&&!housePl&&!dipPl){showToast('No GPS data to export','warn');return;}
-  dlFile(kml,'EST_Larval_'+s.district+'_'+s.date+'.kml','application/vnd.google-earth.kml+xml');
-  showToast('KML exported — open in Google Maps or Google Earth','pdf');
+  const allHouseGps=(s.houses||[]).filter(h=>h.lat&&h.lng);
+  const allDipGps=(s.dipSites||[]).filter(d=>d.lat&&d.lng);
+  if(!hasTrack&&!allHouseGps.length&&!allDipGps.length){showToast('No GPS data to export','warn');return;}
+  // ── KML document ──
+  const escX=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const housePl=allHouseGps.map(h=>`<Placemark><name>${escX(h.houseNo)}</name><description><![CDATA[<b>${h.housePositive?'✓ POSITIVE':'Negative'}</b><br>Containers: ${h.containers||0} | Positive: ${h.positive||0}<br>Pupal+: ${h.pupal||0}]]></description><Style><IconStyle><color>${h.housePositive?'ff1400ff':'ffff8800'}</color><scale>1.0</scale></IconStyle></Style><Point><coordinates>${h.lng},${h.lat},0</coordinates></Point></Placemark>`).join('\n');
+  const dipPl=allDipGps.map(d=>`<Placemark><name>${escX(d.siteNo)}</name><description><![CDATA[<b>Dip Site</b><br>Dips: ${d.dips||0} | Larvae: ${d.larvae||0} | Pupae: ${d.pupae||0}]]></description><Style><IconStyle><color>ffff9900</color><scale>0.9</scale></IconStyle></Style><Point><coordinates>${d.lng},${d.lat},0</coordinates></Point></Placemark>`).join('\n');
+  const pathPl=hasTrack?`<Placemark><name>Survey Path</name><description><![CDATA[Distance: ${trk.distanceKm} km | Duration: ${Math.floor(trk.durationSec/60)}m ${trk.durationSec%60}s<br>HI: ${s.HI} | CI: ${s.CI} | BI: ${s.BI}]]></description><Style><LineStyle><color>ff00d7ff</color><width>3</width></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style><LineString><tessellate>1</tessellate><coordinates>\n${trk.waypoints.map(p=>p.lng.toFixed(7)+','+p.lat.toFixed(7)+',0').join('\n')}\n</coordinates></LineString></Placemark>`:'';
+  const kml=`<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">\n<Document>\n<name>EST Larval — ${escX(s.district||'Survey')} — ${s.date}</name>\n<description><![CDATA[EST v2.0 Larval Mosquito Surveillance<br>HI: ${s.HI} | CI: ${s.CI} | BI: ${s.BI} | PI: ${s.PI}<br>LD: ${s.LD} | PD: ${s.PD}<br>Houses: ${(s.houses||[]).length} | Dip Sites: ${(s.dipSites||[]).length}]]></description>\n${pathPl}\n${housePl}\n${dipPl}\n</Document>\n</kml>`;
+  dlFile(kml,'EST_Larval_'+(s.district||'Survey')+'_'+s.date+'.kml','application/vnd.google-earth.kml+xml');
+  // ── Google Maps URL (up to 10 waypoints) for cross-device sharing ──
+  const allPts=[...(hasTrack?trk.waypoints:[]),...allHouseGps.map(h=>({lat:parseFloat(h.lat),lng:parseFloat(h.lng)}))];
+  if(allPts.length){
+    const step=Math.max(1,Math.floor(allPts.length/8));
+    const wps=[];for(let i=0;i<allPts.length;i+=step){wps.push(allPts[i].lat.toFixed(6)+','+allPts[i].lng.toFixed(6));}
+    if(allPts.length>1&&wps[wps.length-1]!==allPts[allPts.length-1].lat.toFixed(6)+','+allPts[allPts.length-1].lng.toFixed(6))wps.push(allPts[allPts.length-1].lat.toFixed(6)+','+allPts[allPts.length-1].lng.toFixed(6));
+    const mapsUrl='https://www.google.com/maps/dir/'+wps.join('/');
+    // Show a modal/toast with the link that user can open
+    showToast('KML downloaded. Opening Maps link...','pdf');
+    setTimeout(()=>{if(confirm('Open survey path in Google Maps?\n('+wps.length+' waypoints)')){ window.open(mapsUrl,'_blank');}},600);
+  }else{showToast('KML exported','pdf');}
+}
+function exportLarvalKMLSilent(s){
+  if(!s)return;const trk=s.track;const hasTrack=trk&&trk.waypoints&&trk.waypoints.length;
+  const escX=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const housePl=(s.houses||[]).filter(h=>h.lat&&h.lng).map(h=>`<Placemark><name>${escX(h.houseNo)}</name><Style><IconStyle><color>${h.housePositive?'ff1400ff':'ffff8800'}</color></IconStyle></Style><Point><coordinates>${h.lng},${h.lat},0</coordinates></Point></Placemark>`).join('\n');
+  const dipPl=(s.dipSites||[]).filter(d=>d.lat&&d.lng).map(d=>`<Placemark><name>${escX(d.siteNo)}</name><Style><IconStyle><color>ffff9900</color></IconStyle></Style><Point><coordinates>${d.lng},${d.lat},0</coordinates></Point></Placemark>`).join('\n');
+  const pathPl=hasTrack?`<Placemark><name>Survey Path</name><Style><LineStyle><color>ff00d7ff</color><width>3</width></LineStyle></Style><LineString><tessellate>1</tessellate><coordinates>\n${trk.waypoints.map(p=>p.lng.toFixed(7)+','+p.lat.toFixed(7)+',0').join('\n')}\n</coordinates></LineString></Placemark>`:'';
+  const kml=`<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n<name>EST Larval — ${escX(s.district||'Survey')} — ${s.date}</name>\n${pathPl}\n${housePl}\n${dipPl}\n</Document>\n</kml>`;
+  dlFile(kml,'EST_Larval_'+(s.district||'Survey')+'_'+s.date+'.kml','application/vnd.google-earth.kml+xml');
 }
 
 /* ── PDF EXPORT ─────────────────────────────────────────── */
@@ -2752,12 +2775,9 @@ tr:nth-child(even) td{background:#f9fdf9;}
 <button class="print-btn" onclick="window.print()">🖨 Print / Save PDF</button>
 </body></html>`;
 
-  const blob=new Blob([reportHtml],{type:'text/html;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='EST_Adult_'+(s.location||s.district||'survey').replace(/[^a-zA-Z0-9]/g,'_').substring(0,20)+'_'+s.date+'.html';
-  a.style.display='none';document.body.appendChild(a);
-  setTimeout(()=>{a.click();setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},800);},50);
-  showToast('Report downloaded — open file then Print → Save as PDF','pdf');
+  const _pwin=window.open('','_blank');
+  if(_pwin){_pwin.document.write(reportHtml);_pwin.document.close();showToast('PDF report opened — use the Print button','pdf');}
+  else{const blob=new Blob([reportHtml],{type:'text/html;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='EST_Adult_'+(s.location||s.district||'survey').replace(/[^a-zA-Z0-9]/g,'_').substring(0,20)+'_'+s.date+'.html';a.style.display='none';document.body.appendChild(a);setTimeout(()=>{a.click();setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},800);},50);showToast('Report downloaded — open file then Print → Save as PDF','pdf');}
 }
 
 function exportLarvalPDF(){
@@ -2827,13 +2847,9 @@ function exportLarvalPDF(){
 <div class="footer">EST v2.0 \u00b7 Entomological Surveillance Tool | Report ID: EST-L-${s.id} | Generated: ${new Date().toLocaleString('en-IN')}</div>
 </div><div class="sb-fixed"><button class="pb" onclick="window.print()">Save as PDF / Print</button></div>
 </body></html>`;
-  // Download as HTML file — open in browser to print/save as PDF (avoids popup blockers)
-  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const a2=document.createElement('a');a2.href=url;a2.download='EST_Larval_'+s.district+'_'+s.date+'.html';
-  document.body.appendChild(a2);a2.click();document.body.removeChild(a2);
-  setTimeout(()=>URL.revokeObjectURL(url),2000);
-  showToast('Report downloaded — open in browser then Print → Save as PDF','pdf');
+  const _lpwin=window.open('','_blank');
+  if(_lpwin){_lpwin.document.write(html);_lpwin.document.close();showToast('PDF report opened — use the Print button','pdf');}
+  else{const blob=new Blob([html],{type:'text/html;charset=utf-8'});const url=URL.createObjectURL(blob);const a2=document.createElement('a');a2.href=url;a2.download='EST_Larval_'+s.district+'_'+s.date+'.html';document.body.appendChild(a2);a2.click();document.body.removeChild(a2);setTimeout(()=>URL.revokeObjectURL(url),2000);showToast('Report downloaded — open in browser then Print → Save as PDF','pdf');}
 }
 
 /* ── EMAIL & WHATSAPP ───────────────────────────────────── */
@@ -2989,18 +3005,19 @@ function getSavedById(mod,id){let surveys=[];try{surveys=JSON.parse(localStorage
 function exportOneSavedCSV(mod,id){const s=getSavedById(mod,id);if(!s)return;dlFile(mod==='adult'?buildAdultCSV(s):buildLarvalCSV(s),`EST_${mod}_${s.date||'survey'}_${s.id}.csv`,'text/csv;charset=utf-8;');showToast('CSV downloaded','csv');}
 function exportOneSavedPDF(mod,id){
   const s=getSavedById(mod,id);if(!s)return;
-  if(mod==='adult'){const bk={...aS};Object.assign(aS,s);aS.houses=s.houses||[];exportAdultPDF();Object.assign(aS,bk);}
-  else{const bk={...lS};Object.assign(lS,s);lS.houses=s.houses||[];exportLarvalPDF();Object.assign(lS,bk);}
+  if(mod==='adult'){const bk={...aS,houses:[...aS.houses],curCounts:aS.curCounts.map(r=>[...r])};Object.assign(aS,s);aS.houses=s.houses||[];exportAdultPDF();Object.assign(aS,bk);aS.curCounts=bk.curCounts;}
+  else{const bk={...lS,houses:[...lS.houses],dipSites:[...(lS.dipSites||[])],curCounts:lS.curCounts.map(r=>[...r])};Object.assign(lS,s);lS.houses=s.houses||[];lS.dipSites=s.dipSites||[];exportLarvalPDF();Object.assign(lS,bk);lS.curCounts=bk.curCounts;}
 }
 function shareWASaved(mod,id){const s=getSavedById(mod,id);if(!s)return;const text=mod==='adult'?buildAdultText(s):buildLarvalText(s);const a=document.createElement('a');a.href='https://wa.me/?text='+encodeURIComponent(text);a.target='_blank';document.body.appendChild(a);a.click();document.body.removeChild(a);}
 function deleteSaved(mod,id){if(!confirm('Delete this survey? Cannot be undone.'))return;const key=mod==='adult'?A_SAVED:L_SAVED;let surveys=[];try{surveys=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}surveys=surveys.filter(s=>String(s.id)!==String(id));try{localStorage.setItem(key,JSON.stringify(surveys));}catch(e){}(mod==='adult'?aSel:lSel).delete(String(id));renderSaved();showToast('Survey deleted','del');}
 function exportSelCSV(mod){
   const sel=mod==='adult'?aSel:lSel;let surveys=[];try{surveys=JSON.parse(localStorage.getItem(mod==='adult'?A_SAVED:L_SAVED)||'[]');}catch(e){}
-  const toExp=sel.size>0?surveys.filter(s=>sel.has(String(s.id))):surveys;if(!toExp.length){showToast('No surveys to export','warn');return;}
-  let c='\uFEFF';
-  if(mod==='adult'){c+='Date,District,Location,CollType,Houses,ManHours,TotalMosq,MHD,TMHD,IndoorDensity,OutdoorDensity,RoomDensity,HBR\r\n';toExp.forEach(s=>{c+=`"${s.date}","${s.district}","${(s.location||'').replace(/"/g,'""')}","${s.collType}",${s.houses?.length||0},${s.totalManHours?.toFixed?s.totalManHours.toFixed(2):0},${s.totalMosq||0},"${s.MHD||'-'}","${s.TMHD||'-'}","${s.indoorDensity||'-'}","${s.outdoorDensity||'-'}","${s.roomDensity||'-'}","${s.HBR||'-'}"\r\n`;});}
-  else{c+='Date,District,Location,Houses,HI,CI,BI,PI,LarvalDensity,PupalDensity,TotalLarvae,TotalPupae,TotalDips\r\n';toExp.forEach(s=>{c+=`"${s.date}","${s.district}","${(s.location||'').replace(/"/g,'""')}",${s.houses?.length||0},"${s.HI||'-'}","${s.CI||'-'}","${s.BI||'-'}","${s.PI||'-'}","${s.LD||'-'}","${s.PD||'-'}",${s.totalLarvae||0},${s.totalPupae||0},${s.totalDips||0}\r\n`;});}
-  dlFile(c,'EST_'+mod+'_Combined_'+toExp.length+'surveys.csv','text/csv;charset=utf-8;');showToast(toExp.length+' survey'+(toExp.length!==1?'s':'')+' exported','csv');
+  const toExp=sel.size>0?surveys.filter(s=>sel.has(String(s.id))):surveys;
+  if(!toExp.length){showToast('No surveys to export','warn');return;}
+  const SEP='\r\n\r\n"================================================================================"\r\n\r\n';
+  const parts=toExp.map(s=>(mod==='adult'?buildAdultCSV(s):buildLarvalCSV(s)).replace(/^\uFEFF/,''));
+  dlFile('\uFEFF'+parts.join(SEP),'EST_'+mod+'_'+toExp.length+'surveys_'+new Date().toISOString().slice(0,10)+'.csv','text/csv;charset=utf-8;');
+  showToast(toExp.length+' full-detail survey'+(toExp.length!==1?'s':'')+' exported','csv');
 }
 function showSavedTab(tab){
   activeSavedTab=tab;
@@ -3127,9 +3144,11 @@ const _TileMap=(()=>{
     function draw(){tiles();overlay();}
     function fit(){
       const w=W(),h=H();
-      if(!pts.length)return;
-      if(pts.length===1){z=16;const cw=_wxy(pts[0].lat,pts[0].lng,z);ox=cw.x-w/2/TS;oy=cw.y-h/2/TS;return;}
-      const la=pts.map(p=>p.lat),lo=pts.map(p=>p.lng);
+      const hPts=(houses||[]).filter(hh=>hh.lat&&hh.lng).map(hh=>({lat:parseFloat(hh.lat),lng:parseFloat(hh.lng)}));
+      const all=[...pts,...hPts];
+      if(!all.length)return;
+      if(all.length===1){z=16;const cw=_wxy(all[0].lat,all[0].lng,z);ox=cw.x-w/2/TS;oy=cw.y-h/2/TS;return;}
+      const la=all.map(p=>p.lat),lo=all.map(p=>p.lng);
       const mn1=Math.min(...la),mx1=Math.max(...la),mn2=Math.min(...lo),mx2=Math.max(...lo);
       z=18;
       for(let i=0;i<10&&z>10;i++){const a=_wxy(mn1,mn2,z),b=_wxy(mx1,mx2,z);if(Math.abs(b.x-a.x)*TS<w*.72&&Math.abs(b.y-a.y)*TS<h*.72)break;z--;}
