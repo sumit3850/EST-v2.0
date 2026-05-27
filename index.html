@@ -275,6 +275,10 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
 .spin{animation:spinA .8s linear infinite;}
 @keyframes spinA{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 @keyframes gpsp{0%{box-shadow:0 0 0 0 rgba(0,191,165,.45);}70%{box-shadow:0 0 0 12px rgba(0,191,165,0);}100%{box-shadow:0 0 0 0 rgba(0,191,165,0);}}
+@keyframes recpulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+#track-rec-bar{display:none;position:fixed;bottom:var(--nh);left:0;right:0;z-index:190;background:rgba(0,55,46,.96);backdrop-filter:blur(8px);padding:7px 16px;align-items:center;justify-content:space-between;border-top:1.5px solid rgba(0,191,165,.35);height:42px;}
+.trk-dot{width:9px;height:9px;border-radius:50%;background:#ff4d4d;box-shadow:0 0 6px #ff4d4d;animation:recpulse 1.1s infinite;flex-shrink:0;}
+body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!important;}
 .num-field{display:flex;align-items:center;gap:10px;}
 .num-field input{width:72px;height:var(--touch);text-align:center;padding:0 8px;background:var(--sfc);border:2px solid var(--olv);border-radius:var(--rmd);font-family:var(--mono);font-size:16px;color:var(--os);appearance:none;}
 .num-field input:focus{outline:none;border-color:var(--primary);}
@@ -313,13 +317,13 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
       </svg>
     </div>
-    <div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:5px;">Entomological Surveillance Tool</div>
+    <div style="font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;word-spacing:0;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:5px;">Entomological&nbsp;Surveillance&nbsp;Tool</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px;">
       <div style="font-family:var(--mono);font-size:26px;font-weight:700;color:#fff;letter-spacing:-.02em;">EST v2.0</div>
       <button onclick="goToAbout()" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;" title="About this app">&#x2139;</button>
     </div>
 
-    <div class="login-card">
+    <div class="login-card" id="login-card">
       <label class="login-label">Username</label>
       <input class="login-inp" type="text" id="login-user" placeholder="Enter username" autocomplete="off">
       <label class="login-label">Password</label>
@@ -600,7 +604,7 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
         </div>
       </div>
       <div class="time-calc" id="a-time-calc"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg><span id="a-time-txt">Tap NOW on Start, collect, tap NOW on End</span></div>
-      <button class="btn-p" onclick="logAdultHouse()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>Log <span id="a-log-btn-code">HH-001</span></button>
+      <button class="btn-p" id="a-log-btn" onclick="logAdultHouse()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>Log <span id="a-log-btn-code">HH-001</span></button>
     </div>
     <div class="sec-hdr"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="sec-lbl" id="a-log-list-lbl">Houses / Sites Logged</span></div>
     <div id="a-houses-empty" style="text-align:center;color:var(--osv);font-size:13px;padding:14px;background:var(--sfc);border-radius:var(--rmd);border:1px dashed var(--olv);">No entries logged yet.</div>
@@ -647,6 +651,7 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
     <div class="sp-rev-wrap"><table class="sp-rev-tbl"><thead><tr id="r-a-sp-hdr"></tr></thead><tbody id="r-a-sp-body"></tbody></table></div>
     <div class="sec-hdr"><svg width="17" height="17" viewBox="0 0 24 24" fill="var(--primary)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="sec-lbl">House-wise Summary</span></div>
     <div style="overflow-x:auto;border-radius:var(--rlg);border:1px solid var(--olv);background:var(--sfc);margin-bottom:13px;" id="r-a-house-wrap"></div>
+    <div id="a-track-preview"></div>
     <div class="exp-wrap">
       <div class="exp-ttl">Download</div>
       <button class="exp-btn" onclick="exportAdultCSV()"><svg width="19" height="19" viewBox="0 0 24 24" fill="var(--primary)"><path d="M20 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 2v3H5V5h15zm-8 14H5v-5h7v5zm0-7H5v-5h7v5zm8 7h-6v-5h6v5zm0-7h-6v-5h6v5z"/></svg><div><div>Save as CSV</div><div class="exp-sub">Full data with all indices</div></div></button>
@@ -813,55 +818,64 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
         <span style="font-size:11px;font-weight:700;color:var(--osv);white-space:nowrap;">Others:</span>
         <input type="text" id="l-other-name" placeholder="Species name…" style="flex:1;height:34px;padding:0 10px;border:1.5px solid var(--olv);border-radius:var(--rsm);font-size:13px;color:var(--os);background:var(--sfc);">
       </div>
-      <!-- ANOPHELES / CULEX DIPPING -->
-      <div style="background:rgba(0,107,92,.05);border:1px solid rgba(0,107,92,.2);border-radius:var(--rmd);padding:11px;margin-bottom:10px;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Anopheles / Culex — Dipping</div>
-        <div style="font-size:10px;color:var(--osv);margin-bottom:9px;">Larval Density · Pupal Density · Immature Density</div>
-        <!-- Running indices for An/Cx -->
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;">
-          <div style="background:rgba(0,107,92,.08);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
-            <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Larval Den.</div>
-            <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-ld">-</div>
-            <div style="font-size:8px;color:var(--osv);">/100 dips</div>
-          </div>
-          <div style="background:rgba(0,107,92,.08);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
-            <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Pupal Den.</div>
-            <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-pd">-</div>
-            <div style="font-size:8px;color:var(--osv);">/100 dips</div>
-          </div>
-          <div style="background:rgba(0,107,92,.08);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
-            <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Imm. Den.</div>
-            <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-id">-</div>
-            <div style="font-size:8px;color:var(--osv);">/100 dips</div>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0;">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,107,92,.1);">
-            <div style="font-size:12px;font-weight:700;color:var(--os);">Dips Taken</div>
-            <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('dips',-1)">-</button><div class="cnt-val" id="l-dips" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('dips',1)">+</button></div>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,107,92,.1);">
-            <div style="font-size:12px;font-weight:700;color:var(--os);">Larvae Collected</div>
-            <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('larvae',-1)">-</button><div class="cnt-val" id="l-larvae" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('larvae',1)">+</button></div>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;">
-            <div style="font-size:12px;font-weight:700;color:var(--os);">Pupae Collected</div>
-            <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('pupae',-1)">-</button><div class="cnt-val" id="l-pupae" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('pupae',1)">+</button></div>
-          </div>
-        </div>
-      </div>
-
-
       <div class="field" style="margin-bottom:9px;">
         <label class="flabel">End Time</label>
         <div class="time-now-row"><input type="time" id="l-end" class="time-inp" style="border-color:rgba(186,26,26,.35);"><button class="now-btn end" onclick="setNow('l','end')">NOW</button></div>
       </div>
-      <button class="btn-p larval-btn" onclick="logLarvalHouse()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>Log <span id="l-log-btn-code">HH-001</span></button>
+      <button class="btn-p larval-btn" id="l-log-btn" onclick="logLarvalHouse()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>Log <span id="l-log-btn-code">HH-001</span></button>
     </div>
     <div class="sec-hdr"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--larval)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="sec-lbl">Houses Logged</span></div>
     <div id="l-houses-empty" style="text-align:center;color:var(--osv);font-size:13px;padding:14px;background:var(--sfc);border-radius:var(--rmd);border:1px dashed rgba(21,101,192,.3);">No houses logged yet.</div>
     <div id="l-houses-list"></div>
     <div class="divider"></div>
+    <!-- ANOPHELES / CULEX DIPPING — Independent card below Aedes log -->
+    <div style="background:rgba(0,107,92,.05);border:1.5px solid rgba(0,107,92,.25);border-radius:var(--rmd);padding:12px;margin-bottom:12px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:2px;">Anopheles / Culex — Dipping</div>
+      <div style="font-size:10px;color:var(--osv);margin-bottom:10px;">Log each dip site independently · DS-001, DS-002…</div>
+      <!-- Site No. counter -->
+      <div class="hnum-bar lrv" style="margin-bottom:11px;border-color:rgba(0,107,92,.3);">
+        <button class="cnt-btn" style="color:var(--primary);" onclick="changeSiteN(-1)">-</button>
+        <div><div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--osv);text-align:center;margin-bottom:3px;">Site No.</div><div class="hnum-display" id="ds-num-disp" style="color:var(--primary);border-color:rgba(0,107,92,.3);">DS-001</div></div>
+        <button class="cnt-btn" style="color:var(--primary);" onclick="changeSiteN(1)">+</button>
+      </div>
+      <!-- Running LD/PD/ID indices -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;">
+        <div style="background:rgba(0,107,92,.08);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Larval Den.</div>
+          <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-ld">-</div>
+          <div style="font-size:8px;color:var(--osv);">/100 dips</div>
+        </div>
+        <div style="background:rgba(0,107,92,.08);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Pupal Den.</div>
+          <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-pd">-</div>
+          <div style="font-size:8px;color:var(--osv);">/100 dips</div>
+        </div>
+        <div style="background:rgba(0,107,92,.08);border:1px solid var(--pd);border-radius:var(--rmd);padding:7px 4px;text-align:center;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;">Imm. Den.</div>
+          <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--primary);" id="live-id">-</div>
+          <div style="font-size:8px;color:var(--osv);">/100 dips</div>
+        </div>
+      </div>
+      <!-- Counters -->
+      <div style="display:flex;flex-direction:column;gap:0;background:rgba(0,107,92,.06);border-radius:var(--rsm);overflow:hidden;margin-bottom:11px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;border-bottom:1px solid rgba(0,107,92,.1);">
+          <div style="font-size:12px;font-weight:700;color:var(--os);">Dips Taken</div>
+          <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('dips',-1)">-</button><div class="cnt-val" id="l-dips" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('dips',1)">+</button></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;border-bottom:1px solid rgba(0,107,92,.1);">
+          <div style="font-size:12px;font-weight:700;color:var(--os);">Larvae Collected</div>
+          <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('larvae',-1)">-</button><div class="cnt-val" id="l-larvae" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('larvae',1)">+</button></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;">
+          <div style="font-size:12px;font-weight:700;color:var(--os);">Pupae Collected</div>
+          <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('pupae',-1)">-</button><div class="cnt-val" id="l-pupae" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('pupae',1)">+</button></div>
+        </div>
+      </div>
+      <button class="btn-p larval-btn" id="ds-log-btn" style="background:var(--primary);" onclick="logDipSite()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>Log <span id="ds-log-btn-code">DS-001</span></button>
+      <div class="sec-hdr" style="margin-top:12px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M9 2v6.59l-4.17 8.43A2 2 0 0 0 6.59 20h10.82a2 2 0 0 0 1.76-2.98L15 8.59V2H9zm2 2h2v5h-2V4z"/></svg><span class="sec-lbl">Dip Sites Logged</span></div>
+      <div id="ds-empty" style="text-align:center;color:var(--osv);font-size:13px;padding:14px;background:var(--sfc);border-radius:var(--rmd);border:1px dashed rgba(0,107,92,.3);">No dip sites logged yet.</div>
+      <div id="ds-list"></div>
+    </div>
     <div class="alert warn" id="l-coll-warn" style="display:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>Log at least one house first.</div>
     <button class="btn-p larval-btn" onclick="proceedToLarvalReview()">Review &amp; Submit <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></button>
     <div style="margin-top:9px;"><button class="btn-s larval-s" onclick="goTo('survey')"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Metadata</button></div>
@@ -917,11 +931,15 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
     <div class="sp-rev-wrap"><table class="sp-rev-tbl lrv"><thead><tr><th style="text-align:left;padding-left:10px;">Container Type</th><th>Examined</th><th>Positive</th></tr></thead><tbody id="r-l-cont-body"></tbody></table></div>
     <div class="sec-hdr"><svg width="17" height="17" viewBox="0 0 24 24" fill="var(--larval)"><path d="M9 2v6.59l-4.17 8.43A2 2 0 0 0 6.59 20h10.82a2 2 0 0 0 1.76-2.98L15 8.59V2H9zm2 2h2v5h-2V4z"/></svg><span class="sec-lbl">Species Breakdown</span></div>
     <div class="sp-rev-wrap"><table class="sp-rev-tbl lrv"><thead><tr><th style="text-align:left;padding-left:10px;">Species</th><th>Larvae</th><th>Pupae</th><th>Total</th></tr></thead><tbody id="r-l-sp-body"></tbody></table></div>
-    <div class="sec-hdr"><svg width="17" height="17" viewBox="0 0 24 24" fill="var(--larval)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="sec-lbl">House-wise Summary</span></div>
+    <div class="sec-hdr"><svg width="17" height="17" viewBox="0 0 24 24" fill="var(--larval)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="sec-lbl">House-wise Summary (Aedes)</span></div>
     <div style="overflow-x:auto;border-radius:var(--rlg);border:1px solid var(--olv);background:var(--sfc);margin-bottom:13px;" id="r-l-house-wrap"></div>
+    <div class="sec-hdr"><svg width="17" height="17" viewBox="0 0 24 24" fill="var(--primary)"><path d="M9 2v6.59l-4.17 8.43A2 2 0 0 0 6.59 20h10.82a2 2 0 0 0 1.76-2.98L15 8.59V2H9zm2 2h2v5h-2V4z"/></svg><span class="sec-lbl">Dip Site Summary (An./Cx.)</span></div>
+    <div style="overflow-x:auto;border-radius:var(--rlg);border:1px solid rgba(0,107,92,.25);background:var(--sfc);margin-bottom:13px;" id="r-l-dip-wrap"></div>
+    <div id="l-track-preview"></div>
     <div class="exp-wrap">
       <div class="exp-ttl">Download</div>
-      <button class="exp-btn" onclick="exportLarvalCSV()"><svg width="19" height="19" viewBox="0 0 24 24" fill="var(--larval)"><path d="M20 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 2v3H5V5h15zm-8 14H5v-5h7v5zm0-7H5v-5h7v5zm8 7h-6v-5h6v5zm0-7h-6v-5h6v5z"/></svg><div><div>Save as CSV</div><div class="exp-sub">Larval indices &amp; house data</div></div></button>
+      <button class="exp-btn" onclick="exportLarvalCSV()"><svg width="19" height="19" viewBox="0 0 24 24" fill="var(--larval)"><path d="M20 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 2v3H5V5h15zm-8 14H5v-5h7v5zm0-7H5v-5h7v5zm8 7h-6v-5h6v5zm0-7h-6v-5h6v5z"/></svg><div><div>Save as CSV / Excel</div><div class="exp-sub">GPS coords + Google Maps links</div></div></button>
+      <button class="exp-btn" onclick="exportLarvalKML()"><svg width="19" height="19" viewBox="0 0 24 24" fill="var(--larval)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><div><div>Export KML (Survey Path)</div><div class="exp-sub">Open in Google Maps / Earth</div></div></button>
       <button class="exp-btn" onclick="exportLarvalPDF()"><svg width="19" height="19" viewBox="0 0 24 24" fill="var(--larval)"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z"/></svg><div><div>Save as PDF Report</div><div class="exp-sub">Formatted A4 printable</div></div></button>
       <div class="exp-ttl">Send</div>
       <div class="email-row"><input type="email" class="email-inp" id="l-send-email" placeholder="Recipient email…"><button class="email-send" onclick="sendEmail('larval')" style="background:var(--larval);"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>Send</button></div>
@@ -1001,7 +1019,7 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
     <!-- Modules -->
     <div class="about-card">
       <div style="font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px;">Surveillance Modules</div>
-      <div style="font-size:12px;color:var(--os);line-height:1.8;"><strong style="color:var(--primary);">1. Adult Mosquito Surveillance</strong><br>&bull; Resting Collection — Indoor/Outdoor counts<br>&bull; Human Landing Catch (HLC) — Per-site collection<br>&bull; 27 species across 5 genera<br>&bull; Per-house time-stamped entries with GPS<br><br><strong style="color:var(--larval);">2. Larval Surveillance</strong><br>&bull; Aedes — 18 container types, stegomyia indices<br>&bull; Anopheles/Culex — dipping data, density indices<br>&bull; 8 larval species identification<br>&bull; Per-house entries with house-positive detection</div>
+      <div style="font-size:12px;color:var(--os);line-height:1.8;"><strong style="color:var(--primary);">1. Adult Mosquito Surveillance</strong><br>&bull; Resting Collection — Indoor/Outdoor counts<br>&bull; Human Landing Catch (HLC) — Per-site collection<br>&bull; 27 species across 5 genera<br>&bull; Per-house GPS auto-logged; live survey path on satellite map<br><br><strong style="color:var(--larval);">2. Larval Surveillance</strong><br>&bull; Aedes — 18 container types, stegomyia indices (HI, CI, BI, PI)<br>&bull; Anopheles/Culex — independent dip-site logging (DS-001…) with LD, PD, IMD<br>&bull; 8 larval species identification<br>&bull; Per-house &amp; per-site GPS auto-logged; positive houses shown on satellite map<br>&bull; KML export for exact survey path in Google Earth/Maps</div>
     </div>
     <!-- Indices -->
     <div class="about-card">
@@ -1011,7 +1029,7 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
     <!-- Advantages -->
     <div class="about-card">
       <div style="font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px;">Key Advantages</div>
-      <div style="font-size:12px;color:var(--os);line-height:1.9;">&bull; <strong>Fully offline</strong> — single HTML file, any device<br>&bull; <strong>GPS auto-detect</strong> with 4-API network fallback<br>&bull; <strong>All India</strong> states/UTs and districts<br>&bull; <strong>Draft auto-save</strong> — never lose in-progress data<br>&bull; <strong>Export</strong> — CSV, PDF report, WhatsApp, Email<br>&bull; <strong>Data persists</strong> on reload (localStorage)<br>&bull; <strong>Two modules</strong> — Adult &amp; Larval in one app</div>
+      <div style="font-size:12px;color:var(--os);line-height:1.9;">&bull; <strong>Fully offline</strong> — single HTML file, any device<br>&bull; <strong>GPS auto-detect</strong> with 4-API network fallback<br>&bull; <strong>Survey path recording</strong> — live GPS track with distance &amp; time timer<br>&bull; <strong>Per-house GPS logging</strong> — each house auto-captures GPS position on log<br>&bull; <strong>Satellite map preview</strong> — survey path + positive houses on Google Satellite<br>&bull; <strong>All India</strong> states/UTs and districts<br>&bull; <strong>Draft auto-save</strong> — never lose in-progress data<br>&bull; <strong>Export</strong> — CSV/Excel with GPS + Google Maps links, KML for Google Earth, PDF, WhatsApp, Email<br>&bull; <strong>Data persists</strong> on reload (localStorage)<br>&bull; <strong>Two modules</strong> — Adult &amp; Larval in one app</div>
     </div>
     <!-- Developer -->
     <div class="about-card">
@@ -1071,6 +1089,16 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
   </div>
 </div>
 
+<div id="track-rec-bar">
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span class="trk-dot"></span>
+    <span style="font-size:11px;font-weight:700;color:#fff;letter-spacing:.07em;text-transform:uppercase;">Recording Path</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span style="font-size:14px;font-weight:700;color:#68fadd;" id="trk-dist">0.00 km</span>
+    <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,.55);" id="trk-time">00:00</span>
+  </div>
+</div>
 <div class="toast" id="toast"><span id="toast-icon" style="display:flex;align-items:center;flex-shrink:0;"></span><span id="toast-msg"></span></div>
 
 <!-- SUCCESS MODAL -->
@@ -1080,10 +1108,20 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
     <div class="modal-title">Survey Saved!</div>
     <div class="modal-sub">Data stored on this device and preserved on reload.</div>
     <div class="modal-btns">
+      <button class="btn-p" onclick="document.getElementById('success-modal').classList.remove('open');reviewLastSaved();" style="margin-bottom:6px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>Review This Submission</button>
       <button class="btn-p" onclick="document.getElementById('success-modal').classList.remove('open');showSavedTab(activeSavedTab);renderSaved();showScreen('saved');"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg>View Saved Surveys</button>
       <button class="btn-s" onclick="document.getElementById('success-modal').classList.remove('open');goTo('dash')" style="margin-top:7px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Back to Dashboard</button>
     </div>
   </div>
+</div>
+
+<!-- Survey Map Full-screen Modal -->
+<div id="survey-map-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:2000;flex-direction:column;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#111827;color:#fff;flex-shrink:0;">
+    <span id="smap-meta" style="font-size:12px;color:rgba(255,255,255,.8);">Survey Track</span>
+    <button onclick="closeSurveyMap()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:18px;line-height:1;">✕</button>
+  </div>
+  <div id="smap-body" style="flex:1;min-height:0;"></div>
 </div>
 
 <script>
@@ -1391,9 +1429,9 @@ const LSP=[
   {n:'Cx. quinquefasciatus',g:'CULEX'},{n:'Others',g:'OTHERS',oth:true}
 ];
 const LNS=LSP.length;
-let activeModule=null,activeSavedTab='adult';
+let activeModule=null,activeSavedTab='adult',lastSavedId=null,lastSavedType=null;
 const aS={collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,nights:1,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curCounts:Array.from({length:ANS},()=>[0,0,0]),curOther:''};
-const lS={date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],curHN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curCounts:Array.from({length:LNS},()=>[0,0]),curOther:''};
+const lS={date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipSites:[],curHN:1,curSiteN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curCounts:Array.from({length:LNS},()=>[0,0]),curOther:''};
 function aCols(){return aS.collType==='resting'?['Indoor','Outdoor']:['Landing Catch'];}
 function aTotSp(i){return aS.collType==='resting'?aS.houses.reduce((s,h)=>s+h.counts[i][0]+h.counts[i][1],0):aS.houses.reduce((s,h)=>s+h.counts[i][0],0);}
 function aTotAll(){let t=0;for(let i=0;i<ANS;i++)t+=aTotSp(i);return t;}
@@ -1414,9 +1452,10 @@ function calcHBRHr(){const t=aTotAll(),c=aS.collectors||1,h=aRawHours();return t
 function lTotContainers(){return lS.houses.reduce((s,h)=>s+h.containers,0);}
 function lTotPositive(){return lS.houses.reduce((s,h)=>s+h.positive,0);}
 function lTotPupal(){return lS.houses.reduce((s,h)=>s+h.pupal,0);}
-function lTotDips(){return lS.houses.reduce((s,h)=>s+h.dips,0);}
-function lTotLarvae(){return lS.houses.reduce((s,h)=>s+h.larvae,0);}
-function lTotPupae(){return lS.houses.reduce((s,h)=>s+h.pupae,0);}
+function lTotDips(){return(lS.dipSites&&lS.dipSites.length?lS.dipSites:lS.houses).reduce((s,x)=>s+(x.dips||0),0);}
+function lTotLarvae(){return(lS.dipSites&&lS.dipSites.length?lS.dipSites:lS.houses).reduce((s,x)=>s+(x.larvae||0),0);}
+function lTotPupae(){return(lS.dipSites&&lS.dipSites.length?lS.dipSites:lS.houses).reduce((s,x)=>s+(x.pupae||0),0);}
+function dsCode(n){return'DS-'+String(n).padStart(3,'0');}
 function lPositiveHouses(){return lS.houses.filter(h=>h.housePositive||h.positive>0).length;}
 function calcHI(){const n=lS.houses.length;return n>0?((lPositiveHouses()/n)*100).toFixed(1)+'%':'—';}
 function calcCI(){const tot=lTotContainers(),pos=lTotPositive();return tot>0?((pos/tot)*100).toFixed(1)+'%':'—';}
@@ -1656,11 +1695,11 @@ function goTo(key){
   if(!activeModule){showToast('Select a module first','warn');return;}
   if(key==='survey'){showScreen(activeModule+'-survey');return;}
   if(key==='collect'){showScreen(activeModule+'-collect');return;}
-  if(key==='review'){if(activeModule==='adult'){populateAdultReview();showScreen('adult-review');}else{populateLarvalReview();showScreen('larval-review');}return;}
+  if(key==='review'){TrackRecorder.stop();if(activeModule==='adult'){populateAdultReview();showScreen('adult-review');}else{populateLarvalReview();showScreen('larval-review');}return;}
 }
 function startModule(mod,mode){
   activeModule=mod;
-  if(mode==='draft'){loadDraft(mod);showScreen(mod+'-collect');}
+  if(mode==='draft'){loadDraft(mod);showScreen(mod+'-collect');TrackRecorder.start();}
   else{
     if(mode==='new')resetStateOnly(mod);
     if(mod==='adult'){document.getElementById('a-date').value=todayStr();buildAdultMatrix();
@@ -1671,15 +1710,15 @@ function startModule(mod,mode){
       // Ensure state/district dropdowns are populated
       if(document.getElementById('a-state')&&!document.getElementById('a-state').options.length){populateStates('a-state');}
       if(document.getElementById('a-state')&&document.getElementById('a-state').options.length<2){populateStates('a-state');}
-      showScreen('adult-survey');setTimeout(()=>getGPS('a'),400);}
+      showScreen('adult-survey');setTimeout(()=>{getGPS('a');TrackRecorder.start();},400);}
     else{document.getElementById('l-date').value=todayStr();buildLarvalMatrix();buildContainerMatrix();
       if(document.getElementById('l-state')&&!document.getElementById('l-state').options.length){populateStates('l-state');}
-      showScreen('larval-survey');setTimeout(()=>getGPS('l'),400);}
+      showScreen('larval-survey');setTimeout(()=>{getGPS('l');TrackRecorder.start();},400);}
   }
 }
 function resetStateOnly(mod){
   if(mod==='adult'){Object.assign(aS,{collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,nights:1,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curOther:''});aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);}
-  else{Object.assign(lS,{date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],curHN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curOther:''});lS.curCounts=Array.from({length:LNS},()=>[0,0]);lContainers=CONTAINERS.map(c=>({...c}));}
+  else{Object.assign(lS,{date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipSites:[],curHN:1,curSiteN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curOther:''});lS.curCounts=Array.from({length:LNS},()=>[0,0]);lContainers=CONTAINERS.map(c=>({...c}));}
 }
 function resetModule(mod){
   if(!confirm('Reset all data for this survey?'))return;
@@ -1848,6 +1887,38 @@ function openGoogleMaps(){
   showToast('Opening Google Maps — zoom to location, long-press to get coordinates','check');
   window.open('https://maps.google.com','_blank');
 }
+const TrackRecorder=(()=>{
+  let _wid=null,_pts=[],_dist=0,_t0=0,_t1=0,_timer=null,_on=false;
+  function _hav(a,b,c,d){const R=6371,dA=(c-a)*Math.PI/180,dB=(d-b)*Math.PI/180;const x=Math.sin(dA/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dB/2)**2;return R*2*Math.asin(Math.sqrt(x));}
+  function _fmt(s){const m=Math.floor(s/60),h=Math.floor(m/60);return h>0?h+':'+String(m%60).padStart(2,'0')+':'+String(s%60).padStart(2,'0'):String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+  function _ui(){const d=document.getElementById('trk-dist'),t=document.getElementById('trk-time');if(d)d.textContent=_dist.toFixed(2)+' km';if(t)t.textContent=_fmt(Math.floor((Date.now()-_t0)/1000));}
+  return{
+    start(){
+      if(_wid!==null)navigator.geolocation.clearWatch(_wid);
+      clearInterval(_timer);
+      _pts=[];_dist=0;_t0=Date.now();_t1=0;_on=true;
+      let _last=null;
+      const bar=document.getElementById('track-rec-bar');if(bar)bar.style.display='flex';
+      document.body.classList.add('tracking');
+      if(navigator.geolocation){
+        _wid=navigator.geolocation.watchPosition(pos=>{
+          const{latitude:la,longitude:lo}=pos.coords,ts=Date.now();
+          if(_last){const d=_hav(_last.la,_last.lo,la,lo);if(d<0.005)return;_dist+=d;}
+          _pts.push({lat:la,lng:lo,ts});_last={la,lo};_ui();
+        },()=>{},{enableHighAccuracy:true,timeout:20000,maximumAge:5000});
+      }
+      _timer=setInterval(_ui,1000);
+    },
+    stop(){
+      if(_wid!==null){navigator.geolocation.clearWatch(_wid);_wid=null;}
+      clearInterval(_timer);_timer=null;_on=false;_t1=Date.now();
+      const bar=document.getElementById('track-rec-bar');if(bar)bar.style.display='none';
+      document.body.classList.remove('tracking');
+    },
+    getLastPos(){return _pts.length?{lat:_pts[_pts.length-1].lat,lng:_pts[_pts.length-1].lng}:null;},
+    getTrack(){const end=_on?Date.now():(_t1||Date.now());return{waypoints:[..._pts],distanceKm:parseFloat(_dist.toFixed(3)),durationSec:Math.floor((end-_t0)/1000),startTime:new Date(_t0).toISOString(),endTime:new Date(end).toISOString()};}
+  };
+})();
 function liveCoords(pfx){const lat=parseFloat(document.getElementById(pfx+'-mlat').value);const lng=parseFloat(document.getElementById(pfx+'-mlng').value);if(!isNaN(lat)&&!isNaN(lng)){const s=pfx==='a'?aS:lS;s.lat=lat.toFixed(6);s.lng=lng.toFixed(6);document.getElementById(pfx+'-gps-status').textContent='Manual Location';document.getElementById(pfx+'-gps-coords').textContent=lat.toFixed(5)+'N  '+lng.toFixed(5)+'E';setGpsPill(pfx,'Manual coordinates set','ok');}}
 function applyCoords(pfx){const lat=parseFloat(document.getElementById(pfx+'-mlat').value);const lng=parseFloat(document.getElementById(pfx+'-mlng').value);if(isNaN(lat)||isNaN(lng)){showToast('Enter valid coordinates','warn');return;}const s=pfx==='a'?aS:lS;s.lat=lat.toFixed(6);s.lng=lng.toFixed(6);document.getElementById(pfx+'-gps-status').textContent='Manual Location';document.getElementById(pfx+'-gps-coords').textContent=lat.toFixed(5)+'N  '+lng.toFixed(5)+'E';setGpsPill(pfx,'Coordinates applied','ok');showToast('Coordinates applied','check');}
 function setNow(pfx,which){const now=new Date();const ts=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');const el=document.getElementById(pfx+'-'+which);if(el)el.value=ts;if(pfx==='a')updateTimeCalc('a');showToast((which==='start'?'Start':'End')+': '+ts,'check');}
@@ -1900,24 +1971,38 @@ function proceedToAdultCollect(){
   const nrEl=document.getElementById('a-nights-row');if(nrEl)nrEl.style.display=aS.collType==='resting'?'grid':'none';
   buildAdultMatrix();renderAdultHouses();updateAdultSummary();showScreen('adult-collect');
 }
+function getSnapPos(cb){
+  if(!navigator.geolocation){cb(TrackRecorder.getLastPos());return;}
+  const t=setTimeout(()=>cb(TrackRecorder.getLastPos()),4000);
+  navigator.geolocation.getCurrentPosition(
+    p=>{clearTimeout(t);cb({lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy});},
+    ()=>{clearTimeout(t);cb(TrackRecorder.getLastPos());},
+    {enableHighAccuracy:true,maximumAge:0,timeout:7000}
+  );
+}
 function logAdultHouse(){
+  const btn=document.getElementById('a-log-btn');if(btn&&btn.disabled)return;
+  if(btn)btn.disabled=true;
   const code=hCode(aS.curHN),start=document.getElementById('a-start').value,end=document.getElementById('a-end').value;
   const hours=calcHrs(start,end),counts=aS.curCounts.map(r=>[...r]);
   const total=aS.collType==='resting'?counts.reduce((s,r)=>s+r[0]+r[1],0):counts.reduce((s,r)=>s+r[0],0);
   const other=document.getElementById('a-other-name')?.value.trim()||'';
-  aS.houses.push({id:Date.now(),houseNo:code,rooms:aS.curRooms,start:start||'-',end:end||'-',hours,counts,total,otherName:other});
-  aS.curHN++;const nc=hCode(aS.curHN);
-  const hd=document.getElementById('a-hnum-disp');if(hd)hd.textContent=nc;
-  const lbc=document.getElementById('a-log-btn-code');if(lbc)lbc.textContent=nc;
-  const nn=document.getElementById('a-next-num');if(nn)nn.textContent=aS.curHN;
-  document.getElementById('a-start').value='';document.getElementById('a-end').value='';
-  const oe=document.getElementById('a-other-name');if(oe)oe.value='';
-  aS.curRooms=0;const ard=document.getElementById('a-rooms-disp');if(ard)ard.textContent='0';
-  aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);
-  buildAdultMatrix();updateTimeCalc('a');renderAdultHouses();updateAdultSummary();saveDraft('adult');
-  showToast(code+' logged — '+total+' mosquito'+(total!==1?'es':'')+' ✓','check');
+  getSnapPos(pos=>{
+    if(btn)btn.disabled=false;
+    aS.houses.push({id:Date.now(),houseNo:code,rooms:aS.curRooms,start:start||'-',end:end||'-',hours,counts,total,otherName:other,lat:pos?.lat||'',lng:pos?.lng||''});
+    aS.curHN++;const nc=hCode(aS.curHN);
+    const hd=document.getElementById('a-hnum-disp');if(hd)hd.textContent=nc;
+    const lbc=document.getElementById('a-log-btn-code');if(lbc)lbc.textContent=nc;
+    const nn=document.getElementById('a-next-num');if(nn)nn.textContent=aS.curHN;
+    document.getElementById('a-start').value='';document.getElementById('a-end').value='';
+    const oe=document.getElementById('a-other-name');if(oe)oe.value='';
+    aS.curRooms=0;const ard=document.getElementById('a-rooms-disp');if(ard)ard.textContent='0';
+    aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);
+    buildAdultMatrix();updateTimeCalc('a');renderAdultHouses();updateAdultSummary();saveDraft('adult');
+    showToast(code+' logged — '+total+' mosquito'+(total!==1?'es':'')+' ✓','check');
+  });
 }
-function proceedToAdultReview(){if(!aS.houses.length){document.getElementById('a-coll-warn').style.display='flex';return;}document.getElementById('a-coll-warn').style.display='none';populateAdultReview();showScreen('adult-review');}
+function proceedToAdultReview(){if(!aS.houses.length){document.getElementById('a-coll-warn').style.display='flex';return;}document.getElementById('a-coll-warn').style.display='none';TrackRecorder.stop();populateAdultReview();showScreen('adult-review');}
 function renderAdultHouses(){
   const list=document.getElementById('a-houses-list'),empty=document.getElementById('a-houses-empty');
   list.innerHTML='';if(!aS.houses.length){empty.style.display='block';return;}empty.style.display='none';
@@ -1957,11 +2042,12 @@ function renderTrackPreview(containerId,houses){
       <span style="font-size:11px;color:var(--osv);font-weight:600;">${distStr}</span>
     </div>
     ${mapBody}
-    <div style="display:flex;gap:14px;margin-top:7px;font-size:10px;color:var(--osv);flex-wrap:wrap;">
-      <span style="display:flex;align-items:center;gap:3px;"><span style="width:9px;height:9px;border-radius:50%;background:#43a047;display:inline-block;"></span>S=Start&nbsp;/&nbsp;E=End</span>
-      <span style="display:flex;align-items:center;gap:3px;"><span style="width:9px;height:9px;border-radius:50%;background:#e53935;display:inline-block;"></span>Positive</span>
-      <span style="display:flex;align-items:center;gap:3px;"><span style="width:9px;height:9px;border-radius:50%;background:#1565c0;display:inline-block;"></span>House</span>
-      <span style="margin-left:auto;font-size:9px;color:#aaa;">Imagery © Google</span>
+    <div style="display:flex;gap:10px;margin-top:7px;font-size:10px;color:var(--osv);flex-wrap:wrap;">
+      <span style="display:flex;align-items:center;gap:3px;"><span style="width:9px;height:9px;border-radius:50%;background:#43a047;display:inline-block;"></span>S/E</span>
+      <span style="display:flex;align-items:center;gap:3px;"><span style="width:9px;height:9px;border-radius:50%;background:#e53935;display:inline-block;"></span>+ve House</span>
+      <span style="display:flex;align-items:center;gap:3px;"><span style="width:9px;height:9px;border-radius:50%;background:#1565c0;display:inline-block;"></span>−ve House</span>
+      <span style="display:flex;align-items:center;gap:3px;"><span style="width:9px;height:9px;border-radius:50%;background:#00bcd4;display:inline-block;"></span>Dip Site</span>
+      <span style="margin-left:auto;font-size:9px;color:#aaa;">© Google</span>
     </div>
   </div>`;
   if(hasPts)setTimeout(()=>{const m=document.getElementById(containerId+'-map');if(m&&typeof _TileMap!=='undefined')_TileMap.build(m,trk,houses);},30);
@@ -2020,13 +2106,14 @@ function populateAdultReview(){
   hw.innerHTML=`<table class="sp-rev-tbl"><thead><tr><th style="text-align:left;padding-left:10px;">House</th><th>Rooms</th><th>Hours</th>${hCols}<th>Total</th></tr></thead><tbody>${hRows}<tr class="tot-tr"><td style="text-align:left;padding-left:10px;">TOTAL</td><td>${totR}</td><td>${totH.toFixed(2)}</td>${isR?`<td>${totIA}</td><td>${totOA}</td>`:`<td>${totIA}</td>`}<td>${aTotAll()}</td></tr></tbody></table>`;
   const miss=[];if(!aS.date)miss.push('Date');if(!aS.district)miss.push('District');if(!aS.houses.length)miss.push('Collection data');
   document.getElementById('a-val-alert').style.display=miss.length?'flex':'none';if(miss.length)document.getElementById('a-val-msg').textContent='Incomplete: '+miss.join(', ');
+  renderTrackPreview('a-track-preview',aS.houses);
 }
 function aSnap(){
   const isR=aS.collType==='resting';
   const spB=ASP.map((sp,i)=>({name:sp.n,genus:sp.g,isCulex:!!sp.cx,indoor:aS.houses.reduce((s,h)=>s+h.counts[i][0],0),outdoor:isR?aS.houses.reduce((s,h)=>s+h.counts[i][1],0):0}));
-  return {id:Date.now(),savedAt:new Date().toISOString(),appType:'adult',v:'2.0',collType:aS.collType,date:aS.date,state:(aS.state||''),district:aS.district,location:aS.location,workers:aS.workers,officers:aS.officers,collectors:aS.collectors,nights:aS.nights,lat:aS.lat,lng:aS.lng,houses:aS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),speciesBreakdown:spB,MHD:calcMHD(),TMHD:calcTMHD(),indoorDensity:calcIndoorDensity(),outdoorDensity:calcOutdoorDensity(),roomDensity:calcRoomDensity(),HBR:calcHBR(),totalMosq:aTotAll(),totIndoor:aTotIndoor(),totOutdoor:aTotOutdoor(),totNonCulex:aTotNonCulex(),totCulex:aTotCulex(),totalRooms:aTotRooms(),totalManHours:aManHours()};
+  return {id:Date.now(),savedAt:new Date().toISOString(),appType:'adult',v:'2.0',collType:aS.collType,date:aS.date,state:(aS.state||''),district:aS.district,location:aS.location,workers:aS.workers,officers:aS.officers,collectors:aS.collectors,nights:aS.nights,lat:aS.lat,lng:aS.lng,houses:aS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),speciesBreakdown:spB,MHD:calcMHD(),TMHD:calcTMHD(),indoorDensity:calcIndoorDensity(),outdoorDensity:calcOutdoorDensity(),roomDensity:calcRoomDensity(),HBR:calcHBR(),totalMosq:aTotAll(),totIndoor:aTotIndoor(),totOutdoor:aTotOutdoor(),totNonCulex:aTotNonCulex(),totCulex:aTotCulex(),totalRooms:aTotRooms(),totalManHours:aManHours(),track:TrackRecorder.getTrack()};
 }
-function saveAdultSurvey(){const s=aSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(A_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('adult');activeSavedTab='adult';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'adult');}
+function saveAdultSurvey(){TrackRecorder.stop();const s=aSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(A_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('adult');activeSavedTab='adult';lastSavedId=s.id;lastSavedType='adult';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'adult');}
 
 
 /* ── CONTAINER TYPES ────────────────────────────────────── */
@@ -2127,14 +2214,17 @@ function changeLarvalCnt(type,d){
   if(type==='pupal')updateContSummary();
 }
 function resetLarvalCurForm(){
-  ['pupal','dips','larvae','pupae'].forEach(t=>{lS['cur'+t.charAt(0).toUpperCase()+t.slice(1)]=0;const el=document.getElementById('l-'+t);if(el)el.textContent='0';});
+  lS.curPupal=0;const pEl=document.getElementById('l-pupal');if(pEl)pEl.textContent='0';
   lS.curRooms=0;lS.curHousePos=0;
   const hp=document.getElementById('l-housepos-disp');if(hp)hp.textContent='0';
   lContainers=CONTAINERS.map(c=>({...c}));buildContainerMatrix();
   const se=document.getElementById('l-start');if(se)se.value='';const ee=document.getElementById('l-end');if(ee)ee.value='';const oe=document.getElementById('l-other-name');if(oe)oe.value='';
   lS.curCounts=Array.from({length:LNS},()=>[0,0]);buildLarvalMatrix();
-  // Reset live indices
-  ['live-hi','live-ci','live-bi','live-ld','live-pd','live-id'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='-';});
+  ['live-hi','live-ci','live-bi'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='-';});
+}
+function resetDipForm(){
+  ['dips','larvae','pupae'].forEach(t=>{lS['cur'+t.charAt(0).toUpperCase()+t.slice(1)]=0;const el=document.getElementById('l-'+t);if(el)el.textContent='0';});
+  ['live-ld','live-pd','live-id'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='-';});
 }
 
 /* ── LARVAL PHASES ──────────────────────────────────────── */
@@ -2146,6 +2236,8 @@ function proceedToLarvalCollect(){
   buildLarvalMatrix();updateLarvalSummary();renderLarvalHouses();showScreen('larval-collect');
 }
 function logLarvalHouse(){
+  const btn=document.getElementById('l-log-btn');if(btn&&btn.disabled)return;
+  if(btn)btn.disabled=true;
   const code=hCode(lS.curHN),start=document.getElementById('l-start')?.value||'',end=document.getElementById('l-end')?.value||'',other=document.getElementById('l-other-name')?.value.trim()||'';
   const counts=lS.curCounts.map(r=>[...r]);
   const contSnap=lContainers.map(c=>({...c}));
@@ -2154,16 +2246,49 @@ function logLarvalHouse(){
   lS.curContainers=totExamined;lS.curPositive=totPositive;
   const hpDisp=document.getElementById('l-housepos-disp');
   const isHousePositive=(hpDisp?parseInt(hpDisp.textContent)>0:false)||(totPositive>0)||(lS.curPupal>0);
-  lS.houses.push({id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:lS.curPupal,dips:lS.curDips,larvae:lS.curLarvae,pupae:lS.curPupae,housePositive:isHousePositive,counts,contDetails:contSnap,otherName:other});
-  lS.curHN++;const nc=hCode(lS.curHN);
-  const lhd=document.getElementById('l-hnum-disp');if(lhd)lhd.textContent=nc;
-  const llb=document.getElementById('l-log-btn-code');if(llb)llb.textContent=nc;
-  const lnn=document.getElementById('l-next-num');if(lnn)lnn.textContent=lS.curHN;
-  lS.curRooms=0;
-  const h=lS.houses[lS.houses.length-1];resetLarvalCurForm();renderLarvalHouses();updateLarvalSummary();saveDraft('larval');
-  showToast(code+' logged — L:'+h.larvae+' P:'+h.pupae+' ✓','check');
+  getSnapPos(pos=>{
+    if(btn)btn.disabled=false;
+    lS.houses.push({id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:lS.curPupal,dips:0,larvae:0,pupae:0,housePositive:isHousePositive,counts,contDetails:contSnap,otherName:other,lat:pos?.lat||'',lng:pos?.lng||''});
+    lS.curHN++;const nc=hCode(lS.curHN);
+    const lhd=document.getElementById('l-hnum-disp');if(lhd)lhd.textContent=nc;
+    const llb=document.getElementById('l-log-btn-code');if(llb)llb.textContent=nc;
+    const lnn=document.getElementById('l-next-num');if(lnn)lnn.textContent=lS.curHN;
+    lS.curRooms=0;
+    const h=lS.houses[lS.houses.length-1];resetLarvalCurForm();renderLarvalHouses();updateLarvalSummary();saveDraft('larval');
+    showToast(code+' logged — Cont:'+h.containers+' +ve:'+h.positive+(isHousePositive?' ★':'')+'  ✓','check');
+  });
 }
-function proceedToLarvalReview(){if(!lS.houses.length){document.getElementById('l-coll-warn').style.display='flex';return;}document.getElementById('l-coll-warn').style.display='none';populateLarvalReview();showScreen('larval-review');}
+function proceedToLarvalReview(){if(!lS.houses.length){document.getElementById('l-coll-warn').style.display='flex';return;}document.getElementById('l-coll-warn').style.display='none';TrackRecorder.stop();populateLarvalReview();showScreen('larval-review');}
+function changeSiteN(d){lS.curSiteN=Math.max(1,lS.curSiteN+d);const code=dsCode(lS.curSiteN);const sd=document.getElementById('ds-num-disp');if(sd)sd.textContent=code;const slb=document.getElementById('ds-log-btn-code');if(slb)slb.textContent=code;const snn=document.getElementById('ds-next-num');if(snn)snn.textContent=lS.curSiteN;}
+function logDipSite(){
+  const btn=document.getElementById('ds-log-btn');if(btn&&btn.disabled)return;
+  if(btn)btn.disabled=true;
+  const d=lS.curDips,l=lS.curLarvae,p=lS.curPupae;
+  const code=dsCode(lS.curSiteN);
+  getSnapPos(pos=>{
+    if(btn)btn.disabled=false;
+    lS.dipSites.push({id:Date.now(),siteNo:code,dips:d,larvae:l,pupae:p,lat:pos?.lat||'',lng:pos?.lng||''});
+    lS.curSiteN++;
+    const nc=dsCode(lS.curSiteN);
+    const sd=document.getElementById('ds-num-disp');if(sd)sd.textContent=nc;
+    const slb=document.getElementById('ds-log-btn-code');if(slb)slb.textContent=nc;
+    const snn=document.getElementById('ds-next-num');if(snn)snn.textContent=lS.curSiteN;
+    resetDipForm();renderDipSites();updateLarvalSummary();saveDraft('larval');
+    showToast(code+' logged — D:'+d+' L:'+l+' P:'+p+' ✓','check');
+  });
+}
+function renderDipSites(){
+  const list=document.getElementById('ds-list'),empty=document.getElementById('ds-empty');
+  if(!list)return;list.innerHTML='';
+  if(!lS.dipSites||!lS.dipSites.length){if(empty)empty.style.display='block';return;}
+  if(empty)empty.style.display='none';
+  lS.dipSites.forEach((d,idx)=>{
+    const div=document.createElement('div');div.className='hli';
+    div.innerHTML=`<div class="hli-hdr"><div class="hli-left"><div class="hli-num" style="background:var(--primary);color:#fff;">${idx+1}</div><div class="hli-info"><div class="hli-name">${d.siteNo}</div><div class="hli-meta"><span>Dips:${d.dips}</span><span>L:${d.larvae}</span><span>P:${d.pupae}</span>${d.lat?`<span style="color:var(--primary);">GPS✓</span>`:''}</div></div></div><div class="hli-right"><div style="text-align:right;"><div class="hli-total" style="color:var(--primary);">${d.larvae+d.pupae}</div><div style="font-size:9px;color:var(--osv)">L+P</div></div><button class="hli-del" onclick="event.stopPropagation();delDipSite(${d.id})">${mkSvg('del',15)}</button></div></div>`;
+    list.appendChild(div);
+  });
+}
+function delDipSite(id){lS.dipSites=lS.dipSites.filter(d=>d.id!==id);renderDipSites();updateLarvalSummary();saveDraft('larval');showToast('Dip site removed','del');}
 
 /* ── LARVAL RENDER ──────────────────────────────────────── */
 function renderLarvalHouses(){
@@ -2216,15 +2341,19 @@ function populateLarvalReview(){
     if(tot>0){const tr=document.createElement('tr');const nm=(sp.oth&&lS.houses.some(h=>h.otherName))?'Others ('+lS.houses.map(h=>h.otherName).filter(Boolean).join(', ')+')':sp.n;tr.innerHTML=`<td>${nm}</td><td style="color:var(--larval);">${l||'-'}</td><td>${p||'-'}</td><td style="font-weight:700;">${tot}</td>`;sb.appendChild(tr);}});
   const tt=document.createElement('tr');tt.className='tot-tr';tt.innerHTML=`<td>TOTAL</td><td>${totL}</td><td>${totP}</td><td>${totL+totP}</td>`;sb.appendChild(tt);
   const hw=document.getElementById('r-l-house-wrap');
-  const hRows=lS.houses.map(h=>`<tr><td style="text-align:left;padding-left:10px;font-style:normal;font-weight:600;">${h.houseNo}</td><td>${h.containers}</td><td style="color:var(--larval);font-weight:600;">${h.positive}</td><td>${h.pupal}</td><td>${h.dips}</td><td>${h.larvae}</td><td>${h.pupae}</td><td style="font-weight:700;">${h.larvae+h.pupae}</td></tr>`).join('');
-  const tC=lS.houses.reduce((s,h)=>s+h.containers,0),tP=lS.houses.reduce((s,h)=>s+h.positive,0),tPu=lS.houses.reduce((s,h)=>s+h.pupal,0),tD=lS.houses.reduce((s,h)=>s+h.dips,0);
-  hw.innerHTML=`<table class="sp-rev-tbl lrv"><thead><tr><th style="text-align:left;padding-left:10px;">House</th><th>Cont.</th><th>Pos.</th><th>Pupal+</th><th>Dips</th><th>Larvae</th><th>Pupae</th><th>L+P</th></tr></thead><tbody>${hRows}<tr class="tot-tr"><td style="text-align:left;padding-left:10px;">TOTAL</td><td>${tC}</td><td>${tP}</td><td>${tPu}</td><td>${tD}</td><td>${lTotLarvae()}</td><td>${lTotPupae()}</td><td>${lTotLarvae()+lTotPupae()}</td></tr></tbody></table>`;
+  const hRows=lS.houses.map(h=>`<tr><td style="text-align:left;padding-left:10px;font-style:normal;font-weight:600;">${h.houseNo}</td><td>${h.containers}</td><td style="color:var(--larval);font-weight:600;">${h.positive}</td><td>${h.pupal}</td><td style="font-weight:700;color:${h.housePositive?'#e53935':'inherit'};">${h.housePositive?'✓':'-'}</td>${h.lat?`<td style="font-size:9px;color:var(--primary);">GPS✓</td>`:'<td style="color:var(--osv);">—</td>'}</tr>`).join('');
+  const tC=lS.houses.reduce((s,h)=>s+h.containers,0),tP=lS.houses.reduce((s,h)=>s+h.positive,0),tPu=lS.houses.reduce((s,h)=>s+h.pupal,0);
+  hw.innerHTML=`<table class="sp-rev-tbl lrv"><thead><tr><th style="text-align:left;padding-left:10px;">House</th><th>Cont.</th><th>Pos.</th><th>Pupal+</th><th>+ve House</th><th>GPS</th></tr></thead><tbody>${hRows}<tr class="tot-tr"><td style="text-align:left;padding-left:10px;">TOTAL</td><td>${tC}</td><td>${tP}</td><td>${tPu}</td><td>${lPositiveHouses()}</td><td></td></tr></tbody></table>`;
+  const dw=document.getElementById('r-l-dip-wrap');
+  if(dw){const ds=lS.dipSites||[];if(ds.length){const dipRows=ds.map(d=>`<tr><td style="text-align:left;padding-left:10px;font-weight:600;">${d.siteNo}</td><td>${d.dips||0}</td><td style="color:var(--primary);font-weight:600;">${d.larvae||0}</td><td>${d.pupae||0}</td><td style="font-weight:700;">${(d.larvae||0)+(d.pupae||0)}</td>${d.lat?`<td style="font-size:9px;color:var(--primary);">GPS✓</td>`:'<td style="color:var(--osv);">—</td>'}</tr>`).join('');const tDips=ds.reduce((s,d)=>s+(d.dips||0),0),tLarv=ds.reduce((s,d)=>s+(d.larvae||0),0),tPup=ds.reduce((s,d)=>s+(d.pupae||0),0);dw.innerHTML=`<table class="sp-rev-tbl lrv"><thead><tr><th style="text-align:left;padding-left:10px;">Site</th><th>Dips</th><th>Larvae</th><th>Pupae</th><th>L+P</th><th>GPS</th></tr></thead><tbody>${dipRows}<tr class="tot-tr"><td style="text-align:left;padding-left:10px;">TOTAL</td><td>${tDips}</td><td>${tLarv}</td><td>${tPup}</td><td>${tLarv+tPup}</td><td></td></tr></tbody></table>`;}else{dw.innerHTML='<p style="color:var(--osv);font-size:12px;padding:10px;text-align:center;">No dip sites recorded</p>';}}
+  const dipMarkers=(lS.dipSites||[]).map(d=>({lat:d.lat,lng:d.lng,houseNo:d.siteNo,housePositive:(d.larvae+d.pupae)>0,isDipSite:true}));
+  renderTrackPreview('l-track-preview',[...lS.houses,...dipMarkers]);
 }
 function lSnap(){
   const allCont=lS.houses.reduce((acc,h)=>{(h.contDetails||[]).forEach((c,i)=>{if(!acc[i])acc[i]={name:c.name,examined:0,positive:0};acc[i].examined+=c.examined;acc[i].positive+=c.positive;});return acc;},{});
-  return {id:Date.now(),savedAt:new Date().toISOString(),appType:'larval',v:'2.0',date:lS.date,state:lS.state,district:lS.district,location:lS.location,workers:lS.workers,officers:lS.officers,lat:lS.lat,lng:lS.lng,houses:lS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),containerSummary:Object.values(allCont),HI:calcHI(),CI:calcCI(),BI:calcBI(),PI:calcPI(),LD:calcLD(),PD:calcPD(),totalLarvae:lTotLarvae(),totalPupae:lTotPupae(),totalDips:lTotDips(),totalContainers:lTotContainers(),totalPositive:lTotPositive()};
+  return {id:Date.now(),savedAt:new Date().toISOString(),appType:'larval',v:'2.0',date:lS.date,state:lS.state,district:lS.district,location:lS.location,workers:lS.workers,officers:lS.officers,lat:lS.lat,lng:lS.lng,houses:lS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),dipSites:lS.dipSites||[],containerSummary:Object.values(allCont),HI:calcHI(),CI:calcCI(),BI:calcBI(),PI:calcPI(),LD:calcLD(),PD:calcPD(),totalLarvae:lTotLarvae(),totalPupae:lTotPupae(),totalDips:lTotDips(),totalContainers:lTotContainers(),totalPositive:lTotPositive(),track:TrackRecorder.getTrack()};
 }
-function saveLarvalSurvey(){const s=lSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(L_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('larval');activeSavedTab='larval';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'larval');}
+function saveLarvalSurvey(){TrackRecorder.stop();const s=lSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(L_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('larval');activeSavedTab='larval';lastSavedId=s.id;lastSavedType='larval';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'larval');}
 
 /* ── CSV EXPORT ─────────────────────────────────────────── */
 function buildAdultCSV(s){
@@ -2264,15 +2393,15 @@ function buildAdultCSV(s){
   // DENSITY INDICES
   sep('DENSITY INDICES');
   h('Index','Value','Formula');
-  r('PMHD (non-Culex)',s.MHD,'(Non-Culex ÷ Collectors × Time) × 100');
-  r('Culex TMHD',s.TMHD,'(Culex ÷ Man-hours) × 10');
+  r('Man-Hour Density — Non-Culex (PMHD)',s.MHD,'(Non-Culex ÷ Collectors × Time) × 100');
+  r('Total Man-Hour Density — Culex (TMHD)',s.TMHD,'(Culex ÷ Man-hours) × 10');
   if(isR){
     r('Indoor Resting Density',s.indoorDensity,'Indoor mosq ÷ (Houses × Nights)');
     r('Outdoor Resting Density',s.outdoorDensity,'Outdoor mosq ÷ (Houses × Nights)');
     r('Room Density',s.roomDensity,'Total mosq ÷ Total rooms');
   }else{
     r('Human Biting Rate (HBR)',s.HBR,'Mosquitoes ÷ No. of collectors');
-    r('HBR per Hour',s.HBRHr||'-','Mosquitoes ÷ (Collectors × Hours)');
+    r('Human Biting Rate per Collector per Hour',s.HBRHr||'-','Mosquitoes ÷ (Collectors × Hours)');
   }
   blank();
 
@@ -2291,8 +2420,8 @@ function buildAdultCSV(s){
 
   // SPECIES BREAKDOWN
   sep('SPECIES BREAKDOWN');
-  if(isR) h('Species','Genus','Is Culex','Indoor Count','Outdoor Count','Total');
-  else h('Species','Genus','Is Culex','Landing Catch','Total');
+  if(isR) h('Species','Genus','Culex Group','Indoor Mosquitoes','Outdoor Mosquitoes','Total');
+  else h('Species','Genus','Culex Group','Human Landing Catch','Total');
   (s.speciesBreakdown||[]).forEach(sp=>{
     const tot=(sp.indoor||0)+(sp.outdoor||0);
     if(tot>0){
@@ -2304,8 +2433,8 @@ function buildAdultCSV(s){
 
   // HOUSE/SITE DETAILS
   sep('HOUSE / SITE DETAILS');
-  if(isR) h('House/Site No.','Rooms Inspected','Start Time','End Time','Hours Spent','Indoor','Outdoor','Total Mosquitoes');
-  else h('Site No.','Start Time','End Time','Hours Spent','Landing Catch','Total Mosquitoes');
+  if(isR) h('House/Site No.','Rooms Inspected','Start Time','End Time','Hours Spent','Indoor Mosquitoes','Outdoor Mosquitoes','Total Mosquitoes');
+  else h('Site No.','Start Time','End Time','Hours Spent','Human Landing Catch','Total Mosquitoes');
   (s.houses||[]).forEach(h2=>{
     const ind=(h2.counts||[]).reduce((t,r2)=>t+(r2[0]||0),0);
     const out=isR?(h2.counts||[]).reduce((t,r2)=>t+(r2[1]||0),0):0;
@@ -2413,21 +2542,37 @@ function buildLarvalCSV(s){
   blank();
 
   sep('HOUSE-WISE DETAILS (CONTAINER INSPECTION)');
-  r('House No.','Rooms','Start Time','End Time','Containers Inspected','Positive Containers','Pupal +ve Containers','House Positive');
+  r('House No.','Rooms Inspected','Start Time','End Time','Containers Inspected','Positive Containers','Pupal-Positive Containers','House Positive (Aedes)','GPS Latitude','GPS Longitude','Google Maps Link');
   (s.houses||[]).forEach(h=>{
-    r(h.houseNo,h.rooms,h.start,h.end,h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No');
+    const lat=h.lat||'';const lng=h.lng||'';const mapsLink=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
+    r(h.houseNo,h.rooms,h.start,h.end,h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No',lat,lng,mapsLink);
   });
   blank();
 
-  sep('HOUSE-WISE DIPPING DATA (ANOPHELES / CULEX)');
-  r('House No.','Dips Taken','Larvae Collected','Pupae Collected','Total (L+P)');
-  (s.houses||[]).forEach(h=>{
-    r(h.houseNo,h.dips||0,h.larvae||0,h.pupae||0,(h.larvae||0)+(h.pupae||0));
-  });
+  sep('DIP SITE DATA (ANOPHELES / CULEX)');
+  r('Dip Site No. (An./Cx.)','Dips Taken','Larvae Collected','Pupae Collected','Total Immatures (L+P)','GPS Latitude','GPS Longitude','Google Maps Link');
+  if(s.dipSites&&s.dipSites.length){
+    (s.dipSites||[]).forEach(d=>{const lat=d.lat||'';const lng=d.lng||'';const mapsLink=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';r(d.siteNo,d.dips||0,d.larvae||0,d.pupae||0,(d.larvae||0)+(d.pupae||0),lat,lng,mapsLink);});
+  }else{
+    (s.houses||[]).forEach(h=>{r(h.houseNo,h.dips||0,h.larvae||0,h.pupae||0,(h.larvae||0)+(h.pupae||0),'','','');});
+  }
   blank();
+
+  if(s.track&&s.track.waypoints&&s.track.waypoints.length){
+    sep('GPS SURVEY PATH');
+    r('Point No.','Latitude','Longitude','Timestamp');
+    s.track.waypoints.forEach((p,i)=>{r(i+1,p.lat.toFixed(6),p.lng.toFixed(6),p.ts?new Date(p.ts).toLocaleString('en-IN'):'-');});
+    blank();
+    const startPt=s.track.waypoints[0],endPt=s.track.waypoints[s.track.waypoints.length-1];
+    r('Survey Start GPS','https://maps.google.com/?q='+startPt.lat+','+startPt.lng);
+    r('Survey End GPS','https://maps.google.com/?q='+endPt.lat+','+endPt.lng);
+    r('Total Distance',s.track.distanceKm+' km');
+    r('Duration',s.track.durationSec+' seconds');
+    blank();
+  }
 
   sep('PER HOUSE SPECIES BREAKDOWN');
-  r('House No.','Species','Larvae','Pupae','Total');
+  r('House No.','Species','Larvae Collected','Pupae Collected','Total Immatures');
   (s.houses||[]).forEach(h=>{
     (h.counts||[]).forEach((cnt,i)=>{
       const tot=(cnt[0]||0)+(cnt[1]||0);
@@ -2442,6 +2587,52 @@ function buildLarvalCSV(s){
 }
 
 function exportLarvalCSV(){const s=lSnap();const fn='EST_Larval_'+(s.location||s.district||'survey').replace(/[^a-zA-Z0-9]/g,'_').substring(0,20)+'_'+s.date+'.csv';dlFile(buildLarvalCSV(s),fn,'text/csv;charset=utf-8;');}
+function buildKML(s){
+  const trk=s.track,hasTrack=trk&&trk.waypoints&&trk.waypoints.length;
+  const escX=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const fld=(name,open,content)=>content?`<Folder><name>${escX(name)}</name><open>${open?1:0}</open>\n${content}\n</Folder>`:'';
+  const pm=(name,sid,desc,lat,lng)=>`<Placemark><name>${escX(String(name))}</name><styleUrl>#${sid}</styleUrl>${desc?`<description><![CDATA[${desc}]]></description>`:''}<Point><coordinates>${parseFloat(lng).toFixed(7)},${parseFloat(lat).toFixed(7)},0</coordinates></Point></Placemark>`;
+  const styles=`<Style id="s-path"><LineStyle><color>ff00d7ff</color><width>3</width></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+<Style id="s-hpos"><IconStyle><color>ff0000ff</color><scale>1.1</scale></IconStyle><LabelStyle><scale>0.8</scale></LabelStyle></Style>
+<Style id="s-hneg"><IconStyle><color>ffff5500</color><scale>0.9</scale></IconStyle><LabelStyle><scale>0.7</scale></LabelStyle></Style>
+<Style id="s-dpos"><IconStyle><color>ff00ffff</color><scale>1.1</scale></IconStyle><LabelStyle><scale>0.8</scale></LabelStyle></Style>
+<Style id="s-dneg"><IconStyle><color>ff888888</color><scale>0.8</scale></IconStyle><LabelStyle><scale>0.6</scale></LabelStyle></Style>
+<Style id="s-start"><IconStyle><color>ff00cc00</color><scale>1.3</scale></IconStyle></Style>
+<Style id="s-end"><IconStyle><color>ff5500ff</color><scale>1.3</scale></IconStyle></Style>`;
+  const pathFld=hasTrack?fld('Survey Path / Tracking Route',true,
+    `<Placemark><name>Survey Track</name><styleUrl>#s-path</styleUrl><description><![CDATA[Distance: ${trk.distanceKm} km | Duration: ${Math.floor(trk.durationSec/60)}m ${trk.durationSec%60}s | Waypoints: ${trk.waypoints.length}<br>HI: ${s.HI} | CI: ${s.CI} | BI: ${s.BI}]]></description><LineString><tessellate>1</tessellate><coordinates>\n${trk.waypoints.map(p=>p.lng.toFixed(7)+','+p.lat.toFixed(7)+',0').join('\n')}\n</coordinates></LineString></Placemark>`):'';
+  const startFld=hasTrack?fld('Start Point',true,pm('START','s-start',`Survey start point<br>Lat: ${trk.waypoints[0].lat.toFixed(7)}<br>Lng: ${trk.waypoints[0].lng.toFixed(7)}`,trk.waypoints[0].lat,trk.waypoints[0].lng)):'';
+  const endFld=hasTrack&&trk.waypoints.length>=2?fld('End Point',true,pm('END','s-end',`Survey end point<br>Lat: ${trk.waypoints[trk.waypoints.length-1].lat.toFixed(7)}<br>Lng: ${trk.waypoints[trk.waypoints.length-1].lng.toFixed(7)}`,trk.waypoints[trk.waypoints.length-1].lat,trk.waypoints[trk.waypoints.length-1].lng)):'';
+  const allH=(s.houses||[]).filter(h=>h.lat&&h.lng);
+  const posH=allH.filter(h=>h.housePositive);
+  const hExamFld=allH.length?fld('Houses Examined',false,allH.map(h=>pm(h.houseNo,h.housePositive?'s-hpos':'s-hneg',`${h.housePositive?'&#10003; POSITIVE HOUSE':'Negative House'}<br>Containers Inspected: ${h.containers||0}<br>Positive Containers: ${h.positive||0}<br>Pupal +ve: ${h.pupal||0}`,h.lat,h.lng)).join('\n')):'';
+  const posHFld=posH.length?fld('Positive Houses (Aedes)',true,posH.map(h=>pm(h.houseNo,'s-hpos',`&#10003; POSITIVE HOUSE<br>Containers: ${h.containers||0} | +ve: ${h.positive||0} | Pupal: ${h.pupal||0}`,h.lat,h.lng)).join('\n')):'';
+  const allD=(s.dipSites||[]).filter(d=>d.lat&&d.lng);
+  const posD=allD.filter(d=>(d.larvae||0)+(d.pupae||0)>0);
+  const dAllFld=allD.length?fld('Dip Sites (An./Cx.)',false,allD.map(d=>pm(d.siteNo,(d.larvae||0)+(d.pupae||0)>0?'s-dpos':'s-dneg',`${(d.larvae||0)+(d.pupae||0)>0?'&#10003; DIP-POSITIVE':'Dip Negative'}<br>Dips: ${d.dips||0} | Larvae: ${d.larvae||0} | Pupae: ${d.pupae||0}`,d.lat,d.lng)).join('\n')):'';
+  const posDFld=posD.length?fld('Dip-Positive Sites (An./Cx.)',true,posD.map(d=>pm(d.siteNo,'s-dpos',`&#10003; DIP-POSITIVE<br>Dips: ${d.dips||0} | Larvae: ${d.larvae||0} | Pupae: ${d.pupae||0}`,d.lat,d.lng)).join('\n')):'';
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n<name>EST Larval — ${escX(s.district||'Survey')} — ${s.date||''}</name>\n<description><![CDATA[EST v2.0 Larval Surveillance<br>HI: ${s.HI} | CI: ${s.CI} | BI: ${s.BI} | PI: ${s.PI}<br>LD: ${s.LD} | PD: ${s.PD}<br>Houses: ${(s.houses||[]).length} | Dip Sites: ${(s.dipSites||[]).length}]]></description>\n${styles}\n${pathFld}\n${startFld}\n${endFld}\n${hExamFld}\n${posHFld}\n${dAllFld}\n${posDFld}\n</Document>\n</kml>`;
+}
+function exportLarvalKML(){
+  const s=lSnap();const trk=s.track;
+  const hasTrack=trk&&trk.waypoints&&trk.waypoints.length;
+  const hGps=(s.houses||[]).filter(h=>h.lat&&h.lng);
+  const dGps=(s.dipSites||[]).filter(d=>d.lat&&d.lng);
+  if(!hasTrack&&!hGps.length&&!dGps.length){showToast('No GPS data to export','warn');return;}
+  dlFile(buildKML(s),'EST_Larval_'+(s.district||'Survey')+'_'+s.date+'.kml','application/vnd.google-earth.kml+xml');
+  const allPts=[...(hasTrack?trk.waypoints:[]),...hGps.map(h=>({lat:parseFloat(h.lat),lng:parseFloat(h.lng)}))];
+  if(allPts.length){
+    const step=Math.max(1,Math.floor(allPts.length/8));const wps=[];
+    for(let i=0;i<allPts.length;i+=step)wps.push(allPts[i].lat.toFixed(6)+','+allPts[i].lng.toFixed(6));
+    const last=allPts[allPts.length-1];const lastStr=last.lat.toFixed(6)+','+last.lng.toFixed(6);
+    if(wps.length>1&&wps[wps.length-1]!==lastStr)wps.push(lastStr);
+    showToast('KML downloaded. Opening Maps link...','pdf');
+    setTimeout(()=>{if(confirm('Open survey path in Google Maps?\n('+wps.length+' waypoints)'))window.open('https://www.google.com/maps/dir/'+wps.join('/'),'_blank');},600);
+  }else showToast('KML exported','pdf');
+}
+function exportLarvalKMLSilent(s){
+  if(!s)return;dlFile(buildKML(s),'EST_Larval_'+(s.district||'Survey')+'_'+s.date+'.kml','application/vnd.google-earth.kml+xml');
+}
 
 /* ── PDF EXPORT ─────────────────────────────────────────── */
 function exportAdultPDF(){
@@ -2618,12 +2809,9 @@ tr:nth-child(even) td{background:#f9fdf9;}
 <button class="print-btn" onclick="window.print()">🖨 Print / Save PDF</button>
 </body></html>`;
 
-  const blob=new Blob([reportHtml],{type:'text/html;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='EST_Adult_'+(s.location||s.district||'survey').replace(/[^a-zA-Z0-9]/g,'_').substring(0,20)+'_'+s.date+'.html';
-  a.style.display='none';document.body.appendChild(a);
-  setTimeout(()=>{a.click();setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},800);},50);
-  showToast('Report downloaded — open file then Print → Save as PDF','pdf');
+  const _pwin=window.open('','_blank');
+  if(_pwin){_pwin.document.write(reportHtml);_pwin.document.close();showToast('PDF report opened — use the Print button','pdf');}
+  else{const blob=new Blob([reportHtml],{type:'text/html;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='EST_Adult_'+(s.location||s.district||'survey').replace(/[^a-zA-Z0-9]/g,'_').substring(0,20)+'_'+s.date+'.html';a.style.display='none';document.body.appendChild(a);setTimeout(()=>{a.click();setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},800);},50);showToast('Report downloaded — open file then Print → Save as PDF','pdf');}
 }
 
 function exportLarvalPDF(){
@@ -2632,8 +2820,8 @@ function exportLarvalPDF(){
   let spRows='',totL=0,totP=0,lastG='';
   LSP.forEach((sp,i)=>{const l=s.houses.reduce((t,h)=>t+h.counts[i][0],0),p=s.houses.reduce((t,h)=>t+h.counts[i][1],0);totL+=l;totP+=p;if(l+p>0){if(sp.g!==lastG){lastG=sp.g;spRows+=`<tr><td colspan="4" style="background:#e3f2fd;font-size:8pt;font-weight:700;text-transform:uppercase;color:#1565c0;padding:4px 8px;">${sp.g}</td></tr>`;}spRows+=`<tr><td><em>${sp.n}</em></td><td style="color:#1565c0;">${l}</td><td>${p}</td><td><strong>${l+p}</strong></td></tr>`;}});
   spRows+=`<tr style="background:#e3f2fd;font-weight:700;border-top:2px solid #1565c0;"><td>TOTAL</td><td>${totL}</td><td>${totP}</td><td>${totL+totP}</td></tr>`;
-  let hRows='';s.houses.forEach(h=>{hRows+=`<tr><td>${h.houseNo}</td><td>${h.rooms}</td><td>${h.containers||0}</td><td style="color:#1565c0;"><strong>${h.positive||0}</strong></td><td>${h.pupal||0}</td><td style="font-weight:700;">${h.housePositive?'Yes':'-'}</td></tr>`;});
-  let dipRows='';s.houses.forEach(h=>{const lp=(h.larvae||0)+(h.pupae||0);dipRows+=`<tr><td>${h.houseNo}</td><td>${h.dips||0}</td><td>${h.larvae||0}</td><td>${h.pupae||0}</td><td style="font-weight:700;">${lp}</td></tr>`;});
+  let hRows='';s.houses.forEach(h=>{const gpsLink=h.lat&&h.lng?`<a href="https://maps.google.com/?q=${h.lat},${h.lng}" style="color:#1565c0;font-size:8pt;">📍Map</a>`:'—';hRows+=`<tr><td>${h.houseNo}</td><td>${h.rooms}</td><td>${h.containers||0}</td><td style="color:#1565c0;"><strong>${h.positive||0}</strong></td><td>${h.pupal||0}</td><td style="font-weight:700;">${h.housePositive?'Yes':'-'}</td><td>${gpsLink}</td></tr>`;});
+  let dipRows='';if(s.dipSites&&s.dipSites.length){s.dipSites.forEach(d=>{const lp=(d.larvae||0)+(d.pupae||0);dipRows+=`<tr><td>${d.siteNo}</td><td>${d.dips||0}</td><td>${d.larvae||0}</td><td>${d.pupae||0}</td><td style="font-weight:700;">${lp}</td></tr>`;});}else{s.houses.forEach(h=>{const lp=(h.larvae||0)+(h.pupae||0);dipRows+=`<tr><td>${h.houseNo}</td><td>${h.dips||0}</td><td>${h.larvae||0}</td><td>${h.pupae||0}</td><td style="font-weight:700;">${lp}</td></tr>`;});}
   let contHRows='';(s.containerSummary||[]).forEach(ct=>{if(ct.examined>0||ct.positive>0)contHRows+=`<tr><td>${ct.name}</td><td>${ct.examined}</td><td>${ct.positive}</td></tr>`;});
   if(!contHRows)contHRows='<tr><td colspan="3" style="text-align:center;color:#999;">No container data</td></tr>';
   const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>EST Larval \u2014 ${s.district} \u2014 ${s.date}</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Times New Roman',serif;font-size:11pt;color:#111;}.page{width:210mm;min-height:297mm;margin:0 auto;padding:14mm 16mm 20mm;}.hd{border-bottom:3px double #1565c0;padding-bottom:10px;margin-bottom:12px;}.hd h2{font-size:14pt;font-weight:bold;color:#1565c0;}.hd p{font-size:9pt;color:#555;margin-top:2px;}.tb{text-align:center;border:2px solid #1565c0;border-radius:4px;padding:10px;margin-bottom:12px;}.tb h1{font-size:14pt;color:#1565c0;}.ref{display:flex;justify-content:space-between;font-size:9pt;color:#555;background:#e3f2fd;border-left:3px solid #1565c0;padding:5px 10px;margin-bottom:14px;}.sec{font-size:11pt;font-weight:bold;text-transform:uppercase;border-bottom:1.5px solid;padding-bottom:3px;margin:14px 0 8px;}.sec.ae{color:#1565c0;border-color:#64b5f6;}.sec.an{color:#006b5c;border-color:#00bfa5;}.mt{width:100%;border-collapse:collapse;}.mt td{padding:7px 10px;border:1px solid #ccc;font-size:10pt;}.mt td.lbl{background:#e3f2fd;font-weight:bold;font-size:8.5pt;color:#0d47a1;width:22%;}.iw{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:4px;}.ib{border:1px solid #90caf9;border-radius:4px;padding:9px 6px;text-align:center;flex:1;min-width:80px;background:#e3f2fd;}.ib.gn{border-color:var(--pd,#44ddc1);background:#e6f7f4;}.il{font-size:7.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:#555;margin-bottom:3px;}.iv{font-size:14pt;font-weight:bold;color:#1565c0;}.iv.gn{color:#006b5c;}.is{font-size:7pt;color:#777;margin-top:2px;}table{width:100%;border-collapse:collapse;}thead tr{background:#1565c0;color:#fff;}thead.gn tr{background:#006b5c;}thead th{padding:7px 8px;font-size:9pt;font-weight:bold;text-align:center;text-transform:uppercase;}thead th:first-child{text-align:left;}td{padding:5px 8px;border-bottom:1px solid #e0e0e0;font-size:10pt;text-align:center;}td:first-child{text-align:left;}.sig{display:flex;justify-content:space-between;gap:10px;margin-top:28px;padding-top:12px;border-top:1px solid #ccc;}.sb{flex:1;text-align:center;}.sl{border-top:1px solid #333;margin:0 auto 5px;width:88%;}.sn{font-size:9.5pt;font-weight:bold;}.sr{font-size:8pt;color:#555;margin-top:2px;}.footer{margin-top:14px;border-top:1px solid #ccc;padding-top:6px;font-size:8pt;color:#888;text-align:center;}.sb-fixed{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ccc;padding:10px;text-align:center;}.pb{background:#1565c0;color:#fff;border:none;padding:10px 30px;border-radius:6px;font-size:12pt;font-weight:bold;cursor:pointer;}@media print{.sb-fixed{display:none!important;}@page{size:A4;margin:12mm;}}</style></head><body>
@@ -2680,12 +2868,12 @@ function exportLarvalPDF(){
 <tbody>${contHRows}</tbody></table>
 
 <div class="sec ae">6. House-wise Container Inspection</div>
-<table><thead><tr><th style="text-align:left;">House</th><th>Rooms</th><th>Containers</th><th>Positive</th><th>Pupal+ve</th><th>+ve House</th></tr></thead>
+<table><thead><tr><th style="text-align:left;">House</th><th>Rooms</th><th>Containers</th><th>Positive</th><th>Pupal+ve</th><th>+ve House</th><th>GPS</th></tr></thead>
 <tbody>${hRows}</tbody></table>
 
-<div class="sec an" style="color:#006b5c;border-color:#00bfa5;margin-top:12px;">7. House-wise Dipping Data (An./Culex)</div>
-<table><thead class="gn"><tr><th style="text-align:left;">House</th><th>Dips Taken</th><th>Larvae</th><th>Pupae</th><th>Total (L+P)</th></tr></thead>
-<tbody>${dipRows}</tbody></table>
+<div class="sec an" style="color:#006b5c;border-color:#00bfa5;margin-top:12px;">7. Dip Site Data (An./Culex)</div>
+<table><thead class="gn"><tr><th style="text-align:left;">Site</th><th>Dips Taken</th><th>Larvae</th><th>Pupae</th><th>Total (L+P)</th></tr></thead>
+<tbody>${(s.dipSites&&s.dipSites.length?s.dipSites.map(d=>`<tr><td>${d.siteNo}</td><td>${d.dips||0}</td><td>${d.larvae||0}</td><td>${d.pupae||0}</td><td style="font-weight:700;">${(d.larvae||0)+(d.pupae||0)}</td></tr>`):s.houses.map(h=>`<tr><td>${h.houseNo}</td><td>${h.dips||0}</td><td>${h.larvae||0}</td><td>${h.pupae||0}</td><td style="font-weight:700;">${(h.larvae||0)+(h.pupae||0)}</td></tr>`)).join('')}</tbody></table>
 
 <div class="sig"><div class="sb"><div class="sl"></div><div class="sn">${s.workers}</div><div class="sr">Surveillance Worker</div></div>
 <div class="sb"><div class="sl"></div><div class="sn">${s.officers}</div><div class="sr">Senior Officer</div></div>
@@ -2693,13 +2881,9 @@ function exportLarvalPDF(){
 <div class="footer">EST v2.0 \u00b7 Entomological Surveillance Tool | Report ID: EST-L-${s.id} | Generated: ${new Date().toLocaleString('en-IN')}</div>
 </div><div class="sb-fixed"><button class="pb" onclick="window.print()">Save as PDF / Print</button></div>
 </body></html>`;
-  // Download as HTML file — open in browser to print/save as PDF (avoids popup blockers)
-  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const a2=document.createElement('a');a2.href=url;a2.download='EST_Adult_'+s.district+'_'+s.date+'.html';
-  document.body.appendChild(a2);a2.click();document.body.removeChild(a2);
-  setTimeout(()=>URL.revokeObjectURL(url),2000);
-  showToast('Report downloaded — open in browser then Print → Save as PDF','pdf');
+  const _lpwin=window.open('','_blank');
+  if(_lpwin){_lpwin.document.write(html);_lpwin.document.close();showToast('PDF report opened — use the Print button','pdf');}
+  else{const blob=new Blob([html],{type:'text/html;charset=utf-8'});const url=URL.createObjectURL(blob);const a2=document.createElement('a');a2.href=url;a2.download='EST_Larval_'+s.district+'_'+s.date+'.html';document.body.appendChild(a2);a2.click();document.body.removeChild(a2);setTimeout(()=>URL.revokeObjectURL(url),2000);showToast('Report downloaded — open in browser then Print → Save as PDF','pdf');}
 }
 
 /* ── EMAIL & WHATSAPP ───────────────────────────────────── */
@@ -2780,10 +2964,12 @@ function loadDraft(mod){
       const nc=hCode(aS.curHN);document.getElementById('a-hnum-disp').textContent=nc;document.getElementById('a-log-btn-code').textContent=nc;document.getElementById('a-next-num').textContent=aS.curHN;
     }else{
       Object.assign(lS,d);lS.curCounts=Array.isArray(lS.curCounts)?lS.curCounts:Array.from({length:LNS},()=>[0,0]);
-      buildLarvalMatrix();updateLarvalSummary();renderLarvalHouses();
+      if(!lS.dipSites)lS.dipSites=[];if(!lS.curSiteN)lS.curSiteN=1;
+      buildLarvalMatrix();updateLarvalSummary();renderLarvalHouses();renderDipSites();
       ['l-date','l-location','l-workers','l-officers'].forEach(id=>{const k=id.replace('l-','');const el=document.getElementById(id);if(el)el.value=lS[k]||'';});
       document.getElementById('l-district').value=lS.district||'';
       const nc=hCode(lS.curHN);document.getElementById('l-hnum-disp').textContent=nc;document.getElementById('l-log-btn-code').textContent=nc;document.getElementById('l-next-num').textContent=lS.curHN;
+      const ncs=dsCode(lS.curSiteN);const dsd=document.getElementById('ds-num-disp');if(dsd)dsd.textContent=ncs;const dslb=document.getElementById('ds-log-btn-code');if(dslb)dslb.textContent=ncs;
     }
   }catch(e){console.warn('Draft load failed',e);}
 }
@@ -2840,7 +3026,7 @@ function renderSavedMod(mod){
     const isSel=sel.has(String(s.id)),ac=mod==='adult';
     const savedTime=s.savedAt?new Date(s.savedAt).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true}):'';
     const meta=(s.state||'')+(s.state&&s.district?' · ':'')+( s.district||'')+(s.date?' · '+s.date:'')+( savedTime?' · '+savedTime:'');
-    const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');
+    const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');div.dataset.sid=String(s.id);
     const serialNo=surveyIdx+1;
     div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?('Synced '+new Date(s.syncedAt||'').toLocaleDateString('en-IN')):'Not synced to GitHub'}</div><div class="sit-acts"><button class="sit-act" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} CSV</button><button class="sit-act" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
     list.appendChild(div);
@@ -2853,18 +3039,19 @@ function getSavedById(mod,id){let surveys=[];try{surveys=JSON.parse(localStorage
 function exportOneSavedCSV(mod,id){const s=getSavedById(mod,id);if(!s)return;dlFile(mod==='adult'?buildAdultCSV(s):buildLarvalCSV(s),`EST_${mod}_${s.date||'survey'}_${s.id}.csv`,'text/csv;charset=utf-8;');showToast('CSV downloaded','csv');}
 function exportOneSavedPDF(mod,id){
   const s=getSavedById(mod,id);if(!s)return;
-  if(mod==='adult'){const bk={...aS};Object.assign(aS,s);aS.houses=s.houses||[];exportAdultPDF();Object.assign(aS,bk);}
-  else{const bk={...lS};Object.assign(lS,s);lS.houses=s.houses||[];exportLarvalPDF();Object.assign(lS,bk);}
+  if(mod==='adult'){const bk={...aS,houses:[...aS.houses],curCounts:aS.curCounts.map(r=>[...r])};Object.assign(aS,s);aS.houses=s.houses||[];exportAdultPDF();Object.assign(aS,bk);aS.curCounts=bk.curCounts;}
+  else{const bk={...lS,houses:[...lS.houses],dipSites:[...(lS.dipSites||[])],curCounts:lS.curCounts.map(r=>[...r])};Object.assign(lS,s);lS.houses=s.houses||[];lS.dipSites=s.dipSites||[];exportLarvalPDF();Object.assign(lS,bk);lS.curCounts=bk.curCounts;}
 }
 function shareWASaved(mod,id){const s=getSavedById(mod,id);if(!s)return;const text=mod==='adult'?buildAdultText(s):buildLarvalText(s);const a=document.createElement('a');a.href='https://wa.me/?text='+encodeURIComponent(text);a.target='_blank';document.body.appendChild(a);a.click();document.body.removeChild(a);}
 function deleteSaved(mod,id){if(!confirm('Delete this survey? Cannot be undone.'))return;const key=mod==='adult'?A_SAVED:L_SAVED;let surveys=[];try{surveys=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}surveys=surveys.filter(s=>String(s.id)!==String(id));try{localStorage.setItem(key,JSON.stringify(surveys));}catch(e){}(mod==='adult'?aSel:lSel).delete(String(id));renderSaved();showToast('Survey deleted','del');}
 function exportSelCSV(mod){
   const sel=mod==='adult'?aSel:lSel;let surveys=[];try{surveys=JSON.parse(localStorage.getItem(mod==='adult'?A_SAVED:L_SAVED)||'[]');}catch(e){}
-  const toExp=sel.size>0?surveys.filter(s=>sel.has(String(s.id))):surveys;if(!toExp.length){showToast('No surveys to export','warn');return;}
-  let c='\uFEFF';
-  if(mod==='adult'){c+='Date,District,Location,CollType,Houses,ManHours,TotalMosq,MHD,TMHD,IndoorDensity,OutdoorDensity,RoomDensity,HBR\r\n';toExp.forEach(s=>{c+=`"${s.date}","${s.district}","${(s.location||'').replace(/"/g,'""')}","${s.collType}",${s.houses?.length||0},${s.totalManHours?.toFixed?s.totalManHours.toFixed(2):0},${s.totalMosq||0},"${s.MHD||'-'}","${s.TMHD||'-'}","${s.indoorDensity||'-'}","${s.outdoorDensity||'-'}","${s.roomDensity||'-'}","${s.HBR||'-'}"\r\n`;});}
-  else{c+='Date,District,Location,Houses,HI,CI,BI,PI,LarvalDensity,PupalDensity,TotalLarvae,TotalPupae,TotalDips\r\n';toExp.forEach(s=>{c+=`"${s.date}","${s.district}","${(s.location||'').replace(/"/g,'""')}",${s.houses?.length||0},"${s.HI||'-'}","${s.CI||'-'}","${s.BI||'-'}","${s.PI||'-'}","${s.LD||'-'}","${s.PD||'-'}",${s.totalLarvae||0},${s.totalPupae||0},${s.totalDips||0}\r\n`;});}
-  dlFile(c,'EST_'+mod+'_Combined_'+toExp.length+'surveys.csv','text/csv;charset=utf-8;');showToast(toExp.length+' survey'+(toExp.length!==1?'s':'')+' exported','csv');
+  const toExp=sel.size>0?surveys.filter(s=>sel.has(String(s.id))):surveys;
+  if(!toExp.length){showToast('No surveys to export','warn');return;}
+  const SEP='\r\n\r\n"================================================================================"\r\n\r\n';
+  const parts=toExp.map(s=>(mod==='adult'?buildAdultCSV(s):buildLarvalCSV(s)).replace(/^\uFEFF/,''));
+  dlFile('\uFEFF'+parts.join(SEP),'EST_'+mod+'_'+toExp.length+'surveys_'+new Date().toISOString().slice(0,10)+'.csv','text/csv;charset=utf-8;');
+  showToast(toExp.length+' full-detail survey'+(toExp.length!==1?'s':'')+' exported','csv');
 }
 function showSavedTab(tab){
   activeSavedTab=tab;
@@ -2881,6 +3068,14 @@ function showSavedTab(tab){
     else{badge.className='hmod-badge larval';badge.textContent='Larval Surveillance';}
   }
   renderSavedMod(tab);
+}
+function reviewLastSaved(){
+  if(!lastSavedId||!lastSavedType){showSavedTab(activeSavedTab);renderSaved();showScreen('saved');return;}
+  showSavedTab(lastSavedType);renderSaved();showScreen('saved');
+  setTimeout(()=>{
+    const el=document.querySelector('[data-sid="'+lastSavedId+'"]');
+    if(el){el.scrollIntoView({behavior:'smooth',block:'nearest'});el.style.outline='2.5px solid var(--primary)';el.style.outlineOffset='3px';setTimeout(()=>{el.style.outline='';el.style.outlineOffset='';},2500);}
+  },350);
 }
 
 /* ── SHARE EMAIL ────────────────────────────────────────── */
@@ -2964,30 +3159,38 @@ const _TileMap=(()=>{
     }
     function overlay(){
       let c='',lbl='';
-      if(pts.length>=2){c+=`<path d="${pts.map((p,i)=>{const s=scr(p.lat,p.lng);return(i?'L':'M')+s.x.toFixed(1)+','+s.y.toFixed(1);}).join(' ')}" fill="none" stroke="#ffd600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>`;}
-      (houses||[]).forEach(h=>{
+      if(pts.length>=2){c+=`<path d="${pts.map((p,i)=>{const s=scr(p.lat,p.lng);return(i?'L':'M')+s.x.toFixed(1)+','+s.y.toFixed(1);}).join(' ')}" fill="none" stroke="#ffd600" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>`;}
+      (houses||[]).forEach((h,hi)=>{
         if(!h.lat||!h.lng)return;
-        const s=scr(parseFloat(h.lat),parseFloat(h.lng)),pos=h.housePositive||(h.total>0)||(h.positive>0);
-        c+=`<circle cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="4" fill="${pos?'#e53935':'#1565c0'}" stroke="#fff" stroke-width="1.5"/>`;
-        lbl+=`<text x="${(s.x+5).toFixed(1)}" y="${(s.y+4).toFixed(1)}" font-size="9" font-family="system-ui,sans-serif" font-weight="700" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">${h.houseNo}</text>`;
+        const s=scr(parseFloat(h.lat),parseFloat(h.lng));
+        const isDip=h.isDipSite;
+        const pos=isDip?(h.housePositive):((h.housePositive)||(h.total>0)||(h.positive>0));
+        const fill=isDip?(pos?'#00bcd4':'#78909c'):(pos?'#e53935':'#1565c0');
+        const r=isDip?4:5;
+        c+=`<circle cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="${r}" fill="${fill}" stroke="#fff" stroke-width="1.5" opacity=".95"/>`;
+        const lx=(s.x+6).toFixed(1),ly=(s.y+4).toFixed(1);
+        const label=h.houseNo||h.siteNo||'';
+        lbl+=`<text x="${lx}" y="${ly}" font-size="8" font-family="system-ui,sans-serif" font-weight="700" fill="${fill}" stroke="#000" stroke-width="2" paint-order="stroke">${label}</text>`;
       });
       c+=lbl;
       if(pts.length>=1){
         const s0=scr(pts[0].lat,pts[0].lng);
-        c+=`<circle cx="${s0.x.toFixed(1)}" cy="${s0.y.toFixed(1)}" r="6" fill="#43a047" stroke="#fff" stroke-width="2"/><text x="${(s0.x+8).toFixed(1)}" y="${(s0.y+4).toFixed(1)}" font-size="9" font-family="system-ui,sans-serif" font-weight="700" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">${pts.length>1?'S':'GPS'}</text>`;
+        c+=`<circle cx="${s0.x.toFixed(1)}" cy="${s0.y.toFixed(1)}" r="7" fill="#43a047" stroke="#fff" stroke-width="2"/><text x="${(s0.x+9).toFixed(1)}" y="${(s0.y+5).toFixed(1)}" font-size="10" font-family="system-ui,sans-serif" font-weight="900" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">${pts.length>1?'S':'●'}</text>`;
       }
       if(pts.length>=2){
         const sN=scr(pts[pts.length-1].lat,pts[pts.length-1].lng);
-        c+=`<circle cx="${sN.x.toFixed(1)}" cy="${sN.y.toFixed(1)}" r="6" fill="#43a047" stroke="#fff" stroke-width="2"/><text x="${(sN.x+8).toFixed(1)}" y="${(sN.y+4).toFixed(1)}" font-size="9" font-family="system-ui,sans-serif" font-weight="700" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">E</text>`;
+        c+=`<circle cx="${sN.x.toFixed(1)}" cy="${sN.y.toFixed(1)}" r="7" fill="#43a047" stroke="#fff" stroke-width="2"/><text x="${(sN.x+9).toFixed(1)}" y="${(sN.y+5).toFixed(1)}" font-size="10" font-family="system-ui,sans-serif" font-weight="900" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">E</text>`;
       }
       svg.setAttribute('viewBox',`0 0 ${W()} ${H()}`);svg.innerHTML=c;
     }
     function draw(){tiles();overlay();}
     function fit(){
       const w=W(),h=H();
-      if(!pts.length)return;
-      if(pts.length===1){z=16;const cw=_wxy(pts[0].lat,pts[0].lng,z);ox=cw.x-w/2/TS;oy=cw.y-h/2/TS;return;}
-      const la=pts.map(p=>p.lat),lo=pts.map(p=>p.lng);
+      const hPts=(houses||[]).filter(hh=>hh.lat&&hh.lng).map(hh=>({lat:parseFloat(hh.lat),lng:parseFloat(hh.lng)}));
+      const all=[...pts,...hPts];
+      if(!all.length)return;
+      if(all.length===1){z=16;const cw=_wxy(all[0].lat,all[0].lng,z);ox=cw.x-w/2/TS;oy=cw.y-h/2/TS;return;}
+      const la=all.map(p=>p.lat),lo=all.map(p=>p.lng);
       const mn1=Math.min(...la),mx1=Math.max(...la),mn2=Math.min(...lo),mx2=Math.max(...lo);
       z=18;
       for(let i=0;i<10&&z>10;i++){const a=_wxy(mn1,mn2,z),b=_wxy(mx1,mx2,z);if(Math.abs(b.x-a.x)*TS<w*.72&&Math.abs(b.y-a.y)*TS<h*.72)break;z--;}
@@ -3009,7 +3212,7 @@ const _TileMap=(()=>{
 })();
 function openSurveyMap(cid){
   const d=_prevCache[cid];
-  if(!d||!d.track||!d.track.waypoints||d.track.waypoints.length<2){showToast('No GPS path recorded','warn');return;}
+  if(!d||!d.track||!d.track.waypoints||!d.track.waypoints.length){showToast('No GPS path recorded','warn');return;}
   document.getElementById('survey-map-modal').style.display='flex';
   setTimeout(()=>{_TileMap.build(document.getElementById('smap-body'),d.track,d.houses);},60);
 }
