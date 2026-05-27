@@ -647,6 +647,12 @@ function showTrackMap(idx,type){
     const line=L.polyline(pts,{color:'#006b5c',weight:4,opacity:.9}).addTo(_leafMap);
     L.circleMarker(pts[0],{radius:8,fillColor:'#43a047',color:'#fff',weight:2,fillOpacity:1}).bindPopup('Start').addTo(_leafMap);
     L.circleMarker(pts[pts.length-1],{radius:8,fillColor:'#e53935',color:'#fff',weight:2,fillOpacity:1}).bindPopup('End').addTo(_leafMap);
+    s.houses?.forEach(h=>{
+      if(!h.lat||!h.lng)return;
+      const pos=h.housePositive||(h.positive>0)||(h.total>0);
+      if(pos)L.circleMarker([h.lat,h.lng],{radius:7,fillColor:'#e53935',color:'#fff',weight:2,fillOpacity:.9}).bindPopup('<b>'+h.houseNo+'</b>: positive').addTo(_leafMap);
+      else L.circleMarker([h.lat,h.lng],{radius:5,fillColor:'#555',color:'#fff',weight:1.5,fillOpacity:.7}).bindPopup(h.houseNo).addTo(_leafMap);
+    });
     _leafMap.fitBounds(line.getBounds(),{padding:[20,20]});
   },100);
 }
