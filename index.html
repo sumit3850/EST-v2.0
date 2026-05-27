@@ -1418,7 +1418,7 @@ const LSP=[
 const LNS=LSP.length;
 let activeModule=null,activeSavedTab='adult';
 const aS={collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,nights:1,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curCounts:Array.from({length:ANS},()=>[0,0,0]),curOther:''};
-const lS={date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],curHN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curCounts:Array.from({length:LNS},()=>[0,0]),curOther:''};
+const lS={date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipSites:[],curHN:1,curSiteN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curCounts:Array.from({length:LNS},()=>[0,0]),curOther:''};
 function aCols(){return aS.collType==='resting'?['Indoor','Outdoor']:['Landing Catch'];}
 function aTotSp(i){return aS.collType==='resting'?aS.houses.reduce((s,h)=>s+h.counts[i][0]+h.counts[i][1],0):aS.houses.reduce((s,h)=>s+h.counts[i][0],0);}
 function aTotAll(){let t=0;for(let i=0;i<ANS;i++)t+=aTotSp(i);return t;}
@@ -1439,9 +1439,10 @@ function calcHBRHr(){const t=aTotAll(),c=aS.collectors||1,h=aRawHours();return t
 function lTotContainers(){return lS.houses.reduce((s,h)=>s+h.containers,0);}
 function lTotPositive(){return lS.houses.reduce((s,h)=>s+h.positive,0);}
 function lTotPupal(){return lS.houses.reduce((s,h)=>s+h.pupal,0);}
-function lTotDips(){return lS.houses.reduce((s,h)=>s+h.dips,0);}
-function lTotLarvae(){return lS.houses.reduce((s,h)=>s+h.larvae,0);}
-function lTotPupae(){return lS.houses.reduce((s,h)=>s+h.pupae,0);}
+function lTotDips(){return(lS.dipSites&&lS.dipSites.length?lS.dipSites:lS.houses).reduce((s,x)=>s+(x.dips||0),0);}
+function lTotLarvae(){return(lS.dipSites&&lS.dipSites.length?lS.dipSites:lS.houses).reduce((s,x)=>s+(x.larvae||0),0);}
+function lTotPupae(){return(lS.dipSites&&lS.dipSites.length?lS.dipSites:lS.houses).reduce((s,x)=>s+(x.pupae||0),0);}
+function dsCode(n){return'DS-'+String(n).padStart(3,'0');}
 function lPositiveHouses(){return lS.houses.filter(h=>h.housePositive||h.positive>0).length;}
 function calcHI(){const n=lS.houses.length;return n>0?((lPositiveHouses()/n)*100).toFixed(1)+'%':'—';}
 function calcCI(){const tot=lTotContainers(),pos=lTotPositive();return tot>0?((pos/tot)*100).toFixed(1)+'%':'—';}
@@ -1704,7 +1705,7 @@ function startModule(mod,mode){
 }
 function resetStateOnly(mod){
   if(mod==='adult'){Object.assign(aS,{collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,nights:1,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curOther:''});aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);}
-  else{Object.assign(lS,{date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],curHN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curOther:''});lS.curCounts=Array.from({length:LNS},()=>[0,0]);lContainers=CONTAINERS.map(c=>({...c}));}
+  else{Object.assign(lS,{date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipSites:[],curHN:1,curSiteN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curOther:''});lS.curCounts=Array.from({length:LNS},()=>[0,0]);lContainers=CONTAINERS.map(c=>({...c}));}
 }
 function resetModule(mod){
   if(!confirm('Reset all data for this survey?'))return;
@@ -1962,7 +1963,7 @@ function logAdultHouse(){
   const hours=calcHrs(start,end),counts=aS.curCounts.map(r=>[...r]);
   const total=aS.collType==='resting'?counts.reduce((s,r)=>s+r[0]+r[1],0):counts.reduce((s,r)=>s+r[0],0);
   const other=document.getElementById('a-other-name')?.value.trim()||'';
-  aS.houses.push({id:Date.now(),houseNo:code,rooms:aS.curRooms,start:start||'-',end:end||'-',hours,counts,total,otherName:other});
+  const _apos=TrackRecorder.getLastPos();aS.houses.push({id:Date.now(),houseNo:code,rooms:aS.curRooms,start:start||'-',end:end||'-',hours,counts,total,otherName:other,lat:_apos?.lat||'',lng:_apos?.lng||''});
   aS.curHN++;const nc=hCode(aS.curHN);
   const hd=document.getElementById('a-hnum-disp');if(hd)hd.textContent=nc;
   const lbc=document.getElementById('a-log-btn-code');if(lbc)lbc.textContent=nc;
@@ -2185,14 +2186,17 @@ function changeLarvalCnt(type,d){
   if(type==='pupal')updateContSummary();
 }
 function resetLarvalCurForm(){
-  ['pupal','dips','larvae','pupae'].forEach(t=>{lS['cur'+t.charAt(0).toUpperCase()+t.slice(1)]=0;const el=document.getElementById('l-'+t);if(el)el.textContent='0';});
+  lS.curPupal=0;const pEl=document.getElementById('l-pupal');if(pEl)pEl.textContent='0';
   lS.curRooms=0;lS.curHousePos=0;
   const hp=document.getElementById('l-housepos-disp');if(hp)hp.textContent='0';
   lContainers=CONTAINERS.map(c=>({...c}));buildContainerMatrix();
   const se=document.getElementById('l-start');if(se)se.value='';const ee=document.getElementById('l-end');if(ee)ee.value='';const oe=document.getElementById('l-other-name');if(oe)oe.value='';
   lS.curCounts=Array.from({length:LNS},()=>[0,0]);buildLarvalMatrix();
-  // Reset live indices
-  ['live-hi','live-ci','live-bi','live-ld','live-pd','live-id'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='-';});
+  ['live-hi','live-ci','live-bi'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='-';});
+}
+function resetDipForm(){
+  ['dips','larvae','pupae'].forEach(t=>{lS['cur'+t.charAt(0).toUpperCase()+t.slice(1)]=0;const el=document.getElementById('l-'+t);if(el)el.textContent='0';});
+  ['live-ld','live-pd','live-id'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='-';});
 }
 
 /* ── LARVAL PHASES ──────────────────────────────────────── */
@@ -2212,14 +2216,15 @@ function logLarvalHouse(){
   lS.curContainers=totExamined;lS.curPositive=totPositive;
   const hpDisp=document.getElementById('l-housepos-disp');
   const isHousePositive=(hpDisp?parseInt(hpDisp.textContent)>0:false)||(totPositive>0)||(lS.curPupal>0);
-  lS.houses.push({id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:lS.curPupal,dips:lS.curDips,larvae:lS.curLarvae,pupae:lS.curPupae,housePositive:isHousePositive,counts,contDetails:contSnap,otherName:other});
+  const _lpos=TrackRecorder.getLastPos();
+  lS.houses.push({id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:lS.curPupal,dips:0,larvae:0,pupae:0,housePositive:isHousePositive,counts,contDetails:contSnap,otherName:other,lat:_lpos?.lat||'',lng:_lpos?.lng||''});
   lS.curHN++;const nc=hCode(lS.curHN);
   const lhd=document.getElementById('l-hnum-disp');if(lhd)lhd.textContent=nc;
   const llb=document.getElementById('l-log-btn-code');if(llb)llb.textContent=nc;
   const lnn=document.getElementById('l-next-num');if(lnn)lnn.textContent=lS.curHN;
   lS.curRooms=0;
   const h=lS.houses[lS.houses.length-1];resetLarvalCurForm();renderLarvalHouses();updateLarvalSummary();saveDraft('larval');
-  showToast(code+' logged — L:'+h.larvae+' P:'+h.pupae+' ✓','check');
+  showToast(code+' logged — Cont:'+h.containers+' +ve:'+h.positive+(isHousePositive?' ★':'')+'  ✓','check');
 }
 function proceedToLarvalReview(){if(!lS.houses.length){document.getElementById('l-coll-warn').style.display='flex';return;}document.getElementById('l-coll-warn').style.display='none';TrackRecorder.stop();populateLarvalReview();showScreen('larval-review');}
 
