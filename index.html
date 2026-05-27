@@ -2147,13 +2147,13 @@ function renderTrackPreview(containerId,houses){
     <svg width="100%" viewBox="0 0 ${W} ${H}" style="display:block;border-radius:6px;background:#e8f5f2;">
       <path d="${polyline}" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
       <circle cx="${sx(pts[0]).toFixed(1)}" cy="${sy(pts[0]).toFixed(1)}" r="6" fill="#43a047" stroke="#fff" stroke-width="2"><title>Start</title></circle>
-      <circle cx="${sx(pts[pts.length-1]).toFixed(1)}" cy="${sy(pts[pts.length-1]).toFixed(1)}" r="6" fill="#e53935" stroke="#fff" stroke-width="2"><title>End</title></circle>
+      <circle cx="${sx(pts[pts.length-1]).toFixed(1)}" cy="${sy(pts[pts.length-1]).toFixed(1)}" r="6" fill="#43a047" stroke="#fff" stroke-width="2"><title>End</title></circle>
       ${hDots}
     </svg>
     <div style="display:flex;gap:14px;margin-top:7px;font-size:10px;color:var(--osv);">
-      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#43a047;display:inline-block;"></span>Start</span>
-      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#e53935;display:inline-block;"></span>End / Positive</span>
-      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#555;display:inline-block;"></span>House</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#43a047;display:inline-block;"></span>Start / End</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#e53935;display:inline-block;"></span>Positive House</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#555;display:inline-block;"></span>House (−ve)</span>
     </div>
   </div>`;
 }
@@ -2548,16 +2548,25 @@ function buildAdultCSV(s){
 
   // HOUSE/SITE DETAILS
   sep('HOUSE / SITE DETAILS');
-  if(isR) h('House/Site No.','Rooms Inspected','Start Time','End Time','Hours Spent','Indoor','Outdoor','Total Mosquitoes');
-  else h('Site No.','Start Time','End Time','Hours Spent','Landing Catch','Total Mosquitoes');
+  if(isR) h('House/Site No.','Rooms Inspected','Start Time','End Time','Hours Spent','Indoor','Outdoor','Total Mosquitoes','GPS Latitude','GPS Longitude');
+  else h('Site No.','Start Time','End Time','Hours Spent','Landing Catch','Total Mosquitoes','GPS Latitude','GPS Longitude');
   (s.houses||[]).forEach(h2=>{
     const ind=(h2.counts||[]).reduce((t,r2)=>t+(r2[0]||0),0);
     const out=isR?(h2.counts||[]).reduce((t,r2)=>t+(r2[1]||0),0):0;
     const hrs=h2.hours?.toFixed?h2.hours.toFixed(2):0;
-    if(isR) r(h2.houseNo,h2.rooms,h2.start,h2.end,hrs,ind,out,h2.total);
-    else r(h2.houseNo,h2.start,h2.end,hrs,ind,h2.total);
+    if(isR) r(h2.houseNo,h2.rooms,h2.start,h2.end,hrs,ind,out,h2.total,h2.lat||'',h2.lng||'');
+    else r(h2.houseNo,h2.start,h2.end,hrs,ind,h2.total,h2.lat||'',h2.lng||'');
   });
   blank();
+
+  // POSITIVE HOUSES GPS
+  const posHouses=(s.houses||[]).filter(h2=>(h2.total>0)&&h2.lat&&h2.lng);
+  if(posHouses.length){
+    sep('POSITIVE HOUSE / SITE GPS COORDINATES');
+    h('House/Site No.','Total Mosquitoes','GPS Latitude','GPS Longitude','Google Maps Link');
+    posHouses.forEach(h2=>r(h2.houseNo,h2.total,h2.lat,h2.lng,'https://maps.google.com/?q='+h2.lat+','+h2.lng));
+    blank();
+  }
 
   // PER-HOUSE SPECIES BREAKDOWN
   sep('PER HOUSE/SITE SPECIES BREAKDOWN');
@@ -2661,11 +2670,20 @@ function buildLarvalCSV(s){
   blank();
 
   sep('HOUSE-WISE DETAILS (CONTAINER INSPECTION)');
-  r('House No.','Rooms','Start Time','End Time','Containers Inspected','Positive Containers','Pupal +ve Containers','House Positive');
+  r('House No.','Rooms','Start Time','End Time','Containers Inspected','Positive Containers','Pupal +ve Containers','House Positive','GPS Latitude','GPS Longitude');
   (s.houses||[]).forEach(h=>{
-    r(h.houseNo,h.rooms,h.start,h.end,h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No');
+    r(h.houseNo,h.rooms,h.start,h.end,h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No',h.lat||'',h.lng||'');
   });
   blank();
+
+  // POSITIVE HOUSES GPS
+  const posHouses=(s.houses||[]).filter(h=>h.housePositive&&h.lat&&h.lng);
+  if(posHouses.length){
+    sep('POSITIVE HOUSE GPS COORDINATES');
+    r('House No.','Positive Containers','Pupal +ve','GPS Latitude','GPS Longitude','Google Maps Link');
+    posHouses.forEach(h=>r(h.houseNo,h.positive||0,h.pupal||0,h.lat,h.lng,'https://maps.google.com/?q='+h.lat+','+h.lng));
+    blank();
+  }
 
   sep('ANOPHELES / CULEX DIPPING ENTRIES');
   r('Site No.','Dips Taken','Larvae Collected','Pupae Collected','Total (L+P)','Remark');
