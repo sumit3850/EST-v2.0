@@ -29,7 +29,13 @@
       "password": "2020",
       "role": "field",
       "active": true
+    },
+    {
+      "username": "USER-3",
+      "password": "2020",
+      "role": "field",
+      "active": true
     }
   ],
-  "updatedAt": "2026-05-28T09:35:19.441Z"
+  "updatedAt": "2026-05-28T09:36:38.943Z"
 }
