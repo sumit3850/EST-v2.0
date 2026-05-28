@@ -1,0 +1,763 @@
+{
+  "id": 1779940360989,
+  "savedAt": "2026-05-28T03:52:40.989Z",
+  "appType": "adult",
+  "v": "2.0",
+  "collType": "resting",
+  "date": "28-05-2026",
+  "state": "Andaman and Nicobar Islands",
+  "district": "Nicobar",
+  "location": "JNV Aurong, Car Nicobar",
+  "workers": "Shiva, Shivan",
+  "officers": "Sumit",
+  "collectors": 2,
+  "nights": 1,
+  "lat": "9.184356",
+  "lng": "92.723620",
+  "houses": [
+    {
+      "id": 1779938257093,
+      "houseNo": "HH-001",
+      "rooms": 2,
+      "start": "-",
+      "end": "08:47",
+      "hours": 0,
+      "counts": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "total": 0,
+      "otherName": "",
+      "lat": 9.1846054,
+      "lng": 92.7233337
+    },
+    {
+      "id": 1779939124378,
+      "houseNo": "HH-002",
+      "rooms": 1,
+      "start": "08:52",
+      "end": "09:01",
+      "hours": 0.15,
+      "counts": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "total": 1,
+      "otherName": "",
+      "lat": 9.1848839,
+      "lng": 92.7236797
+    },
+    {
+      "id": 1779940292459,
+      "houseNo": "HH-004",
+      "rooms": 0,
+      "start": "09:12",
+      "end": "09:21",
+      "hours": 0.15,
+      "counts": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "total": 0,
+      "otherName": "",
+      "lat": 9.1851563,
+      "lng": 92.7232135
+    }
+  ],
+  "speciesBreakdown": [
+    {
+      "name": "Ae. aegypti",
+      "genus": "AEDES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Ae. albopictus",
+      "genus": "AEDES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Ae. niveus",
+      "genus": "AEDES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. culicifacies",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. stephensi",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. fluviatilis",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. philippinensis",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. sundaicus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. dirus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. minimus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. varuna",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. annularis",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. barbirostris",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. hyrcanus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. subpictus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. kochi",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. quinquefasciatus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 1,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. vishnui",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. pseudovishnui",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. tritaeniorhynchus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. gelidus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. fuscocephala",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. whitmorei",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. epidesmus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. bitaeniorhynchus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Ph. argentipes",
+      "genus": "OTHER VECTORS",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Others",
+      "genus": "OTHERS",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    }
+  ],
+  "MHD": "0.00",
+  "TMHD": "16.67",
+  "indoorDensity": "0.33",
+  "outdoorDensity": "0.00",
+  "roomDensity": "0.33",
+  "HBR": "0.50",
+  "totalMosq": 1,
+  "totIndoor": 1,
+  "totOutdoor": 0,
+  "totNonCulex": 0,
+  "totCulex": 1,
+  "totalRooms": 3,
+  "totalManHours": 0.6,
+  "track": {
+    "waypoints": [
+      {
+        "lat": 9.1843521,
+        "lng": 92.7236213,
+        "ts": 1779937172466
+      },
+      {
+        "lat": 9.1844618,
+        "lng": 92.7235389,
+        "ts": 1779937195209
+      },
+      {
+        "lat": 9.1845872,
+        "lng": 92.7234817,
+        "ts": 1779937222098
+      },
+      {
+        "lat": 9.1846054,
+        "lng": 92.7233337,
+        "ts": 1779937329430
+      },
+      {
+        "lat": 9.1846112,
+        "lng": 92.7235008,
+        "ts": 1779938266448
+      },
+      {
+        "lat": 9.1845323,
+        "lng": 92.7233719,
+        "ts": 1779938268421
+      },
+      {
+        "lat": 9.1844827,
+        "lng": 92.7234997,
+        "ts": 1779938394441
+      },
+      {
+        "lat": 9.1844895,
+        "lng": 92.7236367,
+        "ts": 1779938475440
+      },
+      {
+        "lat": 9.1846255,
+        "lng": 92.7236237,
+        "ts": 1779938491055
+      },
+      {
+        "lat": 9.1847612,
+        "lng": 92.7236206,
+        "ts": 1779938507948
+      },
+      {
+        "lat": 9.1848839,
+        "lng": 92.7236797,
+        "ts": 1779938527444
+      },
+      {
+        "lat": 9.1847422,
+        "lng": 92.7236022,
+        "ts": 1779939399445
+      },
+      {
+        "lat": 9.1848677,
+        "lng": 92.7235481,
+        "ts": 1779939621423
+      },
+      {
+        "lat": 9.1849912,
+        "lng": 92.7234842,
+        "ts": 1779939683435
+      },
+      {
+        "lat": 9.1851184,
+        "lng": 92.7234355,
+        "ts": 1779939698971
+      },
+      {
+        "lat": 9.1852315,
+        "lng": 92.7233579,
+        "ts": 1779939713431
+      },
+      {
+        "lat": 9.1853662,
+        "lng": 92.7233682,
+        "ts": 1779940301135
+      }
+    ],
+    "distanceKm": 0.251,
+    "durationSec": 3188,
+    "startTime": "2026-05-28T02:59:32.450Z",
+    "endTime": "2026-05-28T03:52:40.988Z"
+  }
+}
