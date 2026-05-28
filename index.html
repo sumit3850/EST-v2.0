@@ -400,8 +400,8 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
           <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
         </svg>
       </div>
-      <div class="dash-title">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub">EST v2.0</div>
+      <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.0</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -1429,7 +1429,7 @@ async function syncValidUsersFromCache(){
     if(raw) mergeConfigCreds(JSON.parse(raw));
   }catch(e){}
 }
-const APP_VER='2.0.32';
+const APP_VER='2.0.34';
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
   {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
@@ -1694,7 +1694,7 @@ function showScreen(id){
     if(id.startsWith('adult')||activeModule==='adult'){badge.className='hmod-badge adult';badge.textContent='Adult Surveillance';}
     else if(id.startsWith('larval')||activeModule==='larval'){badge.className='hmod-badge larval';badge.textContent='Larval Surveillance';}
     else if(id==='about'){badge.className='hmod-badge adult';badge.textContent='About EST';}
-    else{badge.className='hmod-badge adult';badge.textContent='EST v2.0';}
+    else{badge.className='hmod-badge adult';badge.textContent='EST v'+APP_VER;}
   }
 }
 function goTo(key){
@@ -3348,6 +3348,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const _av=document.getElementById('about-ver');if(_av)_av.textContent=_vStr;
   const _dav=document.getElementById('dash-about-ver');if(_dav)_dav.textContent=_vStr;
   const _dbv=document.getElementById('dash-bottom-ver');if(_dbv)_dbv.textContent=_vStr+' · Data stored locally — works offline';
+  const _dsv=document.getElementById('dash-sub-ver');if(_dsv)_dsv.textContent=_vStr;
 });
 </script>
 <script>
