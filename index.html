@@ -323,7 +323,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
     </div>
     <div style="font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;word-spacing:0;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:5px;">Entomological&nbsp;Surveillance&nbsp;Tool</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px;">
-      <div style="font-family:var(--mono);font-size:26px;font-weight:700;color:#fff;letter-spacing:-.02em;">EST v2.0</div>
+      <div id="splash-ver" style="font-family:var(--mono);font-size:26px;font-weight:700;color:#fff;letter-spacing:-.02em;">EST v2.0</div>
       <button onclick="goToAbout()" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;" title="About this app">&#x2139;</button>
     </div>
 
@@ -373,7 +373,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       <div id="splash-db-status" style="text-align:center;font-size:10px;color:rgba(255,255,255,.4);margin-top:6px;display:none;"></div>
     </div>
     <div id="offline-login-badge" style="display:none;background:rgba(180,83,9,.25);border:1px solid rgba(251,191,36,.4);border-radius:8px;padding:7px 14px;font-size:11px;font-weight:600;color:#fde68a;text-align:center;margin-top:8px;margin-bottom:4px;width:100%;max-width:340px;">⚠ Offline — use pre-configured credentials</div>
-    <button id="install-app-btn" onclick="installApp()" style="display:none;align-items:center;justify-content:center;gap:8px;width:100%;max-width:340px;height:44px;background:rgba(255,255,255,.18);border:1.5px solid rgba(104,250,221,.6);border-radius:var(--rxl);color:#fff;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:8px;transition:all var(--tr);">
+    <button id="install-app-btn" onclick="installApp()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;max-width:340px;height:44px;background:rgba(255,255,255,.18);border:1.5px solid rgba(104,250,221,.6);border-radius:var(--rxl);color:#fff;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:8px;transition:all var(--tr);">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
       Add to Home Screen
     </button>
@@ -431,9 +431,9 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About EST v2.0
+      About <span id="dash-about-ver">EST v2.0</span>
     </button>
-    <div style="text-align:center;font-size:10px;color:rgba(255,255,255,.2);margin-top:8px;">EST v2.0 · Data stored locally — works offline</div>
+    <div id="dash-bottom-ver" style="text-align:center;font-size:10px;color:rgba(255,255,255,.2);margin-top:8px;">EST v2.0 · Data stored locally — works offline</div>
   </div>
 </div>
 
@@ -871,6 +871,10 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
           <div class="cnt-row"><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('pupae',-1)">-</button><div class="cnt-val" id="l-pupae" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--primary);" onclick="changeLarvalCnt('pupae',1)">+</button></div>
         </div>
       </div>
+      <div style="margin-bottom:8px;">
+        <div style="font-size:11px;font-weight:700;color:var(--osv);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;">Observation / Remarks</div>
+        <textarea id="ds-remark" placeholder="Habitat type, water colour, vegetation, any field notes…" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:12px;color:var(--os);background:var(--sfc);resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
+      </div>
       <button class="btn-p larval-btn" id="ds-log-btn" style="background:var(--primary);" onclick="logDipSite()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>Log <span id="ds-log-btn-code">DS-001</span></button>
       <div class="sec-hdr" style="margin-top:12px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M9 2v6.59l-4.17 8.43A2 2 0 0 0 6.59 20h10.82a2 2 0 0 0 1.76-2.98L15 8.59V2H9zm2 2h2v5h-2V4z"/></svg><span class="sec-lbl">Dip Sites Logged</span></div>
       <div id="ds-empty" style="text-align:center;color:var(--osv);font-size:13px;padding:14px;background:var(--sfc);border-radius:var(--rmd);border:1px dashed rgba(0,107,92,.3);">No dip sites logged yet.</div>
@@ -984,7 +988,6 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
 <!-- ══ ABOUT ══ -->
 <div class="screen" id="screen-about">
   <div class="scroll-area" style="padding-bottom:120px;">
-    <button id="about-back-btn" onclick="backFromAbout()" style="display:none;align-items:center;gap:7px;padding:7px 12px;background:var(--sfc);border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:12px;font-weight:700;color:var(--osv);cursor:pointer;margin-bottom:12px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Sign In</button>
     <div class="page-title">About EST</div>
     <div style="height:3px;width:36px;border-radius:2px;margin-bottom:16px;background:linear-gradient(90deg,var(--pl),var(--larval));"></div>
     <!-- App hero -->
@@ -1001,7 +1004,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
           <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
         </svg>
       </div>
-      <div style="font-family:var(--mono);font-size:22px;font-weight:700;color:#fff;margin-bottom:3px;">EST v2.0</div>
+      <div id="about-ver" style="font-family:var(--mono);font-size:22px;font-weight:700;color:#fff;margin-bottom:3px;">EST v2.0</div>
       <div style="font-size:10px;color:rgba(255,255,255,.6);letter-spacing:.12em;text-transform:uppercase;">Entomological Surveillance Tool</div>
     </div>
     <!-- About -->
@@ -1039,10 +1042,6 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       <button onclick="window.open('https://wa.me/919531806405')" style="display:flex;align-items:center;gap:9px;padding:11px 12px;background:var(--sf);border:1px solid var(--olv);border-radius:var(--rmd);font-size:13px;font-weight:600;color:var(--os);width:100%;cursor:pointer;margin-bottom:7px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>+91 95318 06405 (WhatsApp)</button>
       <button onclick="window.location='tel:+919531806405'" style="display:flex;align-items:center;gap:9px;padding:11px 12px;background:var(--sf);border:1px solid var(--olv);border-radius:var(--rmd);font-size:13px;font-weight:600;color:var(--os);width:100%;cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>+91 95318 06405 (Call)</button>
     </div>
-    <!-- Footer back button -->
-    <div id="about-footer-back" style="padding:16px 0 4px;text-align:center;display:none;">
-      <button onclick="backFromAbout()" style="display:inline-flex;align-items:center;gap:7px;padding:11px 22px;background:var(--gbg);border:1.5px solid var(--pl);border-radius:var(--rxl);font-size:13px;font-weight:700;color:var(--primary);cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg><span id="about-back-footer-text">Back to Sign In</span></button>
-    </div>
     <!-- GitHub Database Settings -->
     <div class="about-card" style="border-color:var(--pl);">
       <div style="font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px;">GitHub Database</div>
@@ -1053,6 +1052,10 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
         <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
         Configure GitHub Database
       </button>
+    </div>
+    <!-- Footer back button -->
+    <div id="about-footer-back" style="padding:16px 0 4px;text-align:center;display:none;">
+      <button onclick="backFromAbout()" style="display:inline-flex;align-items:center;gap:7px;padding:11px 22px;background:var(--gbg);border:1.5px solid var(--pl);border-radius:var(--rxl);font-size:13px;font-weight:700;color:var(--primary);cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg><span id="about-back-footer-text">Back to Sign In</span></button>
     </div>
   </div>
 </div>
@@ -1426,6 +1429,7 @@ async function syncValidUsersFromCache(){
     if(raw) mergeConfigCreds(JSON.parse(raw));
   }catch(e){}
 }
+const APP_VER='2.0.32';
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
   {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
@@ -1516,8 +1520,8 @@ function backToLogin(){
   }
 }
 function backFromAbout(){
-  const backBtn=document.getElementById('about-back-btn');
-  if(backBtn)backBtn.style.display='none';
+  const footerBack=document.getElementById('about-footer-back');
+  if(footerBack)footerBack.style.display='none';
   if(!window._estLoggedIn){
     document.querySelectorAll('.screen:not(#splash)').forEach(s=>s.classList.remove('active'));
     const sp=document.getElementById('splash');if(sp){sp.classList.add('active');sp.style.opacity='1';sp.style.transform='';}
@@ -1527,32 +1531,24 @@ function backFromAbout(){
     goTo('dash');
   }
 }
+function _showAboutPage(){
+  showScreen('about');
+  const footerBack=document.getElementById('about-footer-back');
+  const footerTxt=document.getElementById('about-back-footer-text');
+  if(footerBack)footerBack.style.display='block';
+  if(footerTxt)footerTxt.textContent=window._estLoggedIn?'Back to Dashboard':'Back to Sign In';
+}
 function goToAbout(){
-  document.getElementById('splash').style.opacity='0';
-  document.getElementById('splash').style.transition='opacity .3s';
-  setTimeout(()=>{
-    document.getElementById('splash').classList.remove('active');
-    const abt=document.getElementById('screen-about');
-    if(abt){abt.classList.add('active');abt.querySelector('.scroll-area')?.scrollTo(0,0);}
-    // Hide header when about is accessed from splash (not logged in)
-    if(!window._estLoggedIn){
-      document.getElementById('app-header').style.display='none';
-      document.getElementById('app-nav').style.display='none';
-    } else {
-      document.getElementById('app-header').style.display='flex';
-    }
-    const backBtn=document.getElementById('about-back-btn');
-    if(backBtn){
-      backBtn.style.display='flex';
-      backBtn.innerHTML=window._estLoggedIn
-        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Dashboard'
-        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Sign In';
-    }
-    const footerBack=document.getElementById('about-footer-back');
-    const footerTxt=document.getElementById('about-back-footer-text');
-    if(footerBack)footerBack.style.display='block';
-    if(footerTxt)footerTxt.textContent=window._estLoggedIn?'Back to Dashboard':'Back to Sign In';
-  },300);
+  if(!window._estLoggedIn){
+    const sp=document.getElementById('splash');
+    if(sp){sp.style.opacity='0';sp.style.transition='opacity .3s';}
+    setTimeout(()=>{
+      if(sp)sp.classList.remove('active');
+      _showAboutPage();
+    },300);
+  } else {
+    _showAboutPage();
+  }
 }
 function doLogin(){
   const u=document.getElementById('login-user').value.trim();
@@ -1711,7 +1707,7 @@ function goTo(key){
       else{badge.className='hmod-badge adult';badge.textContent='Adult Surveillance';}
     }
     return;}
-  if(key==='about'){showScreen('about');return;}
+  if(key==='about'){goToAbout();return;}
   if(!activeModule){showToast('Select a module first','warn');return;}
   if(key==='survey'){showScreen(activeModule+'-survey');return;}
   if(key==='collect'){showScreen(activeModule+'-collect');return;}
@@ -2007,20 +2003,21 @@ function logAdultHouse(){
   const hours=calcHrs(start,end),counts=aS.curCounts.map(r=>[...r]);
   const total=aS.collType==='resting'?counts.reduce((s,r)=>s+r[0]+r[1],0):counts.reduce((s,r)=>s+r[0],0);
   const other=document.getElementById('a-other-name')?.value.trim()||'';
-  getSnapPos(pos=>{
-    if(btn)btn.disabled=false;
-    aS.houses.push({id:Date.now(),houseNo:code,rooms:aS.curRooms,start:start||'-',end:end||'-',hours,counts,total,otherName:other,lat:pos?.lat||'',lng:pos?.lng||''});
-    aS.curHN++;const nc=hCode(aS.curHN);
-    const hd=document.getElementById('a-hnum-disp');if(hd)hd.textContent=nc;
-    const lbc=document.getElementById('a-log-btn-code');if(lbc)lbc.textContent=nc;
-    const nn=document.getElementById('a-next-num');if(nn)nn.textContent=aS.curHN;
-    document.getElementById('a-start').value='';document.getElementById('a-end').value='';
-    const oe=document.getElementById('a-other-name');if(oe)oe.value='';
-    aS.curRooms=0;const ard=document.getElementById('a-rooms-disp');if(ard)ard.textContent='0';
-    aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);
-    buildAdultMatrix();updateTimeCalc('a');renderAdultHouses();updateAdultSummary();saveDraft('adult');
-    showToast(code+' logged — '+total+' mosquito'+(total!==1?'es':'')+' ✓','check');
-  });
+  const cached=TrackRecorder.getLastPos();
+  const entry={id:Date.now(),houseNo:code,rooms:aS.curRooms,start:start||'-',end:end||'-',hours,counts,total,otherName:other,lat:cached?.lat||'',lng:cached?.lng||''};
+  aS.houses.push(entry);
+  aS.curHN++;const nc=hCode(aS.curHN);
+  const hd=document.getElementById('a-hnum-disp');if(hd)hd.textContent=nc;
+  const lbc=document.getElementById('a-log-btn-code');if(lbc)lbc.textContent=nc;
+  const nn=document.getElementById('a-next-num');if(nn)nn.textContent=aS.curHN;
+  document.getElementById('a-start').value='';document.getElementById('a-end').value='';
+  const oe=document.getElementById('a-other-name');if(oe)oe.value='';
+  aS.curRooms=0;const ard=document.getElementById('a-rooms-disp');if(ard)ard.textContent='0';
+  aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);
+  buildAdultMatrix();updateTimeCalc('a');renderAdultHouses();updateAdultSummary();saveDraft('adult');
+  if(btn)btn.disabled=false;
+  showToast(code+' logged — '+total+' mosquito'+(total!==1?'es':'')+' ✓','check');
+  if(navigator.geolocation){navigator.geolocation.getCurrentPosition(p=>{const h=aS.houses.find(h=>h.id===entry.id);if(h){h.lat=p.coords.latitude;h.lng=p.coords.longitude;saveDraft('adult');}},()=>{},{enableHighAccuracy:true,maximumAge:5000,timeout:8000});}
 }
 function proceedToAdultReview(){if(!aS.houses.length){document.getElementById('a-coll-warn').style.display='flex';return;}document.getElementById('a-coll-warn').style.display='none';TrackRecorder.stop();populateAdultReview();showScreen('adult-review');}
 function renderAdultHouses(){
@@ -2245,6 +2242,7 @@ function resetLarvalCurForm(){
 function resetDipForm(){
   ['dips','larvae','pupae'].forEach(t=>{lS['cur'+t.charAt(0).toUpperCase()+t.slice(1)]=0;const el=document.getElementById('l-'+t);if(el)el.textContent='0';});
   ['live-ld','live-pd','live-id'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='-';});
+  const rm=document.getElementById('ds-remark');if(rm)rm.value='';
 }
 
 /* ── LARVAL PHASES ──────────────────────────────────────── */
@@ -2266,17 +2264,18 @@ function logLarvalHouse(){
   lS.curContainers=totExamined;lS.curPositive=totPositive;
   const hpDisp=document.getElementById('l-housepos-disp');
   const isHousePositive=(hpDisp?parseInt(hpDisp.textContent)>0:false)||(totPositive>0)||(lS.curPupal>0);
-  getSnapPos(pos=>{
-    if(btn)btn.disabled=false;
-    lS.houses.push({id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:lS.curPupal,dips:0,larvae:0,pupae:0,housePositive:isHousePositive,counts,contDetails:contSnap,otherName:other,lat:pos?.lat||'',lng:pos?.lng||''});
-    lS.curHN++;const nc=hCode(lS.curHN);
-    const lhd=document.getElementById('l-hnum-disp');if(lhd)lhd.textContent=nc;
-    const llb=document.getElementById('l-log-btn-code');if(llb)llb.textContent=nc;
-    const lnn=document.getElementById('l-next-num');if(lnn)lnn.textContent=lS.curHN;
-    lS.curRooms=0;
-    const h=lS.houses[lS.houses.length-1];resetLarvalCurForm();renderLarvalHouses();updateLarvalSummary();saveDraft('larval');
-    showToast(code+' logged — Cont:'+h.containers+' +ve:'+h.positive+(isHousePositive?' ★':'')+'  ✓','check');
-  });
+  const cached=TrackRecorder.getLastPos();
+  const entry={id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:lS.curPupal,dips:0,larvae:0,pupae:0,housePositive:isHousePositive,counts,contDetails:contSnap,otherName:other,lat:cached?.lat||'',lng:cached?.lng||''};
+  lS.houses.push(entry);
+  lS.curHN++;const nc=hCode(lS.curHN);
+  const lhd=document.getElementById('l-hnum-disp');if(lhd)lhd.textContent=nc;
+  const llb=document.getElementById('l-log-btn-code');if(llb)llb.textContent=nc;
+  const lnn=document.getElementById('l-next-num');if(lnn)lnn.textContent=lS.curHN;
+  lS.curRooms=0;
+  resetLarvalCurForm();renderLarvalHouses();updateLarvalSummary();saveDraft('larval');
+  if(btn)btn.disabled=false;
+  showToast(code+' logged — Cont:'+entry.containers+' +ve:'+entry.positive+(isHousePositive?' ★':'')+'  ✓','check');
+  if(navigator.geolocation){navigator.geolocation.getCurrentPosition(p=>{const h=lS.houses.find(h=>h.id===entry.id);if(h){h.lat=p.coords.latitude;h.lng=p.coords.longitude;saveDraft('larval');}},()=>{},{enableHighAccuracy:true,maximumAge:5000,timeout:8000});}
 }
 function proceedToLarvalReview(){if(!lS.houses.length&&(!lS.dipSites||!lS.dipSites.length)){document.getElementById('l-coll-warn').style.display='flex';return;}document.getElementById('l-coll-warn').style.display='none';TrackRecorder.stop();populateLarvalReview();showScreen('larval-review');}
 function changeSiteN(d){lS.curSiteN=Math.max(1,lS.curSiteN+d);const code=dsCode(lS.curSiteN);const sd=document.getElementById('ds-num-disp');if(sd)sd.textContent=code;const slb=document.getElementById('ds-log-btn-code');if(slb)slb.textContent=code;const snn=document.getElementById('ds-next-num');if(snn)snn.textContent=lS.curSiteN;}
@@ -2285,17 +2284,19 @@ function logDipSite(){
   if(btn)btn.disabled=true;
   const d=lS.curDips,l=lS.curLarvae,p=lS.curPupae;
   const code=dsCode(lS.curSiteN);
-  getSnapPos(pos=>{
-    if(btn)btn.disabled=false;
-    lS.dipSites.push({id:Date.now(),siteNo:code,dips:d,larvae:l,pupae:p,lat:pos?.lat||'',lng:pos?.lng||''});
-    lS.curSiteN++;
-    const nc=dsCode(lS.curSiteN);
-    const sd=document.getElementById('ds-num-disp');if(sd)sd.textContent=nc;
-    const slb=document.getElementById('ds-log-btn-code');if(slb)slb.textContent=nc;
-    const snn=document.getElementById('ds-next-num');if(snn)snn.textContent=lS.curSiteN;
-    resetDipForm();renderDipSites();updateLarvalSummary();saveDraft('larval');
-    showToast(code+' logged — D:'+d+' L:'+l+' P:'+p+' ✓','check');
-  });
+  const remark=document.getElementById('ds-remark')?.value.trim()||'';
+  const cached=TrackRecorder.getLastPos();
+  const entry={id:Date.now(),siteNo:code,dips:d,larvae:l,pupae:p,remark,lat:cached?.lat||'',lng:cached?.lng||''};
+  lS.dipSites.push(entry);
+  lS.curSiteN++;
+  const nc=dsCode(lS.curSiteN);
+  const sd=document.getElementById('ds-num-disp');if(sd)sd.textContent=nc;
+  const slb=document.getElementById('ds-log-btn-code');if(slb)slb.textContent=nc;
+  const snn=document.getElementById('ds-next-num');if(snn)snn.textContent=lS.curSiteN;
+  resetDipForm();renderDipSites();updateLarvalSummary();saveDraft('larval');
+  if(btn)btn.disabled=false;
+  showToast(code+' logged — D:'+d+' L:'+l+' P:'+p+' ✓','check');
+  if(navigator.geolocation){navigator.geolocation.getCurrentPosition(p=>{const ds=lS.dipSites.find(ds=>ds.id===entry.id);if(ds){ds.lat=p.coords.latitude;ds.lng=p.coords.longitude;saveDraft('larval');}},()=>{},{enableHighAccuracy:true,maximumAge:5000,timeout:8000});}
 }
 function renderDipSites(){
   const list=document.getElementById('ds-list'),empty=document.getElementById('ds-empty');
@@ -2304,7 +2305,7 @@ function renderDipSites(){
   if(empty)empty.style.display='none';
   lS.dipSites.forEach((d,idx)=>{
     const div=document.createElement('div');div.className='hli';
-    div.innerHTML=`<div class="hli-hdr"><div class="hli-left"><div class="hli-num" style="background:var(--primary);color:#fff;">${idx+1}</div><div class="hli-info"><div class="hli-name">${d.siteNo}</div><div class="hli-meta"><span>Dips:${d.dips}</span><span>L:${d.larvae}</span><span>P:${d.pupae}</span>${d.lat?`<span style="color:var(--primary);">GPS✓</span>`:''}</div></div></div><div class="hli-right"><div style="text-align:right;"><div class="hli-total" style="color:var(--primary);">${d.larvae+d.pupae}</div><div style="font-size:9px;color:var(--osv)">L+P</div></div><button class="hli-del" onclick="event.stopPropagation();delDipSite(${d.id})">${mkSvg('del',15)}</button></div></div>`;
+    div.innerHTML=`<div class="hli-hdr" onclick="toggleHLI('ds${d.id}')"><div class="hli-left"><div class="hli-num" style="background:var(--primary);color:#fff;">${idx+1}</div><div class="hli-info"><div class="hli-name">${d.siteNo}</div><div class="hli-meta"><span>Dips:${d.dips}</span><span>L:${d.larvae}</span><span>P:${d.pupae}</span>${d.lat?`<span style="color:var(--primary);">GPS✓</span>`:''}</div></div></div><div class="hli-right"><div style="text-align:right;"><div class="hli-total" style="color:var(--primary);">${d.larvae+d.pupae}</div><div style="font-size:9px;color:var(--osv)">L+P</div></div><button class="hli-del" onclick="event.stopPropagation();delDipSite(${d.id})">${mkSvg('del',15)}</button><svg id="chevds${d.id}" width="18" height="18" viewBox="0 0 24 24" fill="var(--ol)" style="transition:transform .2s;"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></div></div><div class="hli-body" id="hbds${d.id}">${d.remark?`<div style="font-size:11px;color:var(--os);background:var(--gbg);border-left:3px solid var(--pl);padding:5px 9px;border-radius:0 4px 4px 0;margin-bottom:4px;line-height:1.5;"><em>${d.remark}</em></div>`:''}<div style="font-size:11px;color:var(--osv);">${d.lat?'GPS: '+parseFloat(d.lat).toFixed(5)+'N, '+parseFloat(d.lng).toFixed(5)+'E':'No GPS captured'}</div></div>`;
     list.appendChild(div);
   });
 }
@@ -2570,9 +2571,9 @@ function buildLarvalCSV(s){
   blank();
 
   sep('DIP SITE DATA (ANOPHELES / CULEX)');
-  r('Dip Site No. (An./Cx.)','Dips Taken','Larvae Collected','Pupae Collected','Total Immatures (L+P)','GPS Latitude','GPS Longitude','Google Maps Link');
+  r('Dip Site No. (An./Cx.)','Dips Taken','Larvae Collected','Pupae Collected','Total Immatures (L+P)','GPS Latitude','GPS Longitude','Google Maps Link','Remarks/Observations');
   if(s.dipSites&&s.dipSites.length){
-    (s.dipSites||[]).forEach(d=>{const lat=d.lat||'';const lng=d.lng||'';const mapsLink=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';r(d.siteNo,d.dips||0,d.larvae||0,d.pupae||0,(d.larvae||0)+(d.pupae||0),lat,lng,mapsLink);});
+    (s.dipSites||[]).forEach(d=>{const lat=d.lat||'';const lng=d.lng||'';const mapsLink=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';r(d.siteNo,d.dips||0,d.larvae||0,d.pupae||0,(d.larvae||0)+(d.pupae||0),lat,lng,mapsLink,d.remark||'');});
   }else{
     (s.houses||[]).forEach(h=>{r(h.houseNo,h.dips||0,h.larvae||0,h.pupae||0,(h.larvae||0)+(h.pupae||0),'','','');});
   }
@@ -3044,7 +3045,7 @@ function renderSavedMod(mod){
     const meta=(s.state||'')+(s.state&&s.district?' · ':'')+( s.district||'')+(s.date?' · '+s.date:'')+( savedTime?' · '+savedTime:'');
     const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');div.dataset.sid=String(s.id);
     const serialNo=surveyIdx+1;
-    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?('Synced '+new Date(s.syncedAt||'').toLocaleDateString('en-IN')):'Not synced to GitHub'}</div><div class="sit-views"><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','survey')">Survey</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','collect')">Collect</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','review')">Review</button></div><div class="sit-acts"><button class="sit-act" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} CSV</button><button class="sit-act" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button>${mod==='larval'?`<button class="sit-act" onclick="exportOneSavedKML('${mod}','${s.id}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="var(--larval)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> KML</button>`:''}<button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
+    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?('Synced '+new Date(s.syncedAt||'').toLocaleDateString('en-IN')):'Not synced to GitHub'}</div><div class="sit-views"><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','survey')">Survey</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','collect')">Collect</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','review')">Review</button></div><div class="sit-acts"><button class="sit-act" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} CSV</button><button class="sit-act" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act" onclick="exportOneSavedKML('${mod}','${s.id}')" style="${mod==='adult'?'':'border-color:rgba(21,101,192,.3);color:var(--larval);'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="${mod==='adult'?'var(--primary)':'var(--larval)'}"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> KML</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
     list.appendChild(div);
   });
 }
@@ -3055,8 +3056,82 @@ function getSavedById(mod,id){let surveys=[];try{surveys=JSON.parse(localStorage
 function exportOneSavedCSV(mod,id){const s=getSavedById(mod,id);if(!s)return;dlFile(mod==='adult'?buildAdultCSV(s):buildLarvalCSV(s),`EST_${mod}_${s.date||'survey'}_${s.id}.csv`,'text/csv;charset=utf-8;');showToast('CSV downloaded','csv');}
 function exportOneSavedPDF(mod,id){
   const s=getSavedById(mod,id);if(!s)return;
-  if(mod==='adult'){const bk={...aS,houses:[...aS.houses],curCounts:aS.curCounts.map(r=>[...r])};Object.assign(aS,s);aS.houses=s.houses||[];exportAdultPDF();Object.assign(aS,bk);aS.curCounts=bk.curCounts;}
-  else{const bk={...lS,houses:[...lS.houses],dipSites:[...(lS.dipSites||[])],curCounts:lS.curCounts.map(r=>[...r])};Object.assign(lS,s);lS.houses=s.houses||[];lS.dipSites=s.dipSites||[];exportLarvalPDF();Object.assign(lS,bk);lS.curCounts=bk.curCounts;}
+  if(mod==='adult'){
+    const bk={...aS,houses:[...aS.houses],curCounts:aS.curCounts.map(r=>[...r])};
+    Object.assign(aS,s);aS.houses=s.houses||[];
+    exportAdultPDF();
+    Object.assign(aS,bk);aS.curCounts=bk.curCounts;
+  } else {
+    showPdfPreview(buildLarvalPDFHtml(s));
+    showToast('Tap Print to save as PDF','pdf');
+  }
+}
+function buildLarvalPDFHtml(s){
+  const gpsStr=s.lat?parseFloat(s.lat).toFixed(5)+'°N, '+parseFloat(s.lng).toFixed(5)+'°E':'Not captured';
+  const imd=s.totalDips>0?(((s.totalLarvae||0)+(s.totalPupae||0))/s.totalDips*100).toFixed(1):'—';
+  // Species rows
+  let spRows='',totL=0,totP=0,lastG='';
+  LSP.forEach((sp,i)=>{
+    const l=(s.houses||[]).reduce((t,h)=>t+(h.counts&&h.counts[i]?h.counts[i][0]:0),0);
+    const p=(s.houses||[]).reduce((t,h)=>t+(h.counts&&h.counts[i]?h.counts[i][1]:0),0);
+    totL+=l;totP+=p;
+    if(l+p>0){if(sp.g!==lastG){lastG=sp.g;spRows+=`<tr><td colspan="4" style="background:#e8f5e9;font-size:8pt;font-weight:700;text-transform:uppercase;color:#1b5e20;padding:4px 8px;">${sp.g}</td></tr>`;}spRows+=`<tr><td><em>${sp.n}</em></td><td>${l}</td><td>${p}</td><td style="font-weight:700;">${l+p}</td></tr>`;}
+  });
+  spRows+=`<tr style="background:#e8f5e9;font-weight:700;border-top:2px solid #006b5c;"><td>TOTAL</td><td>${totL}</td><td>${totP}</td><td>${totL+totP}</td></tr>`;
+  // House rows with per-house species
+  let hRows='';
+  (s.houses||[]).forEach(h=>{
+    const gpsLink=h.lat&&h.lng?`<a href="https://maps.google.com/?q=${h.lat},${h.lng}" style="color:#006b5c;font-size:8pt;">📍 Map</a>`:'—';
+    hRows+=`<tr><td>${h.houseNo}</td><td>${h.rooms}</td><td>${h.start||'-'}</td><td>${h.end||'-'}</td><td>${h.containers||0}</td><td style="font-weight:700;color:#006b5c;">${h.positive||0}</td><td>${h.pupal||0}</td><td>${h.housePositive?'✓':'-'}</td><td>${gpsLink}</td></tr>`;
+  });
+  // Per-house species
+  let phRows='';
+  (s.houses||[]).forEach(h=>{
+    let first=true;
+    LSP.forEach((sp,i)=>{const l=h.counts&&h.counts[i]?h.counts[i][0]:0,p=h.counts&&h.counts[i]?h.counts[i][1]:0;if(l||p){phRows+=`<tr><td>${first?h.houseNo:''}</td><td><em>${sp.n}</em></td><td>${sp.g}</td><td>${l}</td><td>${p}</td><td style="font-weight:700;">${l+p}</td></tr>`;first=false;}});
+  });
+  // Container type summary
+  let ctRows='';
+  (s.containerSummary||[]).forEach(ct=>{if(ct.examined>0||ct.positive>0)ctRows+=`<tr><td>${ct.name}</td><td>${ct.examined}</td><td style="font-weight:700;color:#006b5c;">${ct.positive}</td></tr>`;});
+  if(!ctRows)ctRows='<tr><td colspan="3" style="color:#999;text-align:center;">No container data</td></tr>';
+  // Dip site rows
+  let dipRows='';
+  if(s.dipSites&&s.dipSites.length){
+    s.dipSites.forEach(d=>{const lp=(d.larvae||0)+(d.pupae||0);const gpsLink=d.lat&&d.lng?`<a href="https://maps.google.com/?q=${d.lat},${d.lng}" style="color:#006b5c;font-size:8pt;">📍 Map</a>`:'—';dipRows+=`<tr><td>${d.siteNo}</td><td>${d.dips||0}</td><td>${d.larvae||0}</td><td>${d.pupae||0}</td><td style="font-weight:700;">${lp}</td><td>${gpsLink}</td><td style="font-size:8pt;color:#555;">${d.remark||'—'}</td></tr>`;});
+  } else if((s.houses||[]).some(h=>(h.dips||0)>0)){
+    (s.houses||[]).forEach(h=>{const lp=(h.larvae||0)+(h.pupae||0);dipRows+=`<tr><td>${h.houseNo}</td><td>${h.dips||0}</td><td>${h.larvae||0}</td><td>${h.pupae||0}</td><td style="font-weight:700;">${lp}</td><td>—</td><td>—</td></tr>`;});
+  } else {dipRows='<tr><td colspan="7" style="color:#999;text-align:center;">No dipping data recorded</td></tr>';}
+  const css=`*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Times New Roman',serif;font-size:10.5pt;color:#111;}.page{width:210mm;min-height:297mm;margin:0 auto;padding:12mm 14mm 18mm;}.hd{border-bottom:3px double #006b5c;padding-bottom:8px;margin-bottom:10px;}.hd h2{font-size:13pt;font-weight:bold;color:#006b5c;}.hd p{font-size:8.5pt;color:#555;margin-top:2px;}.tb{background:linear-gradient(135deg,#004d42,#006b5c);color:#fff;border-radius:6px;padding:10px 14px;margin-bottom:10px;}.tb h1{font-size:13pt;font-weight:700;}.tb p{font-size:8.5pt;opacity:.8;margin-top:2px;}.ref{display:flex;flex-wrap:wrap;gap:4px;justify-content:space-between;font-size:8.5pt;color:#1b5e20;background:#e8f5e9;border-left:3px solid #006b5c;padding:5px 10px;margin-bottom:10px;}.sec{font-size:10.5pt;font-weight:bold;text-transform:uppercase;border-bottom:1.5px solid #a5d6a7;padding-bottom:2px;margin:12px 0 6px;color:#006b5c;letter-spacing:.04em;}.iw{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;}.ib{border:1px solid #80cbc4;border-radius:4px;padding:7px 6px;text-align:center;min-width:72px;flex:1;background:#e8f5e9;}.il{font-size:7pt;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#555;margin-bottom:2px;}.iv{font-size:13pt;font-weight:700;color:#006b5c;}.is{font-size:7pt;color:#777;margin-top:1px;}.mt{width:100%;border-collapse:collapse;margin-bottom:8px;}.mt td{padding:5px 8px;border:1px solid #ccc;font-size:9.5pt;}.mt td.lbl{background:#e8f5e9;font-weight:700;font-size:8.5pt;color:#1b5e20;width:25%;}table{width:100%;border-collapse:collapse;margin-bottom:8px;}thead tr{background:#006b5c;color:#fff;}thead th{padding:5px 7px;font-size:8pt;font-weight:700;text-align:center;}thead th:first-child{text-align:left;}td{padding:4px 7px;border-bottom:1px solid #e0e0e0;font-size:9.5pt;text-align:center;}td:first-child{text-align:left;}tr:nth-child(even) td{background:#f5fdf8;}.sig{display:flex;justify-content:space-between;gap:10px;margin-top:24px;padding-top:10px;border-top:1px solid #ccc;}.sb{flex:1;text-align:center;}.sl{border-top:1px solid #333;margin:0 auto 4px;width:88%;}.sn{font-size:9pt;font-weight:bold;}.sr{font-size:8pt;color:#555;margin-top:2px;}.footer{margin-top:12px;border-top:1px solid #ccc;padding-top:5px;font-size:7.5pt;color:#888;text-align:center;}.sb-fixed{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ccc;padding:10px;text-align:center;}.pb{background:#006b5c;color:#fff;border:none;padding:10px 30px;border-radius:6px;font-size:12pt;font-weight:bold;cursor:pointer;}@media print{.sb-fixed{display:none!important;}@page{size:A4;margin:10mm;}}`;
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>EST Larval — ${s.district||''} — ${s.date||''}</title><style>${css}</style></head><body><div style="height:58px;"></div><div class="page">
+<div class="hd"><h2>EST v${APP_VER||'2.0'} — Entomological Surveillance Tool</h2><p>Larval Mosquito Surveillance Report</p></div>
+<div class="tb"><h1>Larval Mosquito Surveillance Report</h1><p>Container Inspection &amp; Larval Dipping Survey</p></div>
+<div class="ref"><span><strong>Date:</strong> ${s.date||'—'}</span><span><strong>ID:</strong> EST-L-${s.id}</span><span><strong>District:</strong> ${s.district||'—'}</span><span><strong>State:</strong> ${s.state||'—'}</span></div>
+<div class="sec">1. Survey Metadata</div>
+<table class="mt"><tr><td class="lbl">Date</td><td>${s.date||'—'}</td><td class="lbl">State / UT</td><td>${s.state||'—'}</td></tr>
+<tr><td class="lbl">District</td><td>${s.district||'—'}</td><td class="lbl">Location</td><td>${s.location||'—'}</td></tr>
+<tr><td class="lbl">GPS Coordinates</td><td colspan="3">${gpsStr}</td></tr>
+<tr><td class="lbl">Field Workers</td><td colspan="3">${s.workers||'—'}</td></tr>
+<tr><td class="lbl">Supervising Officer</td><td colspan="3">${s.officers||'—'}</td></tr>
+<tr><td class="lbl">Houses Inspected</td><td>${(s.houses||[]).length}</td><td class="lbl">Total Dips</td><td>${s.totalDips||0}</td></tr>
+<tr><td class="lbl">Total Containers</td><td>${s.totalContainers||0}</td><td class="lbl">Positive Containers</td><td>${s.totalPositive||0}</td></tr>
+<tr><td class="lbl">Saved At</td><td colspan="3">${s.savedAt?new Date(s.savedAt).toLocaleString('en-IN'):'—'}</td></tr></table>
+<div class="sec">2. Aedes Larval Surveillance Indices</div>
+<div class="iw"><div class="ib"><div class="il">House Index (HI)</div><div class="iv">${s.HI||'—'}</div><div class="is">% +ve houses</div></div><div class="ib"><div class="il">Container Index (CI)</div><div class="iv">${s.CI||'—'}</div><div class="is">% +ve containers</div></div><div class="ib"><div class="il">Breteau Index (BI)</div><div class="iv">${s.BI||'—'}</div><div class="is">+ve cont/100 houses</div></div><div class="ib"><div class="il">Pupal Index</div><div class="iv">${s.PI||'—'}</div><div class="is">% pupal +ve</div></div></div>
+<div class="sec">3. Anopheles / Culex Dipping Indices</div>
+<div class="iw"><div class="ib"><div class="il">Larval Density</div><div class="iv">${s.LD||'—'}</div><div class="is">/100 dips</div></div><div class="ib"><div class="il">Pupal Density</div><div class="iv">${s.PD||'—'}</div><div class="is">/100 dips</div></div><div class="ib"><div class="il">Immature Density</div><div class="iv">${imd}</div><div class="is">(L+P)/100 dips</div></div><div class="ib"><div class="il">Total Dips</div><div class="iv">${s.totalDips||0}</div></div><div class="ib"><div class="il">Total Larvae</div><div class="iv">${s.totalLarvae||0}</div></div><div class="ib"><div class="il">Total Pupae</div><div class="iv">${s.totalPupae||0}</div></div></div>
+<div class="sec">4. Species Breakdown (All Houses)</div>
+<table><thead><tr><th>Species</th><th>Larvae</th><th>Pupae</th><th>Total</th></tr></thead><tbody>${spRows||'<tr><td colspan="4" style="color:#999;text-align:center;">No species data recorded</td></tr>'}</tbody></table>
+<div class="sec">5. Container Type Summary</div>
+<table><thead><tr><th>Container Type</th><th>Examined</th><th>Positive</th></tr></thead><tbody>${ctRows}</tbody></table>
+<div class="sec">6. House-wise Inspection Detail</div>
+<table><thead><tr><th>House</th><th>Rooms</th><th>Start</th><th>End</th><th>Cont.</th><th>+ve Cont.</th><th>Pupal</th><th>+ve House</th><th>GPS</th></tr></thead><tbody>${hRows||'<tr><td colspan="9" style="color:#999;text-align:center;">No house data</td></tr>'}</tbody></table>
+<div class="sec">7. House-wise Species Breakdown</div>
+<table><thead><tr><th>House</th><th>Species</th><th>Genus</th><th>Larvae</th><th>Pupae</th><th>Total</th></tr></thead><tbody>${phRows||'<tr><td colspan="6" style="color:#999;text-align:center;">No species data</td></tr>'}</tbody></table>
+<div class="sec">8. Dip Site Data (An. / Cx. Dipping)</div>
+<table><thead><tr><th>Site</th><th>Dips</th><th>Larvae</th><th>Pupae</th><th>Total (L+P)</th><th>GPS</th><th>Remarks</th></tr></thead><tbody>${dipRows}</tbody></table>
+<div class="sig"><div class="sb"><div class="sl"></div><div class="sn">${(s.workers||'').split(/[\n,]/)[0]||'—'}</div><div class="sr">Surveillance Worker</div></div><div class="sb"><div class="sl"></div><div class="sn">${s.officers||'—'}</div><div class="sr">Supervising Officer</div></div><div class="sb"><div class="sl"></div><div class="sn">Medical Officer Incharge</div><div class="sr">Verification &amp; Approval</div></div></div>
+<div class="footer">EST v${APP_VER||'2.0'} · Entomological Surveillance Tool | Report ID: EST-L-${s.id} | Generated: ${new Date().toLocaleString('en-IN')}</div>
+</div><div class="sb-fixed"><button class="pb" onclick="window.print()">Save as PDF / Print</button></div></body></html>`;
 }
 function shareWASaved(mod,id){const s=getSavedById(mod,id);if(!s)return;const text=mod==='adult'?buildAdultText(s):buildLarvalText(s);const a=document.createElement('a');a.href='https://wa.me/?text='+encodeURIComponent(text);a.target='_blank';document.body.appendChild(a);a.click();document.body.removeChild(a);}
 function exportOneSavedKML(mod,id){
@@ -3208,6 +3283,12 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('a-nights-row').style.display='block';
   // Populate India states/UTs in both survey forms
   setTimeout(()=>{populateStates('a-state');populateStates('l-state');},100);
+  // Set version strings in UI
+  const _vStr='EST v'+APP_VER;
+  const _sv=document.getElementById('splash-ver');if(_sv)_sv.textContent=_vStr;
+  const _av=document.getElementById('about-ver');if(_av)_av.textContent=_vStr;
+  const _dav=document.getElementById('dash-about-ver');if(_dav)_dav.textContent=_vStr;
+  const _dbv=document.getElementById('dash-bottom-ver');if(_dbv)_dbv.textContent=_vStr+' · Data stored locally — works offline';
 });
 </script>
 <script>
