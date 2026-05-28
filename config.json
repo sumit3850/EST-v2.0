@@ -23,8 +23,19 @@
       "password": "886748",
       "role": "field",
       "active": true
+    },
+    {
+      "username": "USER-2",
+      "password": "2021",
+      "role": "field",
+      "active": true
+    },
+    {
+      "username": "",
+      "password": "",
+      "role": "field",
+      "active": true
     }
   ],
-  "updatedAt": "2026-05-27T05:19:40.875Z",
-  "appToken": "IjskKV5DAgx4eA44BioGV0YCcwceMVBcVSR4MVIZMi56VAFXEQE4Ow=="
+  "updatedAt": "2026-05-28T09:34:03.852Z"
 }
