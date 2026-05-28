@@ -373,6 +373,10 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       <div id="splash-db-status" style="text-align:center;font-size:10px;color:rgba(255,255,255,.4);margin-top:6px;display:none;"></div>
     </div>
     <div id="offline-login-badge" style="display:none;background:rgba(180,83,9,.25);border:1px solid rgba(251,191,36,.4);border-radius:8px;padding:7px 14px;font-size:11px;font-weight:600;color:#fde68a;text-align:center;margin-top:8px;margin-bottom:4px;width:100%;max-width:340px;">⚠ Offline — use pre-configured credentials</div>
+    <button id="install-app-btn" onclick="installApp()" style="display:none;align-items:center;justify-content:center;gap:8px;width:100%;max-width:340px;height:44px;background:rgba(255,255,255,.18);border:1.5px solid rgba(104,250,221,.6);border-radius:var(--rxl);color:#fff;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:8px;transition:all var(--tr);">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+      Add to Home Screen
+    </button>
     <div style="font-size:10px;color:rgba(255,255,255,.25);margin-top:10px;text-align:center;line-height:1.6;">Offline-capable · GPS enabled · Data stored locally<br>WHO-standard surveillance indices</div>
   </div>
 </div>
@@ -656,14 +660,6 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
     <div class="sec-hdr"><svg width="17" height="17" viewBox="0 0 24 24" fill="var(--primary)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="sec-lbl">House-wise Summary</span></div>
     <div style="overflow-x:auto;border-radius:var(--rlg);border:1px solid var(--olv);background:var(--sfc);margin-bottom:13px;" id="r-a-house-wrap"></div>
     <div id="a-track-preview"></div>
-    <div class="exp-wrap">
-      <div class="exp-ttl">Download</div>
-      <button class="exp-btn" onclick="exportAdultCSV()"><svg width="19" height="19" viewBox="0 0 24 24" fill="var(--primary)"><path d="M20 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 2v3H5V5h15zm-8 14H5v-5h7v5zm0-7H5v-5h7v5zm8 7h-6v-5h6v5zm0-7h-6v-5h6v5z"/></svg><div><div>Save as CSV</div><div class="exp-sub">Full data with all indices</div></div></button>
-      <button class="exp-btn" onclick="exportAdultPDF()"><svg width="19" height="19" viewBox="0 0 24 24" fill="var(--primary)"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z"/></svg><div><div>Save as PDF Report</div><div class="exp-sub">Formatted A4 printable</div></div></button>
-      <div class="exp-ttl">Send</div>
-      <div class="email-row"><input type="email" class="email-inp" id="a-send-email" placeholder="Recipient email…"><button class="email-send" onclick="sendEmail('adult')"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>Send</button></div>
-      <button class="exp-btn" onclick="shareWA('adult')"><svg width="19" height="19" viewBox="0 0 24 24" fill="#25d366"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg><div><div>Share on WhatsApp</div></div></button>
-    </div>
     <button class="btn-p" onclick="saveAdultSurvey()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>Save &amp; Submit Survey</button>
     <div style="margin-top:9px;"><button class="btn-s" onclick="goTo('collect')"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Collection</button></div>
     <div style="margin-top:9px;"><button class="btn-s" onclick="resetModule('adult')" style="border-color:#888;color:#555;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>Start New Survey</button></div>
@@ -880,7 +876,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       <div id="ds-empty" style="text-align:center;color:var(--osv);font-size:13px;padding:14px;background:var(--sfc);border-radius:var(--rmd);border:1px dashed rgba(0,107,92,.3);">No dip sites logged yet.</div>
       <div id="ds-list"></div>
     </div>
-    <div class="alert warn" id="l-coll-warn" style="display:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>Log at least one house first.</div>
+    <div class="alert warn" id="l-coll-warn" style="display:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>Log at least one house or dip site first.</div>
     <button class="btn-p larval-btn" onclick="proceedToLarvalReview()">Review &amp; Submit <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></button>
     <div style="margin-top:9px;"><button class="btn-s larval-s" onclick="goTo('survey')"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Metadata</button></div>
     <div style="height:14px;"></div>
@@ -940,15 +936,6 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
     <div class="sec-hdr"><svg width="17" height="17" viewBox="0 0 24 24" fill="var(--primary)"><path d="M9 2v6.59l-4.17 8.43A2 2 0 0 0 6.59 20h10.82a2 2 0 0 0 1.76-2.98L15 8.59V2H9zm2 2h2v5h-2V4z"/></svg><span class="sec-lbl">Dip Site Summary (An./Cx.)</span></div>
     <div style="overflow-x:auto;border-radius:var(--rlg);border:1px solid rgba(0,107,92,.25);background:var(--sfc);margin-bottom:13px;" id="r-l-dip-wrap"></div>
     <div id="l-track-preview"></div>
-    <div class="exp-wrap">
-      <div class="exp-ttl">Download</div>
-      <button class="exp-btn" onclick="exportLarvalCSV()"><svg width="19" height="19" viewBox="0 0 24 24" fill="var(--larval)"><path d="M20 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 2v3H5V5h15zm-8 14H5v-5h7v5zm0-7H5v-5h7v5zm8 7h-6v-5h6v5zm0-7h-6v-5h6v5z"/></svg><div><div>Save as CSV / Excel</div><div class="exp-sub">GPS coords + Google Maps links</div></div></button>
-      <button class="exp-btn" onclick="exportLarvalKML()"><svg width="19" height="19" viewBox="0 0 24 24" fill="var(--larval)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><div><div>Export KML (Survey Path)</div><div class="exp-sub">Open in Google Maps / Earth</div></div></button>
-      <button class="exp-btn" onclick="exportLarvalPDF()"><svg width="19" height="19" viewBox="0 0 24 24" fill="var(--larval)"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z"/></svg><div><div>Save as PDF Report</div><div class="exp-sub">Formatted A4 printable</div></div></button>
-      <div class="exp-ttl">Send</div>
-      <div class="email-row"><input type="email" class="email-inp" id="l-send-email" placeholder="Recipient email…"><button class="email-send" onclick="sendEmail('larval')" style="background:var(--larval);"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>Send</button></div>
-      <button class="exp-btn" onclick="shareWA('larval')"><svg width="19" height="19" viewBox="0 0 24 24" fill="#25d366"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg><div><div>Share on WhatsApp</div></div></button>
-    </div>
     <button class="btn-p larval-btn" onclick="saveLarvalSurvey()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>Save &amp; Submit Survey</button>
     <div style="margin-top:9px;"><button class="btn-s larval-s" onclick="goTo('collect')"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Collection</button></div>
     <div style="margin-top:9px;"><button class="btn-s" onclick="resetModule('larval')" style="border-color:#888;color:#555;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>Start New Survey</button></div>
@@ -972,6 +959,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
           <button onclick="selectAll('adult')" style="padding:6px 11px;background:var(--sf);border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:11px;font-weight:700;color:var(--osv);cursor:pointer;">All</button>
           <button onclick="selectNone('adult')" style="padding:6px 11px;background:var(--sf);border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:11px;font-weight:700;color:var(--osv);cursor:pointer;">None</button>
           <button onclick="exportSelCSV('adult')" style="padding:6px 11px;background:var(--gbg);border:1.5px solid var(--pl);border-radius:var(--rmd);font-size:11px;font-weight:700;color:var(--primary);cursor:pointer;display:flex;align-items:center;gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 2v3H5V5h15zm-8 14H5v-5h7v5zm0-7H5v-5h7v5zm8 7h-6v-5h6v5zm0-7h-6v-5h6v5z"/></svg>Compile &amp; Export CSV</button>
+          <button onclick="exportSelPDF('adult')" style="padding:6px 11px;background:var(--gbg);border:1.5px solid var(--pl);border-radius:var(--rmd);font-size:11px;font-weight:700;color:var(--primary);cursor:pointer;display:flex;align-items:center;gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z"/></svg>Compile &amp; Export PDF</button>
         </div>
       </div>
       <div id="adult-saved-list"></div>
@@ -984,6 +972,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
           <button onclick="selectAll('larval')" style="padding:6px 11px;background:var(--sf);border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:11px;font-weight:700;color:var(--osv);cursor:pointer;">All</button>
           <button onclick="selectNone('larval')" style="padding:6px 11px;background:var(--sf);border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:11px;font-weight:700;color:var(--osv);cursor:pointer;">None</button>
           <button onclick="exportSelCSV('larval')" style="padding:6px 11px;background:rgba(21,101,192,.1);border:1.5px solid #64b5f6;border-radius:var(--rmd);font-size:11px;font-weight:700;color:var(--larval);cursor:pointer;display:flex;align-items:center;gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 2v3H5V5h15zm-8 14H5v-5h7v5zm0-7H5v-5h7v5zm8 7h-6v-5h6v5zm0-7h-6v-5h6v5z"/></svg>Compile &amp; Export CSV</button>
+          <button onclick="exportSelPDF('larval')" style="padding:6px 11px;background:rgba(21,101,192,.1);border:1.5px solid #64b5f6;border-radius:var(--rmd);font-size:11px;font-weight:700;color:var(--larval);cursor:pointer;display:flex;align-items:center;gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z"/></svg>Compile &amp; Export PDF</button>
         </div>
       </div>
       <div id="larval-saved-list"></div>
@@ -1049,6 +1038,10 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       <button onclick="window.location='mailto:explorer3850@gmail.com'" style="display:flex;align-items:center;gap:9px;padding:11px 12px;background:var(--sf);border:1px solid var(--olv);border-radius:var(--rmd);font-size:13px;font-weight:600;color:var(--os);width:100%;cursor:pointer;margin-bottom:7px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>explorer3850@gmail.com</button>
       <button onclick="window.open('https://wa.me/919531806405')" style="display:flex;align-items:center;gap:9px;padding:11px 12px;background:var(--sf);border:1px solid var(--olv);border-radius:var(--rmd);font-size:13px;font-weight:600;color:var(--os);width:100%;cursor:pointer;margin-bottom:7px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>+91 95318 06405 (WhatsApp)</button>
       <button onclick="window.location='tel:+919531806405'" style="display:flex;align-items:center;gap:9px;padding:11px 12px;background:var(--sf);border:1px solid var(--olv);border-radius:var(--rmd);font-size:13px;font-weight:600;color:var(--os);width:100%;cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>+91 95318 06405 (Call)</button>
+    </div>
+    <!-- Footer back button -->
+    <div id="about-footer-back" style="padding:16px 0 4px;text-align:center;display:none;">
+      <button onclick="backFromAbout()" style="display:inline-flex;align-items:center;gap:7px;padding:11px 22px;background:var(--gbg);border:1.5px solid var(--pl);border-radius:var(--rxl);font-size:13px;font-weight:700;color:var(--primary);cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg><span id="about-back-footer-text">Back to Sign In</span></button>
     </div>
     <!-- GitHub Database Settings -->
     <div class="about-card" style="border-color:var(--pl);">
@@ -1555,6 +1548,10 @@ function goToAbout(){
         ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Dashboard'
         : '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Sign In';
     }
+    const footerBack=document.getElementById('about-footer-back');
+    const footerTxt=document.getElementById('about-back-footer-text');
+    if(footerBack)footerBack.style.display='block';
+    if(footerTxt)footerTxt.textContent=window._estLoggedIn?'Back to Dashboard':'Back to Sign In';
   },300);
 }
 function doLogin(){
@@ -2281,7 +2278,7 @@ function logLarvalHouse(){
     showToast(code+' logged — Cont:'+h.containers+' +ve:'+h.positive+(isHousePositive?' ★':'')+'  ✓','check');
   });
 }
-function proceedToLarvalReview(){if(!lS.houses.length){document.getElementById('l-coll-warn').style.display='flex';return;}document.getElementById('l-coll-warn').style.display='none';TrackRecorder.stop();populateLarvalReview();showScreen('larval-review');}
+function proceedToLarvalReview(){if(!lS.houses.length&&(!lS.dipSites||!lS.dipSites.length)){document.getElementById('l-coll-warn').style.display='flex';return;}document.getElementById('l-coll-warn').style.display='none';TrackRecorder.stop();populateLarvalReview();showScreen('larval-review');}
 function changeSiteN(d){lS.curSiteN=Math.max(1,lS.curSiteN+d);const code=dsCode(lS.curSiteN);const sd=document.getElementById('ds-num-disp');if(sd)sd.textContent=code;const slb=document.getElementById('ds-log-btn-code');if(slb)slb.textContent=code;const snn=document.getElementById('ds-next-num');if(snn)snn.textContent=lS.curSiteN;}
 function logDipSite(){
   const btn=document.getElementById('ds-log-btn');if(btn&&btn.disabled)return;
@@ -2845,7 +2842,7 @@ function exportLarvalPDF(){
   let dipRows='';if(s.dipSites&&s.dipSites.length){s.dipSites.forEach(d=>{const lp=(d.larvae||0)+(d.pupae||0);dipRows+=`<tr><td>${d.siteNo}</td><td>${d.dips||0}</td><td>${d.larvae||0}</td><td>${d.pupae||0}</td><td style="font-weight:700;">${lp}</td></tr>`;});}else{s.houses.forEach(h=>{const lp=(h.larvae||0)+(h.pupae||0);dipRows+=`<tr><td>${h.houseNo}</td><td>${h.dips||0}</td><td>${h.larvae||0}</td><td>${h.pupae||0}</td><td style="font-weight:700;">${lp}</td></tr>`;});}
   let contHRows='';(s.containerSummary||[]).forEach(ct=>{if(ct.examined>0||ct.positive>0)contHRows+=`<tr><td>${ct.name}</td><td>${ct.examined}</td><td>${ct.positive}</td></tr>`;});
   if(!contHRows)contHRows='<tr><td colspan="3" style="text-align:center;color:#999;">No container data</td></tr>';
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>EST Larval \u2014 ${s.district} \u2014 ${s.date}</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Times New Roman',serif;font-size:11pt;color:#111;}.page{width:210mm;min-height:297mm;margin:0 auto;padding:14mm 16mm 20mm;}.hd{border-bottom:3px double #1565c0;padding-bottom:10px;margin-bottom:12px;}.hd h2{font-size:14pt;font-weight:bold;color:#1565c0;}.hd p{font-size:9pt;color:#555;margin-top:2px;}.tb{text-align:center;border:2px solid #1565c0;border-radius:4px;padding:10px;margin-bottom:12px;}.tb h1{font-size:14pt;color:#1565c0;}.ref{display:flex;justify-content:space-between;font-size:9pt;color:#555;background:#e3f2fd;border-left:3px solid #1565c0;padding:5px 10px;margin-bottom:14px;}.sec{font-size:11pt;font-weight:bold;text-transform:uppercase;border-bottom:1.5px solid;padding-bottom:3px;margin:14px 0 8px;}.sec.ae{color:#1565c0;border-color:#64b5f6;}.sec.an{color:#006b5c;border-color:#00bfa5;}.mt{width:100%;border-collapse:collapse;}.mt td{padding:7px 10px;border:1px solid #ccc;font-size:10pt;}.mt td.lbl{background:#e3f2fd;font-weight:bold;font-size:8.5pt;color:#0d47a1;width:22%;}.iw{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:4px;}.ib{border:1px solid #90caf9;border-radius:4px;padding:9px 6px;text-align:center;flex:1;min-width:80px;background:#e3f2fd;}.ib.gn{border-color:var(--pd,#44ddc1);background:#e6f7f4;}.il{font-size:7.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:#555;margin-bottom:3px;}.iv{font-size:14pt;font-weight:bold;color:#1565c0;}.iv.gn{color:#006b5c;}.is{font-size:7pt;color:#777;margin-top:2px;}table{width:100%;border-collapse:collapse;}thead tr{background:#1565c0;color:#fff;}thead.gn tr{background:#006b5c;}thead th{padding:7px 8px;font-size:9pt;font-weight:bold;text-align:center;text-transform:uppercase;}thead th:first-child{text-align:left;}td{padding:5px 8px;border-bottom:1px solid #e0e0e0;font-size:10pt;text-align:center;}td:first-child{text-align:left;}.sig{display:flex;justify-content:space-between;gap:10px;margin-top:28px;padding-top:12px;border-top:1px solid #ccc;}.sb{flex:1;text-align:center;}.sl{border-top:1px solid #333;margin:0 auto 5px;width:88%;}.sn{font-size:9.5pt;font-weight:bold;}.sr{font-size:8pt;color:#555;margin-top:2px;}.footer{margin-top:14px;border-top:1px solid #ccc;padding-top:6px;font-size:8pt;color:#888;text-align:center;}.sb-fixed{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ccc;padding:10px;text-align:center;}.pb{background:#1565c0;color:#fff;border:none;padding:10px 30px;border-radius:6px;font-size:12pt;font-weight:bold;cursor:pointer;}@media print{.sb-fixed{display:none!important;}@page{size:A4;margin:12mm;}}</style></head><body>
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>EST Larval \u2014 ${s.district} \u2014 ${s.date}</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Times New Roman',serif;font-size:11pt;color:#111;}.page{width:210mm;min-height:297mm;margin:0 auto;padding:14mm 16mm 20mm;}.hd{border-bottom:3px double #006b5c;padding-bottom:10px;margin-bottom:12px;}.hd h2{font-size:14pt;font-weight:bold;color:#006b5c;}.hd p{font-size:9pt;color:#555;margin-top:2px;}.tb{text-align:center;background:linear-gradient(135deg,#004d42,#006b5c);color:#fff;border-radius:6px;padding:10px;margin-bottom:12px;}.tb h1{font-size:14pt;color:#fff;}.ref{display:flex;justify-content:space-between;font-size:9pt;color:#1b5e20;background:#e8f5e9;border-left:3px solid #006b5c;padding:5px 10px;margin-bottom:14px;}.sec{font-size:11pt;font-weight:bold;text-transform:uppercase;border-bottom:1.5px solid;padding-bottom:3px;margin:14px 0 8px;}.sec.ae{color:#1565c0;border-color:#64b5f6;}.sec.an{color:#006b5c;border-color:#00bfa5;}.mt{width:100%;border-collapse:collapse;}.mt td{padding:7px 10px;border:1px solid #ccc;font-size:10pt;}.mt td.lbl{background:#e8f5e9;font-weight:bold;font-size:8.5pt;color:#1b5e20;width:22%;}.iw{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:4px;}.ib{border:1px solid #80cbc4;border-radius:4px;padding:9px 6px;text-align:center;flex:1;min-width:80px;background:#e8f5e9;}.ib.gn{border-color:var(--pd,#44ddc1);background:#e6f7f4;}.il{font-size:7.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:#555;margin-bottom:3px;}.iv{font-size:14pt;font-weight:bold;color:#006b5c;}.iv.gn{color:#006b5c;}.is{font-size:7pt;color:#777;margin-top:2px;}table{width:100%;border-collapse:collapse;}thead tr{background:#006b5c;color:#fff;}thead.gn tr{background:#004d42;}thead th{padding:7px 8px;font-size:9pt;font-weight:bold;text-align:center;text-transform:uppercase;}thead th:first-child{text-align:left;}td{padding:5px 8px;border-bottom:1px solid #e0e0e0;font-size:10pt;text-align:center;}td:first-child{text-align:left;}.sig{display:flex;justify-content:space-between;gap:10px;margin-top:28px;padding-top:12px;border-top:1px solid #ccc;}.sb{flex:1;text-align:center;}.sl{border-top:1px solid #333;margin:0 auto 5px;width:88%;}.sn{font-size:9.5pt;font-weight:bold;}.sr{font-size:8pt;color:#555;margin-top:2px;}.footer{margin-top:14px;border-top:1px solid #ccc;padding-top:6px;font-size:8pt;color:#888;text-align:center;}.sb-fixed{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ccc;padding:10px;text-align:center;}.pb{background:#006b5c;color:#fff;border:none;padding:10px 30px;border-radius:6px;font-size:12pt;font-weight:bold;cursor:pointer;}@media print{.sb-fixed{display:none!important;}@page{size:A4;margin:12mm;}}</style></head><body>
 <div style="height:64px;"></div><div class="page">
 <div class="hd"><h2>EST v2.0 \u2014 Entomological Surveillance Tool</h2><p>Larval Mosquito Surveillance Report</p></div>
 <div class="tb"><h1>Larval Mosquito Surveillance Report</h1><p>Container Inspection &amp; Larval Dipping Survey</p></div>
@@ -3047,7 +3044,7 @@ function renderSavedMod(mod){
     const meta=(s.state||'')+(s.state&&s.district?' · ':'')+( s.district||'')+(s.date?' · '+s.date:'')+( savedTime?' · '+savedTime:'');
     const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');div.dataset.sid=String(s.id);
     const serialNo=surveyIdx+1;
-    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?('Synced '+new Date(s.syncedAt||'').toLocaleDateString('en-IN')):'Not synced to GitHub'}</div><div class="sit-views"><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','survey')">Survey</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','collect')">Collect</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','review')">Review</button></div><div class="sit-acts"><button class="sit-act" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} CSV</button><button class="sit-act" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
+    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?('Synced '+new Date(s.syncedAt||'').toLocaleDateString('en-IN')):'Not synced to GitHub'}</div><div class="sit-views"><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','survey')">Survey</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','collect')">Collect</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','review')">Review</button></div><div class="sit-acts"><button class="sit-act" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} CSV</button><button class="sit-act" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button>${mod==='larval'?`<button class="sit-act" onclick="exportOneSavedKML('${mod}','${s.id}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="var(--larval)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> KML</button>`:''}<button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
     list.appendChild(div);
   });
 }
@@ -3062,6 +3059,32 @@ function exportOneSavedPDF(mod,id){
   else{const bk={...lS,houses:[...lS.houses],dipSites:[...(lS.dipSites||[])],curCounts:lS.curCounts.map(r=>[...r])};Object.assign(lS,s);lS.houses=s.houses||[];lS.dipSites=s.dipSites||[];exportLarvalPDF();Object.assign(lS,bk);lS.curCounts=bk.curCounts;}
 }
 function shareWASaved(mod,id){const s=getSavedById(mod,id);if(!s)return;const text=mod==='adult'?buildAdultText(s):buildLarvalText(s);const a=document.createElement('a');a.href='https://wa.me/?text='+encodeURIComponent(text);a.target='_blank';document.body.appendChild(a);a.click();document.body.removeChild(a);}
+function exportOneSavedKML(mod,id){
+  const s=getSavedById(mod,id);if(!s)return;
+  const trk=s.track,hGps=(s.houses||[]).filter(h=>h.lat&&h.lng),dGps=(s.dipSites||[]).filter(d=>d.lat&&d.lng);
+  if(mod==='larval'){
+    if(!trk?.waypoints?.length&&!hGps.length&&!dGps.length){showToast('No GPS data in this survey','warn');return;}
+    dlFile(buildKML(s),'EST_Larval_'+(s.district||'Survey')+'_'+s.date+'.kml','application/vnd.google-earth.kml+xml');
+    showToast('KML downloaded','pdf');
+  } else {
+    if(!trk?.waypoints?.length&&!hGps.length){showToast('No GPS data in this survey','warn');return;}
+    dlFile(buildAdultKML(s),'EST_Adult_'+(s.district||'Survey')+'_'+s.date+'.kml','application/vnd.google-earth.kml+xml');
+    showToast('KML downloaded','pdf');
+  }
+}
+function buildAdultKML(s){
+  const trk=s.track,hasTrack=trk&&trk.waypoints&&trk.waypoints.length;
+  const escX=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const pm=(name,sid,desc,lat,lng)=>`<Placemark><name>${escX(String(name))}</name><styleUrl>#${sid}</styleUrl>${desc?`<description><![CDATA[${desc}]]></description>`:''}<Point><coordinates>${parseFloat(lng).toFixed(7)},${parseFloat(lat).toFixed(7)},0</coordinates></Point></Placemark>`;
+  const fld=(name,open,cnt)=>cnt?`<Folder><name>${escX(name)}</name><open>${open?1:0}</open>\n${cnt}\n</Folder>`:'';
+  const styles='<Style id="s-path"><LineStyle><color>ff00d7ff</color><width>3</width></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>\n<Style id="s-hpos"><IconStyle><color>ff0000ff</color><scale>1.1</scale></IconStyle><LabelStyle><scale>0.8</scale></LabelStyle></Style>\n<Style id="s-hneg"><IconStyle><color>ff886644</color><scale>0.9</scale></IconStyle><LabelStyle><scale>0.7</scale></LabelStyle></Style>\n<Style id="s-start"><IconStyle><color>ff00cc00</color><scale>1.3</scale></IconStyle></Style>\n<Style id="s-end"><IconStyle><color>ff5500ff</color><scale>1.3</scale></IconStyle></Style>';
+  const pathFld=hasTrack?fld('Survey Path',true,`<Placemark><name>Survey Track</name><styleUrl>#s-path</styleUrl><description><![CDATA[Distance: ${trk.distanceKm} km | Duration: ${Math.floor(trk.durationSec/60)}m ${trk.durationSec%60}s]]></description><LineString><tessellate>1</tessellate><coordinates>\n${trk.waypoints.map(p=>p.lng.toFixed(7)+','+p.lat.toFixed(7)+',0').join('\n')}\n</coordinates></LineString></Placemark>`):'';;
+  const startFld=hasTrack?fld('Start',true,pm('START','s-start','Survey start',trk.waypoints[0].lat,trk.waypoints[0].lng)):'';
+  const endFld=hasTrack&&trk.waypoints.length>=2?fld('End',true,pm('END','s-end','Survey end',trk.waypoints[trk.waypoints.length-1].lat,trk.waypoints[trk.waypoints.length-1].lng)):'';
+  const allH=(s.houses||[]).filter(h=>h.lat&&h.lng);
+  const hFld=allH.length?fld('Houses',false,allH.map(h=>pm(h.houseNo,(h.total||0)>0?'s-hpos':'s-hneg',`${h.houseNo}<br>Total: ${h.total||0}`,h.lat,h.lng)).join('\n')):'';
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n<name>EST Adult — ${escX(s.district||'Survey')} — ${s.date||''}</name>\n<description><![CDATA[EST v2.0 Adult Surveillance<br>Type: ${s.collType||''}<br>Houses: ${(s.houses||[]).length}<br>Total: ${s.totalMosq||0}]]></description>\n${styles}\n${pathFld}\n${startFld}\n${endFld}\n${hFld}\n</Document>\n</kml>`;
+}
 function deleteSaved(mod,id){if(!confirm('Delete this survey? Cannot be undone.'))return;const key=mod==='adult'?A_SAVED:L_SAVED;let surveys=[];try{surveys=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}surveys=surveys.filter(s=>String(s.id)!==String(id));try{localStorage.setItem(key,JSON.stringify(surveys));}catch(e){}(mod==='adult'?aSel:lSel).delete(String(id));renderSaved();showToast('Survey deleted','del');}
 function exportSelCSV(mod){
   const sel=mod==='adult'?aSel:lSel;let surveys=[];try{surveys=JSON.parse(localStorage.getItem(mod==='adult'?A_SAVED:L_SAVED)||'[]');}catch(e){}
@@ -3071,6 +3094,42 @@ function exportSelCSV(mod){
   const parts=toExp.map(s=>(mod==='adult'?buildAdultCSV(s):buildLarvalCSV(s)).replace(/^\uFEFF/,''));
   dlFile('\uFEFF'+parts.join(SEP),'EST_'+mod+'_'+toExp.length+'surveys_'+new Date().toISOString().slice(0,10)+'.csv','text/csv;charset=utf-8;');
   showToast(toExp.length+' full-detail survey'+(toExp.length!==1?'s':'')+' exported','csv');
+}
+function exportSelPDF(mod){
+  const sel=mod==='adult'?aSel:lSel;let surveys=[];try{surveys=JSON.parse(localStorage.getItem(mod==='adult'?A_SAVED:L_SAVED)||'[]');}catch(e){}
+  const toExp=sel.size>0?surveys.filter(s=>sel.has(String(s.id))):surveys;
+  if(!toExp.length){showToast('No surveys to export','warn');return;}
+  const isAdult=mod==='adult';
+  let allPages='';
+  toExp.forEach((s,idx)=>{
+    const isR=isAdult&&s.collType==='resting';
+    const gpsStr=s.lat?parseFloat(s.lat).toFixed(5)+'°N, '+parseFloat(s.lng).toFixed(5)+'°E':'Not captured';
+    if(isAdult){
+      const imd=s.totalManHours?.toFixed?s.totalManHours.toFixed(2):'-';
+      let spRows='',totI=0,totO=0,lastG='';
+      ASP.forEach((sp,i)=>{
+        const v0=s.houses.reduce((t,h)=>t+(h.counts[i]?h.counts[i][0]:0),0);
+        const v1=isR?s.houses.reduce((t,h)=>t+(h.counts[i]?h.counts[i][1]:0),0):0;
+        totI+=v0;totO+=v1;
+        if(v0+v1>0){
+          if(sp.g!==lastG){lastG=sp.g;spRows+=`<tr><td colspan="${isR?4:3}" style="background:#e8f5e9;font-weight:700;text-transform:uppercase;color:#1b5e20;font-size:8pt;padding:4px 8px;">${sp.g}</td></tr>`;}
+          spRows+=`<tr><td><em>${sp.n}</em></td><td style="text-align:center;">${v0}</td>${isR?`<td style="text-align:center;">${v1}</td>`:''}<td style="text-align:center;font-weight:700;">${v0+v1}</td></tr>`;
+        }
+      });
+      spRows+=`<tr style="background:#e8f5e9;font-weight:700;"><td>TOTAL</td><td style="text-align:center;">${totI}</td>${isR?`<td style="text-align:center;">${totO}</td>`:''}<td style="text-align:center;">${totI+totO}</td></tr>`;
+      let hRows='';s.houses.forEach(h=>{const ind=h.counts.reduce((t,r)=>t+(r[0]||0),0);const out=isR?h.counts.reduce((t,r)=>t+(r[1]||0),0):0;hRows+=`<tr><td>${h.houseNo}</td><td>${h.rooms}</td><td>${h.start||'-'}</td><td>${h.end||'-'}</td><td>${ind}</td>${isR?`<td>${out}</td>`:''}<td style="font-weight:700;">${h.total}</td></tr>`;});
+      allPages+=`<div class="page" style="${idx>0?'page-break-before:always;':''}"><div class="rt"><h1>${isR?'Resting Collection':'HLC'} Report</h1><p>${s.location||''} · ${s.district||''}</p></div><div class="rb"><span><strong>ID:</strong> EST-A-${s.id}</span><span><strong>Date:</strong> ${s.date}</span><span><strong>GPS:</strong> ${gpsStr}</span><span><strong>Houses:</strong> ${s.houses.length}</span></div><div class="sec">Density Indices</div><div class="iw"><div class="ib hi"><div class="il">PMHD</div><div class="iv">${s.MHD}</div><div class="is">(Non-Culex÷man-hrs)×100</div></div><div class="ib am"><div class="il">TMHD×10</div><div class="iv">${s.TMHD}</div><div class="is">(Culex÷man-hrs)×10</div></div>${isR?`<div class="ib"><div class="il">Indoor Density</div><div class="iv">${s.indoorDensity}</div></div><div class="ib"><div class="il">Outdoor Density</div><div class="iv">${s.outdoorDensity}</div></div>`:''}<div class="ib"><div class="il">Man-Hours</div><div class="iv">${imd}</div></div><div class="ib"><div class="il">Total Mosq.</div><div class="iv">${s.totalMosq||0}</div></div></div><div class="sec">Species Breakdown</div><table><thead><tr><th>Species</th><th>Indoor</th>${isR?'<th>Outdoor</th>':''}<th>Total</th></tr></thead><tbody>${spRows}</tbody></table><div class="sec">House / Site Details</div><table><thead><tr><th>No.</th><th>Rooms</th><th>Start</th><th>End</th><th>Indoor</th>${isR?'<th>Outdoor</th>':''}<th>Total</th></tr></thead><tbody>${hRows||'<tr><td colspan="5" style="color:#999;text-align:center;">No data</td></tr>'}</tbody></table><div class="footer">EST v2.0 · Adult | EST-A-${s.id} | Survey ${idx+1}/${toExp.length} | ${s.date}</div></div>`;
+    } else {
+      const imd=s.totalDips>0?(((s.totalLarvae||0)+(s.totalPupae||0))/s.totalDips*100).toFixed(1):'-';
+      let spRows='',totL=0,totP=0,lastG='';
+      LSP.forEach((sp,i)=>{const l=(s.houses||[]).reduce((t,h)=>t+(h.counts[i]?h.counts[i][0]:0),0),p=(s.houses||[]).reduce((t,h)=>t+(h.counts[i]?h.counts[i][1]:0),0);totL+=l;totP+=p;if(l+p>0){if(sp.g!==lastG){lastG=sp.g;spRows+=`<tr><td colspan="4" style="background:#e8f5e9;font-weight:700;text-transform:uppercase;color:#1b5e20;font-size:8pt;padding:4px 8px;">${sp.g}</td></tr>`;}spRows+=`<tr><td><em>${sp.n}</em></td><td>${l}</td><td>${p}</td><td style="font-weight:700;">${l+p}</td></tr>`;}});
+      let hRows='';(s.houses||[]).forEach(h=>{hRows+=`<tr><td>${h.houseNo}</td><td>${h.rooms}</td><td>${h.containers||0}</td><td>${h.positive||0}</td><td>${h.housePositive?'Yes':'-'}</td></tr>`;});
+      allPages+=`<div class="page" style="${idx>0?'page-break-before:always;':''}"><div class="rt"><h1>Larval Surveillance Report</h1><p>${s.location||''} · ${s.district||''}</p></div><div class="rb"><span><strong>ID:</strong> EST-L-${s.id}</span><span><strong>Date:</strong> ${s.date}</span><span><strong>GPS:</strong> ${gpsStr}</span></div><div class="sec">Aedes Larval Indices</div><div class="iw"><div class="ib hi"><div class="il">House Index (HI)</div><div class="iv">${s.HI}</div><div class="is">% +ve houses</div></div><div class="ib hi"><div class="il">Container Index (CI)</div><div class="iv">${s.CI}</div><div class="is">% +ve cont.</div></div><div class="ib hi"><div class="il">Breteau Index (BI)</div><div class="iv">${s.BI}</div><div class="is">+ve/100 houses</div></div><div class="ib"><div class="il">Pupal Index</div><div class="iv">${s.PI}</div></div></div><div class="sec">An./Cx. Dipping Indices</div><div class="iw"><div class="ib"><div class="il">Larval Density</div><div class="iv">${s.LD}</div><div class="is">/100 dips</div></div><div class="ib"><div class="il">Pupal Density</div><div class="iv">${s.PD}</div><div class="is">/100 dips</div></div><div class="ib"><div class="il">Immature Density</div><div class="iv">${imd}</div><div class="is">/100 dips</div></div><div class="ib"><div class="il">Total Dips</div><div class="iv">${s.totalDips||0}</div></div></div><div class="sec">Species Breakdown</div><table><thead><tr><th>Species</th><th>Larvae</th><th>Pupae</th><th>Total</th></tr></thead><tbody>${spRows||'<tr><td colspan="4" style="color:#999;text-align:center;">No species data</td></tr>'}</tbody></table><div class="sec">House-wise Summary</div><table><thead><tr><th>House</th><th>Rooms</th><th>Containers</th><th>Positive</th><th>+ve House</th></tr></thead><tbody>${hRows||'<tr><td colspan="5" style="color:#999;text-align:center;">No data</td></tr>'}</tbody></table><div class="footer">EST v2.0 · Larval | EST-L-${s.id} | Survey ${idx+1}/${toExp.length} | ${s.date}</div></div>`;
+    }
+  });
+  const coverHtml=`<div class="page cover"><div style="background:linear-gradient(135deg,#004d42,#006b5c);border-radius:8px;padding:28px 24px;margin-bottom:18px;text-align:center;color:#fff;"><div style="font-size:24pt;font-weight:700;margin-bottom:6px;">EST v2.0</div><div style="font-size:11pt;opacity:.8;margin-bottom:14px;letter-spacing:.08em;text-transform:uppercase;">Entomological Surveillance Tool</div><div style="font-size:15pt;font-weight:700;">${isAdult?'Adult':'Larval'} Surveillance</div><div style="font-size:10pt;opacity:.7;margin-top:6px;">Combined Report — ${toExp.length} Survey${toExp.length!==1?'s':''}</div></div><div class="rb" style="flex-direction:column;gap:6px;"><div><strong>Generated:</strong> ${new Date().toLocaleString('en-IN')}</div><div><strong>Surveys:</strong> ${toExp.length}</div><div><strong>Districts:</strong> ${[...new Set(toExp.map(s=>s.district).filter(Boolean))].join(', ')||'—'}</div><div><strong>Date Range:</strong> ${toExp.map(s=>s.date).filter(Boolean).sort()[0]||'—'} to ${toExp.map(s=>s.date).filter(Boolean).sort().slice(-1)[0]||'—'}</div></div></div>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>EST ${isAdult?'Adult':'Larval'} — Combined Report</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Times New Roman',serif;font-size:10.5pt;color:#111;background:#fff;}.page{width:210mm;min-height:297mm;margin:0 auto;padding:12mm 14mm 18mm;}.cover{display:flex;flex-direction:column;justify-content:center;}.rt{background:linear-gradient(135deg,#004d42,#006b5c);color:#fff;text-align:center;padding:10px;border-radius:6px;margin-bottom:10px;}.rt h1{font-size:13pt;font-weight:700;margin-bottom:2px;}.rt p{font-size:8.5pt;opacity:.8;}.rb{display:flex;justify-content:space-between;background:#e8f5e9;border-left:3px solid #006b5c;padding:5px 10px;font-size:8.5pt;color:#1b5e20;margin-bottom:10px;border-radius:0 4px 4px 0;flex-wrap:wrap;gap:4px;}.sec{font-size:10pt;font-weight:700;text-transform:uppercase;color:#006b5c;border-bottom:1.5px solid #a5d6a7;padding-bottom:2px;margin:10px 0 7px;letter-spacing:.05em;}.iw{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}.ib{border:1px solid #a5d6a7;border-radius:5px;padding:8px 7px;text-align:center;min-width:80px;flex:1;background:#f1f8f1;}.ib.hi{background:#e8f5e9;border-color:#66bb6a;}.ib.am{background:#fff3e0;border-color:#ffa726;}.il{font-size:7pt;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#555;margin-bottom:3px;}.iv{font-size:14pt;font-weight:700;color:#006b5c;}.ib.am .iv{color:#e65100;}.is{font-size:7pt;color:#777;margin-top:2px;}table{width:100%;border-collapse:collapse;font-size:9pt;margin-bottom:8px;}thead tr{background:#006b5c;color:#fff;}th{padding:5px 7px;text-align:left;font-size:8pt;font-weight:700;}td{padding:4px 7px;border-bottom:1px solid #e0e0e0;}tr:nth-child(even) td{background:#f9fdf9;}.footer{margin-top:12px;border-top:1px solid #ccc;padding-top:5px;font-size:7.5pt;color:#999;text-align:center;}.print-btn{position:fixed;bottom:16px;right:16px;background:#006b5c;color:#fff;border:none;border-radius:8px;padding:12px 24px;font-size:13pt;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);}@media print{.print-btn{display:none!important;}@page{size:A4;margin:10mm;}}</style></head><body>${coverHtml}${allPages}<button class="print-btn" onclick="window.print()">🖨 Print / Save PDF</button></body></html>`;
+  showPdfPreview(html);showToast('Combined PDF ready — tap Print to save','pdf');
 }
 function showSavedTab(tab){
   activeSavedTab=tab;
@@ -3259,6 +3318,31 @@ function updateGhButtonStatus(){
   }
 }
 
+/* ── PWA INSTALL ─────────────────────────────────── */
+let _deferredInstall=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();_deferredInstall=e;
+  const btn=document.getElementById('install-app-btn');
+  if(btn)btn.style.display='flex';
+});
+window.addEventListener('appinstalled',()=>{
+  _deferredInstall=null;
+  const btn=document.getElementById('install-app-btn');
+  if(btn)btn.style.display='none';
+  showToast('App installed!','check');
+});
+function installApp(){
+  if(_deferredInstall){
+    _deferredInstall.prompt();
+    _deferredInstall.userChoice.then(r=>{
+      if(r.outcome==='accepted'){const btn=document.getElementById('install-app-btn');if(btn)btn.style.display='none';}
+      _deferredInstall=null;
+    });
+  } else {
+    const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+    showToast(isIOS?'Tap Share → Add to Home Screen':'Use browser menu → Add to Home Screen','check');
+  }
+}
 /* ── Register SW ───────────────────────────────────── */
 function registerSW() {
   if (!('serviceWorker' in navigator)) return;
