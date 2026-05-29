@@ -1,0 +1,445 @@
+{
+  "id": 1780060204388,
+  "savedAt": "2026-05-29T13:10:04.388Z",
+  "appType": "adult",
+  "v": "2.0",
+  "collType": "hlc",
+  "date": "29-05-2026",
+  "state": "Andaman and Nicobar Islands",
+  "district": "Nicobar",
+  "location": "Big lapathy",
+  "workers": "Shivan",
+  "officers": "Sumit kumar",
+  "collectors": 1,
+  "nights": 1,
+  "lat": "9.224723",
+  "lng": "92.792520",
+  "houses": [
+    {
+      "id": 1780060144726,
+      "houseNo": "ST-001",
+      "rooms": 0,
+      "start": "17:39",
+      "end": "18:39",
+      "hours": 1,
+      "counts": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          16,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          13,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ]
+      ],
+      "total": 30,
+      "otherName": "Culex sp unid.",
+      "lat": 9.2246817,
+      "lng": 92.7924888
+    }
+  ],
+  "speciesBreakdown": [
+    {
+      "name": "Ae. aegypti",
+      "genus": "AEDES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Ae. albopictus",
+      "genus": "AEDES",
+      "isCulex": false,
+      "indoor": 16,
+      "outdoor": 0
+    },
+    {
+      "name": "Ae. niveus",
+      "genus": "AEDES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. culicifacies",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. stephensi",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. fluviatilis",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. philippinensis",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. sundaicus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. dirus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. minimus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. varuna",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. annularis",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. barbirostris",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. hyrcanus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. subpictus",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "An. kochi",
+      "genus": "ANOPHELES",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. quinquefasciatus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 13,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. vishnui",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. pseudovishnui",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. tritaeniorhynchus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. gelidus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. fuscocephala",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. whitmorei",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. epidesmus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Cx. bitaeniorhynchus",
+      "genus": "CULEX",
+      "isCulex": true,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Ph. argentipes",
+      "genus": "OTHER VECTORS",
+      "isCulex": false,
+      "indoor": 0,
+      "outdoor": 0
+    },
+    {
+      "name": "Others",
+      "genus": "OTHERS",
+      "isCulex": false,
+      "indoor": 1,
+      "outdoor": 0
+    }
+  ],
+  "MHD": "1700.00",
+  "TMHD": "130.00",
+  "indoorDensity": "0.00",
+  "outdoorDensity": "0.00",
+  "roomDensity": "—",
+  "HBR": "30.00",
+  "totalMosq": 30,
+  "totIndoor": 0,
+  "totOutdoor": 0,
+  "totNonCulex": 17,
+  "totCulex": 13,
+  "totalRooms": 0,
+  "totalManHours": 1,
+  "track": {
+    "waypoints": [
+      {
+        "lat": 9.2247317,
+        "lng": 92.7925259,
+        "ts": 1780056512618
+      },
+      {
+        "lat": 9.2245517,
+        "lng": 92.7924357,
+        "ts": 1780058103692
+      },
+      {
+        "lat": 9.2246737,
+        "lng": 92.7925002,
+        "ts": 1780058158740
+      },
+      {
+        "lat": 9.224557,
+        "lng": 92.7924206,
+        "ts": 1780058463708
+      },
+      {
+        "lat": 9.2246689,
+        "lng": 92.7924978,
+        "ts": 1780058483717
+      },
+      {
+        "lat": 9.2247234,
+        "lng": 92.7923674,
+        "ts": 1780058643720
+      },
+      {
+        "lat": 9.2245796,
+        "lng": 92.7923562,
+        "ts": 1780058736709
+      },
+      {
+        "lat": 9.224697,
+        "lng": 92.7924991,
+        "ts": 1780058956961
+      },
+      {
+        "lat": 9.2245287,
+        "lng": 92.792386,
+        "ts": 1780058977738
+      },
+      {
+        "lat": 9.2247197,
+        "lng": 92.7925155,
+        "ts": 1780059349870
+      },
+      {
+        "lat": 9.2247098,
+        "lng": 92.7923783,
+        "ts": 1780059387719
+      },
+      {
+        "lat": 9.22458,
+        "lng": 92.7924262,
+        "ts": 1780059813732
+      },
+      {
+        "lat": 9.2246965,
+        "lng": 92.7924952,
+        "ts": 1780060098745
+      }
+    ],
+    "distanceKm": 0.214,
+    "durationSec": 3694,
+    "startTime": "2026-05-29T12:08:29.531Z",
+    "endTime": "2026-05-29T13:10:04.388Z"
+  }
+}
