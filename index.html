@@ -1398,7 +1398,10 @@ function loadGhSettings(){
 const VALID_USERS=[
   {username:'ANIENTO', password:'2026', role:'admin', active:true},
   {username:'USER-1',  password:'2026', role:'field', active:true},
-  {username:'USER-2',  password:'2026', role:'field', active:true}
+  {username:'USER-2',  password:'2020', role:'field', active:true},
+  {username:'USER-3',  password:'2020', role:'field', active:true},
+  {username:'shiva',   password:'2510', role:'field', active:true},
+  {username:'Shivan',  password:'886748', role:'field', active:true}
 ];
 
 /* Merge credentials from a config object into VALID_USERS.
@@ -1429,7 +1432,7 @@ async function syncValidUsersFromCache(){
     if(raw) mergeConfigCreds(JSON.parse(raw));
   }catch(e){}
 }
-const APP_VER='2.0.35';
+const APP_VER='2.0.36';
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
   {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
@@ -3145,7 +3148,7 @@ window.addEventListener('load',function(){
   _rmap(el,${_mapTrkJ},${_mapHJ},${_mapDJ},'EST-L-${s.id}');
 });
 function _rmap(el,trk,hArr,dArr,sid){var TS=256,W=el.offsetWidth||580,H=220;el.style.cssText='position:relative;overflow:hidden;background:#1a1a2e;height:'+H+'px;';var pts=[];if(trk&&trk.waypoints)trk.waypoints.forEach(function(p){pts.push([p.lat,p.lng]);});hArr.forEach(function(h){if(h.lat&&h.lng)pts.push([+h.lat,+h.lng]);});dArr.forEach(function(d){if(d.lat&&d.lng)pts.push([+d.lat,+d.lng]);});if(!pts.length){el.innerHTML='<div style="text-align:center;color:rgba(255,255,255,.4);padding:70px 0 0;font-size:9pt;">No GPS data recorded</div>';return;}var mnLa=pts[0][0],mxLa=pts[0][0],mnLo=pts[0][1],mxLo=pts[0][1];pts.forEach(function(p){mnLa=Math.min(mnLa,p[0]);mxLa=Math.max(mxLa,p[0]);mnLo=Math.min(mnLo,p[1]);mxLo=Math.max(mxLo,p[1]);});var dLa=(mxLa-mnLa)*0.15||0.001,dLo=(mxLo-mnLo)*0.15||0.001;mnLa-=dLa;mxLa+=dLa;mnLo-=dLo;mxLo+=dLo;function wxy(a,b,z){var n=1<<z,x=(b+180)/360*n,r=a*Math.PI/180,y=(1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*n;return[x,y];}var z=17,ox=0,oy=0,c,tl,br;for(z=17;z>=2;z--){tl=wxy(mxLa,mnLo,z);br=wxy(mnLa,mxLo,z);if((br[0]-tl[0])*TS<W*0.75&&(br[1]-tl[1])*TS<H*0.75)break;}c=wxy((mnLa+mxLa)/2,(mnLo+mxLo)/2,z);ox=c[0]-W/2/TS;oy=c[1]-H/2/TS;function sc(a,b){var w=wxy(a,b,z);return[(w[0]-ox)*TS,(w[1]-oy)*TS];}var td=document.createElement('div');td.style.cssText='position:absolute;inset:0;';var nM=1<<z,x0=Math.floor(ox),y0=Math.floor(oy),x1=Math.ceil(ox+W/TS),y1=Math.ceil(oy+H/TS);for(var tx=x0;tx<=x1;tx++){for(var ty=y0;ty<=y1;ty++){var img=document.createElement('img'),nmt=(((tx%nM)+nM)%nM);img.src='https://mt'+(Math.abs(tx+ty)%4)+'.google.com/vt/lyrs=y&x='+nmt+'&y='+ty+'&z='+z;img.style.cssText='position:absolute;left:'+Math.round((tx-ox)*TS)+'px;top:'+Math.round((ty-oy)*TS)+'px;width:'+TS+'px;height:'+TS+'px;';img.draggable=false;td.appendChild(img);}}el.appendChild(td);var ns='http://www.w3.org/2000/svg',sv=document.createElementNS(ns,'svg');sv.style.cssText='position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;';function mk(tag,attrs){var e=document.createElementNS(ns,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e;}if(trk&&trk.waypoints&&trk.waypoints.length>=2){var pd=trk.waypoints.map(function(p,i){var s=sc(p.lat,p.lng);return(i?'L':'M')+s[0].toFixed(1)+','+s[1].toFixed(1);}).join(' ');sv.appendChild(mk('path',{d:pd,fill:'none',stroke:'#ffd600','stroke-width':'2.5','stroke-linecap':'round','stroke-linejoin':'round',opacity:'0.9'}));var s0=sc(trk.waypoints[0].lat,trk.waypoints[0].lng),se=sc(trk.waypoints[trk.waypoints.length-1].lat,trk.waypoints[trk.waypoints.length-1].lng);sv.appendChild(mk('circle',{cx:s0[0].toFixed(1),cy:s0[1].toFixed(1),r:'5',fill:'#00c853',stroke:'#fff','stroke-width':'1.5'}));sv.appendChild(mk('circle',{cx:se[0].toFixed(1),cy:se[1].toFixed(1),r:'5',fill:'#d50000',stroke:'#fff','stroke-width':'1.5'}));}hArr.forEach(function(h){if(!h.lat||!h.lng)return;var s=sc(+h.lat,+h.lng),pos=h.housePositive||(h.total>0)||(h.positive>0);sv.appendChild(mk('circle',{cx:s[0].toFixed(1),cy:s[1].toFixed(1),r:'4.5',fill:pos?'#e53935':'#1565c0',stroke:'#fff','stroke-width':'1.5'}));var t=mk('text',{x:(s[0]+5.5).toFixed(1),y:(s[1]+4).toFixed(1),'font-size':'7','font-family':'monospace','font-weight':'700',fill:'#fff',stroke:'#000','stroke-width':'2.5','paint-order':'stroke'});t.textContent=h.houseNo;sv.appendChild(t);});dArr.forEach(function(d){if(!d.lat||!d.lng)return;var s=sc(+d.lat,+d.lng);sv.appendChild(mk('polygon',{points:s[0]+','+(s[1]-5)+' '+(s[0]+5)+','+s[1]+' '+s[0]+','+(s[1]+5)+' '+(s[0]-5)+','+s[1],fill:'#1565c0',stroke:'#68fadd','stroke-width':'1.5'}));var t=mk('text',{x:(s[0]+6).toFixed(1),y:(s[1]+4).toFixed(1),'font-size':'7',fill:'#68fadd',stroke:'#000','stroke-width':'2','paint-order':'stroke'});t.textContent=d.siteNo;sv.appendChild(t);});el.appendChild(sv);var hGps=hArr.filter(function(h){return h.lat&&h.lng;}),dGps=dArr.filter(function(d){return d.lat&&d.lng;});var lg=document.createElement('div');lg.style.cssText='position:absolute;bottom:4px;left:6px;background:rgba(0,0,0,.72);border-radius:3px;padding:3px 7px;font-size:6.5pt;color:#fff;line-height:1.75;max-width:70%;';lg.innerHTML='<strong>'+sid+'</strong>'+(trk&&trk.distanceKm?' | Track: '+trk.distanceKm+' km':'')+(hGps.length?'<br><span style="color:#e53935">&#9679;</span>/<span style="color:#1565c0">&#9679;</span> Houses: '+hGps.length+(hArr.filter(function(h){return h.housePositive||(h.positive>0);}).length?' ('+hArr.filter(function(h){return h.housePositive||(h.positive>0);}).length+' +ve)':''):'')+(dGps.length?' | <span style="color:#68fadd">&#9670;</span> Dip sites: '+dGps.length:'');el.appendChild(lg);var zl=document.createElement('div');zl.style.cssText='position:absolute;top:4px;right:4px;background:rgba(0,0,0,.5);color:rgba(255,255,255,.75);font-size:6pt;padding:2px 5px;border-radius:3px;';zl.textContent='Z'+z+' · Satellite';el.appendChild(zl);}
-</script>
+<\/script>
 </body></html>`;
 }
 function shareWASaved(mod,id){const s=getSavedById(mod,id);if(!s)return;const text=mod==='adult'?buildAdultText(s):buildLarvalText(s);const a=document.createElement('a');a.href='https://wa.me/?text='+encodeURIComponent(text);a.target='_blank';document.body.appendChild(a);a.click();document.body.removeChild(a);}
@@ -3376,8 +3379,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   buildContainerMatrix();
   document.getElementById('a-date').value=todayStr();
   document.getElementById('l-date').value=todayStr();
-  document.getElementById('hlc-warn').style.display='none';
-  document.getElementById('a-nights-row').style.display='block';
+  const _hlcw=document.getElementById('hlc-warn');if(_hlcw)_hlcw.style.display='none';
+  const _nrw=document.getElementById('a-nights-row');if(_nrw)_nrw.style.display='block';
   // Populate India states/UTs in both survey forms
   setTimeout(()=>{populateStates('a-state');populateStates('l-state');},100);
   // Set version strings in UI
@@ -3615,7 +3618,7 @@ document.addEventListener('DOMContentLoaded', () => {
   injectManifest();
   registerSW();
   updateOnlineStatus();
-  console.log('[EST] v' + EST_VERSION + ' loaded. Online:', navigator.onLine);
+  console.log('[EST] v' + (typeof APP_VER!=='undefined'?APP_VER:'2.0') + ' loaded. Online:', navigator.onLine);
 });
 /* ── PDF PREVIEW ──────────────────────────────────────────── */
 function showPdfPreview(html){
