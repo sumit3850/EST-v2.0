@@ -120,6 +120,13 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
 .ctype-btn.active{border-color:var(--primary);background:var(--gbg);}
 .ctype-name{font-size:12px;font-weight:700;color:var(--os);margin:6px 0 3px;}
 .ctype-sub{font-size:10px;color:var(--osv);}
+.submod-card{display:flex;align-items:flex-start;gap:12px;background:var(--sfc);border:1.5px solid var(--olv);border-radius:var(--rlg);padding:14px 12px;margin-bottom:11px;cursor:pointer;transition:border-color var(--tr),background var(--tr);}
+.submod-card:active{background:var(--gbg);border-color:var(--primary);}
+.submod-icon{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.submod-body{flex:1;min-width:0;}
+.submod-name{font-size:14px;font-weight:700;color:var(--os);margin-bottom:3px;}
+.submod-sub{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--osv);margin-bottom:5px;}
+.submod-desc{font-size:12px;color:var(--osv);line-height:1.5;}
 .matrix-wrap{overflow-x:auto;border-radius:var(--rlg);border:1px solid var(--olv);background:var(--sfc);margin-bottom:10px;}
 .mtbl{width:100%;border-collapse:collapse;min-width:300px;}
 .mtbl thead tr{background:var(--primary);}
@@ -408,9 +415,9 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
     <div class="mod-card">
       <div class="mod-hdr">
         <div class="mod-icon adult-i"><svg width="26" height="26" viewBox="0 0 24 24" fill="#00bfa5"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
-        <div><div class="mod-name">Adult Surveillance</div><div style="font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;">Resting / Human Landing Catch</div></div>
+        <div><div class="mod-name">Adult Surveillance</div><div style="font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;">Mosquito Density · HBR · ALR</div></div>
       </div>
-      <div class="mod-desc">House-by-house adult collection. Calculates PMHD (non-Culex), TMHD (Culex ×10), Indoor/Outdoor Resting Density, Room Density &amp; Human Biting Rate.</div>
+      <div class="mod-desc">3 sub-modules: Adult Mosquito Density (PMHD/TMHD), Human Biting Rate (HBR), and Adult Biting/Landing Rate (ALR). House-by-house or station-based collection.</div>
       <div class="mod-btns">
         <button class="mod-new" onclick="startModule('adult','new')"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>New Survey</button>
         <button class="mod-cont" id="adult-cont-btn" style="display:none;" onclick="startModule('adult','draft')"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>Continue</button>
@@ -473,6 +480,50 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
   </button>
 </nav>
 
+<!-- ══ ADULT SUB-MODULE SELECTION ══ -->
+<div class="screen" id="screen-adult-submod">
+  <div class="scroll-area">
+    <div class="page-title">Adult Surveillance</div>
+    <div class="page-accent adult"></div>
+    <div style="font-size:12px;color:var(--osv);margin-bottom:16px;line-height:1.6;">Select the collection method for this survey session.</div>
+    <div class="submod-card" onclick="selectAdultSubmod('amd')">
+      <div class="submod-icon" style="background:rgba(0,191,165,.12);">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="var(--primary)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      </div>
+      <div class="submod-body">
+        <div class="submod-name">Adult Mosquito Density</div>
+        <div class="submod-sub">Resting Collection / HLC</div>
+        <div class="submod-desc">House-by-house indoor/outdoor collection. Calculates PMHD, TMHD, resting density &amp; room density.</div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--osv)" style="flex-shrink:0;margin-top:2px;"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+    </div>
+    <div class="submod-card" onclick="selectAdultSubmod('hbr')">
+      <div class="submod-icon" style="background:rgba(245,124,0,.1);">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#f57c00"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      </div>
+      <div class="submod-body">
+        <div class="submod-name">Human Biting Rate</div>
+        <div class="submod-sub">HBR — Overnight (18:00–06:00)</div>
+        <div class="submod-desc">Human-volunteer bait collection. Calculates HBR (mosquitoes / night / volunteer) for human–vector contact rate.</div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--osv)" style="flex-shrink:0;margin-top:2px;"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+    </div>
+    <div class="submod-card" onclick="selectAdultSubmod('alr')">
+      <div class="submod-icon" style="background:rgba(25,118,210,.08);">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#1976d2"><path d="M7 22q-1.25 0-2.125-.875T4 19V7l1-5h14l1 5v12q0 1.25-.875 2.125T17 22H7Zm0-2h10V10H7v10Zm0-12h10l-.5-3H7.5L7 8Zm3 8q.425 0 .713-.288T11 15V13q0-.425-.288-.712T10 12q-.425 0-.712.288T9 13v2q0 .425.288.713T10 16Zm4 0q.425 0 .713-.288T15 15V13q0-.425-.288-.712T14 12q-.425 0-.712.288T13 13v2q0 .425.288.713T14 16Z"/></svg>
+      </div>
+      <div class="submod-body">
+        <div class="submod-name">Adult Biting / Landing Rate</div>
+        <div class="submod-sub">ALR — Trap / Station (18:00–06:00)</div>
+        <div class="submod-desc">Trap or bait station collection. Calculates ALR (adults / bait / hour), rate per night, and collection efficiency.</div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--osv)" style="flex-shrink:0;margin-top:2px;"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+    </div>
+    <div style="margin-top:8px;"><button class="btn-s" onclick="goTo('dash')" style="border-color:#888;color:#555;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Back to Dashboard</button></div>
+    <div style="height:10px;"></div>
+  </div>
+</div>
+
 <!-- ══ ADULT SURVEY Phase 1 ══ -->
 <div class="screen" id="screen-adult-survey">
   <div class="scroll-area">
@@ -483,6 +534,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
     <div class="page-accent adult"></div>
     <div class="stepper"><div class="step-bar active"></div><div class="step-bar"></div><div class="step-bar"></div></div>
     <div class="stepper-lbl">Phase 1 of 3 — Survey Metadata</div>
+    <div id="a-ctype-section">
     <div class="sec-hdr"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></svg><span class="sec-lbl">Collection Type</span></div>
     <div class="ctype-wrap">
       <div class="ctype-btn active" id="ct-rest" onclick="setCollType('resting')">
@@ -493,6 +545,15 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
         <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--osv)"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         <div class="ctype-name">Human Landing Catch</div><div class="ctype-sub">HLC — Ethical clearance reqd.</div>
       </div>
+    </div>
+    </div>
+    <div id="a-hbr-banner" style="display:none;align-items:flex-start;gap:10px;background:rgba(245,124,0,.08);border:1.5px solid #f57c00;border-radius:var(--rmd);padding:11px 14px;margin-bottom:14px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#f57c00" style="flex-shrink:0;margin-top:1px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <div style="font-size:12px;color:#7a4200;font-weight:600;line-height:1.5;"><strong>Human Biting Rate (HBR)</strong><br>Overnight collection — 18:00–06:00. Each volunteer/person acts as a bait. Log each volunteer/station as a separate entry.</div>
+    </div>
+    <div id="a-alr-banner" style="display:none;align-items:flex-start;gap:10px;background:rgba(25,118,210,.07);border:1.5px solid #1976d2;border-radius:var(--rmd);padding:11px 14px;margin-bottom:14px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#1976d2" style="flex-shrink:0;margin-top:1px;"><path d="M7 22q-1.25 0-2.125-.875T4 19V7l1-5h14l1 5v12q0 1.25-.875 2.125T17 22H7Zm0-2h10V10H7v10Zm0-12h10l-.5-3H7.5L7 8Zm3 8q.425 0 .713-.288T11 15V13q0-.425-.288-.712T10 12q-.425 0-.712.288T9 13v2q0 .425.288.713T10 16Zm4 0q.425 0 .713-.288T15 15V13q0-.425-.288-.712T14 12q-.425 0-.712.288T13 13v2q0 .425.288.713T14 16Z"/></svg>
+      <div style="font-size:12px;color:#1a3a6b;font-weight:600;line-height:1.5;"><strong>Adult Biting / Landing Rate (ALR)</strong><br>Trap or bait station collection — 18:00–06:00. Log each trap or station as a separate entry.</div>
     </div>
     <div class="divider"></div>
     <div class="field"><label class="flabel">Date *</label><input type="text" id="a-date" placeholder="DD-MM-YYYY" maxlength="10"></div>
@@ -553,7 +614,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--osv);margin-bottom:9px;">Collection Parameters</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <div>
-          <div style="font-size:11px;font-weight:700;color:var(--os);margin-bottom:6px;">No. of Collectors</div>
+          <div style="font-size:11px;font-weight:700;color:var(--os);margin-bottom:6px;" id="a-collectors-lbl">No. of Collectors</div>
           <div class="cnt-row"><button class="cnt-btn" onclick="changeParam('a-collectors',-1,1,20)">-</button><div class="cnt-val" id="a-collectors-disp">1</div><button class="cnt-btn" onclick="changeParam('a-collectors',1,1,20)">+</button></div>
           <input type="hidden" id="a-collectors" value="1">
         </div>
@@ -568,11 +629,11 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       <div class="sum-cell"><div class="sum-lbl">Houses</div><div class="sum-val" id="as-houses">0</div></div>
       <div class="sum-cell"><div class="sum-lbl">Mosquitoes</div><div class="sum-val" id="as-total">0</div></div>
       <div class="sum-cell"><div class="sum-lbl">Man-Hrs</div><div class="sum-val" id="as-mhrs">0.00</div></div>
-      <div class="sum-cell" title="PMHD: Non-Culex ÷ (Collectors × Time hrs) × 100"><div class="sum-lbl">PMHD</div><div class="sum-val" id="as-mhd">-</div></div>
+      <div class="sum-cell" title="PMHD: Total Mosquitoes ÷ (Collectors × Time hrs)"><div class="sum-lbl">PMHD</div><div class="sum-val" id="as-mhd">-</div></div>
     </div>
     <div class="hec-card">
       <div class="hec-title">
-        <div class="hec-lbl"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Log New House / Site</div>
+        <div class="hec-lbl" id="a-hec-lbl"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Log New House / Site</div>
         <div class="hec-badge">Entry #<span id="a-next-num">1</span></div>
       </div>
       <div class="field" style="margin-bottom:10px;">
@@ -594,7 +655,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
         <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px;"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
         HLC mode: site number locked. Tap + to unlock &amp; add another site.
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;background:var(--sfc);border:1px solid var(--olv);border-radius:var(--rmd);padding:9px 14px;margin-bottom:11px;">
+      <div id="a-rooms-row" style="display:flex;align-items:center;justify-content:space-between;background:var(--sfc);border:1px solid var(--olv);border-radius:var(--rmd);padding:9px 14px;margin-bottom:11px;">
         <span style="font-size:12px;font-weight:700;">Rooms Inspected</span>
         <div class="cnt-row"><button class="cnt-btn" onclick="changeRms('a',-1)">-</button><div class="cnt-val" id="a-rooms-disp">0</div><button class="cnt-btn" onclick="changeRms('a',1)">+</button></div>
       </div>
@@ -1031,7 +1092,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
     <!-- Indices -->
     <div class="about-card">
       <div style="font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px;">WHO-Standard Indices</div>
-      <div style="font-size:12px;color:var(--os);line-height:1.9;"><strong>Adult (Resting):</strong> PMHD, TMHD (×10), Indoor/Outdoor Resting Density, Room Density<br><strong>Adult (HLC):</strong> HBR, HBR/hr, PMHD, TMHD<br><strong>Larval (Aedes):</strong> HI, CI, BI, Pupal Index<br><strong>Larval (An./Cx.):</strong> Larval Density, Pupal Density, Immature Density<br><br><strong>PMHD Formula:</strong> (Non-Culex ÷ (Collectors × Total Time hrs)) × 100<br><strong>TMHD Formula:</strong> (Culex ÷ (Collectors × Total Time hrs)) × 10</div>
+      <div style="font-size:12px;color:var(--os);line-height:1.9;"><strong>Adult Mosquito Density (Resting):</strong> PMHD, TMHD (×10), Indoor/Outdoor Resting Density, Room Density<br><strong>Adult Mosquito Density (HLC):</strong> PMHD, TMHD, HBR, HBR/hr<br><strong>Human Biting Rate (HBR):</strong> HBR (mosq/night/volunteer), HBR/hr, PMHD, TMHD<br><strong>Adult Biting/Landing Rate (ALR):</strong> ALR (adults/bait/hr), ALR/night, ALR Simple<br><strong>Larval (Aedes):</strong> HI, CI, BI, Pupal Index<br><strong>Larval (An./Cx.):</strong> Larval Density, Pupal Density, Immature Density<br><br><strong>PMHD Formula:</strong> Total Mosquitoes ÷ (Collectors × Total Time hrs)<br><strong>TMHD Formula:</strong> (Culex ÷ (Collectors × Total Time hrs)) × 10<br><strong>HBR Formula:</strong> Total Mosquitoes ÷ Nights ÷ Volunteers<br><strong>ALR Formula:</strong> Total Mosquitoes ÷ (Bait Stations × Hours)</div>
     </div>
     <!-- Advantages -->
     <div class="about-card">
@@ -1444,7 +1505,7 @@ async function syncValidUsersFromCache(){
     if(raw) mergeConfigCreds(JSON.parse(raw));
   }catch(e){}
 }
-const APP_VER='2.0.37';
+const APP_VER='2.0.38';
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
   {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
@@ -1477,13 +1538,16 @@ function aTotOutdoor(){if(aS.collType!=='resting')return 0;return aS.houses.redu
 function aTotRooms(){return aS.houses.reduce((s,h)=>s+h.rooms,0);}
 function aManHours(){return parseFloat((aS.houses.reduce((s,h)=>s+h.hours,0)*(aS.collectors||1)).toFixed(4));}
 function aRawHours(){return aS.houses.reduce((s,h)=>s+h.hours,0);}
-function calcMHD(){const mh=aManHours(),nc=aTotNonCulex();return mh>0?((nc/mh)*100).toFixed(2):'—';}
+function calcMHD(){const mh=aManHours(),t=aTotAll();return mh>0?(t/mh).toFixed(2):'—';}
 function calcTMHD(){const mh=aManHours(),cx=aTotCulex();return mh>0?((cx/mh)*10).toFixed(2):'—';}
 function calcIndoorDensity(){const t=aTotIndoor(),h=aS.houses.length,n=aS.nights||1;return h>0&&n>0?(t/(h*n)).toFixed(2):'—';}
 function calcOutdoorDensity(){const t=aTotOutdoor(),h=aS.houses.length,n=aS.nights||1;return h>0&&n>0?(t/(h*n)).toFixed(2):'—';}
 function calcRoomDensity(){const r=aTotRooms(),t=aTotAll();return r>0?(t/r).toFixed(2):'—';}
-function calcHBR(){const t=aTotAll(),c=aS.collectors||1;return t>0&&c>0?(t/c).toFixed(2):'—';}
+function calcHBR(){const t=aTotAll(),c=aS.collectors||1,n=aS.nights||1;return t>0&&c>0?(t/(n*c)).toFixed(2):'—';}
 function calcHBRHr(){const t=aTotAll(),c=aS.collectors||1,h=aRawHours();return t>0&&h>0?(t/(c*h)).toFixed(2):'—';}
+function calcALR(){const t=aTotAll(),c=aS.collectors||1,h=aRawHours();return t>0&&h>0?(t/(c*h)).toFixed(2):'—';}
+function calcALRNight(){const t=aTotAll(),c=aS.collectors||1,n=aS.nights||1;return t>0&&c>0?(t/(c*n)).toFixed(2):'—';}
+function calcALRSimple(){const t=aTotAll(),c=aS.collectors||1;return t>0&&c>0?(t/c).toFixed(2):'—';}
 function lTotContainers(){return lS.houses.reduce((s,h)=>s+h.containers,0);}
 function lTotPositive(){return lS.houses.reduce((s,h)=>s+h.positive,0);}
 function lTotPupal(){return lS.houses.reduce((s,h)=>s+h.pupal,0);}
@@ -1500,7 +1564,7 @@ function calcLD(){const d=lTotDips(),l=lTotLarvae();return d>0?((l/d)*100).toFix
 function calcPD(){const d=lTotDips(),p=lTotPupae();return d>0?((p/d)*100).toFixed(1):'—';}
 function todayStr(){const d=new Date();return String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear();}
 function calcHrs(s,e){if(!s||!e)return 0;const[sh,sm]=s.split(':').map(Number);const[eh,em]=e.split(':').map(Number);let v=(eh*60+em)-(sh*60+sm);if(v<=0)v+=1440;return parseFloat((v/60).toFixed(4));}
-function hCode(n){const pfx=aS.collType==='hlc'?'ST-':'HH-';return pfx+String(n).padStart(3,'0');}
+function hCode(n){const pfx=aS.collType==='hlc'?'ST-':aS.collType==='hbr'?'BS-':aS.collType==='alr'?'CS-':'HH-';return pfx+String(n).padStart(3,'0');}
 const _P={check:'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',warn:'M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z',del:'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z',csv:'M20 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 2v3H5V5h15zm-8 14H5v-5h7v5zm0-7H5v-5h7v5zm8 7h-6v-5h6v5zm0-7h-6v-5h6v5z',pdf:'M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z',wa:'M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z'};
 function mkSvg(name,sz,col){sz=sz||16;const p=_P[name]||_P.check;const s=col?`color:${col};`:'';return `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;vertical-align:middle;${s}"><path d="${p}"/></svg>`;}
 let _tT;
@@ -1702,7 +1766,7 @@ function showScreen(id){
     else if(id!=='dash'){nav.style.display='flex';}
   }
   ['home','survey','collect','review','saved'].forEach(k=>{const b=document.getElementById('nav-'+k);if(b)b.classList.remove('active','larval-active');});
-  const nm={'dash':'home','adult-survey':'survey','adult-collect':'collect','adult-review':'review','larval-survey':'survey','larval-collect':'collect','larval-review':'review','saved':'saved'};
+  const nm={'dash':'home','adult-submod':'survey','adult-survey':'survey','adult-collect':'collect','adult-review':'review','larval-survey':'survey','larval-collect':'collect','larval-review':'review','saved':'saved'};
   const nb=nm[id];if(nb){const el=document.getElementById('nav-'+nb);if(el)el.classList.add(activeModule==='larval'?'larval-active':'active');}
   const badge=document.getElementById('hmod-badge');
   if(badge){
@@ -1728,17 +1792,29 @@ function goTo(key){
   if(key==='collect'){showScreen(activeModule+'-collect');return;}
   if(key==='review'){TrackRecorder.stop();if(activeModule==='adult'){populateAdultReview();showScreen('adult-review');}else{populateLarvalReview();showScreen('larval-review');}return;}
 }
+function selectAdultSubmod(sub){
+  // sub: 'amd' | 'hbr' | 'alr'
+  activeModule='adult';
+  const ct=sub==='amd'?'resting':sub;
+  aS.collType=ct;
+  document.getElementById('a-date').value=todayStr();
+  if(document.getElementById('a-state')&&document.getElementById('a-state').options.length<2)populateStates('a-state');
+  buildAdultMatrix();
+  setCollType(ct);
+  showScreen('adult-survey');
+  setTimeout(()=>{getGPS('a');TrackRecorder.start();},400);
+}
 function startModule(mod,mode){
   activeModule=mod;
   if(mode==='draft'){loadDraft(mod);showScreen(mod+'-collect');TrackRecorder.start();}
   else{
     if(mode==='new')resetStateOnly(mod);
-    if(mod==='adult'){document.getElementById('a-date').value=todayStr();buildAdultMatrix();
-      // Reset house num btn state for new module
+    if(mod==='adult'){
+      if(mode==='new'){showScreen('adult-submod');return;}
+      document.getElementById('a-date').value=todayStr();buildAdultMatrix();
       const _hp=document.getElementById('a-hnum-plus');if(_hp)_hp.onclick=function(){changeHouseN('a',1);};
       const _hm=document.getElementById('a-hnum-minus');if(_hm){_hm.removeAttribute('disabled');_hm.style.opacity='';}
       const _hl=document.getElementById('a-hlc-lock-msg');if(_hl)_hl.style.display='none';
-      // Ensure state/district dropdowns are populated
       if(document.getElementById('a-state')&&!document.getElementById('a-state').options.length){populateStates('a-state');}
       if(document.getElementById('a-state')&&document.getElementById('a-state').options.length<2){populateStates('a-state');}
       showScreen('adult-survey');setTimeout(()=>{getGPS('a');TrackRecorder.start();},400);}
@@ -1748,7 +1824,7 @@ function startModule(mod,mode){
   }
 }
 function resetStateOnly(mod){
-  if(mod==='adult'){Object.assign(aS,{collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,nights:1,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curOther:''});aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);}
+  if(mod==='adult'){Object.assign(aS,{collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,nights:1,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curOther:'',otherSpecCount:0});aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);}
   else{Object.assign(lS,{date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipSites:[],curHN:1,curSiteN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curOther:''});lS.curCounts=Array.from({length:LNS},()=>[0,0]);lContainers=CONTAINERS.map(c=>({...c}));}
 }
 function resetModule(mod){
@@ -1766,14 +1842,55 @@ function resetModule(mod){
     buildLarvalMatrix();renderLarvalHouses();updateLarvalSummary();resetLarvalCurForm();showScreen('larval-survey');
   }
 }
+function _updAdultP2Labels(t){
+  const collLbl=document.getElementById('a-collectors-lbl');
+  const hecLbl=document.getElementById('a-hec-lbl');
+  const listLbl=document.getElementById('a-log-list-lbl');
+  const roomsRow=document.getElementById('a-rooms-row');
+  const nightsRow=document.getElementById('a-nights-row');
+  const rrEl=document.getElementById('a-remarks-row');
+  if(rrEl)rrEl.style.display='block';
+  if(t==='hbr'){
+    if(collLbl)collLbl.textContent='No. of Volunteers / Baits';
+    if(hecLbl)hecLbl.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/><\/svg>Log New Bait Station';
+    if(listLbl)listLbl.textContent='Bait Stations Logged';
+    if(roomsRow)roomsRow.style.display='none';
+    if(nightsRow)nightsRow.style.display='grid';
+  } else if(t==='alr'){
+    if(collLbl)collLbl.textContent='No. of Bait Stations / Traps';
+    if(hecLbl)hecLbl.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 19.59a5 5 0 0 0 8.59 5.11C12.59 22 12 20.5 12 19c2.5 1.5 5 1 5-2 0 1-1 2-1 2s3-1 3-5c0-3-3-6-2-6z"/><\/svg>Log New Collection Site';
+    if(listLbl)listLbl.textContent='Collection Sites Logged';
+    if(roomsRow)roomsRow.style.display='none';
+    if(nightsRow)nightsRow.style.display='grid';
+  } else if(t==='hlc'){
+    if(collLbl)collLbl.textContent='No. of Collectors';
+    if(hecLbl)hecLbl.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/><\/svg>Log New Collection Site (HLC)';
+    if(listLbl)listLbl.textContent='Collection Sites Logged';
+    if(roomsRow)roomsRow.style.display='none';
+    if(nightsRow)nightsRow.style.display='none';
+  } else {
+    if(collLbl)collLbl.textContent='No. of Collectors';
+    if(hecLbl)hecLbl.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/><\/svg>Log New House / Site';
+    if(listLbl)listLbl.textContent='Houses / Sites Logged';
+    if(roomsRow)roomsRow.style.display='flex';
+    if(nightsRow)nightsRow.style.display='grid';
+  }
+}
 function setCollType(t){
   aS.collType=t;
-  document.getElementById('ct-rest').className='ctype-btn'+(t==='resting'?' active':'');
-  document.getElementById('ct-hlc').className='ctype-btn'+(t==='hlc'?' active':'');
+  const ctRest=document.getElementById('ct-rest');
+  const ctHlc=document.getElementById('ct-hlc');
+  if(ctRest)ctRest.className='ctype-btn'+(t==='resting'?' active':'');
+  if(ctHlc)ctHlc.className='ctype-btn'+(t==='hlc'?' active':'');
   const hw=document.getElementById('hlc-warn');if(hw)hw.style.display=t==='hlc'?'flex':'none';
-  const nr=document.getElementById('a-nights-row');if(nr)nr.style.display=t==='resting'?'grid':'none';
+  // Show/hide Phase 1 ctype section and banners
+  const cs=document.getElementById('a-ctype-section');
+  const hbrB=document.getElementById('a-hbr-banner');
+  const alrB=document.getElementById('a-alr-banner');
+  if(cs)cs.style.display=(t==='hbr'||t==='alr')?'none':'block';
+  if(hbrB)hbrB.style.display=t==='hbr'?'flex':'none';
+  if(alrB)alrB.style.display=t==='alr'?'flex':'none';
   aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);buildAdultMatrix();
-  // HLC: lock house +/- by default; Resting: unlock
   const hminus=document.getElementById('a-hnum-minus');
   const hplus=document.getElementById('a-hnum-plus');
   const hlbl=document.getElementById('a-hnum-lbl');
@@ -1782,32 +1899,40 @@ function setCollType(t){
   if(t==='hlc'){
     if(hminus){hminus.setAttribute('disabled','');hminus.style.opacity='0.35';hminus.style.cursor='not-allowed';}
     if(hplus){hplus.onclick=function(){
-      // Unlock on first + press
       if(hminus){hminus.removeAttribute('disabled');hminus.style.opacity='';hminus.style.cursor='';}
       hplus.onclick=function(){changeHouseN('a',1);};
       if(hlock)hlock.style.display='none';
       changeHouseN('a',1);
     };}
     if(hlbl)hlbl.textContent='Collection Site No. (HLC)';
-    // Reset house num to ST-001 for HLC
     aS.curHN=1;const stCode='ST-001';
     const _hd=document.getElementById('a-hnum-disp');if(_hd)_hd.textContent=stCode;
     const _lb=document.getElementById('a-log-btn-code');if(_lb)_lb.textContent=stCode;
     const _nn=document.getElementById('a-next-num');if(_nn)_nn.textContent=1;
     if(hlock)hlock.style.display='flex';
     if(hbar){hbar.style.background='rgba(180,83,9,.06)';hbar.style.borderColor='#f59e0b';}
-  }else{
+  } else if(t==='hbr'||t==='alr'){
+    if(hminus){hminus.removeAttribute('disabled');hminus.style.opacity='';hminus.style.cursor='';}
+    if(hplus){hplus.onclick=function(){changeHouseN('a',1);};}
+    if(hlbl)hlbl.textContent=t==='hbr'?'Bait Station No.':'Collection Site No.';
+    if(hlock)hlock.style.display='none';
+    if(hbar){hbar.style.background='';hbar.style.borderColor='';}
+    aS.curHN=1;const bsCode=hCode(1);
+    const _hd3=document.getElementById('a-hnum-disp');if(_hd3)_hd3.textContent=bsCode;
+    const _lb3=document.getElementById('a-log-btn-code');if(_lb3)_lb3.textContent=bsCode;
+    const _nn3=document.getElementById('a-next-num');if(_nn3)_nn3.textContent=1;
+  } else {
     if(hminus){hminus.removeAttribute('disabled');hminus.style.opacity='';hminus.style.cursor='';}
     if(hplus){hplus.onclick=function(){changeHouseN('a',1);};}
     if(hlbl)hlbl.textContent='House / Site No.';
     if(hlock)hlock.style.display='none';
     if(hbar){hbar.style.background='';hbar.style.borderColor='';}
-    // Reset to HH-001 for resting
     aS.curHN=1;const hhCode='HH-001';
     const _hd2=document.getElementById('a-hnum-disp');if(_hd2)_hd2.textContent=hhCode;
     const _lb2=document.getElementById('a-log-btn-code');if(_lb2)_lb2.textContent=hhCode;
     const _nn2=document.getElementById('a-next-num');if(_nn2)_nn2.textContent=1;
   }
+  _updAdultP2Labels(t);
 }
 function setGpsPill(pfx,msg,type){
   const pill=document.getElementById(pfx+'-gps-pill');if(!pill)return;
@@ -1999,9 +2124,7 @@ function proceedToAdultCollect(){
   aS.date=date;aS.state=aStateVal;aS.district=dist;aS.location=loc;aS.workers=wrk;aS.officers=offr;
   aS.collectors=parseInt(document.getElementById('a-collectors').value)||1;
   aS.nights=parseInt(document.getElementById('a-nights').value)||1;
-  // Update display of nights row based on collection type
-  const nrEl=document.getElementById('a-nights-row');if(nrEl)nrEl.style.display=aS.collType==='resting'?'grid':'none';
-  const rrEl=document.getElementById('a-remarks-row');if(rrEl)rrEl.style.display=aS.collType==='resting'?'block':'none';
+  _updAdultP2Labels(aS.collType);
   buildAdultMatrix();renderAdultHouses();updateAdultSummary();showScreen('adult-collect');
 }
 function getSnapPos(cb){
@@ -2052,14 +2175,18 @@ function renderAdultHouses(){
   const list=document.getElementById('a-houses-list'),empty=document.getElementById('a-houses-empty');
   list.innerHTML='';if(!aS.houses.length){empty.style.display='block';return;}empty.style.display='none';
   const isR=aS.collType==='resting';
+  const isHBR=aS.collType==='hbr';
+  const isALR=aS.collType==='alr';
   aS.houses.forEach((h,idx)=>{
     const ind=isR?h.counts.reduce((s,r)=>s+r[0],0):0;const out=isR?h.counts.reduce((s,r)=>s+r[1],0):0;const lc=isR?0:h.counts.reduce((s,r)=>s+r[0],0);
     let spRows='';
     ASP.forEach((sp,i)=>{const v0=h.counts[i][0],v1=isR?h.counts[i][1]:0;if(v0||v1){const nm=(sp.oth&&h.otherName)?'Others ('+h.otherName+')':sp.n;spRows+=`<tr><td style="font-style:italic;">${nm}</td><td>${v0||'-'}</td>${isR?`<td>${v1||'-'}</td>`:''}<td style="font-weight:700;">${v0+v1}</td></tr>`;}});
     if(!spRows)spRows=`<tr><td colspan="${isR?4:3}" style="font-style:normal;color:var(--osv);">No mosquitoes recorded</td></tr>`;
     const rmkHtml=h.remarks?`<div style="font-size:11px;color:var(--os);background:var(--sfl);border-left:3px solid var(--pl);padding:5px 9px;margin-bottom:8px;border-radius:0 var(--rsm) var(--rsm) 0;"><strong>Remarks:</strong> ${h.remarks}</div>`:'';
+    const metaRooms=isR?`<span>${h.rooms}R</span>`:'';
+    const lcLabel=isHBR?'Collected':isALR?'Collected':'Landing';
     const div=document.createElement('div');div.className='hli';
-    div.innerHTML=`<div class="hli-hdr" onclick="toggleHLI('a${h.id}')"><div class="hli-left"><div class="hli-num">${idx+1}</div><div class="hli-info"><div class="hli-name">${h.houseNo}</div><div class="hli-meta"><span>${h.rooms}R</span><span>${h.start}-${h.end} (${h.hours>0?h.hours.toFixed(2)+'h':'-'})</span>${h.remarks?'<span style="color:var(--primary);">📝</span>':''}</div></div></div><div class="hli-right"><div style="text-align:right;"><div class="hli-total">${h.total}</div><div style="font-size:9px;color:var(--osv)">mosq</div></div><button class="hli-del" onclick="event.stopPropagation();delAHouse(${h.id})">${mkSvg('del',15)}</button><svg id="chevA${h.id}" width="18" height="18" viewBox="0 0 24 24" fill="var(--ol)" style="transition:transform .2s;"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></div></div><div class="hli-body" id="hbA${h.id}">${rmkHtml}<div style="display:flex;gap:12px;margin-bottom:8px;font-size:11px;flex-wrap:wrap;">${isR?`<span style="color:var(--primary);font-weight:700;">Indoor: ${ind}</span><span>Outdoor: ${out}</span>`:`<span style="color:var(--amber);font-weight:700;">Landing: ${lc}</span>`}</div><table class="hli-sp-tbl"><thead><tr><th>Species</th><th>${isR?'In':'LC'}</th>${isR?'<th>Out</th>':''}<th>Tot</th></tr></thead><tbody>${spRows}</tbody></table></div>`;
+    div.innerHTML=`<div class="hli-hdr" onclick="toggleHLI('a${h.id}')"><div class="hli-left"><div class="hli-num">${idx+1}</div><div class="hli-info"><div class="hli-name">${h.houseNo}</div><div class="hli-meta">${metaRooms}<span>${h.start}-${h.end} (${h.hours>0?h.hours.toFixed(2)+'h':'-'})</span>${h.remarks?'<span style="color:var(--primary);">📝</span>':''}</div></div></div><div class="hli-right"><div style="text-align:right;"><div class="hli-total">${h.total}</div><div style="font-size:9px;color:var(--osv)">mosq</div></div><button class="hli-del" onclick="event.stopPropagation();delAHouse(${h.id})">${mkSvg('del',15)}</button><svg id="chevA${h.id}" width="18" height="18" viewBox="0 0 24 24" fill="var(--ol)" style="transition:transform .2s;"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></div></div><div class="hli-body" id="hbA${h.id}">${rmkHtml}<div style="display:flex;gap:12px;margin-bottom:8px;font-size:11px;flex-wrap:wrap;">${isR?`<span style="color:var(--primary);font-weight:700;">Indoor: ${ind}</span><span>Outdoor: ${out}</span>`:`<span style="color:var(--amber);font-weight:700;">${lcLabel}: ${lc}</span>`}</div><table class="hli-sp-tbl"><thead><tr><th>Species</th><th>${isR?'In':lcLabel.substring(0,3)}</th>${isR?'<th>Out</th>':''}<th>Tot</th></tr></thead><tbody>${spRows}</tbody></table></div>`;
     list.appendChild(div);
   });
 }
@@ -2070,7 +2197,7 @@ function updateAdultSummary(){
   const hEl=document.getElementById('as-houses');if(hEl)hEl.textContent=aS.houses.length;
   const tEl=document.getElementById('as-total');if(tEl)tEl.textContent=aTotAll();
   const mhEl=document.getElementById('as-mhrs');if(mhEl)mhEl.textContent=mh.toFixed(2);
-  const mhdEl=document.getElementById('as-mhd');if(mhdEl)mhdEl.textContent=mh>0?((aTotNonCulex()/mh)*100).toFixed(2):'-';
+  const mhdEl=document.getElementById('as-mhd');if(mhdEl)mhdEl.textContent=mh>0?(aTotAll()/mh).toFixed(2):'-';
 }
 function _fmtDurSec(s){if(!s||s<1)return'—';const m=Math.floor(s/60),h=Math.floor(m/60);return h>0?h+'h '+String(m%60).padStart(2,'0')+'m':m+'m '+String(s%60).padStart(2,'0')+'s';}
 function renderTrackPreview(containerId,houses){
@@ -2105,7 +2232,8 @@ function populateAdultReview(){
   // Always sync date from form before reviewing
   const dateInp=document.getElementById('a-date');if(dateInp&&dateInp.value)aS.date=dateInp.value;
   document.getElementById('r-a-date').textContent=aS.date||'-';
-  document.getElementById('r-a-ctype').textContent=isR?'Resting Collection':'Human Landing Catch (HLC)';
+  const ctypeLabel=aS.collType==='resting'?'Resting Collection (Adult Mosquito Density)':aS.collType==='hlc'?'Human Landing Catch (HLC) — Adult Mosquito Density':aS.collType==='hbr'?'Human Biting Rate (HBR)':'Adult Biting / Landing Rate (ALR)';
+  document.getElementById('r-a-ctype').textContent=ctypeLabel;
   // Sync state/district from form
   const _aStateInp=document.getElementById('a-state');if(_aStateInp&&_aStateInp.value)aS.state=_aStateInp.value;
   const _aDistInp=document.getElementById('a-district');if(_aDistInp&&_aDistInp.value)aS.district=_aDistInp.value;
@@ -2115,25 +2243,52 @@ function populateAdultReview(){
   document.getElementById('r-a-gps').textContent=gpsStr;
   document.getElementById('r-a-workers').textContent=aS.workers||'-';
   document.getElementById('r-a-nc').textContent=aS.collectors;
-  const nr=document.getElementById('r-a-nights-row');if(nr)nr.style.display=isR?'flex':'none';
+  const nr=document.getElementById('r-a-nights-row');if(nr)nr.style.display=aS.collType==='hlc'?'none':'flex';
   document.getElementById('r-a-nights').textContent=aS.nights;
   document.getElementById('r-a-offr').textContent=aS.officers||'-';
   document.getElementById('r-a-hcount').textContent=aS.houses.length;
   document.getElementById('r-a-mhrs').textContent=aManHours().toFixed(2)+' hrs';
   const ig=document.getElementById('r-a-idx-grid'),cg=document.getElementById('r-a-col-grid');
-  if(isR){ig.innerHTML=`<div class="idx-card hl"><div class="idx-lbl">PMHD (non-Culex)</div><div class="idx-val">${calcMHD()}</div><div class="idx-sub">Non-Culex ÷ (Collectors × Time hrs) × 100</div></div><div class="idx-card am"><div class="idx-lbl">Culex TMHD (×10)</div><div class="idx-val am">${calcTMHD()}</div><div class="idx-sub">(Culex ÷ man-hours) × 10</div></div><div class="idx-card"><div class="idx-lbl">Indoor Resting Density</div><div class="idx-val">${calcIndoorDensity()}</div><div class="idx-sub">mosq/house/night</div></div><div class="idx-card"><div class="idx-lbl">Outdoor Resting Density</div><div class="idx-val">${calcOutdoorDensity()}</div><div class="idx-sub">mosq/house/night</div></div><div class="idx-card"><div class="idx-lbl">Room Density</div><div class="idx-val">${calcRoomDensity()}</div><div class="idx-sub">mosq/room</div></div><div class="idx-card"><div class="idx-lbl">Total Mosquitoes</div><div class="idx-val">${aTotAll()}</div><div class="idx-sub">all species combined</div></div>`;cg.innerHTML=`<div class="idx-card hl"><div class="idx-lbl">Indoor</div><div class="idx-val">${aTotIndoor()}</div></div><div class="idx-card"><div class="idx-lbl">Outdoor</div><div class="idx-val">${aTotOutdoor()}</div></div><div class="idx-card"><div class="idx-lbl">Non-Culex</div><div class="idx-val">${aTotNonCulex()}</div></div>`;}
-  else{
+  if(isR){
+    ig.innerHTML=`<div class="idx-card hl"><div class="idx-lbl">PMHD</div><div class="idx-val">${calcMHD()}</div><div class="idx-sub">Total Mosq. ÷ (Collectors × Time hrs)</div></div><div class="idx-card am"><div class="idx-lbl">Culex TMHD (×10)</div><div class="idx-val am">${calcTMHD()}</div><div class="idx-sub">(Culex ÷ man-hours) × 10</div></div><div class="idx-card"><div class="idx-lbl">Indoor Resting Density</div><div class="idx-val">${calcIndoorDensity()}</div><div class="idx-sub">mosq/house/night</div></div><div class="idx-card"><div class="idx-lbl">Outdoor Resting Density</div><div class="idx-val">${calcOutdoorDensity()}</div><div class="idx-sub">mosq/house/night</div></div><div class="idx-card"><div class="idx-lbl">Room Density</div><div class="idx-val">${calcRoomDensity()}</div><div class="idx-sub">mosq/room</div></div><div class="idx-card"><div class="idx-lbl">Total Mosquitoes</div><div class="idx-val">${aTotAll()}</div><div class="idx-sub">all species combined</div></div>`;
+    cg.innerHTML=`<div class="idx-card hl"><div class="idx-lbl">Indoor</div><div class="idx-val">${aTotIndoor()}</div></div><div class="idx-card"><div class="idx-lbl">Outdoor</div><div class="idx-val">${aTotOutdoor()}</div></div><div class="idx-card"><div class="idx-lbl">Non-Culex</div><div class="idx-val">${aTotNonCulex()}</div></div>`;
+  } else if(aS.collType==='hlc'){
     ig.innerHTML=`
-      <div class="idx-card hl"><div class="idx-lbl">Human Biting Rate (HBR)</div><div class="idx-val">${calcHBR()}</div><div class="idx-sub">mosquitoes ÷ no. of collectors</div></div>
-      <div class="idx-card"><div class="idx-lbl">HBR per Hour</div><div class="idx-val">${calcHBRHr()}</div><div class="idx-sub">mosquitoes ÷ (collectors × hrs)</div></div>
-      <div class="idx-card hl"><div class="idx-lbl">PMHD (non-Culex)</div><div class="idx-val">${calcMHD()}</div><div class="idx-sub">Non-Culex ÷ (Collectors × Time hrs) × 100</div></div>
+      <div class="idx-card hl"><div class="idx-lbl">PMHD</div><div class="idx-val">${calcMHD()}</div><div class="idx-sub">Total Mosq. ÷ (Collectors × Time hrs)</div></div>
       <div class="idx-card am"><div class="idx-lbl">Culex TMHD (×10)</div><div class="idx-val am">${calcTMHD()}</div><div class="idx-sub">(Culex ÷ man-hours) × 10</div></div>
+      <div class="idx-card"><div class="idx-lbl">Human Biting Rate</div><div class="idx-val">${calcHBR()}</div><div class="idx-sub">mosq ÷ nights ÷ collectors</div></div>
+      <div class="idx-card"><div class="idx-lbl">HBR per Hour</div><div class="idx-val">${calcHBRHr()}</div><div class="idx-sub">mosq ÷ (collectors × hrs)</div></div>
       <div class="idx-card"><div class="idx-lbl">Total Man-Hours</div><div class="idx-val">${aManHours().toFixed(2)}</div><div class="idx-sub">collectors × hrs</div></div>
       <div class="idx-card"><div class="idx-lbl">Total Landing</div><div class="idx-val">${aTotAll()}</div><div class="idx-sub">all species</div></div>`;
     cg.innerHTML=`
-      <div class="idx-card"><div class="idx-lbl">Non-Culex</div><div class="idx-val">${aTotNonCulex()}</div><div class="idx-sub">for MHD calculation</div></div>
-      <div class="idx-card am"><div class="idx-lbl">Culex</div><div class="idx-val am">${aTotCulex()}</div><div class="idx-sub">for TMHD calculation</div></div>
+      <div class="idx-card"><div class="idx-lbl">Non-Culex</div><div class="idx-val">${aTotNonCulex()}</div></div>
+      <div class="idx-card am"><div class="idx-lbl">Culex</div><div class="idx-val am">${aTotCulex()}</div></div>
       <div class="idx-card"><div class="idx-lbl">Man-Hours</div><div class="idx-val">${aManHours().toFixed(2)}</div><div class="idx-sub">${aS.collectors} collector(s)</div></div>`;
+  } else if(aS.collType==='hbr'){
+    ig.innerHTML=`
+      <div class="idx-card hl"><div class="idx-lbl">Human Biting Rate (HBR)</div><div class="idx-val">${calcHBR()}</div><div class="idx-sub">mosq ÷ nights ÷ volunteers</div></div>
+      <div class="idx-card"><div class="idx-lbl">HBR per Hour</div><div class="idx-val">${calcHBRHr()}</div><div class="idx-sub">mosq ÷ (volunteers × hrs)</div></div>
+      <div class="idx-card hl"><div class="idx-lbl">PMHD</div><div class="idx-val">${calcMHD()}</div><div class="idx-sub">Total Mosq. ÷ (Volunteers × Time hrs)</div></div>
+      <div class="idx-card am"><div class="idx-lbl">Culex TMHD (×10)</div><div class="idx-val am">${calcTMHD()}</div><div class="idx-sub">(Culex ÷ man-hours) × 10</div></div>
+      <div class="idx-card"><div class="idx-lbl">Nights Surveyed</div><div class="idx-val">${aS.nights||1}</div><div class="idx-sub">total nights</div></div>
+      <div class="idx-card"><div class="idx-lbl">Total Collected</div><div class="idx-val">${aTotAll()}</div><div class="idx-sub">all species</div></div>`;
+    cg.innerHTML=`
+      <div class="idx-card"><div class="idx-lbl">Volunteers (Baits)</div><div class="idx-val">${aS.collectors||1}</div></div>
+      <div class="idx-card"><div class="idx-lbl">Non-Culex</div><div class="idx-val">${aTotNonCulex()}</div></div>
+      <div class="idx-card am"><div class="idx-lbl">Culex</div><div class="idx-val am">${aTotCulex()}</div></div>`;
+  } else {
+    // ALR
+    ig.innerHTML=`
+      <div class="idx-card hl"><div class="idx-lbl">ALR (Adults/Bait/Hour)</div><div class="idx-val">${calcALR()}</div><div class="idx-sub">mosq ÷ (baits × hrs)</div></div>
+      <div class="idx-card"><div class="idx-lbl">ALR per Night</div><div class="idx-val">${calcALRNight()}</div><div class="idx-sub">mosq ÷ (baits × nights)</div></div>
+      <div class="idx-card"><div class="idx-lbl">ALR Simple</div><div class="idx-val">${calcALRSimple()}</div><div class="idx-sub">total ÷ baits</div></div>
+      <div class="idx-card hl"><div class="idx-lbl">PMHD</div><div class="idx-val">${calcMHD()}</div><div class="idx-sub">Total Mosq. ÷ (Baits × Time hrs)</div></div>
+      <div class="idx-card am"><div class="idx-lbl">Culex TMHD (×10)</div><div class="idx-val am">${calcTMHD()}</div><div class="idx-sub">(Culex ÷ man-hours) × 10</div></div>
+      <div class="idx-card"><div class="idx-lbl">Total Collected</div><div class="idx-val">${aTotAll()}</div><div class="idx-sub">all species</div></div>`;
+    cg.innerHTML=`
+      <div class="idx-card"><div class="idx-lbl">Bait Stations</div><div class="idx-val">${aS.collectors||1}</div></div>
+      <div class="idx-card"><div class="idx-lbl">Nights Surveyed</div><div class="idx-val">${aS.nights||1}</div></div>
+      <div class="idx-card am"><div class="idx-lbl">Culex</div><div class="idx-val am">${aTotCulex()}</div></div>`;
   }
   const sh=document.getElementById('r-a-sp-hdr'),sb=document.getElementById('r-a-sp-body');
   if(isR)sh.innerHTML='<th style="text-align:left;padding-left:10px;">Species</th><th>Indoor</th><th>Outdoor</th><th>Total</th>';
@@ -2157,7 +2312,7 @@ function populateAdultReview(){
 function aSnap(){
   const isR=aS.collType==='resting';
   const spB=ASP.map((sp,i)=>({name:sp.n,genus:sp.g,isCulex:!!sp.cx,indoor:aS.houses.reduce((s,h)=>s+h.counts[i][0],0),outdoor:isR?aS.houses.reduce((s,h)=>s+h.counts[i][1],0):0}));
-  return {id:Date.now(),savedAt:new Date().toISOString(),appType:'adult',v:'2.0',collType:aS.collType,date:aS.date,state:(aS.state||''),district:aS.district,location:aS.location,workers:aS.workers,officers:aS.officers,collectors:aS.collectors,nights:aS.nights,lat:aS.lat,lng:aS.lng,houses:aS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),speciesBreakdown:spB,MHD:calcMHD(),TMHD:calcTMHD(),indoorDensity:calcIndoorDensity(),outdoorDensity:calcOutdoorDensity(),roomDensity:calcRoomDensity(),HBR:calcHBR(),totalMosq:aTotAll(),totIndoor:aTotIndoor(),totOutdoor:aTotOutdoor(),totNonCulex:aTotNonCulex(),totCulex:aTotCulex(),totalRooms:aTotRooms(),totalManHours:aManHours(),track:TrackRecorder.getTrack()};
+  return {id:Date.now(),savedAt:new Date().toISOString(),appType:'adult',v:'2.0',collType:aS.collType,date:aS.date,state:(aS.state||''),district:aS.district,location:aS.location,workers:aS.workers,officers:aS.officers,collectors:aS.collectors,nights:aS.nights,lat:aS.lat,lng:aS.lng,houses:aS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),speciesBreakdown:spB,MHD:calcMHD(),TMHD:calcTMHD(),indoorDensity:calcIndoorDensity(),outdoorDensity:calcOutdoorDensity(),roomDensity:calcRoomDensity(),HBR:calcHBR(),HBRHr:calcHBRHr(),ALR:calcALR(),ALRNight:calcALRNight(),ALRSimple:calcALRSimple(),totalMosq:aTotAll(),totIndoor:aTotIndoor(),totOutdoor:aTotOutdoor(),totNonCulex:aTotNonCulex(),totCulex:aTotCulex(),totalRooms:aTotRooms(),totalManHours:aManHours(),track:TrackRecorder.getTrack()};
 }
 function saveAdultSurvey(){TrackRecorder.stop();const s=aSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(A_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('adult');activeSavedTab='adult';lastSavedId=s.id;lastSavedType='adult';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'adult');}
 
@@ -2443,7 +2598,7 @@ function buildAdultCSV(s){
   // DENSITY INDICES
   sep('DENSITY INDICES');
   h('Index','Value','Formula');
-  r('Man-Hour Density — Non-Culex (PMHD)',s.MHD,'(Non-Culex / Collectors x Time) x 100');
+  r('Man-Hour Density (PMHD)',s.MHD,'Total Mosquitoes / (Collectors x Time hrs)');
   r('Total Man-Hour Density — Culex (TMHD)',s.TMHD,'(Culex / Man-hours) x 10');
   if(isR){
     r('Indoor Resting Density',s.indoorDensity,'Indoor mosq / (Houses x Nights)');
@@ -2727,15 +2882,29 @@ function exportAdultPDF(){
 
   // ── Indices HTML ──
   const idxHtml=isR
-    ?`<div class="ib hi"><div class="il">PMHD (non-Culex)</div><div class="iv">${s.MHD}</div><div class="is">(Non-Culex÷man-hrs)×100</div></div>
+    ?`<div class="ib hi"><div class="il">PMHD</div><div class="iv">${s.MHD}</div><div class="is">Total÷(Coll.×Time)</div></div>
       <div class="ib am"><div class="il">Culex TMHD ×10</div><div class="iv">${s.TMHD}</div><div class="is">(Culex÷man-hrs)×10</div></div>
       <div class="ib"><div class="il">Indoor Resting Density</div><div class="iv">${s.indoorDensity}</div><div class="is">mosq/house/night</div></div>
       <div class="ib"><div class="il">Outdoor Resting Density</div><div class="iv">${s.outdoorDensity}</div><div class="is">mosq/house/night</div></div>
       <div class="ib"><div class="il">Room Density</div><div class="iv">${s.roomDensity}</div><div class="is">mosq/room</div></div>
       <div class="ib"><div class="il">Man-Hours</div><div class="iv">${imd}</div><div class="is">collectors × hrs</div></div>`
-    :`<div class="ib hi"><div class="il">HBR</div><div class="iv">${s.HBR}</div><div class="is">bites/collector</div></div>
-      <div class="ib"><div class="il">HBR per Hour</div><div class="iv">${s.HBRHr||'—'}</div><div class="is">bites/collector/hr</div></div>
-      <div class="ib hi"><div class="il">PMHD (non-Culex)</div><div class="iv">${s.MHD}</div><div class="is">(Non-Culex÷man-hrs)×100</div></div>
+    :s.collType==='hbr'
+    ?`<div class="ib hi"><div class="il">HBR</div><div class="iv">${s.HBR}</div><div class="is">mosq/night/volunteer</div></div>
+      <div class="ib"><div class="il">HBR per Hour</div><div class="iv">${s.HBRHr||'—'}</div><div class="is">mosq/volunteer/hr</div></div>
+      <div class="ib hi"><div class="il">PMHD</div><div class="iv">${s.MHD}</div><div class="is">Total÷(Volunteers×Time)</div></div>
+      <div class="ib am"><div class="il">Culex TMHD ×10</div><div class="iv">${s.TMHD}</div><div class="is">(Culex÷man-hrs)×10</div></div>
+      <div class="ib"><div class="il">Man-Hours</div><div class="iv">${imd}</div><div class="is">volunteers × hrs</div></div>
+      <div class="ib"><div class="il">Nights Surveyed</div><div class="iv">${s.nights||1}</div></div>`
+    :s.collType==='alr'
+    ?`<div class="ib hi"><div class="il">ALR (adults/bait/hr)</div><div class="iv">${s.ALR||'—'}</div><div class="is">mosq÷(baits×hrs)</div></div>
+      <div class="ib"><div class="il">ALR per Night</div><div class="iv">${s.ALRNight||'—'}</div><div class="is">mosq÷(baits×nights)</div></div>
+      <div class="ib"><div class="il">ALR Simple</div><div class="iv">${s.ALRSimple||'—'}</div><div class="is">total÷baits</div></div>
+      <div class="ib hi"><div class="il">PMHD</div><div class="iv">${s.MHD}</div><div class="is">Total÷(Baits×Time)</div></div>
+      <div class="ib am"><div class="il">Culex TMHD ×10</div><div class="iv">${s.TMHD}</div><div class="is">(Culex÷man-hrs)×10</div></div>
+      <div class="ib"><div class="il">Man-Hours</div><div class="iv">${imd}</div><div class="is">baits × hrs</div></div>`
+    :`<div class="ib hi"><div class="il">HBR</div><div class="iv">${s.HBR}</div><div class="is">mosq/night/collector</div></div>
+      <div class="ib"><div class="il">HBR per Hour</div><div class="iv">${s.HBRHr||'—'}</div><div class="is">mosq/collector/hr</div></div>
+      <div class="ib hi"><div class="il">PMHD</div><div class="iv">${s.MHD}</div><div class="is">Total÷(Coll.×Time)</div></div>
       <div class="ib am"><div class="il">Culex TMHD ×10</div><div class="iv">${s.TMHD}</div><div class="is">(Culex÷man-hrs)×10</div></div>
       <div class="ib"><div class="il">Man-Hours</div><div class="iv">${imd}</div><div class="is">collectors × hrs</div></div>
       <div class="ib"><div class="il">Total Landing</div><div class="iv">${s.totalMosq||0}</div><div class="is">all species</div></div>`;
@@ -3177,11 +3346,21 @@ function _rmap(el,trk,hArr,dArr,sid){var TS=256,W=el.offsetWidth||580,H=220;el.s
 }
 function buildAdultPDFHtml(s){
   const isR=s.collType==='resting';
+  const isHBR=s.collType==='hbr';
+  const isALR=s.collType==='alr';
+  const isHLC=s.collType==='hlc';
   const gpsStr=s.lat?parseFloat(s.lat).toFixed(5)+'°N, '+parseFloat(s.lng).toFixed(5)+'°E':'Not captured';
   const mhD=s.totalManHours||((s.houses||[]).reduce((t,h)=>t+(h.hours||0),0)*(s.collectors||1));
   const mhStr=mhD>0?mhD.toFixed(2):'—';
-  const pmhd=s.MHD||(mhD>0?(((s.totNonCulex||0)/mhD)*100).toFixed(2):'—');
+  const pmhd=s.MHD||(mhD>0?((s.totalMosq||0)/mhD).toFixed(2):'—');
   const tmhd=s.TMHD||(mhD>0?(((s.totCulex||0)/mhD)*10).toFixed(2):'—');
+  const hbrVal=s.HBR||'—';
+  const alrVal=s.ALR||'—';
+  const alrNightVal=s.ALRNight||'—';
+  const alrSimpleVal=s.ALRSimple||'—';
+  const collTypeLabel=isR?'Resting Collection':isHLC?'Human Landing Catch (HLC)':isHBR?'Human Biting Rate (HBR)':'Adult Biting/Landing Rate (ALR)';
+  const titleLabel=isR?'Adult Mosquito Density — Resting Collection':isHLC?'Adult Mosquito Density — Human Landing Catch':isHBR?'Human Biting Rate (HBR) Survey':'Adult Biting / Landing Rate (ALR) Survey';
+  const baitLabel=isHBR?'Volunteers / Baits':isALR?'Bait Stations / Traps':'Collectors';
   // Species rows
   let spRows='',totI=0,totO=0,lastG='';
   ASP.forEach((sp,i)=>{
@@ -3198,7 +3377,7 @@ function buildAdultPDFHtml(s){
     const ind=(h.counts||[]).reduce((t,r)=>t+(r[0]||0),0);
     const out=isR?(h.counts||[]).reduce((t,r)=>t+(r[1]||0),0):0;
     const gpsLink=h.lat&&h.lng?`<a href="https://maps.google.com/?q=${h.lat},${h.lng}" style="color:#006b5c;font-size:7.5pt;">&#128205; Map</a>`:'—';
-    hRows+=`<tr><td>${h.houseNo}</td><td>${h.rooms}</td><td>${h.start||'-'}</td><td>${h.end||'-'}</td><td>${h.hours>0?h.hours.toFixed(2)+'h':'-'}</td><td>${ind}</td>${isR?`<td>${out}</td>`:''}<td style="font-weight:700;">${h.total}</td><td>${gpsLink}</td>${hasRemarks?`<td style="font-size:8pt;color:#444;">${h.remarks||'—'}</td>`:''}</tr>`;
+    hRows+=`<tr><td>${h.houseNo}</td>${isR?`<td>${h.rooms}</td>`:''}<td>${h.start||'-'}</td><td>${h.end||'-'}</td><td>${h.hours>0?h.hours.toFixed(2)+'h':'-'}</td><td>${ind}</td>${isR?`<td>${out}</td>`:''}<td style="font-weight:700;">${h.total}</td><td>${gpsLink}</td>${hasRemarks?`<td style="font-size:8pt;color:#444;">${h.remarks||'—'}</td>`:''}</tr>`;
   });
   // Per-house species rows
   let phRows='';
@@ -3211,28 +3390,28 @@ function buildAdultPDFHtml(s){
   const css=`*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Times New Roman',serif;font-size:10.5pt;color:#111;}.page{width:210mm;min-height:297mm;margin:0 auto;padding:12mm 14mm 18mm;}.hd{border-bottom:3px double #006b5c;padding-bottom:8px;margin-bottom:10px;}.hd h2{font-size:13pt;font-weight:bold;color:#006b5c;}.hd p{font-size:8.5pt;color:#555;margin-top:2px;}.tb{background:linear-gradient(135deg,#004d42,#006b5c);color:#fff;border-radius:6px;padding:10px 14px;margin-bottom:10px;}.tb h1{font-size:13pt;font-weight:700;}.tb p{font-size:8.5pt;opacity:.8;margin-top:2px;}.ref{display:flex;flex-wrap:wrap;gap:4px;justify-content:space-between;font-size:8.5pt;color:#1b5e20;background:#e8f5e9;border-left:3px solid #006b5c;padding:5px 10px;margin-bottom:10px;}.sec{font-size:10.5pt;font-weight:bold;text-transform:uppercase;border-bottom:1.5px solid #a5d6a7;padding-bottom:2px;margin:12px 0 6px;color:#006b5c;letter-spacing:.04em;}.iw{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;}.ib{border:1px solid #80cbc4;border-radius:4px;padding:7px 6px;text-align:center;min-width:72px;flex:1;background:#e8f5e9;}.ib.hi{background:#e0f4e8;border-color:#66bb6a;}.ib.am{background:#fff3e0;border-color:#ffa726;}.il{font-size:7pt;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#555;margin-bottom:2px;}.iv{font-size:13pt;font-weight:700;color:#006b5c;}.ib.am .iv{color:#e65100;}.is{font-size:7pt;color:#777;margin-top:1px;}.mt{width:100%;border-collapse:collapse;margin-bottom:8px;}.mt td{padding:5px 8px;border:1px solid #ccc;font-size:9.5pt;text-align:left;}.mt td.lbl{background:#e8f5e9;font-weight:700;font-size:8.5pt;color:#1b5e20;width:25%;}table{width:100%;border-collapse:collapse;margin-bottom:8px;}thead tr{background:#006b5c;color:#fff;}thead th{padding:5px 7px;font-size:8pt;font-weight:700;text-align:center;}thead th:first-child{text-align:left;}td{padding:4px 7px;border-bottom:1px solid #e0e0e0;font-size:9.5pt;text-align:center;}td:first-child{text-align:left;}tr:nth-child(even) td{background:#f5fdf8;}.sig{display:flex;justify-content:space-between;gap:10px;margin-top:24px;padding-top:10px;border-top:1px solid #ccc;}.sb{flex:1;text-align:center;}.sl{border-top:1px solid #333;margin:0 auto 4px;width:88%;}.sn{font-size:9pt;font-weight:bold;}.sr{font-size:8pt;color:#555;margin-top:2px;}.footer{margin-top:12px;border-top:1px solid #ccc;padding-top:5px;font-size:7.5pt;color:#888;text-align:center;}.sb-fixed{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ccc;padding:10px;text-align:center;}.pb{background:#006b5c;color:#fff;border:none;padding:10px 30px;border-radius:6px;font-size:12pt;font-weight:bold;cursor:pointer;}@media print{.sb-fixed{display:none!important;}@page{size:A4;margin:10mm;}}`;
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>EST Adult — ${s.district||''} — ${s.date||''}</title><style>${css}</style></head><body><div style="height:58px;"></div><div class="page">
 <div class="hd"><h2>EST v${APP_VER||'2.0'} — Entomological Surveillance Tool</h2><p>Adult Mosquito Surveillance Report</p></div>
-<div class="tb"><h1>${isR?'Resting Collection Report':'Human Landing Catch (HLC) Report'}</h1><p>${s.location||'—'} · ${s.district||'—'}</p></div>
-<div class="ref"><span><strong>Date:</strong> ${s.date||'—'}</span><span><strong>ID:</strong> EST-A-${s.id}</span><span><strong>Type:</strong> ${isR?'Resting':'HLC'}</span><span><strong>District:</strong> ${s.district||'—'}</span><span><strong>State:</strong> ${s.state||'—'}</span></div>
+<div class="tb"><h1>${titleLabel}</h1><p>${s.location||'—'} · ${s.district||'—'}</p></div>
+<div class="ref"><span><strong>Date:</strong> ${s.date||'—'}</span><span><strong>ID:</strong> EST-A-${s.id}</span><span><strong>Type:</strong> ${collTypeLabel}</span><span><strong>District:</strong> ${s.district||'—'}</span><span><strong>State:</strong> ${s.state||'—'}</span></div>
 <div class="sec">1. Survey Metadata</div>
 <table class="mt"><tr><td class="lbl">Date</td><td>${s.date||'—'}</td><td class="lbl">State / UT</td><td>${s.state||'—'}</td></tr>
 <tr><td class="lbl">District</td><td>${s.district||'—'}</td><td class="lbl">Location / Area</td><td>${s.location||'—'}</td></tr>
 <tr><td class="lbl">GPS Coordinates</td><td colspan="3">${gpsStr}</td></tr>
-<tr><td class="lbl">Collection Type</td><td>${isR?'Resting Collection (Aspirator/Net)':'Human Landing Catch (HLC)'}</td><td class="lbl">Nights Surveyed</td><td>${s.nights||1}</td></tr>
-<tr><td class="lbl">Surveillance Workers</td><td>${s.workers||'—'}</td><td class="lbl">No. of Collectors</td><td>${s.collectors||'—'}</td></tr>
+<tr><td class="lbl">Collection Type</td><td>${collTypeLabel}</td><td class="lbl">Nights Surveyed</td><td>${s.nights||1}</td></tr>
+<tr><td class="lbl">Surveillance Workers</td><td>${s.workers||'—'}</td><td class="lbl">${baitLabel}</td><td>${s.collectors||'—'}</td></tr>
 <tr><td class="lbl">Supervising Officer</td><td colspan="3">${s.officers||'—'}</td></tr>
 <tr><td class="lbl">Houses / Sites</td><td>${(s.houses||[]).length}</td><td class="lbl">Total Man-Hours</td><td>${mhStr} hrs</td></tr>
 <tr><td class="lbl">Total Mosquitoes</td><td>${s.totalMosq||0}</td><td class="lbl">Saved At</td><td style="font-size:8.5pt;">${s.savedAt?new Date(s.savedAt).toLocaleString('en-IN'):'—'}</td></tr></table>
 <div class="sec">2. Survey Track Map</div>
 <div id="pmap-a" style="width:100%;height:220px;background:#1a1a2e;border-radius:5px;overflow:hidden;border:1px solid #a5d6a7;margin-bottom:8px;"></div>
 <div class="sec">3. Density Indices</div>
-<div class="iw"><div class="ib hi"><div class="il">PMHD (Non-Culex)</div><div class="iv">${pmhd}</div><div class="is">(Non-Culex ÷ (Coll. × Time)) × 100</div></div><div class="ib am"><div class="il">Culex TMHD × 10</div><div class="iv">${tmhd}</div><div class="is">(Culex ÷ (Coll. × Time)) × 10</div></div>${isR?`<div class="ib"><div class="il">Indoor Density</div><div class="iv">${s.indoorDensity||'—'}</div><div class="is">mosq/house/night</div></div><div class="ib"><div class="il">Outdoor Density</div><div class="iv">${s.outdoorDensity||'—'}</div><div class="is">mosq/house/night</div></div><div class="ib"><div class="il">Room Density</div><div class="iv">${s.roomDensity||'—'}</div><div class="is">mosq/room</div></div>`:''}<div class="ib"><div class="il">Man-Hours</div><div class="iv">${mhStr}</div><div class="is">Coll. × Total Hrs</div></div><div class="ib"><div class="il">Non-Culex Total</div><div class="iv">${s.totNonCulex||0}</div></div><div class="ib"><div class="il">Culex Total</div><div class="iv">${s.totCulex||0}</div></div></div>
-<table class="mt"><tr><td class="lbl">Total Mosquitoes</td><td style="font-weight:700;">${s.totalMosq||0}</td><td class="lbl">Non-Culex</td><td>${s.totNonCulex||0}</td></tr><tr><td class="lbl">Culex</td><td>${s.totCulex||0}</td>${isR?`<td class="lbl">Indoor</td><td>${s.totIndoor||0}</td></tr><tr><td class="lbl">Outdoor</td><td>${s.totOutdoor||0}</td><td class="lbl">Rooms Inspected</td><td>${s.totalRooms||0}</td>`:`<td class="lbl">Houses / Sites</td><td>${(s.houses||[]).length}</td>`}</tr></table>
+${isHBR?`<div class="iw"><div class="ib hi"><div class="il">Human Biting Rate (HBR)</div><div class="iv">${hbrVal}</div><div class="is">mosq ÷ nights ÷ volunteers</div></div><div class="ib"><div class="il">HBR / Hour</div><div class="iv">${s.HBRHr||'—'}</div><div class="is">mosq ÷ (volunteers × hrs)</div></div><div class="ib hi"><div class="il">PMHD</div><div class="iv">${pmhd}</div><div class="is">Total ÷ (Volunteers × Time)</div></div><div class="ib am"><div class="il">Culex TMHD × 10</div><div class="iv">${tmhd}</div><div class="is">(Culex ÷ man-hours) × 10</div></div><div class="ib"><div class="il">Man-Hours</div><div class="iv">${mhStr}</div><div class="is">Volunteers × Total Hrs</div></div><div class="ib"><div class="il">Nights Surveyed</div><div class="iv">${s.nights||1}</div></div></div>`:isALR?`<div class="iw"><div class="ib hi"><div class="il">ALR (Adults/Bait/Hour)</div><div class="iv">${alrVal}</div><div class="is">mosq ÷ (baits × hrs)</div></div><div class="ib"><div class="il">ALR / Night</div><div class="iv">${alrNightVal}</div><div class="is">mosq ÷ (baits × nights)</div></div><div class="ib"><div class="il">ALR Simple</div><div class="iv">${alrSimpleVal}</div><div class="is">total ÷ baits</div></div><div class="ib hi"><div class="il">PMHD</div><div class="iv">${pmhd}</div><div class="is">Total ÷ (Baits × Time)</div></div><div class="ib am"><div class="il">Culex TMHD × 10</div><div class="iv">${tmhd}</div><div class="is">(Culex ÷ man-hours) × 10</div></div><div class="ib"><div class="il">Man-Hours</div><div class="iv">${mhStr}</div><div class="is">Baits × Total Hrs</div></div></div>`:`<div class="iw"><div class="ib hi"><div class="il">PMHD</div><div class="iv">${pmhd}</div><div class="is">Total Mosq ÷ (Coll. × Time)</div></div><div class="ib am"><div class="il">Culex TMHD × 10</div><div class="iv">${tmhd}</div><div class="is">(Culex ÷ man-hours) × 10</div></div>${isR?`<div class="ib"><div class="il">Indoor Density</div><div class="iv">${s.indoorDensity||'—'}</div><div class="is">mosq/house/night</div></div><div class="ib"><div class="il">Outdoor Density</div><div class="iv">${s.outdoorDensity||'—'}</div><div class="is">mosq/house/night</div></div><div class="ib"><div class="il">Room Density</div><div class="iv">${s.roomDensity||'—'}</div><div class="is">mosq/room</div></div>`:''}<div class="ib"><div class="il">Man-Hours</div><div class="iv">${mhStr}</div><div class="is">Coll. × Total Hrs</div></div><div class="ib"><div class="il">Non-Culex Total</div><div class="iv">${s.totNonCulex||0}</div></div><div class="ib"><div class="il">Culex Total</div><div class="iv">${s.totCulex||0}</div></div></div>`}
+<table class="mt"><tr><td class="lbl">Total Mosquitoes</td><td style="font-weight:700;">${s.totalMosq||0}</td><td class="lbl">Non-Culex</td><td>${s.totNonCulex||0}</td></tr><tr><td class="lbl">Culex</td><td>${s.totCulex||0}</td>${isR?`<td class="lbl">Indoor</td><td>${s.totIndoor||0}</td></tr><tr><td class="lbl">Outdoor</td><td>${s.totOutdoor||0}</td><td class="lbl">Rooms Inspected</td><td>${s.totalRooms||0}</td>`:`<td class="lbl">${isHBR?'Bait Stations':isALR?'Collection Sites':'Houses / Sites'}</td><td>${(s.houses||[]).length}</td>`}</tr></table>
 <div class="sec">4. Species Breakdown</div>
-<table><thead><tr><th>Species</th><th>${isR?'Indoor':'Landing'}</th>${isR?'<th>Outdoor</th>':''}<th>Total</th></tr></thead><tbody>${spRows||'<tr><td colspan="3" style="color:#999;text-align:center;">No species data recorded</td></tr>'}</tbody></table>
-<div class="sec">5. House / Site Details</div>
-<table><thead><tr><th>House/Site</th><th>Rooms</th><th>Start</th><th>End</th><th>Hours</th><th>${isR?'Indoor':'LC'}</th>${isR?'<th>Outdoor</th>':''}<th>Total</th><th>GPS</th>${hasRemarks?'<th>Remarks</th>':''}</tr></thead><tbody>${hRows||'<tr><td colspan="8" style="color:#999;text-align:center;">No house data recorded</td></tr>'}</tbody></table>
-<div class="sec">6. Per-House / Site Species Breakdown</div>
-<table><thead><tr><th>House/Site</th><th>Species</th><th>Genus</th><th>${isR?'Indoor':'LC'}</th>${isR?'<th>Outdoor</th>':''}<th>Total</th></tr></thead><tbody>${phRows||'<tr><td colspan="5" style="color:#999;text-align:center;">No species data recorded</td></tr>'}</tbody></table>
+<table><thead><tr><th>Species</th><th>${isR?'Indoor':isHBR||isALR?'Count':'Landing'}</th>${isR?'<th>Outdoor</th>':''}<th>Total</th></tr></thead><tbody>${spRows||'<tr><td colspan="3" style="color:#999;text-align:center;">No species data recorded</td></tr>'}</tbody></table>
+<div class="sec">5. ${isHBR?'Bait Station':isALR?'Collection Site':'House / Site'} Details</div>
+<table><thead><tr><th>${isHBR?'Bait Stn':isALR?'Site':'House/Site'}</th>${isR?'<th>Rooms</th>':''}<th>Start</th><th>End</th><th>Hours</th><th>${isR?'Indoor':isHBR||isALR?'Count':'LC'}</th>${isR?'<th>Outdoor</th>':''}<th>Total</th><th>GPS</th>${hasRemarks?'<th>Remarks</th>':''}</tr></thead><tbody>${hRows||'<tr><td colspan="8" style="color:#999;text-align:center;">No data recorded</td></tr>'}</tbody></table>
+<div class="sec">6. Per-Site Species Breakdown</div>
+<table><thead><tr><th>${isHBR?'Bait Stn':isALR?'Site':'House/Site'}</th><th>Species</th><th>Genus</th><th>${isR?'Indoor':isHBR||isALR?'Count':'LC'}</th>${isR?'<th>Outdoor</th>':''}<th>Total</th></tr></thead><tbody>${phRows||'<tr><td colspan="5" style="color:#999;text-align:center;">No species data recorded</td></tr>'}</tbody></table>
 <div class="sig"><div class="sb"><div class="sl"></div><div class="sn">${(s.workers||'—').split(/[\n,]/)[0]}</div><div class="sr">Surveillance Worker</div></div><div class="sb"><div class="sl"></div><div class="sn">${s.officers||'—'}</div><div class="sr">Supervising Officer</div></div><div class="sb"><div class="sl"></div><div class="sn">Medical Officer Incharge</div><div class="sr">Verification &amp; Approval</div></div></div>
 <div class="footer">Entomological Surveillance Tool — EST v${APP_VER||'2.0'} &nbsp;|&nbsp; Report ID: EST-A-${s.id} &nbsp;|&nbsp; Generated: ${new Date().toLocaleString('en-IN')}</div>
 </div><div class="sb-fixed"><button class="pb" onclick="window.print()">&#128424; Print / Save PDF</button></div>
@@ -3338,7 +3517,7 @@ function exportSelPDF(mod){
 <div class="sec">2. Survey Track Map</div>
 <div id="pmap-${idx}" style="width:100%;height:200px;background:#1a1a2e;border-radius:4px;overflow:hidden;border:1px solid #a5d6a7;margin-bottom:7px;"></div>
 <div class="sec">3. Density Indices</div>
-<div class="iw"><div class="ib hi"><div class="il">PMHD</div><div class="iv">${s.MHD||'—'}</div><div class="is">Non-Culex/man-hr×100</div></div><div class="ib am"><div class="il">Culex TMHD×10</div><div class="iv">${s.TMHD||'—'}</div><div class="is">Culex/man-hr×10</div></div>${isR?`<div class="ib"><div class="il">Indoor Density</div><div class="iv">${s.indoorDensity||'—'}</div></div><div class="ib"><div class="il">Outdoor Density</div><div class="iv">${s.outdoorDensity||'—'}</div></div><div class="ib"><div class="il">Room Density</div><div class="iv">${s.roomDensity||'—'}</div></div>`:``}<div class="ib"><div class="il">Man-Hours</div><div class="iv">${mhStr}</div></div><div class="ib"><div class="il">Non-Culex Total</div><div class="iv">${s.totNonCulex||0}</div></div><div class="ib"><div class="il">Culex Total</div><div class="iv">${s.totCulex||0}</div></div></div>
+<div class="iw"><div class="ib hi"><div class="il">PMHD</div><div class="iv">${s.MHD||'—'}</div><div class="is">Total÷(Coll.×Time)</div></div><div class="ib am"><div class="il">Culex TMHD×10</div><div class="iv">${s.TMHD||'—'}</div><div class="is">Culex/man-hr×10</div></div>${isR?`<div class="ib"><div class="il">Indoor Density</div><div class="iv">${s.indoorDensity||'—'}</div></div><div class="ib"><div class="il">Outdoor Density</div><div class="iv">${s.outdoorDensity||'—'}</div></div><div class="ib"><div class="il">Room Density</div><div class="iv">${s.roomDensity||'—'}</div></div>`:s.collType==='hbr'?`<div class="ib"><div class="il">HBR</div><div class="iv">${s.HBR||'—'}</div><div class="is">mosq/night/vol.</div></div>`:s.collType==='alr'?`<div class="ib"><div class="il">ALR</div><div class="iv">${s.ALR||'—'}</div><div class="is">adults/bait/hr</div></div>`:``}<div class="ib"><div class="il">Man-Hours</div><div class="iv">${mhStr}</div></div><div class="ib"><div class="il">Non-Culex Total</div><div class="iv">${s.totNonCulex||0}</div></div><div class="ib"><div class="il">Culex Total</div><div class="iv">${s.totCulex||0}</div></div></div>
 <div class="sec">4. Species Breakdown</div>
 <table><thead><tr><th>Species</th><th>${isR?'Indoor':'Landing'}</th>${isR?'<th>Outdoor</th>':''}<th>Total</th></tr></thead><tbody>${spRows||'<tr><td colspan="3" style="color:#999;text-align:center;">No species data</td></tr>'}</tbody></table>
 <div class="sec">5. House / Site Details</div>
