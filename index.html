@@ -11,7 +11,7 @@
 <meta http-equiv="Feature-Policy" content="geolocation 'self'">
 <meta name="est-version" content="2.0.1">
 <link rel="manifest" href="./manifest.json" id="pwa-manifest">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23006b5c'/%3E%3Cg transform='translate(50,52)' fill='rgba(255,255,255,.92)'%3E%3Cellipse cx='0' cy='4' rx='5' ry='14'/%3E%3Ccircle cy='-13' r='5'/%3E%3Cellipse cx='-16' cy='-3' rx='14' ry='5' transform='rotate(-18 -16 -3)' opacity='.75'/%3E%3Cellipse cx='16' cy='-3' rx='14' ry='5' transform='rotate(18 16 -3)' opacity='.75'/%3E%3Cline x1='-5' y1='8' x2='-22' y2='18' stroke='rgba(255,255,255,.92)' stroke-width='1.5'/%3E%3Cline x1='5' y1='8' x2='22' y2='18' stroke='rgba(255,255,255,.92)' stroke-width='1.5'/%3E%3Cline x1='-4' y1='-17' x2='-12' y2='-27' stroke='rgba(255,255,255,.92)' stroke-width='1.5'/%3E%3Cline x1='4' y1='-17' x2='12' y2='-27' stroke='rgba(255,255,255,.92)' stroke-width='1.5'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23006b5c'/%3E%3Cellipse cx='30' cy='44' rx='20' ry='7' fill='rgba(255,255,255,.55)' transform='rotate(-28 30 44)'/%3E%3Cellipse cx='70' cy='44' rx='20' ry='7' fill='rgba(255,255,255,.55)' transform='rotate(28 70 44)'/%3E%3Cellipse cx='50' cy='63' rx='8' ry='19' fill='%23c8f0e0'/%3E%3Crect x='42' y='56' width='16' height='2.2' rx='1' fill='rgba(0,60,40,.45)'/%3E%3Crect x='42' y='63' width='16' height='2.2' rx='1' fill='rgba(0,60,40,.45)'/%3E%3Crect x='42' y='70' width='16' height='2.2' rx='1' fill='rgba(0,60,40,.45)'/%3E%3Cellipse cx='50' cy='43' rx='7' ry='7' fill='%23c8f0e0'/%3E%3Ccircle cx='50' cy='30' r='6' fill='%23c8f0e0'/%3E%3Cline x1='50' y1='24' x2='50' y2='8' stroke='%23c8f0e0' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M47,24 Q42,16 38,10' stroke='rgba(200,240,224,.85)' stroke-width='1.3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M53,24 Q58,16 62,10' stroke='rgba(200,240,224,.85)' stroke-width='1.3' fill='none' stroke-linecap='round'/%3E%3Cpolyline points='44,44 24,54 15,67' stroke='rgba(200,240,224,.8)' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpolyline points='44,50 22,60 13,74' stroke='rgba(200,240,224,.7)' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpolyline points='44,56 22,66 12,80' stroke='rgba(200,240,224,.6)' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpolyline points='56,44 76,54 85,67' stroke='rgba(200,240,224,.8)' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpolyline points='56,50 78,60 87,74' stroke='rgba(200,240,224,.7)' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpolyline points='56,56 78,66 88,80' stroke='rgba(200,240,224,.6)' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <title>EST — Entomological Surveillance Tool</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./offline-styles.css">
@@ -600,9 +600,19 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       </div>
       <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--osv);margin-bottom:7px;">Collection Count by Species</div>
       <div class="matrix-wrap"><table class="mtbl" id="a-mtbl"><thead><tr id="a-mtbl-head"><th style="text-align:left;padding-left:10px;">Species</th></tr></thead><tbody id="a-sp-body"></tbody></table></div>
-      <div style="display:flex;align-items:center;gap:8px;background:var(--sf);border:1px dashed var(--olv);border-radius:var(--rmd);padding:9px 12px;margin-bottom:11px;margin-top:-4px;">
-        <span style="font-size:11px;font-weight:700;color:var(--osv);white-space:nowrap;">Others — specify:</span>
-        <input type="text" id="a-other-name" placeholder="Species name…" style="flex:1;height:34px;padding:0 10px;border:1.5px solid var(--olv);border-radius:var(--rsm);font-size:13px;color:var(--os);background:var(--sfc);">
+      <div style="background:var(--sf);border:1px dashed var(--olv);border-radius:var(--rmd);padding:9px 12px;margin-bottom:11px;margin-top:-4px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">
+          <span style="font-size:11px;font-weight:700;color:var(--osv);white-space:nowrap;">Others — specify:</span>
+          <input type="text" id="a-other-name" placeholder="Species name…" style="flex:1;height:34px;padding:0 10px;border:1.5px solid var(--olv);border-radius:var(--rsm);font-size:13px;color:var(--os);background:var(--sfc);">
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:10px;font-weight:600;color:var(--osv);">Count:</span>
+          <div class="cnt-row"><button class="cnt-btn" onclick="changeOtherSpecCnt(-1)">-</button><div class="cnt-val" id="a-other-cnt">0</div><button class="cnt-btn" onclick="changeOtherSpecCnt(1)">+</button></div>
+        </div>
+      </div>
+      <div class="field" id="a-remarks-row" style="margin-bottom:8px;display:none;">
+        <label class="flabel">Remarks / Observation</label>
+        <textarea id="a-remarks" placeholder="Observations about this house/site (resting sites, condition, notes)…" style="width:100%;min-height:60px;padding:8px 10px;border:1.5px solid var(--olv);border-radius:var(--rsm);font-size:13px;color:var(--os);background:var(--sfc);resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
       </div>
       <div class="field" style="margin-bottom:8px;">
         <label class="flabel">End Time</label>
@@ -612,6 +622,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
         </div>
       </div>
       <div class="time-calc" id="a-time-calc"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg><span id="a-time-txt">Tap NOW on Start, collect, tap NOW on End</span></div>
+      <div class="alert warn" id="a-time-warn" style="display:none;margin-top:6px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg><span id="a-time-warn-msg">Start time and End time are required.</span></div>
       <button class="btn-p" id="a-log-btn" onclick="logAdultHouse()"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L19 8l-9 9z"/></svg>Log <span id="a-log-btn-code">HH-001</span></button>
     </div>
     <div class="sec-hdr"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="sec-lbl" id="a-log-list-lbl">Houses / Sites Logged</span></div>
@@ -1020,7 +1031,7 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
     <!-- Indices -->
     <div class="about-card">
       <div style="font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px;">WHO-Standard Indices</div>
-      <div style="font-size:12px;color:var(--os);line-height:1.9;"><strong>Adult (Resting):</strong> PMHD, TMHD (×10), Indoor/Outdoor Resting Density, Room Density<br><strong>Adult (HLC):</strong> HBR, HBR/hr, PMHD, TMHD<br><strong>Larval (Aedes):</strong> HI, CI, BI, Pupal Index<br><strong>Larval (An./Cx.):</strong> Larval Density, Pupal Density, Immature Density<br><br><strong>PMHD Formula:</strong> (Non-Culex ÷ Collectors × Time hrs) × 100<br><strong>TMHD Formula:</strong> (Culex ÷ Man-hours) × 10</div>
+      <div style="font-size:12px;color:var(--os);line-height:1.9;"><strong>Adult (Resting):</strong> PMHD, TMHD (×10), Indoor/Outdoor Resting Density, Room Density<br><strong>Adult (HLC):</strong> HBR, HBR/hr, PMHD, TMHD<br><strong>Larval (Aedes):</strong> HI, CI, BI, Pupal Index<br><strong>Larval (An./Cx.):</strong> Larval Density, Pupal Density, Immature Density<br><br><strong>PMHD Formula:</strong> (Non-Culex ÷ (Collectors × Total Time hrs)) × 100<br><strong>TMHD Formula:</strong> (Culex ÷ (Collectors × Total Time hrs)) × 10</div>
     </div>
     <!-- Advantages -->
     <div class="about-card">
@@ -1035,9 +1046,10 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
         <div>
           <div style="font-size:15px;font-weight:700;color:var(--os);">Dr. B. Sumit Kumar Rao</div>
           <div style="font-size:11px;color:var(--primary);font-weight:600;">State Entomologist</div>
-          <div style="font-size:11px;color:var(--osv);line-height:1.5;margin-top:2px;">Directorate of Health Services<br>Andaman &amp; Nicobar Administration</div>
+          <div style="font-size:11px;color:var(--osv);line-height:1.5;margin-top:2px;">National Vector Borne Disease Control Programme,<br>State Health Society, Andaman &amp; Nicobar Islands</div>
         </div>
       </div>
+      <div style="font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;margin-top:4px;">Contact for Support</div>
       <button onclick="window.location='mailto:explorer3850@gmail.com'" style="display:flex;align-items:center;gap:9px;padding:11px 12px;background:var(--sf);border:1px solid var(--olv);border-radius:var(--rmd);font-size:13px;font-weight:600;color:var(--os);width:100%;cursor:pointer;margin-bottom:7px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>explorer3850@gmail.com</button>
       <button onclick="window.open('https://wa.me/919531806405')" style="display:flex;align-items:center;gap:9px;padding:11px 12px;background:var(--sf);border:1px solid var(--olv);border-radius:var(--rmd);font-size:13px;font-weight:600;color:var(--os);width:100%;cursor:pointer;margin-bottom:7px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>+91 95318 06405 (WhatsApp)</button>
       <button onclick="window.location='tel:+919531806405'" style="display:flex;align-items:center;gap:9px;padding:11px 12px;background:var(--sf);border:1px solid var(--olv);border-radius:var(--rmd);font-size:13px;font-weight:600;color:var(--os);width:100%;cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>+91 95318 06405 (Call)</button>
@@ -1432,7 +1444,7 @@ async function syncValidUsersFromCache(){
     if(raw) mergeConfigCreds(JSON.parse(raw));
   }catch(e){}
 }
-const APP_VER='2.0.36';
+const APP_VER='2.0.37';
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
   {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
@@ -1453,7 +1465,7 @@ const LSP=[
 ];
 const LNS=LSP.length;
 let activeModule=null,activeSavedTab='adult',lastSavedId=null,lastSavedType=null;
-const aS={collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,nights:1,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curCounts:Array.from({length:ANS},()=>[0,0,0]),curOther:''};
+const aS={collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,nights:1,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curCounts:Array.from({length:ANS},()=>[0,0,0]),curOther:'',otherSpecCount:0};
 const lS={date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipSites:[],curHN:1,curSiteN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curCounts:Array.from({length:LNS},()=>[0,0]),curOther:''};
 function aCols(){return aS.collType==='resting'?['Indoor','Outdoor']:['Landing Catch'];}
 function aTotSp(i){return aS.collType==='resting'?aS.houses.reduce((s,h)=>s+h.counts[i][0]+h.counts[i][1],0):aS.houses.reduce((s,h)=>s+h.counts[i][0],0);}
@@ -1978,6 +1990,7 @@ function buildAdultMatrix(){
   });
 }
 function chgASp(i,col,d){aS.curCounts[i][col]=Math.max(0,aS.curCounts[i][col]+d);const el=document.getElementById(`asc-${i}-${col}`);if(el)el.textContent=aS.curCounts[i][col];}
+function changeOtherSpecCnt(d){aS.otherSpecCount=Math.max(0,(aS.otherSpecCount||0)+d);const el=document.getElementById('a-other-cnt');if(el)el.textContent=aS.otherSpecCount;}
 function proceedToAdultCollect(){
   const date=document.getElementById('a-date').value.trim(),dist=document.getElementById('a-district').value,loc=document.getElementById('a-location').value.trim(),wrk=document.getElementById('a-workers').value.trim(),offr=document.getElementById('a-officers').value.trim(),errEl=document.getElementById('a-err');
   if(!date||!dist||!loc||!wrk||!offr){errEl.textContent='Please fill all required fields.';errEl.style.display='block';return;}
@@ -1988,6 +2001,7 @@ function proceedToAdultCollect(){
   aS.nights=parseInt(document.getElementById('a-nights').value)||1;
   // Update display of nights row based on collection type
   const nrEl=document.getElementById('a-nights-row');if(nrEl)nrEl.style.display=aS.collType==='resting'?'grid':'none';
+  const rrEl=document.getElementById('a-remarks-row');if(rrEl)rrEl.style.display=aS.collType==='resting'?'block':'none';
   buildAdultMatrix();renderAdultHouses();updateAdultSummary();showScreen('adult-collect');
 }
 function getSnapPos(cb){
@@ -2003,11 +2017,20 @@ function logAdultHouse(){
   const btn=document.getElementById('a-log-btn');if(btn&&btn.disabled)return;
   if(btn)btn.disabled=true;
   const code=hCode(aS.curHN),start=document.getElementById('a-start').value,end=document.getElementById('a-end').value;
+  const twEl=document.getElementById('a-time-warn'),twMsg=document.getElementById('a-time-warn-msg');
+  if(!start||!end){
+    if(twEl)twEl.style.display='flex';
+    if(twMsg)twMsg.textContent=(!start&&!end)?'Start time and End time are both required — tap NOW at start and end of collection.':(!start?'Start time is required — tap NOW when collection begins.':'End time is required — tap NOW when collection ends.');
+    if(btn)btn.disabled=false;return;
+  }
+  if(twEl)twEl.style.display='none';
   const hours=calcHrs(start,end),counts=aS.curCounts.map(r=>[...r]);
   const total=aS.collType==='resting'?counts.reduce((s,r)=>s+r[0]+r[1],0):counts.reduce((s,r)=>s+r[0],0);
   const other=document.getElementById('a-other-name')?.value.trim()||'';
+  const otherCnt=aS.otherSpecCount||0;
+  const remarks=document.getElementById('a-remarks')?.value.trim()||'';
   const cached=TrackRecorder.getLastPos();
-  const entry={id:Date.now(),houseNo:code,rooms:aS.curRooms,start:start||'-',end:end||'-',hours,counts,total,otherName:other,lat:cached?.lat||'',lng:cached?.lng||''};
+  const entry={id:Date.now(),houseNo:code,rooms:aS.curRooms,start:start||'-',end:end||'-',hours,counts,total,otherName:other,otherCount:otherCnt,remarks,lat:cached?.lat||'',lng:cached?.lng||''};
   aS.houses.push(entry);
   aS.curHN++;const nc=hCode(aS.curHN);
   const hd=document.getElementById('a-hnum-disp');if(hd)hd.textContent=nc;
@@ -2015,6 +2038,8 @@ function logAdultHouse(){
   const nn=document.getElementById('a-next-num');if(nn)nn.textContent=aS.curHN;
   document.getElementById('a-start').value='';document.getElementById('a-end').value='';
   const oe=document.getElementById('a-other-name');if(oe)oe.value='';
+  const re=document.getElementById('a-remarks');if(re)re.value='';
+  aS.otherSpecCount=0;const ocEl=document.getElementById('a-other-cnt');if(ocEl)ocEl.textContent=0;
   aS.curRooms=0;const ard=document.getElementById('a-rooms-disp');if(ard)ard.textContent='0';
   aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);
   buildAdultMatrix();updateTimeCalc('a');renderAdultHouses();updateAdultSummary();saveDraft('adult');
@@ -2032,8 +2057,9 @@ function renderAdultHouses(){
     let spRows='';
     ASP.forEach((sp,i)=>{const v0=h.counts[i][0],v1=isR?h.counts[i][1]:0;if(v0||v1){const nm=(sp.oth&&h.otherName)?'Others ('+h.otherName+')':sp.n;spRows+=`<tr><td style="font-style:italic;">${nm}</td><td>${v0||'-'}</td>${isR?`<td>${v1||'-'}</td>`:''}<td style="font-weight:700;">${v0+v1}</td></tr>`;}});
     if(!spRows)spRows=`<tr><td colspan="${isR?4:3}" style="font-style:normal;color:var(--osv);">No mosquitoes recorded</td></tr>`;
+    const rmkHtml=h.remarks?`<div style="font-size:11px;color:var(--os);background:var(--sfl);border-left:3px solid var(--pl);padding:5px 9px;margin-bottom:8px;border-radius:0 var(--rsm) var(--rsm) 0;"><strong>Remarks:</strong> ${h.remarks}</div>`:'';
     const div=document.createElement('div');div.className='hli';
-    div.innerHTML=`<div class="hli-hdr" onclick="toggleHLI('a${h.id}')"><div class="hli-left"><div class="hli-num">${idx+1}</div><div class="hli-info"><div class="hli-name">${h.houseNo}</div><div class="hli-meta"><span>${h.rooms}R</span><span>${h.start}-${h.end} (${h.hours>0?h.hours.toFixed(2)+'h':'-'})</span></div></div></div><div class="hli-right"><div style="text-align:right;"><div class="hli-total">${h.total}</div><div style="font-size:9px;color:var(--osv)">mosq</div></div><button class="hli-del" onclick="event.stopPropagation();delAHouse(${h.id})">${mkSvg('del',15)}</button><svg id="chevA${h.id}" width="18" height="18" viewBox="0 0 24 24" fill="var(--ol)" style="transition:transform .2s;"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></div></div><div class="hli-body" id="hbA${h.id}"><div style="display:flex;gap:12px;margin-bottom:8px;font-size:11px;flex-wrap:wrap;">${isR?`<span style="color:var(--primary);font-weight:700;">Indoor: ${ind}</span><span>Outdoor: ${out}</span>`:`<span style="color:var(--amber);font-weight:700;">Landing: ${lc}</span>`}</div><table class="hli-sp-tbl"><thead><tr><th>Species</th><th>${isR?'In':'LC'}</th>${isR?'<th>Out</th>':''}<th>Tot</th></tr></thead><tbody>${spRows}</tbody></table></div>`;
+    div.innerHTML=`<div class="hli-hdr" onclick="toggleHLI('a${h.id}')"><div class="hli-left"><div class="hli-num">${idx+1}</div><div class="hli-info"><div class="hli-name">${h.houseNo}</div><div class="hli-meta"><span>${h.rooms}R</span><span>${h.start}-${h.end} (${h.hours>0?h.hours.toFixed(2)+'h':'-'})</span>${h.remarks?'<span style="color:var(--primary);">📝</span>':''}</div></div></div><div class="hli-right"><div style="text-align:right;"><div class="hli-total">${h.total}</div><div style="font-size:9px;color:var(--osv)">mosq</div></div><button class="hli-del" onclick="event.stopPropagation();delAHouse(${h.id})">${mkSvg('del',15)}</button><svg id="chevA${h.id}" width="18" height="18" viewBox="0 0 24 24" fill="var(--ol)" style="transition:transform .2s;"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></div></div><div class="hli-body" id="hbA${h.id}">${rmkHtml}<div style="display:flex;gap:12px;margin-bottom:8px;font-size:11px;flex-wrap:wrap;">${isR?`<span style="color:var(--primary);font-weight:700;">Indoor: ${ind}</span><span>Outdoor: ${out}</span>`:`<span style="color:var(--amber);font-weight:700;">Landing: ${lc}</span>`}</div><table class="hli-sp-tbl"><thead><tr><th>Species</th><th>${isR?'In':'LC'}</th>${isR?'<th>Out</th>':''}<th>Tot</th></tr></thead><tbody>${spRows}</tbody></table></div>`;
     list.appendChild(div);
   });
 }
@@ -3060,10 +3086,8 @@ function exportOneSavedCSV(mod,id){const s=getSavedById(mod,id);if(!s)return;dlF
 function exportOneSavedPDF(mod,id){
   const s=getSavedById(mod,id);if(!s)return;
   if(mod==='adult'){
-    const bk={...aS,houses:[...aS.houses],curCounts:aS.curCounts.map(r=>[...r])};
-    Object.assign(aS,s);aS.houses=s.houses||[];
-    exportAdultPDF();
-    Object.assign(aS,bk);aS.curCounts=bk.curCounts;
+    showPdfPreview(buildAdultPDFHtml(s));
+    showToast('Tap Print to save as PDF','pdf');
   } else {
     showPdfPreview(buildLarvalPDFHtml(s));
     showToast('Tap Print to save as PDF','pdf');
@@ -3148,6 +3172,76 @@ window.addEventListener('load',function(){
   _rmap(el,${_mapTrkJ},${_mapHJ},${_mapDJ},'EST-L-${s.id}');
 });
 function _rmap(el,trk,hArr,dArr,sid){var TS=256,W=el.offsetWidth||580,H=220;el.style.cssText='position:relative;overflow:hidden;background:#1a1a2e;height:'+H+'px;';var pts=[];if(trk&&trk.waypoints)trk.waypoints.forEach(function(p){pts.push([p.lat,p.lng]);});hArr.forEach(function(h){if(h.lat&&h.lng)pts.push([+h.lat,+h.lng]);});dArr.forEach(function(d){if(d.lat&&d.lng)pts.push([+d.lat,+d.lng]);});if(!pts.length){el.innerHTML='<div style="text-align:center;color:rgba(255,255,255,.4);padding:70px 0 0;font-size:9pt;">No GPS data recorded</div>';return;}var mnLa=pts[0][0],mxLa=pts[0][0],mnLo=pts[0][1],mxLo=pts[0][1];pts.forEach(function(p){mnLa=Math.min(mnLa,p[0]);mxLa=Math.max(mxLa,p[0]);mnLo=Math.min(mnLo,p[1]);mxLo=Math.max(mxLo,p[1]);});var dLa=(mxLa-mnLa)*0.15||0.001,dLo=(mxLo-mnLo)*0.15||0.001;mnLa-=dLa;mxLa+=dLa;mnLo-=dLo;mxLo+=dLo;function wxy(a,b,z){var n=1<<z,x=(b+180)/360*n,r=a*Math.PI/180,y=(1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*n;return[x,y];}var z=17,ox=0,oy=0,c,tl,br;for(z=17;z>=2;z--){tl=wxy(mxLa,mnLo,z);br=wxy(mnLa,mxLo,z);if((br[0]-tl[0])*TS<W*0.75&&(br[1]-tl[1])*TS<H*0.75)break;}c=wxy((mnLa+mxLa)/2,(mnLo+mxLo)/2,z);ox=c[0]-W/2/TS;oy=c[1]-H/2/TS;function sc(a,b){var w=wxy(a,b,z);return[(w[0]-ox)*TS,(w[1]-oy)*TS];}var td=document.createElement('div');td.style.cssText='position:absolute;inset:0;';var nM=1<<z,x0=Math.floor(ox),y0=Math.floor(oy),x1=Math.ceil(ox+W/TS),y1=Math.ceil(oy+H/TS);for(var tx=x0;tx<=x1;tx++){for(var ty=y0;ty<=y1;ty++){var img=document.createElement('img'),nmt=(((tx%nM)+nM)%nM);img.src='https://mt'+(Math.abs(tx+ty)%4)+'.google.com/vt/lyrs=y&x='+nmt+'&y='+ty+'&z='+z;img.style.cssText='position:absolute;left:'+Math.round((tx-ox)*TS)+'px;top:'+Math.round((ty-oy)*TS)+'px;width:'+TS+'px;height:'+TS+'px;';img.draggable=false;td.appendChild(img);}}el.appendChild(td);var ns='http://www.w3.org/2000/svg',sv=document.createElementNS(ns,'svg');sv.style.cssText='position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;';function mk(tag,attrs){var e=document.createElementNS(ns,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e;}if(trk&&trk.waypoints&&trk.waypoints.length>=2){var pd=trk.waypoints.map(function(p,i){var s=sc(p.lat,p.lng);return(i?'L':'M')+s[0].toFixed(1)+','+s[1].toFixed(1);}).join(' ');sv.appendChild(mk('path',{d:pd,fill:'none',stroke:'#ffd600','stroke-width':'2.5','stroke-linecap':'round','stroke-linejoin':'round',opacity:'0.9'}));var s0=sc(trk.waypoints[0].lat,trk.waypoints[0].lng),se=sc(trk.waypoints[trk.waypoints.length-1].lat,trk.waypoints[trk.waypoints.length-1].lng);sv.appendChild(mk('circle',{cx:s0[0].toFixed(1),cy:s0[1].toFixed(1),r:'5',fill:'#00c853',stroke:'#fff','stroke-width':'1.5'}));sv.appendChild(mk('circle',{cx:se[0].toFixed(1),cy:se[1].toFixed(1),r:'5',fill:'#d50000',stroke:'#fff','stroke-width':'1.5'}));}hArr.forEach(function(h){if(!h.lat||!h.lng)return;var s=sc(+h.lat,+h.lng),pos=h.housePositive||(h.total>0)||(h.positive>0);sv.appendChild(mk('circle',{cx:s[0].toFixed(1),cy:s[1].toFixed(1),r:'4.5',fill:pos?'#e53935':'#1565c0',stroke:'#fff','stroke-width':'1.5'}));var t=mk('text',{x:(s[0]+5.5).toFixed(1),y:(s[1]+4).toFixed(1),'font-size':'7','font-family':'monospace','font-weight':'700',fill:'#fff',stroke:'#000','stroke-width':'2.5','paint-order':'stroke'});t.textContent=h.houseNo;sv.appendChild(t);});dArr.forEach(function(d){if(!d.lat||!d.lng)return;var s=sc(+d.lat,+d.lng);sv.appendChild(mk('polygon',{points:s[0]+','+(s[1]-5)+' '+(s[0]+5)+','+s[1]+' '+s[0]+','+(s[1]+5)+' '+(s[0]-5)+','+s[1],fill:'#1565c0',stroke:'#68fadd','stroke-width':'1.5'}));var t=mk('text',{x:(s[0]+6).toFixed(1),y:(s[1]+4).toFixed(1),'font-size':'7',fill:'#68fadd',stroke:'#000','stroke-width':'2','paint-order':'stroke'});t.textContent=d.siteNo;sv.appendChild(t);});el.appendChild(sv);var hGps=hArr.filter(function(h){return h.lat&&h.lng;}),dGps=dArr.filter(function(d){return d.lat&&d.lng;});var lg=document.createElement('div');lg.style.cssText='position:absolute;bottom:4px;left:6px;background:rgba(0,0,0,.72);border-radius:3px;padding:3px 7px;font-size:6.5pt;color:#fff;line-height:1.75;max-width:70%;';lg.innerHTML='<strong>'+sid+'</strong>'+(trk&&trk.distanceKm?' | Track: '+trk.distanceKm+' km':'')+(hGps.length?'<br><span style="color:#e53935">&#9679;</span>/<span style="color:#1565c0">&#9679;</span> Houses: '+hGps.length+(hArr.filter(function(h){return h.housePositive||(h.positive>0);}).length?' ('+hArr.filter(function(h){return h.housePositive||(h.positive>0);}).length+' +ve)':''):'')+(dGps.length?' | <span style="color:#68fadd">&#9670;</span> Dip sites: '+dGps.length:'');el.appendChild(lg);var zl=document.createElement('div');zl.style.cssText='position:absolute;top:4px;right:4px;background:rgba(0,0,0,.5);color:rgba(255,255,255,.75);font-size:6pt;padding:2px 5px;border-radius:3px;';zl.textContent='Z'+z+' · Satellite';el.appendChild(zl);}
+<\/script>
+</body></html>`;
+}
+function buildAdultPDFHtml(s){
+  const isR=s.collType==='resting';
+  const gpsStr=s.lat?parseFloat(s.lat).toFixed(5)+'°N, '+parseFloat(s.lng).toFixed(5)+'°E':'Not captured';
+  const mhD=s.totalManHours||((s.houses||[]).reduce((t,h)=>t+(h.hours||0),0)*(s.collectors||1));
+  const mhStr=mhD>0?mhD.toFixed(2):'—';
+  const pmhd=s.MHD||(mhD>0?(((s.totNonCulex||0)/mhD)*100).toFixed(2):'—');
+  const tmhd=s.TMHD||(mhD>0?(((s.totCulex||0)/mhD)*10).toFixed(2):'—');
+  // Species rows
+  let spRows='',totI=0,totO=0,lastG='';
+  ASP.forEach((sp,i)=>{
+    const v0=(s.houses||[]).reduce((t,h)=>t+(h.counts&&h.counts[i]?h.counts[i][0]:0),0);
+    const v1=isR?(s.houses||[]).reduce((t,h)=>t+(h.counts&&h.counts[i]?h.counts[i][1]:0),0):0;
+    totI+=v0;totO+=v1;
+    if(v0+v1>0){if(sp.g!==lastG){lastG=sp.g;spRows+=`<tr><td colspan="${isR?4:3}" style="background:#e8f5e9;font-size:8pt;font-weight:700;text-transform:uppercase;color:#1b5e20;padding:4px 8px;">${sp.g}</td></tr>`;}spRows+=`<tr><td><em>${sp.n}</em></td><td>${v0}</td>${isR?`<td>${v1}</td>`:''}<td style="font-weight:700;">${v0+v1}</td></tr>`;}
+  });
+  spRows+=`<tr style="background:#e8f5e9;font-weight:700;border-top:2px solid #006b5c;"><td>TOTAL</td><td>${totI}</td>${isR?`<td>${totO}</td>`:''}<td>${totI+totO}</td></tr>`;
+  // House rows
+  const hasRemarks=(s.houses||[]).some(h=>h.remarks);
+  let hRows='';
+  (s.houses||[]).forEach(h=>{
+    const ind=(h.counts||[]).reduce((t,r)=>t+(r[0]||0),0);
+    const out=isR?(h.counts||[]).reduce((t,r)=>t+(r[1]||0),0):0;
+    const gpsLink=h.lat&&h.lng?`<a href="https://maps.google.com/?q=${h.lat},${h.lng}" style="color:#006b5c;font-size:7.5pt;">&#128205; Map</a>`:'—';
+    hRows+=`<tr><td>${h.houseNo}</td><td>${h.rooms}</td><td>${h.start||'-'}</td><td>${h.end||'-'}</td><td>${h.hours>0?h.hours.toFixed(2)+'h':'-'}</td><td>${ind}</td>${isR?`<td>${out}</td>`:''}<td style="font-weight:700;">${h.total}</td><td>${gpsLink}</td>${hasRemarks?`<td style="font-size:8pt;color:#444;">${h.remarks||'—'}</td>`:''}</tr>`;
+  });
+  // Per-house species rows
+  let phRows='';
+  (s.houses||[]).forEach(h=>{
+    let first=true;
+    ASP.forEach((sp,i)=>{const v0=h.counts&&h.counts[i]?h.counts[i][0]:0;const v1=isR&&h.counts&&h.counts[i]?h.counts[i][1]:0;if(v0+v1>0){phRows+=`<tr><td>${first?h.houseNo:''}</td><td><em>${sp.n}</em></td><td>${sp.g}</td><td>${v0}</td>${isR?`<td>${v1}</td>`:''}<td style="font-weight:700;">${v0+v1}</td></tr>`;first=false;}});
+  });
+  const _mapTrkJ=JSON.stringify(s.track||null);
+  const _mapHJ=JSON.stringify((s.houses||[]).map(h=>({houseNo:h.houseNo,lat:h.lat,lng:h.lng,total:h.total})));
+  const css=`*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Times New Roman',serif;font-size:10.5pt;color:#111;}.page{width:210mm;min-height:297mm;margin:0 auto;padding:12mm 14mm 18mm;}.hd{border-bottom:3px double #006b5c;padding-bottom:8px;margin-bottom:10px;}.hd h2{font-size:13pt;font-weight:bold;color:#006b5c;}.hd p{font-size:8.5pt;color:#555;margin-top:2px;}.tb{background:linear-gradient(135deg,#004d42,#006b5c);color:#fff;border-radius:6px;padding:10px 14px;margin-bottom:10px;}.tb h1{font-size:13pt;font-weight:700;}.tb p{font-size:8.5pt;opacity:.8;margin-top:2px;}.ref{display:flex;flex-wrap:wrap;gap:4px;justify-content:space-between;font-size:8.5pt;color:#1b5e20;background:#e8f5e9;border-left:3px solid #006b5c;padding:5px 10px;margin-bottom:10px;}.sec{font-size:10.5pt;font-weight:bold;text-transform:uppercase;border-bottom:1.5px solid #a5d6a7;padding-bottom:2px;margin:12px 0 6px;color:#006b5c;letter-spacing:.04em;}.iw{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;}.ib{border:1px solid #80cbc4;border-radius:4px;padding:7px 6px;text-align:center;min-width:72px;flex:1;background:#e8f5e9;}.ib.hi{background:#e0f4e8;border-color:#66bb6a;}.ib.am{background:#fff3e0;border-color:#ffa726;}.il{font-size:7pt;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#555;margin-bottom:2px;}.iv{font-size:13pt;font-weight:700;color:#006b5c;}.ib.am .iv{color:#e65100;}.is{font-size:7pt;color:#777;margin-top:1px;}.mt{width:100%;border-collapse:collapse;margin-bottom:8px;}.mt td{padding:5px 8px;border:1px solid #ccc;font-size:9.5pt;text-align:left;}.mt td.lbl{background:#e8f5e9;font-weight:700;font-size:8.5pt;color:#1b5e20;width:25%;}table{width:100%;border-collapse:collapse;margin-bottom:8px;}thead tr{background:#006b5c;color:#fff;}thead th{padding:5px 7px;font-size:8pt;font-weight:700;text-align:center;}thead th:first-child{text-align:left;}td{padding:4px 7px;border-bottom:1px solid #e0e0e0;font-size:9.5pt;text-align:center;}td:first-child{text-align:left;}tr:nth-child(even) td{background:#f5fdf8;}.sig{display:flex;justify-content:space-between;gap:10px;margin-top:24px;padding-top:10px;border-top:1px solid #ccc;}.sb{flex:1;text-align:center;}.sl{border-top:1px solid #333;margin:0 auto 4px;width:88%;}.sn{font-size:9pt;font-weight:bold;}.sr{font-size:8pt;color:#555;margin-top:2px;}.footer{margin-top:12px;border-top:1px solid #ccc;padding-top:5px;font-size:7.5pt;color:#888;text-align:center;}.sb-fixed{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ccc;padding:10px;text-align:center;}.pb{background:#006b5c;color:#fff;border:none;padding:10px 30px;border-radius:6px;font-size:12pt;font-weight:bold;cursor:pointer;}@media print{.sb-fixed{display:none!important;}@page{size:A4;margin:10mm;}}`;
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>EST Adult — ${s.district||''} — ${s.date||''}</title><style>${css}</style></head><body><div style="height:58px;"></div><div class="page">
+<div class="hd"><h2>EST v${APP_VER||'2.0'} — Entomological Surveillance Tool</h2><p>Adult Mosquito Surveillance Report</p></div>
+<div class="tb"><h1>${isR?'Resting Collection Report':'Human Landing Catch (HLC) Report'}</h1><p>${s.location||'—'} · ${s.district||'—'}</p></div>
+<div class="ref"><span><strong>Date:</strong> ${s.date||'—'}</span><span><strong>ID:</strong> EST-A-${s.id}</span><span><strong>Type:</strong> ${isR?'Resting':'HLC'}</span><span><strong>District:</strong> ${s.district||'—'}</span><span><strong>State:</strong> ${s.state||'—'}</span></div>
+<div class="sec">1. Survey Metadata</div>
+<table class="mt"><tr><td class="lbl">Date</td><td>${s.date||'—'}</td><td class="lbl">State / UT</td><td>${s.state||'—'}</td></tr>
+<tr><td class="lbl">District</td><td>${s.district||'—'}</td><td class="lbl">Location / Area</td><td>${s.location||'—'}</td></tr>
+<tr><td class="lbl">GPS Coordinates</td><td colspan="3">${gpsStr}</td></tr>
+<tr><td class="lbl">Collection Type</td><td>${isR?'Resting Collection (Aspirator/Net)':'Human Landing Catch (HLC)'}</td><td class="lbl">Nights Surveyed</td><td>${s.nights||1}</td></tr>
+<tr><td class="lbl">Surveillance Workers</td><td>${s.workers||'—'}</td><td class="lbl">No. of Collectors</td><td>${s.collectors||'—'}</td></tr>
+<tr><td class="lbl">Supervising Officer</td><td colspan="3">${s.officers||'—'}</td></tr>
+<tr><td class="lbl">Houses / Sites</td><td>${(s.houses||[]).length}</td><td class="lbl">Total Man-Hours</td><td>${mhStr} hrs</td></tr>
+<tr><td class="lbl">Total Mosquitoes</td><td>${s.totalMosq||0}</td><td class="lbl">Saved At</td><td style="font-size:8.5pt;">${s.savedAt?new Date(s.savedAt).toLocaleString('en-IN'):'—'}</td></tr></table>
+<div class="sec">2. Survey Track Map</div>
+<div id="pmap-a" style="width:100%;height:220px;background:#1a1a2e;border-radius:5px;overflow:hidden;border:1px solid #a5d6a7;margin-bottom:8px;"></div>
+<div class="sec">3. Density Indices</div>
+<div class="iw"><div class="ib hi"><div class="il">PMHD (Non-Culex)</div><div class="iv">${pmhd}</div><div class="is">(Non-Culex ÷ (Coll. × Time)) × 100</div></div><div class="ib am"><div class="il">Culex TMHD × 10</div><div class="iv">${tmhd}</div><div class="is">(Culex ÷ (Coll. × Time)) × 10</div></div>${isR?`<div class="ib"><div class="il">Indoor Density</div><div class="iv">${s.indoorDensity||'—'}</div><div class="is">mosq/house/night</div></div><div class="ib"><div class="il">Outdoor Density</div><div class="iv">${s.outdoorDensity||'—'}</div><div class="is">mosq/house/night</div></div><div class="ib"><div class="il">Room Density</div><div class="iv">${s.roomDensity||'—'}</div><div class="is">mosq/room</div></div>`:''}<div class="ib"><div class="il">Man-Hours</div><div class="iv">${mhStr}</div><div class="is">Coll. × Total Hrs</div></div><div class="ib"><div class="il">Non-Culex Total</div><div class="iv">${s.totNonCulex||0}</div></div><div class="ib"><div class="il">Culex Total</div><div class="iv">${s.totCulex||0}</div></div></div>
+<table class="mt"><tr><td class="lbl">Total Mosquitoes</td><td style="font-weight:700;">${s.totalMosq||0}</td><td class="lbl">Non-Culex</td><td>${s.totNonCulex||0}</td></tr><tr><td class="lbl">Culex</td><td>${s.totCulex||0}</td>${isR?`<td class="lbl">Indoor</td><td>${s.totIndoor||0}</td></tr><tr><td class="lbl">Outdoor</td><td>${s.totOutdoor||0}</td><td class="lbl">Rooms Inspected</td><td>${s.totalRooms||0}</td>`:`<td class="lbl">Houses / Sites</td><td>${(s.houses||[]).length}</td>`}</tr></table>
+<div class="sec">4. Species Breakdown</div>
+<table><thead><tr><th>Species</th><th>${isR?'Indoor':'Landing'}</th>${isR?'<th>Outdoor</th>':''}<th>Total</th></tr></thead><tbody>${spRows||'<tr><td colspan="3" style="color:#999;text-align:center;">No species data recorded</td></tr>'}</tbody></table>
+<div class="sec">5. House / Site Details</div>
+<table><thead><tr><th>House/Site</th><th>Rooms</th><th>Start</th><th>End</th><th>Hours</th><th>${isR?'Indoor':'LC'}</th>${isR?'<th>Outdoor</th>':''}<th>Total</th><th>GPS</th>${hasRemarks?'<th>Remarks</th>':''}</tr></thead><tbody>${hRows||'<tr><td colspan="8" style="color:#999;text-align:center;">No house data recorded</td></tr>'}</tbody></table>
+<div class="sec">6. Per-House / Site Species Breakdown</div>
+<table><thead><tr><th>House/Site</th><th>Species</th><th>Genus</th><th>${isR?'Indoor':'LC'}</th>${isR?'<th>Outdoor</th>':''}<th>Total</th></tr></thead><tbody>${phRows||'<tr><td colspan="5" style="color:#999;text-align:center;">No species data recorded</td></tr>'}</tbody></table>
+<div class="sig"><div class="sb"><div class="sl"></div><div class="sn">${(s.workers||'—').split(/[\n,]/)[0]}</div><div class="sr">Surveillance Worker</div></div><div class="sb"><div class="sl"></div><div class="sn">${s.officers||'—'}</div><div class="sr">Supervising Officer</div></div><div class="sb"><div class="sl"></div><div class="sn">Medical Officer Incharge</div><div class="sr">Verification &amp; Approval</div></div></div>
+<div class="footer">Entomological Surveillance Tool — EST v${APP_VER||'2.0'} &nbsp;|&nbsp; Report ID: EST-A-${s.id} &nbsp;|&nbsp; Generated: ${new Date().toLocaleString('en-IN')}</div>
+</div><div class="sb-fixed"><button class="pb" onclick="window.print()">&#128424; Print / Save PDF</button></div>
+<script>
+window.addEventListener('load',function(){
+  var el=document.getElementById('pmap-a');if(!el)return;
+  _rmap(el,${_mapTrkJ},${_mapHJ},'EST-A-${s.id}');
+});
+function _rmap(el,trk,hArr,sid){var TS=256,W=el.offsetWidth||580,H=220;el.style.cssText='position:relative;overflow:hidden;background:#1a1a2e;height:'+H+'px;';var pts=[];if(trk&&trk.waypoints)trk.waypoints.forEach(function(p){pts.push([p.lat,p.lng]);});hArr.forEach(function(h){if(h.lat&&h.lng)pts.push([+h.lat,+h.lng]);});if(!pts.length){el.innerHTML='<div style="text-align:center;color:rgba(255,255,255,.4);padding:70px 0 0;font-size:9pt;">No GPS data recorded</div>';return;}var mnLa=pts[0][0],mxLa=pts[0][0],mnLo=pts[0][1],mxLo=pts[0][1];pts.forEach(function(p){mnLa=Math.min(mnLa,p[0]);mxLa=Math.max(mxLa,p[0]);mnLo=Math.min(mnLo,p[1]);mxLo=Math.max(mxLo,p[1]);});var dLa=(mxLa-mnLa)*0.15||0.001,dLo=(mxLo-mnLo)*0.15||0.001;mnLa-=dLa;mxLa+=dLa;mnLo-=dLo;mxLo+=dLo;function wxy(a,b,z){var n=1<<z,x=(b+180)/360*n,r=a*Math.PI/180,y=(1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*n;return[x,y];}var z=17,ox=0,oy=0,c,tl,br;for(z=17;z>=2;z--){tl=wxy(mxLa,mnLo,z);br=wxy(mnLa,mxLo,z);if((br[0]-tl[0])*TS<W*0.75&&(br[1]-tl[1])*TS<H*0.75)break;}c=wxy((mnLa+mxLa)/2,(mnLo+mxLo)/2,z);ox=c[0]-W/2/TS;oy=c[1]-H/2/TS;function sc(a,b){var w=wxy(a,b,z);return[(w[0]-ox)*TS,(w[1]-oy)*TS];}var td=document.createElement('div');td.style.cssText='position:absolute;inset:0;';var nM=1<<z,x0=Math.floor(ox),y0=Math.floor(oy),x1=Math.ceil(ox+W/TS),y1=Math.ceil(oy+H/TS);for(var tx=x0;tx<=x1;tx++){for(var ty=y0;ty<=y1;ty++){var img=document.createElement('img'),nmt=(((tx%nM)+nM)%nM);img.src='https://mt'+(Math.abs(tx+ty)%4)+'.google.com/vt/lyrs=y&x='+nmt+'&y='+ty+'&z='+z;img.style.cssText='position:absolute;left:'+Math.round((tx-ox)*TS)+'px;top:'+Math.round((ty-oy)*TS)+'px;width:'+TS+'px;height:'+TS+'px;';img.draggable=false;td.appendChild(img);}}el.appendChild(td);var ns='http://www.w3.org/2000/svg',sv=document.createElementNS(ns,'svg');sv.style.cssText='position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;';function mk(tag,attrs){var e=document.createElementNS(ns,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e;}if(trk&&trk.waypoints&&trk.waypoints.length>=2){var pd=trk.waypoints.map(function(p,i){var s=sc(p.lat,p.lng);return(i?'L':'M')+s[0].toFixed(1)+','+s[1].toFixed(1);}).join(' ');sv.appendChild(mk('path',{d:pd,fill:'none',stroke:'#ffd600','stroke-width':'2.5','stroke-linecap':'round','stroke-linejoin':'round',opacity:'0.9'}));var s0=sc(trk.waypoints[0].lat,trk.waypoints[0].lng),se=sc(trk.waypoints[trk.waypoints.length-1].lat,trk.waypoints[trk.waypoints.length-1].lng);sv.appendChild(mk('circle',{cx:s0[0].toFixed(1),cy:s0[1].toFixed(1),r:'5',fill:'#00c853',stroke:'#fff','stroke-width':'1.5'}));sv.appendChild(mk('circle',{cx:se[0].toFixed(1),cy:se[1].toFixed(1),r:'5',fill:'#d50000',stroke:'#fff','stroke-width':'1.5'}));}hArr.forEach(function(h){if(!h.lat||!h.lng)return;var s=sc(+h.lat,+h.lng);sv.appendChild(mk('circle',{cx:s[0].toFixed(1),cy:s[1].toFixed(1),r:'4.5',fill:'#1565c0',stroke:'#fff','stroke-width':'1.5'}));var t=mk('text',{x:(s[0]+5.5).toFixed(1),y:(s[1]+4).toFixed(1),'font-size':'7','font-family':'monospace','font-weight':'700',fill:'#fff',stroke:'#000','stroke-width':'2.5','paint-order':'stroke'});t.textContent=h.houseNo;sv.appendChild(t);});el.appendChild(sv);var hGps=hArr.filter(function(h){return h.lat&&h.lng;});var lg=document.createElement('div');lg.style.cssText='position:absolute;bottom:4px;left:6px;background:rgba(0,0,0,.72);border-radius:3px;padding:3px 7px;font-size:6.5pt;color:#fff;line-height:1.75;max-width:70%;';lg.innerHTML='<strong>'+sid+'</strong>'+(trk&&trk.distanceKm?' | Track: '+trk.distanceKm+' km':'')+(hGps.length?'<br><span style="color:#1565c0">&#9679;</span> Houses: '+hGps.length:'');el.appendChild(lg);var zl=document.createElement('div');zl.style.cssText='position:absolute;top:4px;right:4px;background:rgba(0,0,0,.5);color:rgba(255,255,255,.75);font-size:6pt;padding:2px 5px;border-radius:3px;';zl.textContent='Z'+z+' · Satellite';el.appendChild(zl);}
 <\/script>
 </body></html>`;
 }
