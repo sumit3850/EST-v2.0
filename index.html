@@ -492,8 +492,19 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       </div>
       <div class="submod-body">
         <div class="submod-name">Adult Mosquito Density</div>
-        <div class="submod-sub">Resting Collection / HLC</div>
-        <div class="submod-desc">House-by-house indoor/outdoor collection. Calculates PMHD, TMHD, resting density &amp; room density.</div>
+        <div class="submod-sub">Resting Collection (Aspirator / Net)</div>
+        <div class="submod-desc">House-by-house indoor/outdoor resting collection. Calculates PMHD, TMHD, resting density &amp; room density.</div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--osv)" style="flex-shrink:0;margin-top:2px;"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+    </div>
+    <div class="submod-card" onclick="selectAdultSubmod('hlc')">
+      <div class="submod-icon" style="background:rgba(245,124,0,.08);">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#f57c00"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      </div>
+      <div class="submod-body">
+        <div class="submod-name">Human Landing Catch</div>
+        <div class="submod-sub">HLC — Landing Collection (Human Bait)</div>
+        <div class="submod-desc">Human-volunteer landing catch per site. Calculates PMHD, TMHD and HBR for human–vector contact rate.</div>
       </div>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--osv)" style="flex-shrink:0;margin-top:2px;"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
     </div>
@@ -620,8 +631,18 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
         </div>
         <div id="a-nights-row">
           <div style="font-size:11px;font-weight:700;color:var(--os);margin-bottom:6px;">Day / Night Surveyed</div>
-          <div class="cnt-row"><button class="cnt-btn" onclick="changeParam('a-nights',-1,1,30)">-</button><div class="cnt-val" id="a-nights-disp">1</div><button class="cnt-btn" onclick="changeParam('a-nights',1,1,30)">+</button></div>
-          <input type="hidden" id="a-nights" value="1">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div>
+              <div style="font-size:10px;color:var(--osv);margin-bottom:4px;text-align:center;">Day</div>
+              <div class="cnt-row"><button class="cnt-btn" onclick="changeParam('a-days',-1,0,30)">-</button><div class="cnt-val" id="a-days-disp">0</div><button class="cnt-btn" onclick="changeParam('a-days',1,0,30)">+</button></div>
+              <input type="hidden" id="a-days" value="0">
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--osv);margin-bottom:4px;text-align:center;">Night</div>
+              <div class="cnt-row"><button class="cnt-btn" onclick="changeParam('a-nights',-1,0,30)">-</button><div class="cnt-val" id="a-nights-disp">0</div><button class="cnt-btn" onclick="changeParam('a-nights',1,0,30)">+</button></div>
+              <input type="hidden" id="a-nights" value="0">
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -662,13 +683,19 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--osv);margin-bottom:7px;">Collection Count by Species</div>
       <div class="matrix-wrap"><table class="mtbl" id="a-mtbl"><thead><tr id="a-mtbl-head"><th style="text-align:left;padding-left:10px;">Species</th></tr></thead><tbody id="a-sp-body"></tbody></table></div>
       <div style="background:var(--sf);border:1px dashed var(--olv);border-radius:var(--rmd);padding:9px 12px;margin-bottom:11px;margin-top:-4px;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">
-          <span style="font-size:11px;font-weight:700;color:var(--osv);white-space:nowrap;">Others — specify:</span>
-          <input type="text" id="a-other-name" placeholder="Species name…" style="flex:1;height:34px;padding:0 10px;border:1.5px solid var(--olv);border-radius:var(--rsm);font-size:13px;color:var(--os);background:var(--sfc);">
+        <div style="font-size:11px;font-weight:700;color:var(--osv);margin-bottom:8px;">Others — Unidentified &amp; Other Species</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <span style="font-size:12px;font-weight:600;color:var(--os);">Unidentified (UN-ID-01)</span>
+          <div class="cnt-row"><button class="cnt-btn" onclick="changeUnidentifiedCnt('a',-1)">-</button><div class="cnt-val" id="a-unid-cnt">0</div><button class="cnt-btn" onclick="changeUnidentifiedCnt('a',1)">+</button></div>
         </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <span style="font-size:10px;font-weight:600;color:var(--osv);">Count:</span>
-          <div class="cnt-row"><button class="cnt-btn" onclick="changeOtherSpecCnt(-1)">-</button><div class="cnt-val" id="a-other-cnt">0</div><button class="cnt-btn" onclick="changeOtherSpecCnt(1)">+</button></div>
+        <div style="border-top:1px dashed var(--olv);padding-top:8px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--osv);margin-bottom:6px;">Other sp. log</div>
+          <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
+            <input type="text" id="a-other-name" placeholder="Species name…" style="flex:1;height:32px;padding:0 9px;border:1.5px solid var(--olv);border-radius:var(--rsm);font-size:12px;color:var(--os);background:var(--sfc);">
+            <div class="cnt-row" style="gap:4px;"><button class="cnt-btn" style="width:28px;height:28px;" onclick="changeOtherLogCnt('a',-1)">-</button><div class="cnt-val" style="min-width:28px;font-size:13px;" id="a-other-log-cnt">0</div><button class="cnt-btn" style="width:28px;height:28px;" onclick="changeOtherLogCnt('a',1)">+</button></div>
+            <button onclick="addToOtherLog('a')" style="height:32px;padding:0 10px;background:var(--primary);color:#fff;border:none;border-radius:var(--rsm);font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;">Add</button>
+          </div>
+          <div id="a-other-log-table" style="display:none;"></div>
         </div>
       </div>
       <div class="field" id="a-remarks-row" style="margin-bottom:8px;display:none;">
@@ -719,7 +746,8 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       <div class="r-row"><span class="r-key">GPS</span><span class="r-val mono" id="r-a-gps">-</span></div>
       <div class="r-row"><span class="r-key">Collectors</span><span class="r-val" id="r-a-workers">-</span></div>
       <div class="r-row"><span class="r-key">Count</span><span class="r-val mono" id="r-a-nc">-</span></div>
-      <div class="r-row" id="r-a-nights-row"><span class="r-key">Nights</span><span class="r-val mono" id="r-a-nights">-</span></div>
+      <div class="r-row" id="r-a-nights-row"><span class="r-key">Day / Night</span><span class="r-val mono" id="r-a-nights">-</span></div>
+      <div class="r-row" id="r-a-collperiod-row"><span class="r-key">Collection</span><span class="r-val" id="r-a-collperiod" style="font-weight:700;color:var(--primary);">-</span></div>
       <div class="r-row"><span class="r-key">Officer</span><span class="r-val" id="r-a-offr">-</span></div>
       <div class="r-row"><span class="r-key">Houses</span><span class="r-val mono" id="r-a-hcount">-</span></div>
       <div class="r-row"><span class="r-key">Man-Hours</span><span class="r-val mono" id="r-a-mhrs">-</span></div>
@@ -886,9 +914,25 @@ body.tracking .scroll-area{padding-bottom:calc(var(--nh) + 42px + 16px)!importan
       <!-- SPECIES IDENTIFIED -->
       <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--osv);margin-bottom:6px;">Species Identified (Larvae / Pupae)</div>
       <div class="matrix-wrap"><table class="mtbl lrv"><thead><tr><th style="text-align:left;padding-left:10px;">Species</th><th class="lrv1">Larvae</th><th class="lrv2">Pupae</th></tr></thead><tbody id="l-sp-body"></tbody></table></div>
-      <div style="display:flex;align-items:center;gap:8px;background:var(--sf);border:1px dashed var(--olv);border-radius:var(--rmd);padding:9px 12px;margin-bottom:10px;margin-top:-4px;">
-        <span style="font-size:11px;font-weight:700;color:var(--osv);white-space:nowrap;">Others:</span>
-        <input type="text" id="l-other-name" placeholder="Species name…" style="flex:1;height:34px;padding:0 10px;border:1.5px solid var(--olv);border-radius:var(--rsm);font-size:13px;color:var(--os);background:var(--sfc);">
+      <div style="background:var(--sf);border:1px dashed var(--olv);border-radius:var(--rmd);padding:9px 12px;margin-bottom:10px;margin-top:-4px;">
+        <div style="font-size:11px;font-weight:700;color:var(--osv);margin-bottom:8px;">Others — Unidentified &amp; Other Species</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <span style="font-size:12px;font-weight:600;color:var(--os);">Unidentified (UN-ID-01)</span>
+          <div class="cnt-row"><button class="cnt-btn" onclick="changeUnidentifiedCnt('l',-1)">-</button><div class="cnt-val" id="l-unid-cnt">0</div><button class="cnt-btn" onclick="changeUnidentifiedCnt('l',1)">+</button></div>
+        </div>
+        <div style="border-top:1px dashed var(--olv);padding-top:8px;margin-bottom:8px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--osv);margin-bottom:6px;">Other sp. log</div>
+          <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
+            <input type="text" id="l-other-name" placeholder="Species name…" style="flex:1;height:32px;padding:0 9px;border:1.5px solid var(--olv);border-radius:var(--rsm);font-size:12px;color:var(--os);background:var(--sfc);">
+            <div class="cnt-row" style="gap:4px;"><button class="cnt-btn" style="width:28px;height:28px;" onclick="changeOtherLogCnt('l',-1)">-</button><div class="cnt-val" style="min-width:28px;font-size:13px;" id="l-other-log-cnt">0</div><button class="cnt-btn" style="width:28px;height:28px;" onclick="changeOtherLogCnt('l',1)">+</button></div>
+            <button onclick="addToOtherLog('l')" style="height:32px;padding:0 10px;background:var(--larval);color:#fff;border:none;border-radius:var(--rsm);font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;">Add</button>
+          </div>
+          <div id="l-other-log-table" style="display:none;"></div>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:9px;">
+        <label class="flabel">Remarks</label>
+        <textarea id="l-remarks" placeholder="Observations, notes for this house/site…" style="width:100%;min-height:52px;padding:8px 10px;border:1.5px solid var(--olv);border-radius:var(--rsm);font-size:13px;color:var(--os);background:var(--sfc);resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
       </div>
       <div class="field" style="margin-bottom:9px;">
         <label class="flabel">End Time</label>
@@ -1505,7 +1549,7 @@ async function syncValidUsersFromCache(){
     if(raw) mergeConfigCreds(JSON.parse(raw));
   }catch(e){}
 }
-const APP_VER='2.0.38';
+const APP_VER='2.0.39';
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
   {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
@@ -1516,21 +1560,19 @@ const ASP=[
   {n:'Cx. quinquefasciatus',g:'CULEX',cx:true},{n:'Cx. vishnui',g:'CULEX',cx:true},{n:'Cx. pseudovishnui',g:'CULEX',cx:true},
   {n:'Cx. tritaeniorhynchus',g:'CULEX',cx:true},{n:'Cx. gelidus',g:'CULEX',cx:true},{n:'Cx. fuscocephala',g:'CULEX',cx:true},
   {n:'Cx. whitmorei',g:'CULEX',cx:true},{n:'Cx. epidesmus',g:'CULEX',cx:true},{n:'Cx. bitaeniorhynchus',g:'CULEX',cx:true},
-  {n:'Ph. argentipes',g:'OTHER VECTORS'},{n:'Others',g:'OTHERS',oth:true}
+  {n:'Ph. argentipes',g:'OTHER VECTORS'}
 ];
 const ANS=ASP.length;
 const LSP=[
-  {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
-  {n:'An. subpictus',g:'ANOPHELES'},{n:'An. sundaicus',g:'ANOPHELES'},{n:'An. barbirostris',g:'ANOPHELES'},
-  {n:'Cx. quinquefasciatus',g:'CULEX'},{n:'Others',g:'OTHERS',oth:true}
+  {n:'Aedes sp.',g:'AEDES'},{n:'Culex sp.',g:'CULEX',cx:true},{n:'Anopheles sp.',g:'ANOPHELES'}
 ];
 const LNS=LSP.length;
 let activeModule=null,activeSavedTab='adult',lastSavedId=null,lastSavedType=null;
-const aS={collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,nights:1,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curCounts:Array.from({length:ANS},()=>[0,0,0]),curOther:'',otherSpecCount:0};
-const lS={date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipSites:[],curHN:1,curSiteN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curCounts:Array.from({length:LNS},()=>[0,0]),curOther:''};
+const aS={collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,days:0,nights:0,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curCounts:Array.from({length:ANS},()=>[0,0,0]),curUnidentified:0,curOtherLog:[]};
+const lS={date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipSites:[],curHN:1,curSiteN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curCounts:Array.from({length:LNS},()=>[0,0]),curUnidentified:0,curOtherLog:[],curRemarks:''};
 function aCols(){return aS.collType==='resting'?['Indoor','Outdoor']:['Landing Catch'];}
 function aTotSp(i){return aS.collType==='resting'?aS.houses.reduce((s,h)=>s+h.counts[i][0]+h.counts[i][1],0):aS.houses.reduce((s,h)=>s+h.counts[i][0],0);}
-function aTotAll(){let t=0;for(let i=0;i<ANS;i++)t+=aTotSp(i);return t;}
+function aTotAll(){let t=0;for(let i=0;i<ANS;i++)t+=aTotSp(i);t+=aS.houses.reduce((s,h)=>{let x=h.unidentifiedCount||0;if(h.otherSpLog)x+=h.otherSpLog.reduce((a,e)=>a+(e.count||0),0);return s+x;},0);return t;}
 function aTotNonCulex(){let t=0;for(let i=0;i<ANS;i++)if(!ASP[i].cx)t+=aTotSp(i);return t;}
 function aTotCulex(){let t=0;for(let i=0;i<ANS;i++)if(ASP[i].cx)t+=aTotSp(i);return t;}
 function aTotIndoor(){if(aS.collType!=='resting')return 0;return aS.houses.reduce((s,h)=>s+h.counts.reduce((t,r)=>t+r[0],0),0);}
@@ -1824,8 +1866,8 @@ function startModule(mod,mode){
   }
 }
 function resetStateOnly(mod){
-  if(mod==='adult'){Object.assign(aS,{collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,nights:1,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curOther:'',otherSpecCount:0});aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);}
-  else{Object.assign(lS,{date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipSites:[],curHN:1,curSiteN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curOther:''});lS.curCounts=Array.from({length:LNS},()=>[0,0]);lContainers=CONTAINERS.map(c=>({...c}));}
+  if(mod==='adult'){Object.assign(aS,{collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,days:0,nights:0,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curUnidentified:0,curOtherLog:[]});aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);}
+  else{Object.assign(lS,{date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipSites:[],curHN:1,curSiteN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curUnidentified:0,curOtherLog:[],curRemarks:''});lS.curCounts=Array.from({length:LNS},()=>[0,0]);lContainers=CONTAINERS.map(c=>({...c}));}
 }
 function resetModule(mod){
   if(!confirm('Reset all data for this survey?'))return;
@@ -1833,8 +1875,8 @@ function resetModule(mod){
   if(mod==='adult'){
     ['a-date','a-location','a-workers','a-officers'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=id==='a-date'?todayStr():'';});
     document.getElementById('a-district').selectedIndex=0;
-    document.getElementById('a-collectors').value='1';document.getElementById('a-nights').value='1';
-    document.getElementById('a-collectors-disp').textContent='1';document.getElementById('a-nights-disp').textContent='1';
+    document.getElementById('a-collectors').value='1';document.getElementById('a-nights').value='0';document.getElementById('a-days').value='0';
+    document.getElementById('a-collectors-disp').textContent='1';document.getElementById('a-nights-disp').textContent='0';document.getElementById('a-days-disp').textContent='0';
     buildAdultMatrix();renderAdultHouses();updateAdultSummary();setCollType('resting');showScreen('adult-survey');
   }else{
     ['l-date','l-location','l-workers','l-officers'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=id==='l-date'?todayStr():'';});
@@ -2038,6 +2080,7 @@ function changeParam(id,delta,mn,mx){
   // Update aS/lS
   if(id==='a-collectors'){aS.collectors=v;updateAdultSummary();}
   else if(id==='a-nights'){aS.nights=v;}
+  else if(id==='a-days'){aS.days=v;}
 }
 function openGoogleMaps(){
   showToast('Opening Google Maps — zoom to location, long-press to get coordinates','check');
@@ -2115,7 +2158,12 @@ function buildAdultMatrix(){
   });
 }
 function chgASp(i,col,d){aS.curCounts[i][col]=Math.max(0,aS.curCounts[i][col]+d);const el=document.getElementById(`asc-${i}-${col}`);if(el)el.textContent=aS.curCounts[i][col];}
-function changeOtherSpecCnt(d){aS.otherSpecCount=Math.max(0,(aS.otherSpecCount||0)+d);const el=document.getElementById('a-other-cnt');if(el)el.textContent=aS.otherSpecCount;}
+let _aOtherLogCnt=0,_lOtherLogCnt=0;
+function changeUnidentifiedCnt(pfx,d){if(pfx==='a'){aS.curUnidentified=Math.max(0,(aS.curUnidentified||0)+d);const el=document.getElementById('a-unid-cnt');if(el)el.textContent=aS.curUnidentified;}else{lS.curUnidentified=Math.max(0,(lS.curUnidentified||0)+d);const el=document.getElementById('l-unid-cnt');if(el)el.textContent=lS.curUnidentified;}}
+function changeOtherLogCnt(pfx,d){if(pfx==='a'){_aOtherLogCnt=Math.max(0,_aOtherLogCnt+d);const el=document.getElementById('a-other-log-cnt');if(el)el.textContent=_aOtherLogCnt;}else{_lOtherLogCnt=Math.max(0,_lOtherLogCnt+d);const el=document.getElementById('l-other-log-cnt');if(el)el.textContent=_lOtherLogCnt;}}
+function addToOtherLog(pfx){const nameEl=document.getElementById(pfx+'-other-name');const name=(nameEl?.value||'').trim();const cnt=pfx==='a'?_aOtherLogCnt:_lOtherLogCnt;if(!name){showToast('Enter species name','warn');return;}if(pfx==='a'){aS.curOtherLog.push({name,count:cnt});_aOtherLogCnt=0;const ce=document.getElementById('a-other-log-cnt');if(ce)ce.textContent=0;renderOtherLog('a');}else{lS.curOtherLog.push({name,count:cnt});_lOtherLogCnt=0;const ce=document.getElementById('l-other-log-cnt');if(ce)ce.textContent=0;renderOtherLog('l');}if(nameEl)nameEl.value='';}
+function removeFromOtherLog(pfx,idx){if(pfx==='a'){aS.curOtherLog.splice(idx,1);renderOtherLog('a');}else{lS.curOtherLog.splice(idx,1);renderOtherLog('l');}}
+function renderOtherLog(pfx){const log=pfx==='a'?aS.curOtherLog:lS.curOtherLog;const wrap=document.getElementById(pfx+'-other-log-table');if(!wrap)return;if(!log.length){wrap.style.display='none';wrap.innerHTML='';return;}wrap.style.display='block';wrap.innerHTML='<table style="width:100%;border-collapse:collapse;font-size:11px;margin-top:2px;"><thead><tr><th style="text-align:left;padding:3px 6px;background:var(--sfc);font-weight:700;color:var(--osv);">Species</th><th style="padding:3px 6px;background:var(--sfc);font-weight:700;color:var(--osv);">Count</th><th style="padding:3px 6px;background:var(--sfc);"></th></tr></thead><tbody>'+log.map((e,i)=>`<tr><td style="padding:3px 6px;font-style:italic;">${e.name}</td><td style="padding:3px 6px;text-align:center;font-weight:700;">${e.count}</td><td style="padding:3px 6px;text-align:center;"><button onclick="removeFromOtherLog('${pfx}',${i})" style="background:none;border:none;cursor:pointer;color:var(--err);font-size:14px;line-height:1;">×</button></td></tr>`).join('')+'</tbody></table>';}
 function proceedToAdultCollect(){
   const date=document.getElementById('a-date').value.trim(),dist=document.getElementById('a-district').value,loc=document.getElementById('a-location').value.trim(),wrk=document.getElementById('a-workers').value.trim(),offr=document.getElementById('a-officers').value.trim(),errEl=document.getElementById('a-err');
   if(!date||!dist||!loc||!wrk||!offr){errEl.textContent='Please fill all required fields.';errEl.style.display='block';return;}
@@ -2123,7 +2171,8 @@ function proceedToAdultCollect(){
   const aStateVal=document.getElementById('a-state')?.value||'';
   aS.date=date;aS.state=aStateVal;aS.district=dist;aS.location=loc;aS.workers=wrk;aS.officers=offr;
   aS.collectors=parseInt(document.getElementById('a-collectors').value)||1;
-  aS.nights=parseInt(document.getElementById('a-nights').value)||1;
+  aS.nights=parseInt(document.getElementById('a-nights').value)||0;
+  aS.days=parseInt(document.getElementById('a-days').value)||0;
   _updAdultP2Labels(aS.collType);
   buildAdultMatrix();renderAdultHouses();updateAdultSummary();showScreen('adult-collect');
 }
@@ -2148,12 +2197,14 @@ function logAdultHouse(){
   }
   if(twEl)twEl.style.display='none';
   const hours=calcHrs(start,end),counts=aS.curCounts.map(r=>[...r]);
-  const total=aS.collType==='resting'?counts.reduce((s,r)=>s+r[0]+r[1],0):counts.reduce((s,r)=>s+r[0],0);
-  const other=document.getElementById('a-other-name')?.value.trim()||'';
-  const otherCnt=aS.otherSpecCount||0;
+  const baseTotal=aS.collType==='resting'?counts.reduce((s,r)=>s+r[0]+r[1],0):counts.reduce((s,r)=>s+r[0],0);
+  const unidentifiedCount=aS.curUnidentified||0;
+  const otherSpLog=[...aS.curOtherLog];
+  const otherLogTotal=otherSpLog.reduce((s,e)=>s+(e.count||0),0);
+  const total=baseTotal+unidentifiedCount+otherLogTotal;
   const remarks=document.getElementById('a-remarks')?.value.trim()||'';
   const cached=TrackRecorder.getLastPos();
-  const entry={id:Date.now(),houseNo:code,rooms:aS.curRooms,start:start||'-',end:end||'-',hours,counts,total,otherName:other,otherCount:otherCnt,remarks,lat:cached?.lat||'',lng:cached?.lng||''};
+  const entry={id:Date.now(),houseNo:code,rooms:aS.curRooms,start:start||'-',end:end||'-',hours,counts,total,unidentifiedCount,otherSpLog,remarks,lat:cached?.lat||'',lng:cached?.lng||''};
   aS.houses.push(entry);
   aS.curHN++;const nc=hCode(aS.curHN);
   const hd=document.getElementById('a-hnum-disp');if(hd)hd.textContent=nc;
@@ -2162,7 +2213,8 @@ function logAdultHouse(){
   document.getElementById('a-start').value='';document.getElementById('a-end').value='';
   const oe=document.getElementById('a-other-name');if(oe)oe.value='';
   const re=document.getElementById('a-remarks');if(re)re.value='';
-  aS.otherSpecCount=0;const ocEl=document.getElementById('a-other-cnt');if(ocEl)ocEl.textContent=0;
+  aS.curUnidentified=0;const uEl=document.getElementById('a-unid-cnt');if(uEl)uEl.textContent=0;
+  aS.curOtherLog=[];_aOtherLogCnt=0;const olcEl=document.getElementById('a-other-log-cnt');if(olcEl)olcEl.textContent=0;renderOtherLog('a');
   aS.curRooms=0;const ard=document.getElementById('a-rooms-disp');if(ard)ard.textContent='0';
   aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);
   buildAdultMatrix();updateTimeCalc('a');renderAdultHouses();updateAdultSummary();saveDraft('adult');
@@ -2180,7 +2232,9 @@ function renderAdultHouses(){
   aS.houses.forEach((h,idx)=>{
     const ind=isR?h.counts.reduce((s,r)=>s+r[0],0):0;const out=isR?h.counts.reduce((s,r)=>s+r[1],0):0;const lc=isR?0:h.counts.reduce((s,r)=>s+r[0],0);
     let spRows='';
-    ASP.forEach((sp,i)=>{const v0=h.counts[i][0],v1=isR?h.counts[i][1]:0;if(v0||v1){const nm=(sp.oth&&h.otherName)?'Others ('+h.otherName+')':sp.n;spRows+=`<tr><td style="font-style:italic;">${nm}</td><td>${v0||'-'}</td>${isR?`<td>${v1||'-'}</td>`:''}<td style="font-weight:700;">${v0+v1}</td></tr>`;}});
+    ASP.forEach((sp,i)=>{const v0=h.counts[i][0],v1=isR?h.counts[i][1]:0;if(v0||v1){spRows+=`<tr><td style="font-style:italic;">${sp.n}</td><td>${v0||'-'}</td>${isR?`<td>${v1||'-'}</td>`:''}<td style="font-weight:700;">${v0+v1}</td></tr>`;}});
+    if(h.unidentifiedCount>0)spRows+=`<tr><td>UN-ID-01</td><td>${h.unidentifiedCount}</td>${isR?'<td>-</td>':''}<td style="font-weight:700;">${h.unidentifiedCount}</td></tr>`;
+    if(h.otherSpLog&&h.otherSpLog.length)h.otherSpLog.forEach(e=>{if(e.count>0)spRows+=`<tr><td style="font-style:italic;">${e.name}</td><td>${e.count}</td>${isR?'<td>-</td>':''}<td style="font-weight:700;">${e.count}</td></tr>`;});
     if(!spRows)spRows=`<tr><td colspan="${isR?4:3}" style="font-style:normal;color:var(--osv);">No mosquitoes recorded</td></tr>`;
     const rmkHtml=h.remarks?`<div style="font-size:11px;color:var(--os);background:var(--sfl);border-left:3px solid var(--pl);padding:5px 9px;margin-bottom:8px;border-radius:0 var(--rsm) var(--rsm) 0;"><strong>Remarks:</strong> ${h.remarks}</div>`:'';
     const metaRooms=isR?`<span>${h.rooms}R</span>`:'';
@@ -2244,7 +2298,11 @@ function populateAdultReview(){
   document.getElementById('r-a-workers').textContent=aS.workers||'-';
   document.getElementById('r-a-nc').textContent=aS.collectors;
   const nr=document.getElementById('r-a-nights-row');if(nr)nr.style.display=aS.collType==='hlc'?'none':'flex';
-  document.getElementById('r-a-nights').textContent=aS.nights;
+  const cpr=document.getElementById('r-a-collperiod-row');if(cpr)cpr.style.display=aS.collType==='hlc'?'none':'flex';
+  const dnTxt=aS.days>0&&aS.nights>0?`Day: ${aS.days} / Night: ${aS.nights}`:aS.days>0?`Day: ${aS.days}`:aS.nights>0?`Night: ${aS.nights}`:'-';
+  document.getElementById('r-a-nights').textContent=dnTxt;
+  const collPeriod=aS.days>0&&aS.nights>0?'Day & Night Collection':aS.days>0?'Day Collection':aS.nights>0?'Night Collection':'-';
+  const cpEl=document.getElementById('r-a-collperiod');if(cpEl)cpEl.textContent=collPeriod;
   document.getElementById('r-a-offr').textContent=aS.officers||'-';
   document.getElementById('r-a-hcount').textContent=aS.houses.length;
   document.getElementById('r-a-mhrs').textContent=aManHours().toFixed(2)+' hrs';
@@ -2270,7 +2328,7 @@ function populateAdultReview(){
       <div class="idx-card"><div class="idx-lbl">HBR per Hour</div><div class="idx-val">${calcHBRHr()}</div><div class="idx-sub">mosq ÷ (volunteers × hrs)</div></div>
       <div class="idx-card hl"><div class="idx-lbl">PMHD</div><div class="idx-val">${calcMHD()}</div><div class="idx-sub">Total Mosq. ÷ (Volunteers × Time hrs)</div></div>
       <div class="idx-card am"><div class="idx-lbl">Culex TMHD (×10)</div><div class="idx-val am">${calcTMHD()}</div><div class="idx-sub">(Culex ÷ man-hours) × 10</div></div>
-      <div class="idx-card"><div class="idx-lbl">Nights Surveyed</div><div class="idx-val">${aS.nights||1}</div><div class="idx-sub">total nights</div></div>
+      <div class="idx-card"><div class="idx-lbl">Nights Surveyed</div><div class="idx-val">${aS.nights}</div><div class="idx-sub">total nights</div></div>
       <div class="idx-card"><div class="idx-lbl">Total Collected</div><div class="idx-val">${aTotAll()}</div><div class="idx-sub">all species</div></div>`;
     cg.innerHTML=`
       <div class="idx-card"><div class="idx-lbl">Volunteers (Baits)</div><div class="idx-val">${aS.collectors||1}</div></div>
@@ -2287,7 +2345,7 @@ function populateAdultReview(){
       <div class="idx-card"><div class="idx-lbl">Total Collected</div><div class="idx-val">${aTotAll()}</div><div class="idx-sub">all species</div></div>`;
     cg.innerHTML=`
       <div class="idx-card"><div class="idx-lbl">Bait Stations</div><div class="idx-val">${aS.collectors||1}</div></div>
-      <div class="idx-card"><div class="idx-lbl">Nights Surveyed</div><div class="idx-val">${aS.nights||1}</div></div>
+      <div class="idx-card"><div class="idx-lbl">Nights Surveyed</div><div class="idx-val">${aS.nights}</div></div>
       <div class="idx-card am"><div class="idx-lbl">Culex</div><div class="idx-val am">${aTotCulex()}</div></div>`;
   }
   const sh=document.getElementById('r-a-sp-hdr'),sb=document.getElementById('r-a-sp-body');
@@ -2297,9 +2355,15 @@ function populateAdultReview(){
   ASP.forEach((sp,i)=>{
     const v0=aS.houses.reduce((s,h)=>s+h.counts[i][0],0),v1=isR?aS.houses.reduce((s,h)=>s+h.counts[i][1],0):0,tot=v0+v1;totI+=v0;totO+=v1;
     if(sp.g!==lastG){lastG=sp.g;const gr=document.createElement('tr');gr.innerHTML=`<td colspan="${isR?4:3}" class="grp-hdr" style="color:${GC[sp.g]||'#444'};">${sp.g}</td>`;sb.appendChild(gr);}
-    if(tot>0){const tr=document.createElement('tr');const nm=(sp.oth&&aS.houses.some(h=>h.otherName))?'Others ('+aS.houses.map(h=>h.otherName).filter(Boolean).join(', ')+')':sp.n;tr.innerHTML=`<td>${nm}</td><td>${v0||'-'}</td>${isR?`<td>${v1||'-'}</td>`:''}<td style="font-weight:700;color:var(--primary);">${tot}</td>`;sb.appendChild(tr);}
+    if(tot>0){const tr=document.createElement('tr');tr.innerHTML=`<td>${sp.n}</td><td>${v0||'-'}</td>${isR?`<td>${v1||'-'}</td>`:''}<td style="font-weight:700;color:var(--primary);">${tot}</td>`;sb.appendChild(tr);}
   });
-  const tr2=document.createElement('tr');tr2.className='tot-tr';tr2.innerHTML=`<td>GRAND TOTAL</td><td>${totI}</td>${isR?`<td>${totO}</td>`:''}<td>${totI+totO}</td>`;sb.appendChild(tr2);
+  // UN-ID-01 and Other sp. log entries
+  const totUnid=aS.houses.reduce((s,h)=>s+(h.unidentifiedCount||0),0);
+  if(totUnid>0){if(lastG!=='OTHERS'){const gr=document.createElement('tr');gr.innerHTML=`<td colspan="${isR?4:3}" class="grp-hdr" style="color:#888;">OTHERS</td>`;sb.appendChild(gr);}const tr=document.createElement('tr');tr.innerHTML=`<td>Unidentified (UN-ID-01)</td><td>${totUnid}</td>${isR?'<td>-</td>':''}<td style="font-weight:700;">${totUnid}</td>`;sb.appendChild(tr);}
+  // Aggregate other log entries by name
+  const otherLogMap=new Map();aS.houses.forEach(h=>{if(h.otherSpLog)h.otherSpLog.forEach(e=>{otherLogMap.set(e.name,(otherLogMap.get(e.name)||0)+(e.count||0));});});
+  otherLogMap.forEach((cnt,name)=>{if(cnt>0){const tr=document.createElement('tr');tr.innerHTML=`<td style="font-style:italic;">${name}</td><td>${cnt}</td>${isR?'<td>-</td>':''}<td style="font-weight:700;">${cnt}</td>`;sb.appendChild(tr);}});
+  const tr2=document.createElement('tr');tr2.className='tot-tr';tr2.innerHTML=`<td>GRAND TOTAL</td><td>${totI}</td>${isR?`<td>${totO}</td>`:''}<td>${aTotAll()}</td>`;sb.appendChild(tr2);
   const hw=document.getElementById('r-a-house-wrap');
   const hCols=isR?'<th>Indoor</th><th>Outdoor</th>':'<th>Landing</th>';
   let hRows=aS.houses.map(h=>{const ind=h.counts.reduce((s,r)=>s+r[0],0);const out=isR?h.counts.reduce((s,r)=>s+r[1],0):0;return `<tr><td style="text-align:left;padding-left:10px;font-style:normal;font-weight:600;">${h.houseNo}</td><td>${h.rooms}</td><td style="font-family:var(--mono);">${h.hours>0?h.hours.toFixed(2):'-'}</td>${isR?`<td>${ind}</td><td>${out}</td>`:`<td>${ind}</td>`}<td style="font-weight:700;">${h.total}</td></tr>`;}).join('');
@@ -2312,7 +2376,8 @@ function populateAdultReview(){
 function aSnap(){
   const isR=aS.collType==='resting';
   const spB=ASP.map((sp,i)=>({name:sp.n,genus:sp.g,isCulex:!!sp.cx,indoor:aS.houses.reduce((s,h)=>s+h.counts[i][0],0),outdoor:isR?aS.houses.reduce((s,h)=>s+h.counts[i][1],0):0}));
-  return {id:Date.now(),savedAt:new Date().toISOString(),appType:'adult',v:'2.0',collType:aS.collType,date:aS.date,state:(aS.state||''),district:aS.district,location:aS.location,workers:aS.workers,officers:aS.officers,collectors:aS.collectors,nights:aS.nights,lat:aS.lat,lng:aS.lng,houses:aS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),speciesBreakdown:spB,MHD:calcMHD(),TMHD:calcTMHD(),indoorDensity:calcIndoorDensity(),outdoorDensity:calcOutdoorDensity(),roomDensity:calcRoomDensity(),HBR:calcHBR(),HBRHr:calcHBRHr(),ALR:calcALR(),ALRNight:calcALRNight(),ALRSimple:calcALRSimple(),totalMosq:aTotAll(),totIndoor:aTotIndoor(),totOutdoor:aTotOutdoor(),totNonCulex:aTotNonCulex(),totCulex:aTotCulex(),totalRooms:aTotRooms(),totalManHours:aManHours(),track:TrackRecorder.getTrack()};
+  const collPeriodSnap=aS.days>0&&aS.nights>0?'Day & Night Collection':aS.days>0?'Day Collection':aS.nights>0?'Night Collection':'';
+  return {id:Date.now(),savedAt:new Date().toISOString(),appType:'adult',v:'2.0',collType:aS.collType,date:aS.date,state:(aS.state||''),district:aS.district,location:aS.location,workers:aS.workers,officers:aS.officers,collectors:aS.collectors,days:aS.days,nights:aS.nights,collectionPeriod:collPeriodSnap,lat:aS.lat,lng:aS.lng,houses:aS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),speciesBreakdown:spB,MHD:calcMHD(),TMHD:calcTMHD(),indoorDensity:calcIndoorDensity(),outdoorDensity:calcOutdoorDensity(),roomDensity:calcRoomDensity(),HBR:calcHBR(),HBRHr:calcHBRHr(),ALR:calcALR(),ALRNight:calcALRNight(),ALRSimple:calcALRSimple(),totalMosq:aTotAll(),totIndoor:aTotIndoor(),totOutdoor:aTotOutdoor(),totNonCulex:aTotNonCulex(),totCulex:aTotCulex(),totalRooms:aTotRooms(),totalManHours:aManHours(),track:TrackRecorder.getTrack()};
 }
 function saveAdultSurvey(){TrackRecorder.stop();const s=aSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(A_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('adult');activeSavedTab='adult';lastSavedId=s.id;lastSavedType='adult';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'adult');}
 
@@ -2419,7 +2484,10 @@ function resetLarvalCurForm(){
   lS.curRooms=0;lS.curHousePos=0;
   const hp=document.getElementById('l-housepos-disp');if(hp)hp.textContent='0';
   lContainers=CONTAINERS.map(c=>({...c}));buildContainerMatrix();
-  const se=document.getElementById('l-start');if(se)se.value='';const ee=document.getElementById('l-end');if(ee)ee.value='';const oe=document.getElementById('l-other-name');if(oe)oe.value='';
+  const se=document.getElementById('l-start');if(se)se.value='';const ee=document.getElementById('l-end');if(ee)ee.value='';const oe=document.getElementById('l-other-name');if(oe)oe.value='';const rem=document.getElementById('l-remarks');if(rem)rem.value='';
+  lS.curUnidentified=0;const luEl=document.getElementById('l-unid-cnt');if(luEl)luEl.textContent=0;
+  lS.curOtherLog=[];_lOtherLogCnt=0;const llcEl=document.getElementById('l-other-log-cnt');if(llcEl)llcEl.textContent=0;renderOtherLog('l');
+  lS.curRemarks='';
   lS.curCounts=Array.from({length:LNS},()=>[0,0]);buildLarvalMatrix();
   ['live-hi','live-ci','live-bi'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='-';});
 }
@@ -2440,7 +2508,7 @@ function proceedToLarvalCollect(){
 function logLarvalHouse(){
   const btn=document.getElementById('l-log-btn');if(btn&&btn.disabled)return;
   if(btn)btn.disabled=true;
-  const code=hCode(lS.curHN),start=document.getElementById('l-start')?.value||'',end=document.getElementById('l-end')?.value||'',other=document.getElementById('l-other-name')?.value.trim()||'';
+  const code=hCode(lS.curHN),start=document.getElementById('l-start')?.value||'',end=document.getElementById('l-end')?.value||'';
   const counts=lS.curCounts.map(r=>[...r]);
   const contSnap=lContainers.map(c=>({...c}));
   const totExamined=contSnap.reduce((s,c)=>s+c.examined,0);
@@ -2449,7 +2517,10 @@ function logLarvalHouse(){
   const hpDisp=document.getElementById('l-housepos-disp');
   const isHousePositive=(hpDisp?parseInt(hpDisp.textContent)>0:false)||(totPositive>0)||(lS.curPupal>0);
   const cached=TrackRecorder.getLastPos();
-  const entry={id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:lS.curPupal,dips:0,larvae:0,pupae:0,housePositive:isHousePositive,counts,contDetails:contSnap,otherName:other,lat:cached?.lat||'',lng:cached?.lng||''};
+  const lUnidentified=lS.curUnidentified||0;
+  const lOtherLog=[...lS.curOtherLog];
+  const lRemarks=document.getElementById('l-remarks')?.value.trim()||'';
+  const entry={id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:lS.curPupal,dips:0,larvae:0,pupae:0,housePositive:isHousePositive,counts,contDetails:contSnap,unidentifiedCount:lUnidentified,otherSpLog:lOtherLog,remarks:lRemarks,lat:cached?.lat||'',lng:cached?.lng||''};
   lS.houses.push(entry);
   lS.curHN++;const nc=hCode(lS.curHN);
   const lhd=document.getElementById('l-hnum-disp');if(lhd)lhd.textContent=nc;
@@ -3174,7 +3245,8 @@ function loadDraft(mod){
       buildAdultMatrix();updateAdultSummary();renderAdultHouses();
       ['a-date','a-location','a-workers','a-officers'].forEach(id=>{const k=id.replace('a-','');const el=document.getElementById(id);if(el)el.value=aS[k]||'';});
       document.getElementById('a-district').value=aS.district||'';
-      document.getElementById('a-collectors').value=aS.collectors||1;document.getElementById('a-nights').value=aS.nights||1;
+      document.getElementById('a-collectors').value=aS.collectors||1;document.getElementById('a-nights').value=aS.nights||0;document.getElementById('a-days').value=aS.days||0;
+      const _cdn=document.getElementById('a-nights-disp');if(_cdn)_cdn.textContent=aS.nights||0;const _cdd=document.getElementById('a-days-disp');if(_cdd)_cdd.textContent=aS.days||0;
       setCollType(aS.collType||'resting');
       const nc=hCode(aS.curHN);document.getElementById('a-hnum-disp').textContent=nc;document.getElementById('a-log-btn-code').textContent=nc;document.getElementById('a-next-num').textContent=aS.curHN;
     }else{
@@ -3243,7 +3315,7 @@ function renderSavedMod(mod){
     const meta=(s.state||'')+(s.state&&s.district?' · ':'')+( s.district||'')+(s.date?' · '+s.date:'')+( savedTime?' · '+savedTime:'');
     const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');div.dataset.sid=String(s.id);
     const serialNo=surveyIdx+1;
-    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?('Synced '+new Date(s.syncedAt||'').toLocaleDateString('en-IN')):'Not synced to GitHub'}</div><div class="sit-views"><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','survey')">Survey</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','collect')">Collect</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','review')">Review</button></div><div class="sit-acts"><button class="sit-act" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} CSV</button><button class="sit-act" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act" onclick="exportOneSavedKML('${mod}','${s.id}')" style="${mod==='adult'?'':'border-color:rgba(21,101,192,.3);color:var(--larval);'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="${mod==='adult'?'var(--primary)':'var(--larval)'}"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> KML</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
+    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?('Synced '+new Date(s.syncedAt||'').toLocaleDateString('en-IN')):'Not synced to GitHub'}</div><div class="sit-views"><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','survey')">Survey</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','collect')">Collect</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','review')">Review</button></div><div class="sit-acts"><button class="sit-act" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} CSV</button><button class="sit-act" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act" onclick="exportOneSavedKML('${mod}','${s.id}')" style="${mod==='adult'?'':'border-color:rgba(21,101,192,.3);color:var(--larval);'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="${mod==='adult'?'var(--primary)':'var(--larval)'}"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> KML</button><button class="sit-act" onclick="resaveSurvey('${mod}','${s.id}')" ${s.resaved?'disabled':''} style="border-color:rgba(100,100,100,.3);color:#555;${s.resaved?'opacity:.4;cursor:not-allowed;':''}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg> Resave</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
     list.appendChild(div);
   });
 }
@@ -3452,6 +3524,7 @@ function buildAdultKML(s){
   return `<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n<name>EST Adult — ${escX(s.district||'Survey')} — ${s.date||''}</name>\n<description><![CDATA[EST v2.0 Adult Surveillance<br>Type: ${s.collType||''}<br>Houses: ${(s.houses||[]).length}<br>Total: ${s.totalMosq||0}]]></description>\n${styles}\n${pathFld}\n${startFld}\n${endFld}\n${hFld}\n</Document>\n</kml>`;
 }
 function deleteSaved(mod,id){if(!confirm('Delete this survey? Cannot be undone.'))return;const key=mod==='adult'?A_SAVED:L_SAVED;let surveys=[];try{surveys=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}surveys=surveys.filter(s=>String(s.id)!==String(id));try{localStorage.setItem(key,JSON.stringify(surveys));}catch(e){}(mod==='adult'?aSel:lSel).delete(String(id));renderSaved();showToast('Survey deleted','del');}
+function resaveSurvey(mod,id){const key=mod==='adult'?A_SAVED:L_SAVED;let saved=[];try{saved=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}const orig=saved.find(s=>String(s.id)===String(id));if(!orig||orig.resaved)return;const copy={...orig,id:Date.now(),savedAt:new Date().toISOString(),resavedFrom:String(id),resaved:true};orig.resaved=true;saved.unshift(copy);try{localStorage.setItem(key,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}renderSaved();showToast('Survey resaved','check');}
 function exportSelCSV(mod){
   const sel=mod==='adult'?aSel:lSel;let surveys=[];try{surveys=JSON.parse(localStorage.getItem(mod==='adult'?A_SAVED:L_SAVED)||'[]');}catch(e){}
   const toExp=sel.size>0?surveys.filter(s=>sel.has(String(s.id))):surveys;
