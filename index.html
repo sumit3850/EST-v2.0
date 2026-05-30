@@ -294,13 +294,13 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 .remember-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
 .remember-row input[type="checkbox"]{width:20px;height:20px;accent-color:var(--pb);cursor:pointer;}
 .remember-row label{font-size:13px;color:rgba(255,255,255,.75);cursor:pointer;}
-.login-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:var(--rlg);padding:18px;width:100%;max-width:340px;margin-bottom:14px;}
-.login-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:6px;display:block;}
-.login-inp{width:100%;height:46px;padding:0 14px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.25);border-radius:var(--rmd);font-family:var(--mono);font-size:15px;color:#fff;margin-bottom:11px;appearance:none;}
-.login-inp::placeholder{color:rgba(255,255,255,.35);}
-.login-inp:focus{outline:none;border-color:var(--pb);}
+.login-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:var(--rlg);padding:20px;width:100%;max-width:340px;margin-bottom:12px;backdrop-filter:blur(12px);box-shadow:0 8px 32px rgba(0,0,0,.25);}
+.login-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.52);margin-bottom:5px;display:block;}
+.login-inp{width:100%;height:48px;padding:0 14px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:var(--rmd);font-family:var(--mono);font-size:15px;color:#fff;margin-bottom:12px;appearance:none;transition:border-color .2s,background .2s;}
+.login-inp::placeholder{color:rgba(255,255,255,.28);}
+.login-inp:focus{outline:none;border-color:var(--pb);background:rgba(255,255,255,.15);}
 .login-err{display:none;color:#ffb4ab;font-size:12px;text-align:center;margin-bottom:9px;}
-.launch-btn{width:100%;max-width:340px;height:54px;background:var(--pb);color:#00201a;border:none;border-radius:var(--rxl);font-family:var(--mono);font-size:15px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;box-shadow:0 4px 24px rgba(104,250,221,.3);transition:all var(--tr);}
+.launch-btn{width:100%;max-width:340px;height:52px;background:linear-gradient(135deg,var(--pb),#00c8a0);color:#002218;border:none;border-radius:var(--rxl);font-family:var(--mono);font-size:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;box-shadow:0 4px 20px rgba(104,250,221,.35);transition:all var(--tr);}
 .launch-btn:active{transform:scale(.97);}
 
 .sit-views{display:flex;gap:6px;margin-bottom:7px;}
@@ -313,26 +313,35 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 <div class="screen active" id="splash">
   <div class="sbg c1"></div><div class="sbg c2"></div><div class="sbg c3"></div>
   <div style="display:flex;flex-direction:column;align-items:center;padding:38px 20px 28px;width:100%;max-width:400px;margin:0 auto;">
-    <!-- Mosquito icon -->
-    <div style="width:90px;height:90px;background:rgba(255,255,255,.1);border-radius:50%;border:1.5px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
-      <svg width="54" height="54" viewBox="0 0 100 100" fill="rgba(255,255,255,.9)">
-        <ellipse cx="50" cy="56" rx="7" ry="19"/>
-        <circle cx="50" cy="33" r="7"/>
-        <line x1="50" y1="40" x2="50" y2="88" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
-        <ellipse cx="28" cy="46" rx="19" ry="7" transform="rotate(-18 28 46)" opacity=".75"/>
-        <ellipse cx="72" cy="46" rx="19" ry="7" transform="rotate(18 72 46)" opacity=".75"/>
-        <line x1="43" y1="60" x2="18" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
-        <line x1="43" y1="66" x2="16" y2="82" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
-        <line x1="57" y1="60" x2="82" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
-        <line x1="57" y1="66" x2="84" y2="82" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
-        <line x1="45" y1="27" x2="34" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
-        <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
+    <!-- Mosquito icon — engraving style matching favicon -->
+    <div style="width:88px;height:88px;background:rgba(13,32,24,.78);border-radius:22px;border:1.5px solid rgba(104,250,221,.35);display:flex;align-items:center;justify-content:center;margin-bottom:18px;box-shadow:0 6px 28px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.06);">
+      <svg width="58" height="58" viewBox="0 0 100 100">
+        <g stroke='rgba(255,255,255,.18)' fill='none' stroke-linecap='round'><polyline points='50,47 26,18' stroke-width='0.85'/><polyline points='57,49 82,22 92,16' stroke-width='0.8'/><polyline points='62,54 88,36 96,44' stroke-width='0.8'/></g>
+        <path d='M50,44 Q44,22 64,13 Q78,7 87,18 Q91,27 85,35 Q76,41 63,44 Q57,44 51,44Z' fill='rgba(255,255,255,.07)' stroke='rgba(255,255,255,.65)' stroke-width='0.7'/>
+        <line x1='52' y1='44' x2='72' y2='12' stroke='rgba(255,255,255,.38)' stroke-width='0.55'/><line x1='54' y1='44' x2='78' y2='14' stroke='rgba(255,255,255,.32)' stroke-width='0.48'/><line x1='57' y1='44' x2='84' y2='19' stroke='rgba(255,255,255,.26)' stroke-width='0.42'/><line x1='60' y1='44' x2='88' y2='26' stroke='rgba(255,255,255,.22)' stroke-width='0.38'/>
+        <line x1='61' y1='14' x2='64' y2='24' stroke='rgba(255,255,255,.22)' stroke-width='0.38'/><line x1='70' y1='13' x2='73' y2='23' stroke='rgba(255,255,255,.18)' stroke-width='0.34'/><line x1='78' y1='15' x2='81' y2='25' stroke='rgba(255,255,255,.15)' stroke-width='0.3'/>
+        <path d='M51,45 Q47,38 58,33 Q69,29 74,36 Q77,41 71,45 Q62,46 53,45Z' fill='rgba(255,255,255,.05)' stroke='rgba(255,255,255,.5)' stroke-width='0.58'/>
+        <line x1='53' y1='45' x2='68' y2='31' stroke='rgba(255,255,255,.22)' stroke-width='0.37'/><line x1='57' y1='45' x2='71' y2='34' stroke='rgba(255,255,255,.18)' stroke-width='0.32'/>
+        <g fill='none' stroke-linecap='round'><polyline points='50,48 32,68 20,82' stroke='rgba(255,255,255,.85)' stroke-width='1.1'/><polyline points='56,53 44,76 34,90' stroke='rgba(255,255,255,.85)' stroke-width='1.0'/><polyline points='62,55 80,77 86,91' stroke='rgba(255,255,255,.85)' stroke-width='1.0'/></g>
+        <ellipse cx='54' cy='46' rx='10' ry='9.5' fill='rgba(255,255,255,.8)' stroke='rgba(255,255,255,.9)' stroke-width='0.75'/>
+        <g stroke='rgba(0,0,0,.2)' stroke-width='0.65' fill='none'><line x1='48' y1='40' x2='46' y2='52'/><line x1='52' y1='38' x2='50' y2='53'/><line x1='56' y1='38' x2='54' y2='53'/><line x1='60' y1='40' x2='58' y2='52'/></g>
+        <ellipse cx='76' cy='63' rx='18' ry='6.5' transform='rotate(26 76 63)' fill='rgba(255,255,255,.75)' stroke='rgba(255,255,255,.9)' stroke-width='0.65'/>
+        <g stroke='rgba(0,0,0,.4)' stroke-width='2' stroke-linecap='square'><line x1='65' y1='52' x2='73' y2='70'/><line x1='71' y1='52' x2='79' y2='69'/><line x1='77' y1='54' x2='84' y2='68'/></g>
+        <circle cx='42' cy='50' r='6.2' fill='rgba(255,255,255,.82)' stroke='rgba(255,255,255,.9)' stroke-width='0.75'/>
+        <ellipse cx='38.5' cy='48' rx='3.8' ry='3.5' fill='rgba(5,18,12,.9)' stroke='rgba(255,255,255,.4)' stroke-width='0.55'/>
+        <circle cx='37.5' cy='47' r='1' fill='rgba(255,255,255,.3)'/>
+        <path d='M36,53 Q22,57 10,58' stroke='rgba(255,255,255,.85)' stroke-width='1.6' fill='none' stroke-linecap='round'/>
+        <ellipse cx='9.5' cy='58' rx='1.8' ry='1.1' fill='rgba(255,255,255,.7)' stroke='rgba(255,255,255,.8)' stroke-width='0.45'/>
+        <path d='M36,51 Q25,48 16,46' stroke='rgba(255,255,255,.45)' stroke-width='0.78' fill='none' stroke-linecap='round'/>
+        <path d='M42,44 Q38,33 34,20' stroke='rgba(255,255,255,.65)' stroke-width='0.95' fill='none' stroke-linecap='round'/>
+        <path d='M45,44 Q44,31 47,18' stroke='rgba(255,255,255,.55)' stroke-width='0.85' fill='none' stroke-linecap='round'/>
+        <g fill='rgba(255,255,255,.45)'><circle cx='37.5' cy='32' r='0.85'/><circle cx='36' cy='26' r='0.78'/><circle cx='35' cy='21' r='0.72'/><circle cx='44.5' cy='31' r='0.82'/><circle cx='45.5' cy='25' r='0.75'/><circle cx='46.5' cy='19' r='0.68'/></g>
       </svg>
     </div>
-    <div style="font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;word-spacing:0;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:5px;">Entomological&nbsp;Surveillance&nbsp;Tool</div>
-    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px;">
-      <div id="splash-ver" style="font-family:var(--mono);font-size:26px;font-weight:700;color:#fff;letter-spacing:-.02em;">EST v2.0</div>
-      <button onclick="goToAbout()" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;" title="About this app">&#x2139;</button>
+    <div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(104,250,221,.55);margin-bottom:6px;">Entomological&nbsp;Surveillance&nbsp;Tool</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:20px;">
+      <div id="splash-ver" style="font-family:var(--mono);font-size:28px;font-weight:700;color:#fff;letter-spacing:-.02em;">EST v2.0</div>
+      <button onclick="goToAbout()" style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.65);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;" title="About this app">&#x2139;</button>
     </div>
 
     <div class="login-card" id="login-card">
@@ -1602,7 +1611,7 @@ async function syncValidUsersFromCache(){
     if(raw) mergeConfigCreds(JSON.parse(raw));
   }catch(e){}
 }
-const APP_VER='2.0.40';
+const APP_VER='2.0.41';
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
   {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
@@ -2155,9 +2164,10 @@ const TrackRecorder=(()=>{
       if(navigator.geolocation){
         _wid=navigator.geolocation.watchPosition(pos=>{
           const{latitude:la,longitude:lo}=pos.coords,ts=Date.now();
-          if(_last){const d=_hav(_last.la,_last.lo,la,lo);const acc=pos.coords.accuracy||999;if(d<0.015||acc>50)return;_dist+=d;}
-          _pts.push({lat:la,lng:lo,ts});_last={la,lo};_ui();
-        },()=>{},{enableHighAccuracy:true,timeout:20000,maximumAge:5000});
+          const acc=pos.coords.accuracy||999;if(acc>40)return;
+          if(_last){const d=_hav(_last.la,_last.lo,la,lo);if(d<0.01)return;if(_last.ts){const dtH=(ts-_last.ts)/3600000;if(dtH>0&&d/dtH>35)return;}_dist+=d;}
+          _pts.push({lat:la,lng:lo,ts});_last={la,lo,ts};_ui();
+        },()=>{},{enableHighAccuracy:true,timeout:20000,maximumAge:3000});
       }
       _timer=setInterval(_ui,1000);
     },
