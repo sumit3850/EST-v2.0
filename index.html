@@ -1625,7 +1625,7 @@ function saveGhSettings(){
   document.getElementById('gh-settings-modal')?.classList.remove('open');
   typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();
   showToast('GitHub settings saved','check');
-  if(o&&t){ ghFetchConfig().then(c=>{ if(c){showToast('Connected to GitHub ✓','check');typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();} else showToast('Check your token / repo name','warn');}); }
+  if(o&&t){ ghFetchConfig().then(c=>{ if(c){showToast('Connected to GitHub ✓','check');typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();syncLocalUsersToGitHub().catch(()=>{});} else showToast('Check your token / repo name','warn');}); }
 }
 function loadGhSettings(){
   try{
@@ -1642,6 +1642,38 @@ function _saveLocalUser(u){
 }
 function loadLocalUsers(){
   try{const lu=JSON.parse(localStorage.getItem('est_local_users')||'[]');lu.forEach(u=>{if(u.username&&!VALID_USERS.some(v=>v.username===u.username))VALID_USERS.push(u);});}catch(e){}
+}
+
+/* Push any locally-registered users that are missing from GitHub config.json */
+async function syncLocalUsersToGitHub(){
+  if(!GH_CONFIG.token||!GH_CONFIG.owner||!navigator.onLine) return;
+  let localUsers=[];
+  try{localUsers=JSON.parse(localStorage.getItem('est_local_users')||'[]');}catch(e){return;}
+  if(!localUsers.length) return;
+  try{
+    const resp=await fetch(ghDataApiUrl(GH_CONFIG_PATH),{headers:ghHeaders(),cache:'no-store'});
+    if(!resp.ok) return;
+    const data=await resp.json();
+    const cfg=JSON.parse(b64Decode(data.content));
+    if(!cfg.credentials) cfg.credentials=[];
+    const ghNames=new Set(cfg.credentials.map(c=>(c.username||'').toLowerCase()));
+    // Filter local users that don't exist in GitHub yet (skip grandfathered / already synced)
+    const toAdd=localUsers.filter(u=>u.username&&!ghNames.has(u.username.toLowerCase()));
+    if(!toAdd.length) return;
+    cfg.credentials.push(...toAdd);
+    cfg.updatedAt=new Date().toISOString();
+    const putResp=await fetch(ghDataApiUrl(GH_CONFIG_PATH),{
+      method:'PUT',
+      headers:{...ghHeaders(),'Content-Type':'application/json'},
+      body:JSON.stringify({message:`[EST] Sync ${toAdd.length} local user(s) to GitHub`,content:b64Encode(JSON.stringify(cfg,null,2)),sha:data.sha,branch:GH_CONFIG.branch})
+    });
+    if(putResp.ok){
+      try{localStorage.setItem('est_gh_config',JSON.stringify(cfg));}catch(e){}
+      // Merge synced users into VALID_USERS cache
+      toAdd.forEach(u=>{if(!VALID_USERS.some(v=>v.username===u.username))VALID_USERS.push(u);});
+      showToast(`${toAdd.length} user(s) synced to GitHub database.`,'check');
+    }
+  }catch(e){}
 }
 
 /* ── PREMIUM / LICENSING ─────────────────────────────────── */
@@ -1772,7 +1804,7 @@ async function syncValidUsersFromCache(){
     if(raw) mergeConfigCreds(JSON.parse(raw));
   }catch(e){}
 }
-const APP_VER='2.0.45';
+const APP_VER='2.0.46';
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
   {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
@@ -1918,6 +1950,7 @@ function doLogin(){
   // Silently refresh GitHub credentials in background after login (non-blocking)
   if(GH_CONFIG.owner && GH_CONFIG.token && navigator.onLine){
     ghFetchConfig().catch(()=>{}); // fire and forget
+    syncLocalUsersToGitHub().catch(()=>{}); // push any locally-registered users to GitHub
   }
   if(rem){try{localStorage.setItem(CRED_KEY,JSON.stringify({u,p}));}catch(e){}}else{try{localStorage.removeItem(CRED_KEY);}catch(e){}}
   const sp=document.getElementById('splash');
