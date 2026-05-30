@@ -1248,14 +1248,19 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
     <div class="modal-title">GitHub Database Setup</div>
     <div class="modal-sub" style="font-size:12px;color:var(--osv);">Connect to GitHub to sync surveys and enable user registration.</div>
     <div style="background:var(--gbg);border:1px solid var(--pd);border-radius:var(--rmd);padding:8px 12px;margin-bottom:12px;font-size:11px;color:var(--primary);">
-      Database: <strong>sumit3850 / EST-v2.0</strong> (pre-configured)
+      App repo: <strong id="gh-app-repo-disp">sumit3850 / EST-v2.0</strong> (public · pre-configured)
     </div>
     <input id="gh-owner-inp" type="hidden" value="sumit3850">
     <input id="gh-repo-inp" type="hidden" value="EST-v2.0">
     <div style="margin-bottom:14px;">
+      <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--osv);letter-spacing:.08em;display:block;margin-bottom:4px;">Data Repository <span style="font-weight:400;text-transform:none;">(private repo for credentials &amp; surveys)</span></label>
+      <input id="gh-data-repo-inp" type="text" placeholder="EST-v2.0-data" style="width:100%;height:42px;padding:0 12px;border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:13px;color:var(--os);background:var(--sfc);font-family:var(--mono);">
+      <div style="font-size:10px;color:var(--osv);margin-top:4px;">Name of your <em>private</em> GitHub repository that holds <code>config.json</code> and survey data.</div>
+    </div>
+    <div style="margin-bottom:14px;">
       <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--osv);letter-spacing:.08em;display:block;margin-bottom:4px;">Personal Access Token</label>
       <input id="gh-token-inp" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="width:100%;height:42px;padding:0 12px;border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:13px;color:var(--os);background:var(--sfc);font-family:var(--mono);">
-      <div style="font-size:10px;color:var(--osv);margin-top:4px;">Token stored on this device only. Never shared. Needs repo write scope.</div>
+      <div style="font-size:10px;color:var(--osv);margin-top:4px;">Token stored on this device only. Never shared. Needs <code>repo</code> scope on the private data repo.</div>
     </div>
 
     <div class="modal-btns">
@@ -1396,10 +1401,11 @@ function populateDistricts(stateId,distId){
 
 /* ── GITHUB CONFIGURATION — EDIT THESE ──────────────────── */
 const GH_CONFIG = {
-  owner: '',          // Your GitHub username  e.g. 'sumitrao'
-  repo:  'EST-v2.0',  // Your database repo name
-  token: '',          // GitHub Personal Access Token (classic, repo scope)
-  branch: 'main'
+  owner:    '',              // GitHub username  e.g. 'sumit3850'
+  repo:     'EST-v2.0',     // App / Pages repository (public)
+  dataRepo: 'EST-v2.0-data',// Private data repository (credentials + surveys)
+  token:    '',             // GitHub Personal Access Token (classic, repo scope)
+  branch:   'main'
 };
 
 /* ── CONFIG FILE PATH ────────────────────────────────────── */
@@ -1419,6 +1425,9 @@ function ghHeaders(){
 function ghApiUrl(path){
   return `https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${path}`;
 }
+function ghDataApiUrl(path){
+  return `https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.dataRepo||GH_CONFIG.repo}/contents/${path}`;
+}
 function b64Encode(str){
   return btoa(unescape(encodeURIComponent(str)));
 }
@@ -1430,7 +1439,7 @@ function b64Decode(str){
 async function ghFetchConfig(){
   if(!GH_CONFIG.owner||!GH_CONFIG.token) return null;
   try{
-    const resp = await fetch(ghApiUrl(GH_CONFIG_PATH), { headers: ghHeaders(), cache:'no-store' });
+    const resp = await fetch(ghDataApiUrl(GH_CONFIG_PATH), { headers: ghHeaders(), cache:'no-store' });
     if(!resp.ok) return null;
     const data = await resp.json();
     const config = JSON.parse(b64Decode(data.content));
@@ -1481,7 +1490,7 @@ async function ghPushSurvey(surveyData, mod){
   const filename = `${GH_DATA_PREFIX}${dateStr}/${mod}-${timeStr}-${surveyData.id}.json`;
   const content  = b64Encode(JSON.stringify(surveyData, null, 2));
   try{
-    const resp = await fetch(ghApiUrl(filename), {
+    const resp = await fetch(ghDataApiUrl(filename), {
       method:'PUT',
       headers: { ...ghHeaders(), 'Content-Type':'application/json' },
       body: JSON.stringify({
@@ -1547,8 +1556,13 @@ async function ghAutoSync(surveyData, mod){
 function showGhSettings(){
   const modal=document.getElementById('gh-settings-modal');
   if(modal){
-    document.getElementById('gh-owner-inp').value=GH_CONFIG.owner||'sumit3850';
-    document.getElementById('gh-repo-inp').value=GH_CONFIG.repo||'EST-v2.0';
+    const o=GH_CONFIG.owner||'sumit3850';
+    const rp=GH_CONFIG.repo||'EST-v2.0';
+    document.getElementById('gh-owner-inp').value=o;
+    document.getElementById('gh-repo-inp').value=rp;
+    const appDisp=document.getElementById('gh-app-repo-disp');
+    if(appDisp) appDisp.textContent=`${o} / ${rp}`;
+    document.getElementById('gh-data-repo-inp').value=GH_CONFIG.dataRepo||'EST-v2.0-data';
     document.getElementById('gh-token-inp').value=GH_CONFIG.token||'';
     modal.classList.add('open');
   }
@@ -1556,19 +1570,21 @@ function showGhSettings(){
 function saveGhSettings(){
   const o=document.getElementById('gh-owner-inp')?.value.trim()||'';
   const rp=document.getElementById('gh-repo-inp')?.value.trim()||'EST-v2.0';
+  const dr=document.getElementById('gh-data-repo-inp')?.value.trim()||'EST-v2.0-data';
   const t=document.getElementById('gh-token-inp')?.value.trim()||'';
-  GH_CONFIG.owner=o; GH_CONFIG.repo=rp; GH_CONFIG.token=t;
-  try{localStorage.setItem('est_gh_settings',JSON.stringify({owner:o,repo:rp,token:t}));}catch(e){}
+  GH_CONFIG.owner=o; GH_CONFIG.repo=rp; GH_CONFIG.dataRepo=dr; GH_CONFIG.token=t;
+  try{localStorage.setItem('est_gh_settings',JSON.stringify({owner:o,repo:rp,dataRepo:dr,token:t}));}catch(e){}
   document.getElementById('gh-settings-modal')?.classList.remove('open');
-  typeof updateGhButtonStatus==='function'&&updateGhButtonStatus(); // Refresh splash button
+  typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();
   showToast('GitHub settings saved','check');
-  if(o&&t){ ghFetchConfig().then(c=>{ if(c){showToast('Connected to GitHub ✓','check');typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();} else showToast('Check your token/repo name','warn');}); }
+  if(o&&t){ ghFetchConfig().then(c=>{ if(c){showToast('Connected to GitHub ✓','check');typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();} else showToast('Check your token / data repo name','warn');}); }
 }
 function loadGhSettings(){
   try{
     const s=JSON.parse(localStorage.getItem('est_gh_settings')||'{}');
     if(s.owner)GH_CONFIG.owner=s.owner;
     if(s.repo)GH_CONFIG.repo=s.repo;
+    if(s.dataRepo)GH_CONFIG.dataRepo=s.dataRepo;
     if(s.token)GH_CONFIG.token=s.token;
   }catch(e){}
 }
@@ -1611,7 +1627,7 @@ async function syncValidUsersFromCache(){
     if(raw) mergeConfigCreds(JSON.parse(raw));
   }catch(e){}
 }
-const APP_VER='2.0.41';
+const APP_VER='2.0.42';
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
   {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
@@ -1821,7 +1837,7 @@ async function doRegister(){
   btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="spin"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8Z"/></svg> Registering…';
   btn.disabled=true;
   try{
-    const resp=await fetch(ghApiUrl(GH_CONFIG_PATH),{headers:ghHeaders(),cache:'no-store'});
+    const resp=await fetch(ghDataApiUrl(GH_CONFIG_PATH),{headers:ghHeaders(),cache:'no-store'});
     if(!resp.ok) throw new Error('Cannot reach GitHub. Check your token.');
     const data=await resp.json();
     const cfg=JSON.parse(b64Decode(data.content));
@@ -1831,7 +1847,7 @@ async function doRegister(){
     if(!cfg.credentials) cfg.credentials=[];
     cfg.credentials.push({username:u,password:p,role:'field',active:true});
     cfg.updatedAt=new Date().toISOString();
-    const putResp=await fetch(ghApiUrl(GH_CONFIG_PATH),{
+    const putResp=await fetch(ghDataApiUrl(GH_CONFIG_PATH),{
       method:'PUT',
       headers:{...ghHeaders(),'Content-Type':'application/json'},
       body:JSON.stringify({message:`[EST] Register user: ${u}`,content:b64Encode(JSON.stringify(cfg,null,2)),sha:data.sha,branch:GH_CONFIG.branch})

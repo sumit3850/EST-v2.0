@@ -1,35 +1,4 @@
 {
-  "credentials": [
-    {
-      "username": "ANIENTO",
-      "password": "2026",
-      "role": "admin",
-      "active": true
-    },
-    {
-      "username": "USER-1",
-      "password": "2026",
-      "role": "field",
-      "active": true
-    },
-    {
-      "username": "Shivan",
-      "password": "886748",
-      "role": "field",
-      "active": true
-    },
-    {
-      "username": "USER-2",
-      "password": "2020",
-      "role": "field",
-      "active": true
-    },
-    {
-      "username": "USER-3",
-      "password": "2020",
-      "role": "field",
-      "active": true
-    }
-  ],
-  "updatedAt": "2026-05-30T08:04:26.382Z"
+  "_info": "User credentials are stored in the private EST-v2.0-data repository. Configure the GitHub database in the app (About → GitHub Database Setup) to enable cloud sync.",
+  "updatedAt": "2026-05-30T00:00:00.000Z"
 }
