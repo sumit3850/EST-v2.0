@@ -13,12 +13,6 @@
       "active": true
     },
     {
-      "username": "shiva",
-      "password": "2510",
-      "role": "field",
-      "active": true
-    },
-    {
       "username": "Shivan",
       "password": "886748",
       "role": "field",
@@ -37,5 +31,5 @@
       "active": true
     }
   ],
-  "updatedAt": "2026-05-28T09:36:38.943Z"
+  "updatedAt": "2026-05-30T08:03:12.617Z"
 }
