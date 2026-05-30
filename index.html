@@ -1495,30 +1495,69 @@ async function ghFetchConfig(){
     const config = JSON.parse(b64Decode(data.content));
     ghConfigCache = config;
     localStorage.setItem('est_gh_config', JSON.stringify(config));
-    // Immediately extend VALID_USERS so new users work offline from this point
+    // Merge new/updated credentials into VALID_USERS
     mergeConfigCreds(config);
+    // Purge non-grandfathered users that were deleted or inactivated on GitHub
+    _purgeDeletedUsers(config);
     return config;
   }catch(e){ return null; }
+}
+
+/* Remove users deleted/inactivated in GitHub from local caches */
+function _purgeDeletedUsers(freshCfg){
+  if(!freshCfg||!Array.isArray(freshCfg.credentials)) return;
+  const activeInGH=new Set(
+    freshCfg.credentials
+      .filter(c=>c.active!==false&&c.username)
+      .map(c=>c.username.trim())
+  );
+  // Remove from VALID_USERS (skip grandfathered — they always stay)
+  for(let i=VALID_USERS.length-1;i>=0;i--){
+    const u=VALID_USERS[i].username;
+    if(!GRANDFATHERED_USERS.has(u)&&!activeInGH.has(u)) VALID_USERS.splice(i,1);
+  }
+  // Remove from est_local_users localStorage
+  try{
+    const lu=JSON.parse(localStorage.getItem('est_local_users')||'[]');
+    const filtered=lu.filter(u=>GRANDFATHERED_USERS.has(u.username)||activeInGH.has(u.username));
+    if(filtered.length!==lu.length) localStorage.setItem('est_local_users',JSON.stringify(filtered));
+  }catch(e){}
 }
 
 /* ── VALIDATE CREDENTIALS ────────────────────────────────── */
 function validateCredentials(user, pass){
   if(!user||!pass) return {valid:false,reason:'empty'};
   const u=user.trim();
+
+  // Load cached GitHub config (null if never synced — offline-safe)
+  let ghCreds=null;
+  try{const raw=localStorage.getItem('est_gh_config');if(raw){const cfg=JSON.parse(raw);if(Array.isArray(cfg.credentials))ghCreds=cfg.credentials;}}catch(e){}
+
+  // Helper: check GitHub credential status for a username
+  function ghStatus(name){
+    if(!ghCreds) return 'unknown'; // never synced — allow offline fallback
+    const entry=ghCreds.find(c=>c.username&&c.username.trim()===name);
+    if(!entry) return 'deleted';
+    if(entry.active===false) return 'inactive';
+    return 'active';
+  }
+
   // 1. Permanent offline credentials — always works, no network required
   const local=VALID_USERS.find(c=>c.username===u);
   if(local){
+    // Enforce GitHub deletions for non-grandfathered users (if GitHub ever synced)
+    if(!GRANDFATHERED_USERS.has(u)&&ghCreds){
+      const st=ghStatus(u);
+      if(st==='deleted'||st==='inactive') return {valid:false,reason:'inactive',source:'github'};
+    }
     if(local.active===false) return {valid:false,reason:'inactive',source:'local'};
     if(local.password===pass) return {valid:true,role:local.role,source:'local'};
     return {valid:false,reason:'wrong_password',source:'local'};
   }
   // 2. Cached GitHub credentials — extra users added via dashboard online
   try{
-    const raw=localStorage.getItem('est_gh_config');
-    if(raw){
-      const cfg=JSON.parse(raw);
-      const creds=Array.isArray(cfg.credentials)?cfg.credentials:[];
-      const found=creds.find(c=>c.username&&c.username.trim()===u);
+    if(ghCreds){
+      const found=ghCreds.find(c=>c.username&&c.username.trim()===u);
       if(found){
         if(found.active===false) return {valid:false,reason:'inactive',source:'cache'};
         if(found.password===pass) return {valid:true,role:found.role||'field',source:'cache'};
@@ -1804,7 +1843,7 @@ async function syncValidUsersFromCache(){
     if(raw) mergeConfigCreds(JSON.parse(raw));
   }catch(e){}
 }
-const APP_VER='2.0.46';
+const APP_VER='2.0.47';
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
   {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
