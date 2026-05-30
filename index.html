@@ -2021,9 +2021,11 @@ async function doRegister(){
       showLoginForm();document.getElementById('login-user').value=u;
       showToast('Account created! You can now sign in.','check');
     }catch(e){
-      errEl.textContent='GitHub sync failed: '+e.message+' — Account saved locally.';errEl.style.display='block';
+      // GitHub sync failed — register locally without showing an error to the user
       VALID_USERS.push(newUser);_saveLocalUser(newUser);
-      setTimeout(()=>{document.getElementById('reg-user').value='';document.getElementById('reg-pass').value='';document.getElementById('reg-pass2').value='';showLoginForm();document.getElementById('login-user').value=u;showToast('Account saved locally. Sign in now.','check');},2500);
+      document.getElementById('reg-user').value='';document.getElementById('reg-pass').value='';document.getElementById('reg-pass2').value='';
+      showLoginForm();document.getElementById('login-user').value=u;
+      showToast('Account created! You can now sign in.','check');
     }finally{btn.innerHTML=origHTML;btn.disabled=false;}
   }else{
     // Offline or GitHub not configured — local registration
