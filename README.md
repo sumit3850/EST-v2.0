@@ -4,7 +4,7 @@
 > Purpose-built for field entomologists, public health workers, and vector control personnel across India.
 
 [![Live App](https://img.shields.io/badge/Live%20App-sumit3850.github.io%2FEST--v2.0-006b5c?style=flat-square)](https://sumit3850.github.io/EST-v2.0/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg?style=flat-square)](LICENSE)
 [![PWA](https://img.shields.io/badge/PWA-Offline--Capable-5a67d8?style=flat-square)](https://sumit3850.github.io/EST-v2.0/)
 
 ---
@@ -106,7 +106,6 @@ BI    = (Positive Containers ÷ Houses Inspected) × 100
 | File | Purpose |
 |---|---|
 | `index.html` | Main EST application (single-file PWA) |
-| `dashboard.html` | Admin database dashboard |
 | `sw.js` | Service Worker — offline-first caching strategy |
 | `manifest.json` | PWA manifest (icons, theme, display mode) |
 | `config.json` | User credentials and GitHub database configuration |
@@ -126,15 +125,6 @@ The app can optionally sync all survey data to a GitHub repository acting as a c
 
 Once configured, every saved survey is automatically pushed as a JSON file under `data/`.
 
-### Default Dashboard Login
-
-| | |
-|---|---|
-| **Username** | `ANIENTO` |
-| **Password** | `2026` |
-
-> Change credentials via `config.json` in your GitHub repository.
-
 ---
 
 ## Privacy
@@ -152,9 +142,10 @@ See [PRIVACY.md](PRIVACY.md) for the full privacy policy.
 
 ## License
 
-MIT License — see [LICENSE](LICENSE)
+© 2024–2026 Dr. B. Sumit Kumar Rao — All Rights Reserved.
 
-Copyright © 2024–2026 Dr. B. Sumit Kumar Rao
+This software is proprietary. Unauthorized reproduction, redistribution, or
+commercial use is strictly prohibited. See [LICENSE](LICENSE) for full terms.
 
 ---
 
