@@ -317,10 +317,6 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 /* ── PREMIUM BADGE (shown when not licensed) ───────── */
 #premium-badge{position:fixed;bottom:72px;right:12px;z-index:900;background:#e65100;color:#fff;border-radius:20px;padding:7px 13px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.25);align-items:center;gap:6px;display:none;}
 /* ── SCREENSHOT DETERRENCE ─────────────────────────── */
-#wm-overlay{position:fixed;inset:0;pointer-events:none;z-index:9990;overflow:hidden;opacity:0;transition:opacity .3s;}
-#wm-overlay.active{opacity:1;}
-.wm-row{display:flex;gap:80px;white-space:nowrap;margin-bottom:70px;}
-.wm-text{font-size:13px;font-weight:700;color:rgba(0,107,92,.13);transform:rotate(-35deg);transform-origin:center;display:inline-block;user-select:none;font-family:monospace;letter-spacing:.05em;}
 #focus-shield{position:fixed;inset:0;background:rgba(10,20,15,.97);z-index:9995;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
 #focus-shield.show{display:flex;}
 #focus-shield svg{opacity:.5;}
@@ -1619,6 +1615,14 @@ function loadGhSettings(){
   }catch(e){}
 }
 
+/* ── LOCAL USER STORAGE ──────────────────────────────────── */
+function _saveLocalUser(u){
+  try{const lu=JSON.parse(localStorage.getItem('est_local_users')||'[]');if(!lu.some(v=>v.username===u.username)){lu.push(u);localStorage.setItem('est_local_users',JSON.stringify(lu));}}catch(e){}
+}
+function loadLocalUsers(){
+  try{const lu=JSON.parse(localStorage.getItem('est_local_users')||'[]');lu.forEach(u=>{if(u.username&&!VALID_USERS.some(v=>v.username===u.username))VALID_USERS.push(u);});}catch(e){}
+}
+
 /* ── PREMIUM / LICENSING ─────────────────────────────────── */
 function b64urlDecode(s){
   return Uint8Array.from(atob(s.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0));
@@ -1747,7 +1751,7 @@ async function syncValidUsersFromCache(){
     if(raw) mergeConfigCreds(JSON.parse(raw));
   }catch(e){}
 }
-const APP_VER='2.0.43';
+const APP_VER='2.0.44';
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
   {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
@@ -1953,40 +1957,51 @@ async function doRegister(){
   if(u.length<3){errEl.textContent='Username must be at least 3 characters.';errEl.style.display='block';return;}
   if(p.length<4){errEl.textContent='Password must be at least 4 characters.';errEl.style.display='block';return;}
   if(VALID_USERS.some(v=>v.username.toLowerCase()===u.toLowerCase())){errEl.textContent='Username already exists. Choose another.';errEl.style.display='block';return;}
-  if(!GH_CONFIG.token){errEl.textContent='Connect to GitHub database first (tap the GitHub button below).';errEl.style.display='block';return;}
-  if(!navigator.onLine){errEl.textContent='Registration requires an internet connection.';errEl.style.display='block';return;}
-  const origHTML=btn.innerHTML;
-  btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="spin"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8Z"/></svg> Registering…';
-  btn.disabled=true;
-  try{
-    const resp=await fetch(ghDataApiUrl(GH_CONFIG_PATH),{headers:ghHeaders(),cache:'no-store'});
-    if(!resp.ok) throw new Error('Cannot reach GitHub. Check your token.');
-    const data=await resp.json();
-    const cfg=JSON.parse(b64Decode(data.content));
-    if(cfg.credentials&&cfg.credentials.some(c=>(c.username||'').toLowerCase()===u.toLowerCase())){
-      errEl.textContent='Username already taken. Choose another.';errEl.style.display='block';return;
-    }
-    if(!cfg.credentials) cfg.credentials=[];
-    cfg.credentials.push({username:u,password:p,role:'field',active:true});
-    cfg.updatedAt=new Date().toISOString();
-    const putResp=await fetch(ghDataApiUrl(GH_CONFIG_PATH),{
-      method:'PUT',
-      headers:{...ghHeaders(),'Content-Type':'application/json'},
-      body:JSON.stringify({message:`[EST] Register user: ${u}`,content:b64Encode(JSON.stringify(cfg,null,2)),sha:data.sha,branch:GH_CONFIG.branch})
-    });
-    if(!putResp.ok) throw new Error('Failed to save. Check token has write permission.');
-    VALID_USERS.push({username:u,password:p,role:'field',active:true});
-    try{localStorage.setItem('est_gh_config',JSON.stringify(cfg));}catch(e){}
-    document.getElementById('reg-user').value='';
-    document.getElementById('reg-pass').value='';
-    document.getElementById('reg-pass2').value='';
-    showLoginForm();
-    document.getElementById('login-user').value=u;
-    showToast('Account created! You can now sign in.','check');
-  }catch(e){
-    errEl.textContent='Registration failed: '+e.message;errEl.style.display='block';
-  }finally{
-    btn.innerHTML=origHTML;btn.disabled=false;
+  const newUser={username:u,password:p,role:'field',active:true};
+  // Try GitHub sync if configured and online; fall back to local-only
+  if(GH_CONFIG.token&&GH_CONFIG.owner&&navigator.onLine){
+    const origHTML=btn.innerHTML;
+    btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="spin"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8Z"/></svg> Registering…';
+    btn.disabled=true;
+    try{
+      const resp=await fetch(ghDataApiUrl(GH_CONFIG_PATH),{headers:ghHeaders(),cache:'no-store'});
+      if(!resp.ok){
+        const s=resp.status;
+        if(s===404) throw new Error('Data repo not found. Create EST-v2.0-data on GitHub or register offline.');
+        if(s===401||s===403) throw new Error('Token invalid or lacks repo access.');
+        throw new Error('GitHub error '+s+'.');
+      }
+      const data=await resp.json();
+      const cfg=JSON.parse(b64Decode(data.content));
+      if(cfg.credentials&&cfg.credentials.some(c=>(c.username||'').toLowerCase()===u.toLowerCase())){
+        errEl.textContent='Username already taken. Choose another.';errEl.style.display='block';return;
+      }
+      if(!cfg.credentials) cfg.credentials=[];
+      cfg.credentials.push(newUser);
+      cfg.updatedAt=new Date().toISOString();
+      const putResp=await fetch(ghDataApiUrl(GH_CONFIG_PATH),{
+        method:'PUT',
+        headers:{...ghHeaders(),'Content-Type':'application/json'},
+        body:JSON.stringify({message:`[EST] Register user: ${u}`,content:b64Encode(JSON.stringify(cfg,null,2)),sha:data.sha,branch:GH_CONFIG.branch})
+      });
+      if(!putResp.ok) throw new Error('Failed to save. Check token has write permission.');
+      try{localStorage.setItem('est_gh_config',JSON.stringify(cfg));}catch(e){}
+      VALID_USERS.push(newUser);
+      _saveLocalUser(newUser);
+      document.getElementById('reg-user').value='';document.getElementById('reg-pass').value='';document.getElementById('reg-pass2').value='';
+      showLoginForm();document.getElementById('login-user').value=u;
+      showToast('Account created! You can now sign in.','check');
+    }catch(e){
+      errEl.textContent='GitHub sync failed: '+e.message+' — Account saved locally.';errEl.style.display='block';
+      VALID_USERS.push(newUser);_saveLocalUser(newUser);
+      setTimeout(()=>{document.getElementById('reg-user').value='';document.getElementById('reg-pass').value='';document.getElementById('reg-pass2').value='';showLoginForm();document.getElementById('login-user').value=u;showToast('Account saved locally. Sign in now.','check');},2500);
+    }finally{btn.innerHTML=origHTML;btn.disabled=false;}
+  }else{
+    // Offline or GitHub not configured — local registration
+    VALID_USERS.push(newUser);_saveLocalUser(newUser);
+    document.getElementById('reg-user').value='';document.getElementById('reg-pass').value='';document.getElementById('reg-pass2').value='';
+    showLoginForm();document.getElementById('login-user').value=u;
+    showToast('Account created locally. Sign in now.','check');
   }
 }
 function loadSavedCreds(){try{const c=JSON.parse(localStorage.getItem(CRED_KEY));if(c&&c.u&&c.p){document.getElementById('login-user').value=c.u;document.getElementById('login-pass').value=c.p;document.getElementById('remember-me').checked=true;}}catch(e){}}
@@ -3921,6 +3936,7 @@ window.addEventListener('beforeunload',(e)=>{
 });
 document.addEventListener('DOMContentLoaded',()=>{
   // Sync VALID_USERS from cached config.json before auth so all users work offline
+  loadLocalUsers();
   syncValidUsersFromCache().then(()=>loadSavedCreds());
   loadGhSettings();
   typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();
@@ -4244,31 +4260,8 @@ function exitViewMode(){
   showSavedTab(activeSavedTab);showScreen('saved');
 }
 
-/* ── WATERMARK & SCREENSHOT DETERRENCE ────────────── */
+/* ── SCREENSHOT DETERRENCE ─────────────────────────── */
 (function(){
-  function buildWatermark(){
-    const wm=document.getElementById('wm-overlay');
-    if(!wm) return;
-    const u=(window._estUser?.username||'EST v2.0')+' · EST v'+APP_VER+' · '+new Date().toLocaleDateString('en-IN');
-    const cols=Math.ceil(window.innerWidth/220)+2;
-    const rows=Math.ceil(window.innerHeight/120)+2;
-    let html='';
-    for(let r=0;r<rows;r++){
-      html+='<div class="wm-row" style="margin-left:'+(r%2===0?0:-60)+'px">';
-      for(let c=0;c<cols;c++) html+='<span class="wm-text">'+u+'</span>';
-      html+='</div>';
-    }
-    wm.innerHTML=html;
-    wm.classList.add('active');
-  }
-  window.addEventListener('load',buildWatermark);
-  window.addEventListener('resize',buildWatermark);
-  // Rebuild watermark with username after login
-  const _origLogin=window.doLogin;
-  if(typeof _origLogin==='function'){
-    window.doLogin=function(){_origLogin.apply(this,arguments);setTimeout(buildWatermark,700);};
-  }
-  // Focus shield — blur app when window/tab loses focus
   function showShield(){if(window._estLoggedIn) document.getElementById('focus-shield')?.classList.add('show');}
   function hideShield(){document.getElementById('focus-shield')?.classList.remove('show');}
   document.addEventListener('visibilitychange',()=>document.hidden?showShield():hideShield());
@@ -4278,8 +4271,7 @@ function exitViewMode(){
 })();
 </script>
 
-<!-- WATERMARK OVERLAY (screenshot deterrence) -->
-<div id="wm-overlay"></div>
+
 
 <!-- FOCUS SHIELD (blur when app loses focus) -->
 <div id="focus-shield">
