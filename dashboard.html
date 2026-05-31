@@ -258,12 +258,12 @@ tr:nth-child(even) td{background:#f8faf9;}
     <table id="tbl-adult">
       <thead><tr>
         <th><input type="checkbox" class="row-cb" onchange="selectAll('adult',this.checked)"></th>
-        <th>#</th><th>Date</th><th>Location</th><th>State/UT</th><th>District</th>
+        <th>#</th><th>Survey ID</th><th>Username</th><th>Date</th><th>Location</th><th>State/UT</th><th>District</th>
         <th>Type</th><th>Houses</th><th>Mosq</th><th>Non-Cx</th><th>Culex</th>
         <th>PMHD</th><th>TMHD</th><th>Indoor Den</th><th>Outdoor Den</th><th>HBR</th>
         <th>Collectors</th><th>Man-Hrs</th><th>Nights</th><th>Officer</th><th>GPS</th><th>Map</th><th>Saved</th><th>Sync</th><th>Del</th>
       </tr></thead>
-      <tbody id="tbody-adult"><tr><td colspan="25" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+      <tbody id="tbody-adult"><tr><td colspan="27" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -288,13 +288,13 @@ tr:nth-child(even) td{background:#f8faf9;}
     <table id="tbl-larval">
       <thead><tr class="blue-hd">
         <th><input type="checkbox" class="row-cb" onchange="selectAll('larval',this.checked)"></th>
-        <th>#</th><th>Date</th><th>Location</th><th>State/UT</th><th>District</th>
+        <th>#</th><th>Survey ID</th><th>Username</th><th>Date</th><th>Location</th><th>State/UT</th><th>District</th>
         <th>Houses</th><th>HI%</th><th>CI%</th><th>BI</th><th>Pupal Idx</th>
         <th>Larval Den</th><th>Pupal Den</th><th>Immature Den</th>
         <th>Containers</th><th>+ve Cont</th><th>Larvae</th><th>Pupae</th><th>Dips</th>
         <th>Workers</th><th>Officer</th><th>GPS</th><th>Map</th><th>Saved</th><th>Sync</th><th>Del</th>
       </tr></thead>
-      <tbody id="tbody-larval"><tr><td colspan="26" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+      <tbody id="tbody-larval"><tr><td colspan="28" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -333,6 +333,13 @@ tr:nth-child(even) td{background:#f8faf9;}
 const DASH_U='ANIENTO', DASH_P='2026', DASH_KEY='est_dash_creds';
 let GH={owner:'',repo:'EST-v2.0',token:''};
 let allAdult=[],allLarval=[],adultF=[],larvalF=[],usersCfg=[];
+/* Compact human-readable Survey ID: A-260531-1437 */
+function fmtSid(type,id){
+  const d=new Date(Number(id));
+  if(isNaN(d.getTime()))return(type==='adult'?'A-':'L-')+id;
+  const yy=String(d.getFullYear()).slice(2),mm=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0'),hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');
+  return(type==='adult'?'A-':'L-')+yy+mm+dd+'-'+hh+mi;
+}
 
 /* ── AUTH ── */
 function validateDashLogin(u,p){
@@ -442,7 +449,7 @@ function updateStats(){
 /* ── RENDER TABLES ── */
 function renderAdult(){
   const tb=document.getElementById('tbody-adult');
-  if(!adultF.length){tb.innerHTML='<tr><td colspan="25" class="tbl-empty">No adult surveys found</td></tr>';return;}
+  if(!adultF.length){tb.innerHTML='<tr><td colspan="27" class="tbl-empty">No adult surveys found</td></tr>';return;}
   tb.innerHTML=adultF.map((s,i)=>{
     const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
@@ -450,7 +457,7 @@ function renderAdult(){
     const mapBtn=(s.track&&s.track.waypoints&&s.track.waypoints.length>=2)?`<button class="pt-btn ghost" style="padding:0 7px;height:26px;font-size:11px;" onclick="showTrackMap(${i},'adult')" title="View survey map">🗺</button>`:`<span style="color:var(--muted);">—</span>`;
     return `<tr>
       <td><input type="checkbox" class="row-cb adult-cb" data-idx="${i}"></td>
-      <td>${i+1}</td><td>${s.date||'-'}</td>
+      <td>${i+1}</td><td style="font-family:monospace;font-size:11px;color:var(--teal);">${fmtSid('adult',s.id)}</td><td style="font-weight:600;">${s.savedBy||'-'}</td><td>${s.date||'-'}</td>
       <td style="font-weight:600;min-width:120px;">${s.location||'-'}</td>
       <td>${s.state||'-'}</td><td>${s.district||'-'}</td>
       <td><span class="badge ${s.collType==='resting'?'rest':'hlc'}">${s.collType==='resting'?'Resting':'HLC'}</span></td>
@@ -476,7 +483,7 @@ function renderAdult(){
 }
 function renderLarval(){
   const tb=document.getElementById('tbody-larval');
-  if(!larvalF.length){tb.innerHTML='<tr><td colspan="26" class="tbl-empty">No larval surveys found</td></tr>';return;}
+  if(!larvalF.length){tb.innerHTML='<tr><td colspan="28" class="tbl-empty">No larval surveys found</td></tr>';return;}
   tb.innerHTML=larvalF.map((s,i)=>{
     const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
@@ -485,7 +492,7 @@ function renderLarval(){
     const mapBtn=(s.track&&s.track.waypoints&&s.track.waypoints.length>=2)?`<button class="pt-btn ghost" style="padding:0 7px;height:26px;font-size:11px;" onclick="showTrackMap(${i},'larval')" title="View survey map">🗺</button>`:`<span style="color:var(--muted);">—</span>`;
     return `<tr>
       <td><input type="checkbox" class="row-cb larval-cb" data-idx="${i}"></td>
-      <td>${i+1}</td><td>${s.date||'-'}</td>
+      <td>${i+1}</td><td style="font-family:monospace;font-size:11px;color:var(--blue);">${fmtSid('larval',s.id)}</td><td style="font-weight:600;">${s.savedBy||'-'}</td><td>${s.date||'-'}</td>
       <td style="font-weight:600;min-width:120px;">${s.location||'-'}</td>
       <td>${s.state||'-'}</td><td>${s.district||'-'}</td>
       <td>${s.houses?.length||0}</td>
@@ -625,7 +632,7 @@ function buildAdultCSV(surveys){
   surveys.forEach((s,i)=>{
     (s.speciesBreakdown||[]).forEach(sp=>{
       const tot=(sp.indoor||0)+(sp.outdoor||0);
-      if(tot>0)r(i+1,'EST-A-'+s.id,s.date,s.location,sp.name,sp.genus,sp.isCulex?'Yes':'No',sp.indoor||0,sp.outdoor||0,tot);
+      if(tot>0)r(i+1,fmtSid('adult',s.id),s.date,s.location,sp.name,sp.genus,sp.isCulex?'Yes':'No',sp.indoor||0,sp.outdoor||0,tot);
     });
   });
   blank();
@@ -640,7 +647,7 @@ function buildAdultCSV(surveys){
       const hrs=h.hours?.toFixed?h.hours.toFixed(2):0;
       const lat=h.lat||'';const lng=h.lng||'';
       const mapsLink=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
-      r(i+1,'EST-A-'+s.id,s.date,s.location,h.houseNo,h.rooms||'',h.start||'-',h.end||'-',hrs,ind,out,h.total,lat,lng,mapsLink);
+      r(i+1,fmtSid('adult',s.id),s.date,s.location,h.houseNo,h.rooms||'',h.start||'-',h.end||'-',hrs,ind,out,h.total,lat,lng,mapsLink);
     });
   });
   blank();
@@ -654,7 +661,7 @@ function buildAdultCSV(surveys){
         const v0=h.counts?.[si]?.[0]||0;
         const v1=isR?(h.counts?.[si]?.[1]||0):0;
         const tot=v0+v1;
-        if(tot>0)r(i+1,'EST-A-'+s.id,s.date,s.location,h.houseNo,sp.name,sp.genus,sp.isCulex?'Yes':'No',v0,v1,tot);
+        if(tot>0)r(i+1,fmtSid('adult',s.id),s.date,s.location,h.houseNo,sp.name,sp.genus,sp.isCulex?'Yes':'No',v0,v1,tot);
       });
     });
   });
@@ -690,7 +697,7 @@ function buildLarvalCSV(surveys){
     (s.containerSummary||[]).forEach(ct=>{
       if(ct.examined>0||ct.positive>0){
         const pct=ct.examined>0?((ct.positive/ct.examined)*100).toFixed(1)+'%':'-';
-        r(i+1,'EST-L-'+s.id,s.date,s.location,ct.name,ct.examined||0,ct.positive||0,pct);
+        r(i+1,fmtSid('larval',s.id),s.date,s.location,ct.name,ct.examined||0,ct.positive||0,pct);
       }
     });
   });
@@ -707,7 +714,7 @@ function buildLarvalCSV(surveys){
         spAgg[nm].larvae+=(cnt[0]||0);spAgg[nm].pupae+=(cnt[1]||0);
       });
     });
-    Object.entries(spAgg).forEach(([nm,v])=>{if(v.larvae||v.pupae)r(i+1,'EST-L-'+s.id,s.date,s.location,nm,v.genus,v.larvae,v.pupae,v.larvae+v.pupae);});
+    Object.entries(spAgg).forEach(([nm,v])=>{if(v.larvae||v.pupae)r(i+1,fmtSid('larval',s.id),s.date,s.location,nm,v.genus,v.larvae,v.pupae,v.larvae+v.pupae);});
   });
   blank();
   // ── House-wise container inspection ──
@@ -717,7 +724,7 @@ function buildLarvalCSV(surveys){
     (s.houses||[]).forEach(h=>{
       const lat=h.lat||'';const lng=h.lng||'';
       const mapsLink=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
-      r(i+1,'EST-L-'+s.id,s.date,s.location,h.houseNo,h.rooms||'',h.start||'-',h.end||'-',h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No',lat,lng,mapsLink);
+      r(i+1,fmtSid('larval',s.id),s.date,s.location,h.houseNo,h.rooms||'',h.start||'-',h.end||'-',h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No',lat,lng,mapsLink);
     });
   });
   blank();
@@ -728,7 +735,7 @@ function buildLarvalCSV(surveys){
     (s.houses||[]).forEach(h=>{
       (h.counts||[]).forEach((cnt,si)=>{
         const tot=(cnt[0]||0)+(cnt[1]||0);
-        if(tot>0)r(i+1,'EST-L-'+s.id,s.date,s.location,h.houseNo,LSP_NAMES[si]||'Sp.'+(si+1),cnt[0]||0,cnt[1]||0,tot);
+        if(tot>0)r(i+1,fmtSid('larval',s.id),s.date,s.location,h.houseNo,LSP_NAMES[si]||'Sp.'+(si+1),cnt[0]||0,cnt[1]||0,tot);
       });
     });
   });
@@ -741,12 +748,12 @@ function buildLarvalCSV(surveys){
       s.dipSites.forEach(d=>{
         const lat=d.lat||'';const lng=d.lng||'';
         const mapsLink=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
-        r(i+1,'EST-L-'+s.id,s.date,s.location,d.siteNo,d.dips||0,d.larvae||0,d.pupae||0,(d.larvae||0)+(d.pupae||0),lat,lng,mapsLink,d.remark||'');
+        r(i+1,fmtSid('larval',s.id),s.date,s.location,d.siteNo,d.dips||0,d.larvae||0,d.pupae||0,(d.larvae||0)+(d.pupae||0),lat,lng,mapsLink,d.remark||'');
       });
     }else{
       (s.houses||[]).forEach(h=>{
         if(h.dips||h.larvae||h.pupae){
-          r(i+1,'EST-L-'+s.id,s.date,s.location,h.houseNo,h.dips||0,h.larvae||0,h.pupae||0,(h.larvae||0)+(h.pupae||0),'','','','');
+          r(i+1,fmtSid('larval',s.id),s.date,s.location,h.houseNo,h.dips||0,h.larvae||0,h.pupae||0,(h.larvae||0)+(h.pupae||0),'','','','');
         }
       });
     }
