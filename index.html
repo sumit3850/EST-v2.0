@@ -1864,7 +1864,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.0.49';
+const APP_VER='2.0.50';
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
   {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
@@ -3049,14 +3049,15 @@ function buildAdultCSV(s){
 
   // HOUSE/SITE DETAILS
   sep('HOUSE / SITE DETAILS');
-  if(isR) h('House/Site No.','Rooms Inspected','Start Time','End Time','Hours Spent','Indoor Mosquitoes','Outdoor Mosquitoes','Total Mosquitoes');
-  else h('Site No.','Start Time','End Time','Hours Spent','Human Landing Catch','Total Mosquitoes');
+  if(isR) h('House/Site No.','Rooms Inspected','Start Time','End Time','Hours Spent','Indoor Mosquitoes','Outdoor Mosquitoes','Total Mosquitoes','GPS Latitude','GPS Longitude','Google Maps Link');
+  else h('Site No.','Start Time','End Time','Hours Spent','Human Landing Catch','Total Mosquitoes','GPS Latitude','GPS Longitude','Google Maps Link');
   (s.houses||[]).forEach(h2=>{
     const ind=(h2.counts||[]).reduce((t,r2)=>t+(r2[0]||0),0);
     const out=isR?(h2.counts||[]).reduce((t,r2)=>t+(r2[1]||0),0):0;
     const hrs=h2.hours?.toFixed?h2.hours.toFixed(2):0;
-    if(isR) r(h2.houseNo,h2.rooms,h2.start,h2.end,hrs,ind,out,h2.total);
-    else r(h2.houseNo,h2.start,h2.end,hrs,ind,h2.total);
+    const lat=h2.lat||'';const lng=h2.lng||'';const mapsLink=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
+    if(isR) r(h2.houseNo,h2.rooms,h2.start,h2.end,hrs,ind,out,h2.total,lat,lng,mapsLink);
+    else r(h2.houseNo,h2.start,h2.end,hrs,ind,h2.total,lat,lng,mapsLink);
   });
   blank();
 
@@ -3078,6 +3079,26 @@ function buildAdultCSV(s){
     });
   });
   blank();
+
+  // GPS SURVEY PATH (Adult)
+  if(s.track&&s.track.waypoints&&s.track.waypoints.length){
+    sep('GPS SURVEY PATH');
+    const startPt=s.track.waypoints[0],endPt=s.track.waypoints[s.track.waypoints.length-1];
+    r('Track Start Latitude',startPt.lat.toFixed(6));
+    r('Track Start Longitude',startPt.lng.toFixed(6));
+    r('Track Start Time',s.track.startTime?new Date(s.track.startTime).toLocaleString('en-IN'):(startPt.ts?new Date(startPt.ts).toLocaleString('en-IN'):'-'));
+    r('Track Start Google Maps','https://maps.google.com/?q='+startPt.lat+','+startPt.lng);
+    r('Track End Latitude',endPt.lat.toFixed(6));
+    r('Track End Longitude',endPt.lng.toFixed(6));
+    r('Track End Time',s.track.endTime?new Date(s.track.endTime).toLocaleString('en-IN'):(endPt.ts?new Date(endPt.ts).toLocaleString('en-IN'):'-'));
+    r('Track End Google Maps','https://maps.google.com/?q='+endPt.lat+','+endPt.lng);
+    r('Total Distance',s.track.distanceKm+' km');
+    r('Duration',Math.floor((s.track.durationSec||0)/60)+' min '+((s.track.durationSec||0)%60)+' sec');
+    blank();
+    r('Point No.','Latitude','Longitude','Timestamp');
+    s.track.waypoints.forEach((p,i)=>{r(i+1,p.lat.toFixed(6),p.lng.toFixed(6),p.ts?new Date(p.ts).toLocaleString('en-IN'):'-');});
+    blank();
+  }
 
   // STAMP
   rows.push(['EST v2.0 · Entomological Surveillance Tool · Report ID: EST-A-'+s.id]);
@@ -3176,14 +3197,20 @@ function buildLarvalCSV(s){
 
   if(s.track&&s.track.waypoints&&s.track.waypoints.length){
     sep('GPS SURVEY PATH');
+    const startPt=s.track.waypoints[0],endPt=s.track.waypoints[s.track.waypoints.length-1];
+    r('Track Start Latitude',startPt.lat.toFixed(6));
+    r('Track Start Longitude',startPt.lng.toFixed(6));
+    r('Track Start Time',s.track.startTime?new Date(s.track.startTime).toLocaleString('en-IN'):(startPt.ts?new Date(startPt.ts).toLocaleString('en-IN'):'-'));
+    r('Track Start Google Maps','https://maps.google.com/?q='+startPt.lat+','+startPt.lng);
+    r('Track End Latitude',endPt.lat.toFixed(6));
+    r('Track End Longitude',endPt.lng.toFixed(6));
+    r('Track End Time',s.track.endTime?new Date(s.track.endTime).toLocaleString('en-IN'):(endPt.ts?new Date(endPt.ts).toLocaleString('en-IN'):'-'));
+    r('Track End Google Maps','https://maps.google.com/?q='+endPt.lat+','+endPt.lng);
+    r('Total Distance',s.track.distanceKm+' km');
+    r('Duration',Math.floor((s.track.durationSec||0)/60)+' min '+((s.track.durationSec||0)%60)+' sec');
+    blank();
     r('Point No.','Latitude','Longitude','Timestamp');
     s.track.waypoints.forEach((p,i)=>{r(i+1,p.lat.toFixed(6),p.lng.toFixed(6),p.ts?new Date(p.ts).toLocaleString('en-IN'):'-');});
-    blank();
-    const startPt=s.track.waypoints[0],endPt=s.track.waypoints[s.track.waypoints.length-1];
-    r('Survey Start GPS','https://maps.google.com/?q='+startPt.lat+','+startPt.lng);
-    r('Survey End GPS','https://maps.google.com/?q='+endPt.lat+','+endPt.lng);
-    r('Total Distance',s.track.distanceKm+' km');
-    r('Duration',s.track.durationSec+' seconds');
     blank();
   }
 
