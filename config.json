@@ -29,7 +29,13 @@
       "password": "886748",
       "role": "field",
       "active": true
+    },
+    {
+      "username": "USER-5",
+      "password": "12345",
+      "role": "field",
+      "active": true
     }
   ],
-  "updatedAt": "2026-05-31T00:18:20.244Z"
+  "updatedAt": "2026-05-31T00:19:00.651Z"
 }
