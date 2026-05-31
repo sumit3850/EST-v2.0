@@ -1503,7 +1503,7 @@ async function ghFetchConfig(){
   }catch(e){ return null; }
 }
 
-/* Remove users deleted/inactivated in GitHub from local caches */
+/* Remove users deleted/inactivated in GitHub from all local caches */
 function _purgeDeletedUsers(freshCfg){
   if(!freshCfg||!Array.isArray(freshCfg.credentials)) return;
   const activeInGH=new Set(
@@ -1511,10 +1511,11 @@ function _purgeDeletedUsers(freshCfg){
       .filter(c=>c.active!==false&&c.username)
       .map(c=>c.username.trim())
   );
-  // Remove from VALID_USERS (skip grandfathered — they always stay)
+  // Collect usernames being purged
+  const toPurge=[];
   for(let i=VALID_USERS.length-1;i>=0;i--){
     const u=VALID_USERS[i].username;
-    if(!GRANDFATHERED_USERS.has(u)&&!activeInGH.has(u)) VALID_USERS.splice(i,1);
+    if(!GRANDFATHERED_USERS.has(u)&&!activeInGH.has(u)){VALID_USERS.splice(i,1);toPurge.push(u);}
   }
   // Remove from est_local_users localStorage
   try{
@@ -1522,6 +1523,22 @@ function _purgeDeletedUsers(freshCfg){
     const filtered=lu.filter(u=>GRANDFATHERED_USERS.has(u.username)||activeInGH.has(u.username));
     if(filtered.length!==lu.length) localStorage.setItem('est_local_users',JSON.stringify(filtered));
   }catch(e){}
+  // Revoke premium license for every purged user
+  toPurge.forEach(uname=>{
+    try{localStorage.removeItem('est_lic_'+uname.toLowerCase());}catch(e){}
+  });
+  // Force-logout if the currently signed-in user was deleted
+  if(toPurge.length&&window._estLoggedIn&&window._estUser){
+    const cur=window._estUser.username;
+    if(toPurge.includes(cur)){
+      _estPremium=false;
+      window._estLoggedIn=false;
+      window._estUser=null;
+      try{localStorage.removeItem(CRED_KEY);}catch(e){}
+      showToast('Your account has been removed. Please contact admin.','warn');
+      setTimeout(()=>location.reload(),2500);
+    }
+  }
 }
 
 /* ── VALIDATE CREDENTIALS ────────────────────────────────── */
@@ -1843,7 +1860,7 @@ async function syncValidUsersFromCache(){
     if(raw) mergeConfigCreds(JSON.parse(raw));
   }catch(e){}
 }
-const APP_VER='2.0.47';
+const APP_VER='2.0.48';
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
   {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
@@ -1965,14 +1982,23 @@ function goToAbout(){
     _showAboutPage();
   }
 }
-function doLogin(){
+async function doLogin(){
   const u=document.getElementById('login-user').value.trim();
   const p=document.getElementById('login-pass').value.trim();
   const rem=document.getElementById('remember-me').checked;
   const err=document.getElementById('login-err');
   const btn=document.querySelector('.launch-btn');
-  const result=validateCredentials(u,p);
+  err.style.display='none';
 
+  // Fetch fresh config from GitHub BEFORE validating — ensures deletions are enforced immediately
+  if(GH_CONFIG.owner&&GH_CONFIG.token&&navigator.onLine){
+    const origHTML=btn?.innerHTML;
+    if(btn){btn.disabled=true;btn.textContent='Checking…';}
+    try{await ghFetchConfig();}catch(e){}
+    if(btn){btn.disabled=false;if(origHTML)btn.innerHTML=origHTML;}
+  }
+
+  const result=validateCredentials(u,p);
   if(!result.valid){
     let msg='Invalid username or password.';
     if(result.reason==='inactive') msg='This account has been deactivated. Contact admin.';
@@ -1986,10 +2012,9 @@ function doLogin(){
   window._estLoggedIn=true;
   window._estUser={username:u, role:result.role};
   checkPremiumStatus();
-  // Silently refresh GitHub credentials in background after login (non-blocking)
-  if(GH_CONFIG.owner && GH_CONFIG.token && navigator.onLine){
-    ghFetchConfig().catch(()=>{}); // fire and forget
-    syncLocalUsersToGitHub().catch(()=>{}); // push any locally-registered users to GitHub
+  // Sync local users to GitHub in background after login
+  if(GH_CONFIG.owner&&GH_CONFIG.token&&navigator.onLine){
+    syncLocalUsersToGitHub().catch(()=>{});
   }
   if(rem){try{localStorage.setItem(CRED_KEY,JSON.stringify({u,p}));}catch(e){}}else{try{localStorage.removeItem(CRED_KEY);}catch(e){}}
   const sp=document.getElementById('splash');
