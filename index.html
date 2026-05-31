@@ -1855,12 +1855,16 @@ async function syncValidUsersFromCache(){
     }catch(e){}
   }
   // 2. From localStorage (written by ghFetchConfig after online sync)
+  let latestCfg=null;
   try{
     const raw=localStorage.getItem('est_gh_config');
-    if(raw) mergeConfigCreds(JSON.parse(raw));
+    if(raw){ latestCfg=JSON.parse(raw); mergeConfigCreds(latestCfg); }
   }catch(e){}
+  // 3. Purge any users who no longer exist in the last-known GitHub config
+  //    so deleted usernames are freed and stale entries can't log in
+  if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.0.48';
+const APP_VER='2.0.49';
 const CRED_KEY='est_creds',A_SAVED='est_adult_saved',L_SAVED='est_larval_saved',A_DRAFT='est_adult_draft',L_DRAFT='est_larval_draft';
 const ASP=[
   {n:'Ae. aegypti',g:'AEDES'},{n:'Ae. albopictus',g:'AEDES'},{n:'Ae. niveus',g:'AEDES'},
@@ -2074,6 +2078,14 @@ async function doRegister(){
   if(p!==p2){errEl.textContent='Passwords do not match.';errEl.style.display='block';return;}
   if(u.length<3){errEl.textContent='Username must be at least 3 characters.';errEl.style.display='block';return;}
   if(p.length<4){errEl.textContent='Password must be at least 4 characters.';errEl.style.display='block';return;}
+  // Fetch fresh config before checking username availability so deleted usernames can be reused
+  if(GH_CONFIG.owner&&GH_CONFIG.token&&navigator.onLine){
+    const origHTML=btn.innerHTML;
+    btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="spin"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8Z"/></svg> Checking…';
+    btn.disabled=true;
+    try{await ghFetchConfig();}catch(e){}
+    btn.disabled=false;btn.innerHTML=origHTML;
+  }
   if(VALID_USERS.some(v=>v.username.toLowerCase()===u.toLowerCase())){errEl.textContent='Username already exists. Choose another.';errEl.style.display='block';return;}
   const newUser={username:u,password:p,role:'field',active:true};
   // Try GitHub sync if configured and online; fall back to local-only
