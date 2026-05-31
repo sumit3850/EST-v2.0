@@ -583,14 +583,22 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
     <div class="stepper-lbl">Phase 1 of 3 — Survey Metadata</div>
     <div id="a-ctype-section">
     <div class="sec-hdr"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)"><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></svg><span class="sec-lbl">Collection Type</span></div>
-    <div class="ctype-wrap">
+    <div class="ctype-wrap" style="grid-template-columns:1fr 1fr;">
       <div class="ctype-btn active" id="ct-rest" onclick="setCollType('resting')">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--primary)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        <div class="ctype-name">Resting Collection</div><div class="ctype-sub">Aspirator / Handheld Net</div>
+        <div class="ctype-name">Resting Collection</div><div class="ctype-sub">AMD — Aspirator / Net</div>
       </div>
       <div class="ctype-btn" id="ct-hlc" onclick="setCollType('hlc')">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--osv)"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-        <div class="ctype-name">Human Landing Catch</div><div class="ctype-sub">HLC — Ethical clearance reqd.</div>
+        <div class="ctype-name">Landing Catch (HLC)</div><div class="ctype-sub">Human bait — clearance reqd.</div>
+      </div>
+      <div class="ctype-btn" id="ct-hbr" onclick="setCollType('hbr')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--osv)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        <div class="ctype-name">Human Biting Rate</div><div class="ctype-sub">HBR — Overnight volunteer bait</div>
+      </div>
+      <div class="ctype-btn" id="ct-alr" onclick="setCollType('alr')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--osv)"><path d="M7 22q-1.25 0-2.125-.875T4 19V7l1-5h14l1 5v12q0 1.25-.875 2.125T17 22H7Zm0-2h10V10H7v10Zm0-12h10l-.5-3H7.5L7 8Zm3 8q.425 0 .713-.288T11 15V13q0-.425-.288-.712T10 12q-.425 0-.712.288T9 13v2q0 .425.288.713T10 16Zm4 0q.425 0 .713-.288T15 15V13q0-.425-.288-.712T14 12q-.425 0-.712.288T13 13v2q0 .425.288.713T14 16Z"/></svg>
+        <div class="ctype-name">Biting / Landing Rate</div><div class="ctype-sub">ALR — Trap / bait station</div>
       </div>
     </div>
     </div>
@@ -1861,7 +1869,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.0.52';
+const APP_VER='2.0.53';
 /* Compact human-readable Survey ID: A-260531-1437 (type + YYMMDD + HHMM) */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -2281,16 +2289,11 @@ function _updAdultP2Labels(t){
 }
 function setCollType(t){
   aS.collType=t;
-  const ctRest=document.getElementById('ct-rest');
-  const ctHlc=document.getElementById('ct-hlc');
-  if(ctRest)ctRest.className='ctype-btn'+(t==='resting'?' active':'');
-  if(ctHlc)ctHlc.className='ctype-btn'+(t==='hlc'?' active':'');
+  ['resting','hlc','hbr','alr'].forEach(v=>{const el=document.getElementById('ct-'+(v==='resting'?'rest':v));if(el)el.className='ctype-btn'+(t===v?' active':'');});
   const hw=document.getElementById('hlc-warn');if(hw)hw.style.display=t==='hlc'?'flex':'none';
-  // Show/hide Phase 1 ctype section and banners
-  const cs=document.getElementById('a-ctype-section');
+  // Keep ctype section always visible; show info banners below for HBR / ALR
   const hbrB=document.getElementById('a-hbr-banner');
   const alrB=document.getElementById('a-alr-banner');
-  if(cs)cs.style.display=(t==='hbr'||t==='alr')?'none':'block';
   if(hbrB)hbrB.style.display=t==='hbr'?'flex':'none';
   if(alrB)alrB.style.display=t==='alr'?'flex':'none';
   aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);buildAdultMatrix();
@@ -2996,7 +2999,7 @@ function buildAdultCSV(s){
   const sep=label=>rows.push([label]);
 
   // HEADER
-  r('EST v2.0 — Adult Mosquito Surveillance Report');
+  r('EST v'+APP_VER+' — Adult Mosquito Surveillance Report');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Survey ID:',fmtSid('adult',s.id));
   blank();
@@ -3115,7 +3118,7 @@ function buildAdultCSV(s){
   }
 
   // STAMP
-  rows.push(['EST v2.0 · Entomological Surveillance Tool · Report ID: EST-A-'+s.id]);
+  rows.push(['EST v'+APP_VER+' · Entomological Surveillance Tool · Report ID: '+fmtSid('adult',s.id)]);
   rows.push(['Exported: '+new Date().toLocaleString('en-IN')]);
 
   // Convert to CSV
@@ -3129,7 +3132,7 @@ function buildLarvalCSV(s){
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
 
-  r('EST v2.0 \u2014 Larval Mosquito Surveillance Report');
+  r('EST v'+APP_VER+' \u2014 Larval Mosquito Surveillance Report');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Survey ID:',fmtSid('larval',s.id));
   blank();
@@ -3238,7 +3241,7 @@ function buildLarvalCSV(s){
   });
   blank();
 
-  rows.push(['EST v2.0 \u00b7 Entomological Surveillance Tool \u00b7 Report ID: EST-L-'+s.id]);
+  rows.push(['EST v'+APP_VER+' \u00b7 Entomological Surveillance Tool \u00b7 Report ID: '+fmtSid('larval',s.id)]);
   rows.push(['Exported: '+new Date().toLocaleString('en-IN')]);
   return '\uFEFF'+rows.map(row=>row.map(cell=>q(cell)).join(',')).join('\r\n');
 }
@@ -3498,7 +3501,7 @@ function exportLarvalPDF(){
   if(!contHRows)contHRows='<tr><td colspan="3" style="text-align:center;color:#999;">No container data</td></tr>';
   const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>EST Larval \u2014 ${s.district} \u2014 ${s.date}</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Times New Roman',serif;font-size:11pt;color:#111;}.page{width:210mm;min-height:297mm;margin:0 auto;padding:14mm 16mm 20mm;}.hd{border-bottom:3px double #006b5c;padding-bottom:10px;margin-bottom:12px;}.hd h2{font-size:14pt;font-weight:bold;color:#006b5c;}.hd p{font-size:9pt;color:#555;margin-top:2px;}.tb{text-align:center;background:linear-gradient(135deg,#004d42,#006b5c);color:#fff;border-radius:6px;padding:10px;margin-bottom:12px;}.tb h1{font-size:14pt;color:#fff;}.ref{display:flex;justify-content:space-between;font-size:9pt;color:#1b5e20;background:#e8f5e9;border-left:3px solid #006b5c;padding:5px 10px;margin-bottom:14px;}.sec{font-size:11pt;font-weight:bold;text-transform:uppercase;border-bottom:1.5px solid;padding-bottom:3px;margin:14px 0 8px;}.sec.ae{color:#1565c0;border-color:#64b5f6;}.sec.an{color:#006b5c;border-color:#00bfa5;}.mt{width:100%;border-collapse:collapse;}.mt td{padding:7px 10px;border:1px solid #ccc;font-size:10pt;}.mt td.lbl{background:#e8f5e9;font-weight:bold;font-size:8.5pt;color:#1b5e20;width:22%;}.iw{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:4px;}.ib{border:1px solid #80cbc4;border-radius:4px;padding:9px 6px;text-align:center;flex:1;min-width:80px;background:#e8f5e9;}.ib.gn{border-color:var(--pd,#44ddc1);background:#e6f7f4;}.il{font-size:7.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:#555;margin-bottom:3px;}.iv{font-size:14pt;font-weight:bold;color:#006b5c;}.iv.gn{color:#006b5c;}.is{font-size:7pt;color:#777;margin-top:2px;}table{width:100%;border-collapse:collapse;}thead tr{background:#006b5c;color:#fff;}thead.gn tr{background:#004d42;}thead th{padding:7px 8px;font-size:9pt;font-weight:bold;text-align:center;text-transform:uppercase;}thead th:first-child{text-align:left;}td{padding:5px 8px;border-bottom:1px solid #e0e0e0;font-size:10pt;text-align:center;}td:first-child{text-align:left;}.sig{display:flex;justify-content:space-between;gap:10px;margin-top:28px;padding-top:12px;border-top:1px solid #ccc;}.sb{flex:1;text-align:center;}.sl{border-top:1px solid #333;margin:0 auto 5px;width:88%;}.sn{font-size:9.5pt;font-weight:bold;}.sr{font-size:8pt;color:#555;margin-top:2px;}.footer{margin-top:14px;border-top:1px solid #ccc;padding-top:6px;font-size:8pt;color:#888;text-align:center;}.sb-fixed{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ccc;padding:10px;text-align:center;}.pb{background:#006b5c;color:#fff;border:none;padding:10px 30px;border-radius:6px;font-size:12pt;font-weight:bold;cursor:pointer;}@media print{.sb-fixed{display:none!important;}@page{size:A4;margin:12mm;}}</style></head><body>
 <div style="height:64px;"></div><div class="page">
-<div class="hd"><h2>EST v2.0 \u2014 Entomological Surveillance Tool</h2><p>Larval Mosquito Surveillance Report</p></div>
+<div class="hd"><h2>EST v${APP_VER||'2.0'} \u2014 Entomological Surveillance Tool</h2><p>Larval Mosquito Surveillance Report</p></div>
 <div class="tb"><h1>Larval Mosquito Surveillance Report</h1><p>Container Inspection &amp; Larval Dipping Survey</p></div>
 <div class="ref"><span><strong>Date:</strong> ${s.date}</span><span><strong>ID:</strong> ${fmtSid('larval',s.id)}</span><span><strong>District:</strong> ${s.district}</span></div>
 <div class="sec ae">1. Survey Details</div>
@@ -3550,7 +3553,7 @@ function exportLarvalPDF(){
 <div class="sig"><div class="sb"><div class="sl"></div><div class="sn">${s.workers}</div><div class="sr">Surveillance Worker</div></div>
 <div class="sb"><div class="sl"></div><div class="sn">${s.officers}</div><div class="sr">Senior Officer</div></div>
 <div class="sb"><div class="sl"></div><div class="sn">Medical Incharge</div><div class="sr">Verification &amp; Approval</div></div></div>
-<div class="footer">EST v2.0 \u00b7 Entomological Surveillance Tool | Report ID: ${fmtSid('larval',s.id)} | Generated: ${new Date().toLocaleString('en-IN')}</div>
+<div class="footer">EST v${APP_VER||'2.0'} \u00b7 Entomological Surveillance Tool | Report ID: ${fmtSid('larval',s.id)} | Generated: ${new Date().toLocaleString('en-IN')}</div>
 </div><div class="sb-fixed"><button class="pb" onclick="window.print()">Save as PDF / Print</button></div>
 </body></html>`;
   showPdfPreview(html);showToast('Tap Print to save as PDF','pdf');
@@ -3579,7 +3582,7 @@ function buildAdultText(s){
       t+=sp.name+': '+tot+detail+'\n';
     });
   }
-  t+='\n'+'─'.repeat(36)+'\nEST v2.0 · Entomological Surveillance Tool';
+  t+='\n'+'─'.repeat(36)+'\nEST v'+APP_VER+' · Entomological Surveillance Tool';
   return t;
 }
 function buildLarvalText(s){
@@ -3607,7 +3610,7 @@ function buildLarvalText(s){
     t+='\n*─── HOUSES ───*\n';
     s.houses.forEach(h=>{t+=h.houseNo+': L='+h.larvae+' P='+h.pupae+' Dips='+h.dips+(h.housePositive?' ✓+ve':'')+'\n';});
   }
-  t+='\n'+'─'.repeat(36)+'\nEST v2.0 · Entomological Surveillance Tool';
+  t+='\n'+'─'.repeat(36)+'\nEST v'+APP_VER+' · Entomological Surveillance Tool';
   return t;
 }
 function sendEmail(mod){
@@ -4393,7 +4396,7 @@ function viewSavedSurvey(mod,id,view){
     aS.houses=(s.houses||[]).map(h=>({...h,counts:(h.counts||[]).map(r=>[...r])}));
     aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);
     aS.curRooms=0;aS.curHN=(s.houses?.length||0)+1;
-    setCollType(s.collType==='hlc'?'hlc':'resting');
+    setCollType(s.collType||'resting');
     if(view==='review'){populateAdultReview();showScreen('adult-review');}
     else if(view==='collect'){buildAdultMatrix();renderAdultHouses();updateAdultSummary();updateTimeCalc('a');showScreen('adult-collect');}
     else{
