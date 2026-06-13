@@ -1,0 +1,53 @@
+{
+  "id": 1781353359727,
+  "savedAt": "2026-06-13T12:22:39.727Z",
+  "savedBy": "USER-1",
+  "appType": "larval",
+  "v": "2.0",
+  "date": "13-06-2026",
+  "state": "Andaman and Nicobar Islands",
+  "district": "South Andaman",
+  "location": "Krishna Nagar_06 (B)",
+  "workers": "S. Shiva Kumar, Abo bakar",
+  "officers": "Dr. Sumit Kumar",
+  "lat": "12.005819",
+  "lng": "92.976294",
+  "houses": [],
+  "dipSites": [
+    {
+      "id": 1781353310792,
+      "siteNo": "DS-001",
+      "dips": 10,
+      "larvae": 2,
+      "pupae": 0,
+      "remark": "Stagnant water source",
+      "lat": 12.0056846,
+      "lng": 92.9764014
+    }
+  ],
+  "containerSummary": [],
+  "HI": "—",
+  "CI": "—",
+  "BI": "—",
+  "PI": "—",
+  "LD": "20.0",
+  "PD": "0.0",
+  "totalLarvae": 2,
+  "totalPupae": 0,
+  "totalDips": 10,
+  "totalContainers": 0,
+  "totalPositive": 0,
+  "track": {
+    "waypoints": [
+      {
+        "lat": 12.0057258,
+        "lng": 92.9763383,
+        "ts": 1781352835221
+      }
+    ],
+    "distanceKm": 0,
+    "durationSec": 526,
+    "startTime": "2026-06-13T12:13:53.538Z",
+    "endTime": "2026-06-13T12:22:39.727Z"
+  }
+}
