@@ -1,0 +1,3460 @@
+{
+  "id": 1781318602881,
+  "savedAt": "2026-06-13T02:43:22.881Z",
+  "savedBy": "USER-1",
+  "appType": "larval",
+  "v": "2.0",
+  "date": "13-06-2026",
+  "state": "Andaman and Nicobar Islands",
+  "district": "South Andaman",
+  "location": "Krishna Nagar_04 (A)",
+  "workers": "S. Shiva Kumar, Abo bakar",
+  "officers": "Dr. Sumit Kumar",
+  "lat": "12.011914",
+  "lng": "92.980198",
+  "houses": [
+    {
+      "id": 1781313389316,
+      "houseNo": "HH-001",
+      "rooms": 0,
+      "start": "06:43",
+      "end": "06:46",
+      "containers": 13,
+      "positive": 2,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": true,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 2,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 2,
+          "positive": 1
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 7,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 1,
+          "positive": 1
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0117527,
+      "lng": 92.9796221
+    },
+    {
+      "id": 1781313509117,
+      "houseNo": "HH-002",
+      "rooms": 0,
+      "start": "06:46",
+      "end": "06:48",
+      "containers": 4,
+      "positive": 1,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": true,
+      "counts": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 2,
+          "positive": 1
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0117248,
+      "lng": 92.9795645
+    },
+    {
+      "id": 1781313732095,
+      "houseNo": "HH-003",
+      "rooms": 0,
+      "start": "06:50",
+      "end": "06:52",
+      "containers": 11,
+      "positive": 0,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": false,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 4,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 4,
+          "positive": 0
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0115563,
+      "lng": 92.9801089
+    },
+    {
+      "id": 1781313894763,
+      "houseNo": "HH-004",
+      "rooms": 0,
+      "start": "06:52",
+      "end": "06:54",
+      "containers": 7,
+      "positive": 1,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": true,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 2,
+          "positive": 1
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 2,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 2,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0114845,
+      "lng": 92.980187
+    },
+    {
+      "id": 1781314046508,
+      "houseNo": "HH-005",
+      "rooms": 0,
+      "start": "06:55",
+      "end": "06:57",
+      "containers": 13,
+      "positive": 0,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": false,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 4,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 7,
+          "positive": 0
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0114243,
+      "lng": 92.9802155
+    },
+    {
+      "id": 1781314209187,
+      "houseNo": "HH-006",
+      "rooms": 0,
+      "start": "06:58",
+      "end": "07:00",
+      "containers": 10,
+      "positive": 4,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": true,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 2,
+          "positive": 1
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 5,
+          "positive": 1
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 2,
+          "positive": 1
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 1,
+          "positive": 1
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0112622,
+      "lng": 92.9803291
+    },
+    {
+      "id": 1781314455304,
+      "houseNo": "HH-007",
+      "rooms": 0,
+      "start": "07:00",
+      "end": "07:04",
+      "containers": 10,
+      "positive": 1,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": true,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 2,
+          "positive": 1
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 7,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0110398,
+      "lng": 92.9805132
+    },
+    {
+      "id": 1781314713240,
+      "houseNo": "HH-008",
+      "rooms": 0,
+      "start": "07:05",
+      "end": "07:08",
+      "containers": 6,
+      "positive": 0,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": false,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 2,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 3,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0110095,
+      "lng": 92.9806364
+    },
+    {
+      "id": 1781315024447,
+      "houseNo": "HH-009",
+      "rooms": 0,
+      "start": "07:10",
+      "end": "07:13",
+      "containers": 9,
+      "positive": 1,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": true,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 7,
+          "positive": 1
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0107992,
+      "lng": 92.9807145
+    },
+    {
+      "id": 1781315330695,
+      "houseNo": "HH-010",
+      "rooms": 0,
+      "start": "07:16",
+      "end": "07:18",
+      "containers": 10,
+      "positive": 0,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": false,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 2,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 7,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0104947,
+      "lng": 92.9809996
+    },
+    {
+      "id": 1781315686542,
+      "houseNo": "HH-011",
+      "rooms": 0,
+      "start": "07:21",
+      "end": "07:24",
+      "containers": 12,
+      "positive": 1,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": true,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 2,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 5,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 4,
+          "positive": 1
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0107812,
+      "lng": 92.9811031
+    },
+    {
+      "id": 1781315970879,
+      "houseNo": "HH-012",
+      "rooms": 0,
+      "start": "07:27",
+      "end": "07:29",
+      "containers": 10,
+      "positive": 3,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": true,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 3,
+          "positive": 1
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 1,
+          "positive": 1
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 5,
+          "positive": 1
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0110656,
+      "lng": 92.9811656
+    },
+    {
+      "id": 1781316271267,
+      "houseNo": "HH-013",
+      "rooms": 0,
+      "start": "07:30",
+      "end": "07:34",
+      "containers": 8,
+      "positive": 1,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": true,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 1,
+          "positive": 1
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 4,
+          "positive": 0
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0112264,
+      "lng": 92.9810669
+    },
+    {
+      "id": 1781317120872,
+      "houseNo": "HH-014",
+      "rooms": 0,
+      "start": "07:48",
+      "end": "07:48",
+      "containers": 13,
+      "positive": 0,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": false,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 2,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 2,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 3,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 4,
+          "positive": 0
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0115998,
+      "lng": 92.9809376
+    },
+    {
+      "id": 1781317281433,
+      "houseNo": "HH-015",
+      "rooms": 0,
+      "start": "07:49",
+      "end": "07:51",
+      "containers": 3,
+      "positive": 0,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": false,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 2,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0117497,
+      "lng": 92.9809867
+    },
+    {
+      "id": 1781317325784,
+      "houseNo": "HH-016",
+      "rooms": 0,
+      "start": "07:51",
+      "end": "07:52",
+      "containers": 2,
+      "positive": 0,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": false,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 2,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0117225,
+      "lng": 92.9809352
+    },
+    {
+      "id": 1781317553246,
+      "houseNo": "HH-017",
+      "rooms": 0,
+      "start": "07:53",
+      "end": "07:55",
+      "containers": 10,
+      "positive": 0,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": false,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 2,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 2,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 5,
+          "positive": 0
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0117642,
+      "lng": 92.9807994
+    },
+    {
+      "id": 1781317793603,
+      "houseNo": "HH-018",
+      "rooms": 0,
+      "start": "07:58",
+      "end": "07:59",
+      "containers": 8,
+      "positive": 1,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": true,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 2,
+          "positive": 1
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 5,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0124079,
+      "lng": 92.9808821
+    },
+    {
+      "id": 1781318091204,
+      "houseNo": "HH-019",
+      "rooms": 0,
+      "start": "08:02",
+      "end": "08:04",
+      "containers": 9,
+      "positive": 1,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": true,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 3,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 5,
+          "positive": 1
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 1,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0122792,
+      "lng": 92.9805562
+    },
+    {
+      "id": 1781318379886,
+      "houseNo": "HH-020",
+      "rooms": 0,
+      "start": "08:06",
+      "end": "08:09",
+      "containers": 14,
+      "positive": 1,
+      "pupal": 0,
+      "dips": 0,
+      "larvae": 0,
+      "pupae": 0,
+      "housePositive": true,
+      "counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "contDetails": [
+        {
+          "name": "Pl. Drum",
+          "g": 1,
+          "examined": 5,
+          "positive": 0
+        },
+        {
+          "name": "Mt. Drum",
+          "g": 1,
+          "examined": 3,
+          "positive": 0
+        },
+        {
+          "name": "Buckets",
+          "g": 1,
+          "examined": 3,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Over Head)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Ground Lvl)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Wt. Tank (Under Gnd)",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Cement Tank",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Drain",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tyres",
+          "g": 1,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Other Containers",
+          "g": 1,
+          "examined": 2,
+          "positive": 0
+        },
+        {
+          "name": "Flower Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Flower Trays",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Mud Pots",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coolers / Refrig.",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Broken Utensils",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Coconut Shells",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Tree Holes",
+          "g": 2,
+          "examined": 0,
+          "positive": 0
+        },
+        {
+          "name": "Miscellaneous",
+          "g": 2,
+          "examined": 1,
+          "positive": 1
+        }
+      ],
+      "otherSpLog": [],
+      "remarks": "",
+      "lat": 12.0119828,
+      "lng": 92.9801698
+    }
+  ],
+  "dipSites": [
+    {
+      "id": 1781317331725,
+      "siteNo": "DS-001",
+      "dips": 5,
+      "larvae": 4,
+      "pupae": 0,
+      "remark": "",
+      "lat": 12.0117261,
+      "lng": 92.9809334
+    }
+  ],
+  "containerSummary": [
+    {
+      "name": "Pl. Drum",
+      "examined": 31,
+      "positive": 4
+    },
+    {
+      "name": "Mt. Drum",
+      "examined": 8,
+      "positive": 0
+    },
+    {
+      "name": "Buckets",
+      "examined": 51,
+      "positive": 5
+    },
+    {
+      "name": "Wt. Tank (Over Head)",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Wt. Tank (Ground Lvl)",
+      "examined": 3,
+      "positive": 0
+    },
+    {
+      "name": "Wt. Tank (Under Gnd)",
+      "examined": 1,
+      "positive": 0
+    },
+    {
+      "name": "Cement Tank",
+      "examined": 9,
+      "positive": 0
+    },
+    {
+      "name": "Drain",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Tyres",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Other Containers",
+      "examined": 13,
+      "positive": 2
+    },
+    {
+      "name": "Flower Pots",
+      "examined": 14,
+      "positive": 0
+    },
+    {
+      "name": "Flower Trays",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Mud Pots",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Coolers / Refrig.",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Broken Utensils",
+      "examined": 6,
+      "positive": 2
+    },
+    {
+      "name": "Coconut Shells",
+      "examined": 4,
+      "positive": 0
+    },
+    {
+      "name": "Tree Holes",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Miscellaneous",
+      "examined": 42,
+      "positive": 5
+    }
+  ],
+  "HI": "60.0%",
+  "CI": "9.9%",
+  "BI": "Nil*",
+  "PI": "0.0%",
+  "LD": "80.0",
+  "PD": "0.0",
+  "totalLarvae": 4,
+  "totalPupae": 0,
+  "totalDips": 5,
+  "totalContainers": 182,
+  "totalPositive": 18,
+  "track": {
+    "waypoints": [
+      {
+        "lat": 12.0119524,
+        "lng": 92.9809535,
+        "ts": 1781313032709
+      },
+      {
+        "lat": 12.0119216,
+        "lng": 92.9802067,
+        "ts": 1781313041315
+      },
+      {
+        "lat": 12.0118861,
+        "lng": 92.9801209,
+        "ts": 1781313110312
+      },
+      {
+        "lat": 12.0118429,
+        "lng": 92.9800358,
+        "ts": 1781313122306
+      },
+      {
+        "lat": 12.0117858,
+        "lng": 92.9799631,
+        "ts": 1781313132308
+      },
+      {
+        "lat": 12.0117305,
+        "lng": 92.9798888,
+        "ts": 1781313142054
+      },
+      {
+        "lat": 12.0116605,
+        "lng": 92.9798189,
+        "ts": 1781313152091
+      },
+      {
+        "lat": 12.0117228,
+        "lng": 92.979752,
+        "ts": 1781313186311
+      },
+      {
+        "lat": 12.0117437,
+        "lng": 92.9796597,
+        "ts": 1781313213639
+      },
+      {
+        "lat": 12.0117916,
+        "lng": 92.9795748,
+        "ts": 1781313403423
+      },
+      {
+        "lat": 12.0117962,
+        "lng": 92.9796678,
+        "ts": 1781313547303
+      },
+      {
+        "lat": 12.0117422,
+        "lng": 92.9797477,
+        "ts": 1781313570984
+      },
+      {
+        "lat": 12.0117191,
+        "lng": 92.97984,
+        "ts": 1781313598135
+      },
+      {
+        "lat": 12.0116531,
+        "lng": 92.9799064,
+        "ts": 1781313610184
+      },
+      {
+        "lat": 12.011619,
+        "lng": 92.9799931,
+        "ts": 1781313621200
+      },
+      {
+        "lat": 12.0115878,
+        "lng": 92.980085,
+        "ts": 1781313638193
+      },
+      {
+        "lat": 12.0114958,
+        "lng": 92.9801308,
+        "ts": 1781313710318
+      },
+      {
+        "lat": 12.0114044,
+        "lng": 92.9801454,
+        "ts": 1781313754131
+      },
+      {
+        "lat": 12.011495,
+        "lng": 92.9801571,
+        "ts": 1781313822304
+      },
+      {
+        "lat": 12.0114466,
+        "lng": 92.9802478,
+        "ts": 1781313917309
+      },
+      {
+        "lat": 12.0114167,
+        "lng": 92.98016,
+        "ts": 1781314053932
+      },
+      {
+        "lat": 12.0113408,
+        "lng": 92.9802129,
+        "ts": 1781314065256
+      },
+      {
+        "lat": 12.0112701,
+        "lng": 92.9802714,
+        "ts": 1781314077719
+      },
+      {
+        "lat": 12.0112099,
+        "lng": 92.9803481,
+        "ts": 1781314224304
+      },
+      {
+        "lat": 12.0111411,
+        "lng": 92.9804123,
+        "ts": 1781314238226
+      },
+      {
+        "lat": 12.011096,
+        "lng": 92.9804956,
+        "ts": 1781314369304
+      },
+      {
+        "lat": 12.0111228,
+        "lng": 92.9805837,
+        "ts": 1781314430115
+      },
+      {
+        "lat": 12.0110481,
+        "lng": 92.9805256,
+        "ts": 1781314446311
+      },
+      {
+        "lat": 12.0111096,
+        "lng": 92.9804488,
+        "ts": 1781314480315
+      },
+      {
+        "lat": 12.0110264,
+        "lng": 92.9804855,
+        "ts": 1781314514581
+      },
+      {
+        "lat": 12.0109622,
+        "lng": 92.9805532,
+        "ts": 1781314528307
+      },
+      {
+        "lat": 12.0110132,
+        "lng": 92.9806291,
+        "ts": 1781314577309
+      },
+      {
+        "lat": 12.0109506,
+        "lng": 92.9805603,
+        "ts": 1781314724301
+      },
+      {
+        "lat": 12.0108687,
+        "lng": 92.9805995,
+        "ts": 1781314758092
+      },
+      {
+        "lat": 12.0108187,
+        "lng": 92.9806795,
+        "ts": 1781314780297
+      },
+      {
+        "lat": 12.0108188,
+        "lng": 92.9807716,
+        "ts": 1781314877142
+      },
+      {
+        "lat": 12.0107294,
+        "lng": 92.9807578,
+        "ts": 1781315061125
+      },
+      {
+        "lat": 12.0106498,
+        "lng": 92.9808038,
+        "ts": 1781315088021
+      },
+      {
+        "lat": 12.0106146,
+        "lng": 92.9808919,
+        "ts": 1781315128702
+      },
+      {
+        "lat": 12.0105922,
+        "lng": 92.9809838,
+        "ts": 1781315143236
+      },
+      {
+        "lat": 12.0105048,
+        "lng": 92.9810057,
+        "ts": 1781315313311
+      },
+      {
+        "lat": 12.0104981,
+        "lng": 92.980912,
+        "ts": 1781315348020
+      },
+      {
+        "lat": 12.0105764,
+        "lng": 92.9808589,
+        "ts": 1781315416606
+      },
+      {
+        "lat": 12.0105837,
+        "lng": 92.9809534,
+        "ts": 1781315438939
+      },
+      {
+        "lat": 12.0106559,
+        "lng": 92.9810087,
+        "ts": 1781315508127
+      },
+      {
+        "lat": 12.0106734,
+        "lng": 92.9810992,
+        "ts": 1781315605978
+      },
+      {
+        "lat": 12.0107664,
+        "lng": 92.9811007,
+        "ts": 1781315638312
+      },
+      {
+        "lat": 12.0108583,
+        "lng": 92.9811122,
+        "ts": 1781315707747
+      },
+      {
+        "lat": 12.0109218,
+        "lng": 92.981182,
+        "ts": 1781315743683
+      },
+      {
+        "lat": 12.0109902,
+        "lng": 92.9812422,
+        "ts": 1781315771313
+      },
+      {
+        "lat": 12.0110697,
+        "lng": 92.9811981,
+        "ts": 1781315792115
+      },
+      {
+        "lat": 12.0111542,
+        "lng": 92.981166,
+        "ts": 1781316002291
+      },
+      {
+        "lat": 12.0112303,
+        "lng": 92.9810978,
+        "ts": 1781316050308
+      },
+      {
+        "lat": 12.0113216,
+        "lng": 92.98108,
+        "ts": 1781316527113
+      },
+      {
+        "lat": 12.0113958,
+        "lng": 92.9810239,
+        "ts": 1781316547093
+      },
+      {
+        "lat": 12.0114794,
+        "lng": 92.9809863,
+        "ts": 1781316593307
+      },
+      {
+        "lat": 12.0115717,
+        "lng": 92.9809435,
+        "ts": 1781316614191
+      },
+      {
+        "lat": 12.0116534,
+        "lng": 92.9808939,
+        "ts": 1781317136188
+      },
+      {
+        "lat": 12.011739,
+        "lng": 92.9808576,
+        "ts": 1781317151285
+      },
+      {
+        "lat": 12.011799,
+        "lng": 92.9809298,
+        "ts": 1781317173310
+      },
+      {
+        "lat": 12.0117932,
+        "lng": 92.9808369,
+        "ts": 1781317399921
+      },
+      {
+        "lat": 12.0117391,
+        "lng": 92.9807626,
+        "ts": 1781317422313
+      },
+      {
+        "lat": 12.0117601,
+        "lng": 92.980672,
+        "ts": 1781317514305
+      },
+      {
+        "lat": 12.011761,
+        "lng": 92.9807643,
+        "ts": 1781317546213
+      },
+      {
+        "lat": 12.0118235,
+        "lng": 92.9808373,
+        "ts": 1781317578056
+      },
+      {
+        "lat": 12.0119135,
+        "lng": 92.9808068,
+        "ts": 1781317600257
+      },
+      {
+        "lat": 12.0119934,
+        "lng": 92.9807638,
+        "ts": 1781317609046
+      },
+      {
+        "lat": 12.0120754,
+        "lng": 92.9807207,
+        "ts": 1781317618306
+      },
+      {
+        "lat": 12.0121491,
+        "lng": 92.9807772,
+        "ts": 1781317627575
+      },
+      {
+        "lat": 12.0121655,
+        "lng": 92.9808754,
+        "ts": 1781317636388
+      },
+      {
+        "lat": 12.0122594,
+        "lng": 92.9808871,
+        "ts": 1781317650138
+      },
+      {
+        "lat": 12.0123504,
+        "lng": 92.9808657,
+        "ts": 1781317670991
+      },
+      {
+        "lat": 12.0124438,
+        "lng": 92.9808556,
+        "ts": 1781317681528
+      },
+      {
+        "lat": 12.0125385,
+        "lng": 92.9808274,
+        "ts": 1781317695305
+      },
+      {
+        "lat": 12.0124444,
+        "lng": 92.9808588,
+        "ts": 1781317781303
+      },
+      {
+        "lat": 12.0123558,
+        "lng": 92.9808787,
+        "ts": 1781317810979
+      },
+      {
+        "lat": 12.0122595,
+        "lng": 92.9808859,
+        "ts": 1781317820779
+      },
+      {
+        "lat": 12.0121789,
+        "lng": 92.9809284,
+        "ts": 1781317828583
+      },
+      {
+        "lat": 12.0120877,
+        "lng": 92.9809176,
+        "ts": 1781317843303
+      },
+      {
+        "lat": 12.0120814,
+        "lng": 92.9808215,
+        "ts": 1781317854813
+      },
+      {
+        "lat": 12.0120845,
+        "lng": 92.9807277,
+        "ts": 1781317869691
+      },
+      {
+        "lat": 12.0121522,
+        "lng": 92.9806652,
+        "ts": 1781317879650
+      },
+      {
+        "lat": 12.0122275,
+        "lng": 92.9806095,
+        "ts": 1781317893159
+      },
+      {
+        "lat": 12.0123028,
+        "lng": 92.9805586,
+        "ts": 1781317905039
+      },
+      {
+        "lat": 12.012392,
+        "lng": 92.9805392,
+        "ts": 1781317922310
+      },
+      {
+        "lat": 12.0124848,
+        "lng": 92.9805553,
+        "ts": 1781318046305
+      },
+      {
+        "lat": 12.0124014,
+        "lng": 92.9805931,
+        "ts": 1781318059312
+      },
+      {
+        "lat": 12.0123263,
+        "lng": 92.980539,
+        "ts": 1781318073250
+      },
+      {
+        "lat": 12.0122517,
+        "lng": 92.9805972,
+        "ts": 1781318103308
+      },
+      {
+        "lat": 12.0121707,
+        "lng": 92.9806372,
+        "ts": 1781318111803
+      },
+      {
+        "lat": 12.0120812,
+        "lng": 92.9806703,
+        "ts": 1781318128311
+      },
+      {
+        "lat": 12.012033,
+        "lng": 92.9805891,
+        "ts": 1781318145791
+      },
+      {
+        "lat": 12.012038,
+        "lng": 92.980493,
+        "ts": 1781318156942
+      },
+      {
+        "lat": 12.0120008,
+        "lng": 92.9804063,
+        "ts": 1781318162738
+      },
+      {
+        "lat": 12.011971,
+        "lng": 92.9803136,
+        "ts": 1781318172955
+      },
+      {
+        "lat": 12.0119804,
+        "lng": 92.9802161,
+        "ts": 1781318184108
+      }
+    ],
+    "distanceKm": 1.054,
+    "durationSec": 5571,
+    "startTime": "2026-06-13T01:10:31.544Z",
+    "endTime": "2026-06-13T02:43:22.880Z"
+  }
+}
