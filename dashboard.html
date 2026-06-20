@@ -1519,7 +1519,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   });
 
   // ── Container Inspection House wise ──
-  const ciHDR=['Survey#','Survey ID','Date','Location','House No.','Start Time','End Time',
+  const ciHDR=['Survey#','Survey ID','Date','State/UT','District','Location','House No.','Start Time','End Time',
     'Containers Inspected','Positive Containers','Pupae Collected (containers)','House Positive (Aedes)',
     'GPS Latitude','GPS Longitude','Google Maps Link'].map(H);
   const ciRows=[ciHDR];
@@ -1528,7 +1528,7 @@ function buildLarvalXLSX(surveys,isCompiled){
       const lat=h.lat||'';const lng=h.lng||'';
       const maps=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
       ciRows.push([
-        C(si+1),C(fmtSid('larval',s.id)),C(s.date||''),s.location||'',
+        C(si+1),C(fmtSid('larval',s.id)),C(s.date||''),C(s.state||''),C(s.district||''),s.location||'',
         C(h.houseNo),C(h.start||'-'),C(h.end||'-'),
         C(h.containers||0),C(h.positive||0),C(h.pupal||0),
         C(h.housePositive?'Yes':'No'),C(lat),C(lng),maps
@@ -1537,19 +1537,19 @@ function buildLarvalXLSX(surveys,isCompiled){
   });
 
   // ── Container Type Breakdown ──
-  const ctHDR=['Survey#','Survey ID','Date','Location','Container Type','Examined','Positive','Positive (%)'].map(H);
+  const ctHDR=['Survey#','Survey ID','Date','State/UT','District','Location','Container Type','Examined','Positive','Positive (%)'].map(H);
   const ctRows=[ctHDR];
   surveys.forEach((s,si)=>{
     (s.containerSummary||[]).forEach(ct=>{
       if((ct.examined||0)>0||(ct.positive||0)>0){
         const pct=ct.examined>0?parseFloat(((ct.positive/ct.examined)*100).toFixed(1)):0;
-        ctRows.push([C(si+1),C(fmtSid('larval',s.id)),C(s.date||''),s.location||'',ct.name||'',C(ct.examined||0),C(ct.positive||0),C(pct)]);
+        ctRows.push([C(si+1),C(fmtSid('larval',s.id)),C(s.date||''),C(s.state||''),C(s.district||''),s.location||'',ct.name||'',C(ct.examined||0),C(ct.positive||0),C(pct)]);
       }
     });
   });
 
   // ── Anopheles and Culex Larval Data ──
-  const dipHDR=['Survey#','Survey ID','Date','Location','Dip Site No.','Dip Site Description',
+  const dipHDR=['Survey#','Survey ID','Date','State/UT','District','Location','Dip Site No.','Dip Site Description',
     'Dips Taken','Larvae Collected','Pupae Collected','Dip Index (Larvae/Dip)',
     'Species Collected','Observations','Latitude','Longitude','Google Maps Link'].map(H);
   const dipRows=[dipHDR];
@@ -1560,9 +1560,9 @@ function buildLarvalXLSX(surveys,isCompiled){
         const lat=d.lat||'';const lng=d.lng||'';
         const maps=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
         dipRows.push([
-          C(si+1),C(fmtSid('larval',s.id)),C(s.date||''),s.location||'',
+          C(si+1),C(fmtSid('larval',s.id)),C(s.date||''),C(s.state||''),C(s.district||''),s.location||'',
           C(d.siteNo),d.description||'',C(d.dips||0),C(d.larvae||0),C(d.pupae||0),
-          CF('IFERROR(H'+dipRowN+'/G'+dipRowN+',0)'),
+          CF('IFERROR(J'+dipRowN+'/I'+dipRowN+',0)'),
           d.species||'',d.remark||'',C(lat),C(lng),maps
         ]);
         dipRowN++;
@@ -1572,9 +1572,9 @@ function buildLarvalXLSX(surveys,isCompiled){
 
   // Column widths (characters) per sheet
   const sumCols=[8,15,11,13,15,24,18,16,13,20,13,28,26,26,16,16,16,16,16,16,18,14,12,12,16,16,20];
-  const ciCols=[8,15,11,22,10,11,11,18,16,24,22,12,14,38];
-  const ctCols=[8,15,11,22,20,12,12,12];
-  const dipCols=[8,15,11,22,12,24,11,18,18,22,20,20,12,12,38];
+  const ciCols=[8,15,11,13,13,22,10,11,11,18,16,24,22,12,14,38];
+  const ctCols=[8,15,11,13,13,22,20,12,12,12];
+  const dipCols=[8,15,11,13,13,22,12,24,11,18,18,22,20,20,12,12,38];
 
   const sheets=[
     {name:'Report Status',rows:statusRows,cols:[28,55],headerRows:[0,8]},
@@ -1606,17 +1606,17 @@ function buildAdultCSV(surveys){
   blank();
   // ── Species breakdown ──
   sep('=== SPECIES BREAKDOWN (per survey) ===');
-  r('Survey#','Survey ID','Date','Location','Species','Genus','Is Culex','Indoor / LC','Outdoor','Total');
+  r('Survey#','Survey ID','Date','State/UT','District','Location','Species','Genus','Is Culex','Indoor / LC','Outdoor','Total');
   surveys.forEach((s,i)=>{
     (s.speciesBreakdown||[]).forEach(sp=>{
       const tot=(sp.indoor||0)+(sp.outdoor||0);
-      if(tot>0)r(i+1,fmtSid('adult',s.id),s.date,s.location,sp.name,sp.genus,sp.isCulex?'Yes':'No',sp.indoor||0,sp.outdoor||0,tot);
+      if(tot>0)r(i+1,fmtSid('adult',s.id),s.date,s.state||'',s.district||'',s.location,sp.name,sp.genus,sp.isCulex?'Yes':'No',sp.indoor||0,sp.outdoor||0,tot);
     });
   });
   blank();
   // ── House/site details ──
   sep('=== HOUSE / SITE DETAILS ===');
-  r('Survey#','Survey ID','Date','Location','House/Site No.','Rooms','Start Time','End Time','Hours','Indoor / LC','Outdoor','Total Mosquitoes','GPS Latitude','GPS Longitude','Google Maps Link');
+  r('Survey#','Survey ID','Date','State/UT','District','Location','House/Site No.','Rooms','Start Time','End Time','Hours','Indoor / LC','Outdoor','Total Mosquitoes','GPS Latitude','GPS Longitude','Google Maps Link');
   surveys.forEach((s,i)=>{
     const isR=s.collType==='resting';
     (s.houses||[]).forEach(h=>{
@@ -1625,13 +1625,13 @@ function buildAdultCSV(surveys){
       const hrs=h.hours?.toFixed?h.hours.toFixed(2):0;
       const lat=h.lat||'';const lng=h.lng||'';
       const mapsLink=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
-      r(i+1,fmtSid('adult',s.id),s.date,s.location,h.houseNo,h.rooms||'',h.start||'-',h.end||'-',hrs,ind,out,h.total,lat,lng,mapsLink);
+      r(i+1,fmtSid('adult',s.id),s.date,s.state||'',s.district||'',s.location,h.houseNo,h.rooms||'',h.start||'-',h.end||'-',hrs,ind,out,h.total,lat,lng,mapsLink);
     });
   });
   blank();
   // ── Per-house species breakdown ──
   sep('=== PER HOUSE/SITE SPECIES BREAKDOWN ===');
-  r('Survey#','Survey ID','Date','Location','House/Site No.','Species','Genus','Is Culex','Indoor / LC','Outdoor','Total');
+  r('Survey#','Survey ID','Date','State/UT','District','Location','House/Site No.','Species','Genus','Is Culex','Indoor / LC','Outdoor','Total');
   surveys.forEach((s,i)=>{
     const isR=s.collType==='resting';
     (s.houses||[]).forEach(h=>{
@@ -1639,7 +1639,7 @@ function buildAdultCSV(surveys){
         const v0=h.counts?.[si]?.[0]||0;
         const v1=isR?(h.counts?.[si]?.[1]||0):0;
         const tot=v0+v1;
-        if(tot>0)r(i+1,fmtSid('adult',s.id),s.date,s.location,h.houseNo,sp.name,sp.genus,sp.isCulex?'Yes':'No',v0,v1,tot);
+        if(tot>0)r(i+1,fmtSid('adult',s.id),s.date,s.state||'',s.district||'',s.location,h.houseNo,sp.name,sp.genus,sp.isCulex?'Yes':'No',v0,v1,tot);
       });
     });
   });
@@ -1670,19 +1670,19 @@ function buildLarvalCSV(surveys){
   blank();
   // ── Container breakdown ──
   sep('=== CONTAINER TYPE BREAKDOWN ===');
-  r('Survey#','Survey ID','Date','Location','Container Type','Examined','Positive','Positive (%)');
+  r('Survey#','Survey ID','Date','State/UT','District','Location','Container Type','Examined','Positive','Positive (%)');
   surveys.forEach((s,i)=>{
     (s.containerSummary||[]).forEach(ct=>{
       if(ct.examined>0||ct.positive>0){
         const pct=ct.examined>0?((ct.positive/ct.examined)*100).toFixed(1)+'%':'-';
-        r(i+1,fmtSid('larval',s.id),s.date,s.location,ct.name,ct.examined||0,ct.positive||0,pct);
+        r(i+1,fmtSid('larval',s.id),s.date,s.state||'',s.district||'',s.location,ct.name,ct.examined||0,ct.positive||0,pct);
       }
     });
   });
   blank();
   // ── Species identification ──
   sep('=== SPECIES IDENTIFICATION (aggregated per survey) ===');
-  r('Survey#','Survey ID','Date','Location','Species','Genus','Total Larvae','Total Pupae','Total Immatures');
+  r('Survey#','Survey ID','Date','State/UT','District','Location','Species','Genus','Total Larvae','Total Pupae','Total Immatures');
   surveys.forEach((s,i)=>{
     const spAgg={};
     (s.houses||[]).forEach(h=>{
@@ -1692,46 +1692,46 @@ function buildLarvalCSV(surveys){
         spAgg[nm].larvae+=(cnt[0]||0);spAgg[nm].pupae+=(cnt[1]||0);
       });
     });
-    Object.entries(spAgg).forEach(([nm,v])=>{if(v.larvae||v.pupae)r(i+1,fmtSid('larval',s.id),s.date,s.location,nm,v.genus,v.larvae,v.pupae,v.larvae+v.pupae);});
+    Object.entries(spAgg).forEach(([nm,v])=>{if(v.larvae||v.pupae)r(i+1,fmtSid('larval',s.id),s.date,s.state||'',s.district||'',s.location,nm,v.genus,v.larvae,v.pupae,v.larvae+v.pupae);});
   });
   blank();
   // ── House-wise container inspection ──
   sep('=== HOUSE-WISE CONTAINER INSPECTION ===');
-  r('Survey#','Survey ID','Date','Location','House No.','Rooms','Start Time','End Time','Containers Inspected','Positive Containers','Pupal-Positive','House Positive (Aedes)','GPS Latitude','GPS Longitude','Google Maps Link');
+  r('Survey#','Survey ID','Date','State/UT','District','Location','House No.','Rooms','Start Time','End Time','Containers Inspected','Positive Containers','Pupal-Positive','House Positive (Aedes)','GPS Latitude','GPS Longitude','Google Maps Link');
   surveys.forEach((s,i)=>{
     (s.houses||[]).forEach(h=>{
       const lat=h.lat||'';const lng=h.lng||'';
       const mapsLink=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
-      r(i+1,fmtSid('larval',s.id),s.date,s.location,h.houseNo,h.rooms||'',h.start||'-',h.end||'-',h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No',lat,lng,mapsLink);
+      r(i+1,fmtSid('larval',s.id),s.date,s.state||'',s.district||'',s.location,h.houseNo,h.rooms||'',h.start||'-',h.end||'-',h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No',lat,lng,mapsLink);
     });
   });
   blank();
   // ── Per-house species breakdown ──
   sep('=== PER HOUSE SPECIES BREAKDOWN ===');
-  r('Survey#','Survey ID','Date','Location','House No.','Species','Larvae','Pupae','Total Immatures');
+  r('Survey#','Survey ID','Date','State/UT','District','Location','House No.','Species','Larvae','Pupae','Total Immatures');
   surveys.forEach((s,i)=>{
     (s.houses||[]).forEach(h=>{
       (h.counts||[]).forEach((cnt,si)=>{
         const tot=(cnt[0]||0)+(cnt[1]||0);
-        if(tot>0)r(i+1,fmtSid('larval',s.id),s.date,s.location,h.houseNo,LSP_NAMES[si]||'Sp.'+(si+1),cnt[0]||0,cnt[1]||0,tot);
+        if(tot>0)r(i+1,fmtSid('larval',s.id),s.date,s.state||'',s.district||'',s.location,h.houseNo,LSP_NAMES[si]||'Sp.'+(si+1),cnt[0]||0,cnt[1]||0,tot);
       });
     });
   });
   blank();
   // ── Dip site data ──
   sep('=== DIP SITE DATA (ANOPHELES / CULEX) ===');
-  r('Survey#','Survey ID','Date','Location','Dip Site No.','Dips Taken','Larvae','Pupae','Total (L+P)','GPS Latitude','GPS Longitude','Google Maps Link','Remarks/Observations');
+  r('Survey#','Survey ID','Date','State/UT','District','Location','Dip Site No.','Dips Taken','Larvae','Pupae','Total (L+P)','GPS Latitude','GPS Longitude','Google Maps Link','Remarks/Observations');
   surveys.forEach((s,i)=>{
     if(s.dipSites&&s.dipSites.length){
       s.dipSites.forEach(d=>{
         const lat=d.lat||'';const lng=d.lng||'';
         const mapsLink=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
-        r(i+1,fmtSid('larval',s.id),s.date,s.location,d.siteNo,d.dips||0,d.larvae||0,d.pupae||0,(d.larvae||0)+(d.pupae||0),lat,lng,mapsLink,d.remark||'');
+        r(i+1,fmtSid('larval',s.id),s.date,s.state||'',s.district||'',s.location,d.siteNo,d.dips||0,d.larvae||0,d.pupae||0,(d.larvae||0)+(d.pupae||0),lat,lng,mapsLink,d.remark||'');
       });
     }else{
       (s.houses||[]).forEach(h=>{
         if(h.dips||h.larvae||h.pupae){
-          r(i+1,fmtSid('larval',s.id),s.date,s.location,h.houseNo,h.dips||0,h.larvae||0,h.pupae||0,(h.larvae||0)+(h.pupae||0),'','','','');
+          r(i+1,fmtSid('larval',s.id),s.date,s.state||'',s.district||'',s.location,h.houseNo,h.dips||0,h.larvae||0,h.pupae||0,(h.larvae||0)+(h.pupae||0),'','','','');
         }
       });
     }

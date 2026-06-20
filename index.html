@@ -3462,8 +3462,11 @@ function buildAdultXLSX(surveys,isCompiled){
     const rows=[HDR];
     slist.forEach((s,si)=>{
       const r=si+2;
-      const posH=(s.houses||[]).filter(h=>(h.total||0)>0||(h.positiveRooms||0)>0).length;
-      const posRooms=(s.houses||[]).reduce((t,h)=>t+(h.positiveRooms||0),0);
+      const _posH=(s.houses||[]).filter(h=>(h.total||0)>0||(h.positiveRooms||0)>0).length;
+      const posH=s.housePositive??_posH;
+      const _posRooms=(s.houses||[]).reduce((t,h)=>t+(h.positiveRooms||0),0);
+      const posRooms=s.positiveRooms??_posRooms;
+      const housesEx=s.housesExamined??s.houses?.length??0;
       const indOut=(s.totIndoor||0)>=(s.totOutdoor||0)?'Indoor':'Outdoor';
       rows.push([
         si+1,
@@ -3477,7 +3480,7 @@ function buildAdultXLSX(surveys,isCompiled){
         null,
         s.nights||0,
         s.days||0,
-        s.houses?.length||0,
+        housesEx,
         posH,
         s.totalRooms||0,
         posRooms,
@@ -3555,28 +3558,28 @@ function buildLarvalXLSX(surveys,isCompiled){
     ]);
   });
   // Container Inspection House wise
-  const ciHDR=['Survey#','Survey ID','Date','Location','House No.','Start Time','End Time','Containers Inspected','Positive Containers','Pupae Collected','House Positive (Aedes)','GPS Latitude','GPS Longitude','Google Maps Link'];
+  const ciHDR=['Survey#','Survey ID','Date','State/UT','District','Location','House No.','Start Time','End Time','Containers Inspected','Positive Containers','Pupae Collected','House Positive (Aedes)','GPS Latitude','GPS Longitude','Google Maps Link'];
   const ciRows=[ciHDR];
   surveys.forEach((s,si)=>{
     (s.houses||[]).forEach(h=>{
       const lat=h.lat||'';const lng=h.lng||'';
       const maps=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
-      ciRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.location||'',h.houseNo,h.start||'-',h.end||'-',h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No',lat,lng,maps]);
+      ciRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.state||'',s.district||'',s.location||'',h.houseNo,h.start||'-',h.end||'-',h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No',lat,lng,maps]);
     });
   });
   // Container Type Breakdown
-  const ctHDR=['Survey#','Survey ID','Date','Location','Container Type','Examined','Positive','Positive (%)'];
+  const ctHDR=['Survey#','Survey ID','Date','State/UT','District','Location','Container Type','Examined','Positive','Positive (%)'];
   const ctRows=[ctHDR];
   surveys.forEach((s,si)=>{
     (s.containerSummary||[]).forEach(ct=>{
       if((ct.examined||0)>0||(ct.positive||0)>0){
         const pct=ct.examined>0?parseFloat(((ct.positive/ct.examined)*100).toFixed(1)):0;
-        ctRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.location||'',ct.name||'',ct.examined||0,ct.positive||0,pct]);
+        ctRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.state||'',s.district||'',s.location||'',ct.name||'',ct.examined||0,ct.positive||0,pct]);
       }
     });
   });
   // Anopheles and Culex Larval Data
-  const dipHDR=['Survey#','Survey ID','Date','Location','Dip Site No.','Dip Site Description','Dips Taken','Larvae Collected','Pupae Collected','Dip Index (Larval)','Species Collected','Observations','Latitude','Longitude','Google Maps Link'];
+  const dipHDR=['Survey#','Survey ID','Date','State/UT','District','Location','Dip Site No.','Dip Site Description','Dips Taken','Larvae Collected','Pupae Collected','Dip Index (Larval)','Species Collected','Observations','Latitude','Longitude','Google Maps Link'];
   const dipRows=[dipHDR];
   let dipRowN=2;
   surveys.forEach((s,si)=>{
@@ -3584,7 +3587,7 @@ function buildLarvalXLSX(surveys,isCompiled){
       s.dipSites.forEach(d=>{
         const lat=d.lat||'';const lng=d.lng||'';
         const maps=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
-        dipRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.location||'',d.siteNo,d.description||'',d.dips||0,d.larvae||0,d.pupae||0,{f:'IFERROR(H'+dipRowN+'/G'+dipRowN+',0)'},d.species||'',d.remark||'',lat,lng,maps]);
+        dipRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.state||'',s.district||'',s.location||'',d.siteNo,d.description||'',d.dips||0,d.larvae||0,d.pupae||0,{f:'IFERROR(J'+dipRowN+'/I'+dipRowN+',0)'},d.species||'',d.remark||'',lat,lng,maps]);
         dipRowN++;
       });
     }
