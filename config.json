@@ -14,34 +14,10 @@
     },
     {
       "username": "USER-2",
-      "password": "2020",
-      "role": "field",
-      "active": true
-    },
-    {
-      "username": "shiva",
-      "password": "2510",
-      "role": "field",
-      "active": true
-    },
-    {
-      "username": "Shivan",
-      "password": "886748",
-      "role": "field",
-      "active": true
-    },
-    {
-      "username": "USER-3",
-      "password": "12345",
-      "role": "field",
-      "active": true
-    },
-    {
-      "username": "USER-4",
-      "password": "12345",
+      "password": "EST2021@",
       "role": "field",
       "active": true
     }
   ],
-  "updatedAt": "2026-06-03T09:02:01.090Z"
+  "updatedAt": "2026-06-20T09:28:30.228Z"
 }
