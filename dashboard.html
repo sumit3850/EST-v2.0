@@ -693,6 +693,17 @@ tr:hover td{background:var(--teal-lt);}
           <div><label class="sf-label">Pupae (An/Cx)</label><input type="number" id="me-l-pupae" class="sf-input" min="0"></div>
         </div>
         <div style="font-size:10px;color:var(--muted);margin-top:8px;">HI / CI / BI / PI indices are recalculated automatically on save.</div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);margin:10px 0 5px;padding-top:6px;border-top:1px solid var(--bdr);">Container Type Breakdown (Aedes)</div>
+        <div style="overflow-x:auto;max-height:220px;overflow-y:auto;border:1px solid var(--bdr);border-radius:6px;">
+          <table style="width:100%;border-collapse:collapse;font-size:11px;">
+            <thead><tr style="background:rgba(21,101,192,.12);position:sticky;top:0;">
+              <th style="padding:5px 8px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;">Container</th>
+              <th style="padding:5px 8px;text-align:center;font-size:10px;font-weight:700;">Examined</th>
+              <th style="padding:5px 8px;text-align:center;font-size:10px;font-weight:700;">Positive</th>
+            </tr></thead>
+            <tbody id="me-cont-body"></tbody>
+          </table>
+        </div>
       </div>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:12px;border-top:1px solid var(--bdr);">
         <button onclick="document.getElementById('manual-edit-modal').style.display='none'" class="tb-btn ghost">Cancel</button>
@@ -1089,6 +1100,14 @@ function openEditManualDash(id,mod){
     document.getElementById('me-l-dips').value=s.totalDips||0;
     document.getElementById('me-l-larvae').value=s.totalLarvae||0;
     document.getElementById('me-l-pupae').value=s.totalPupae||0;
+    const CONT_NAMES_D=['Pl. Drum','Mt. Drum','Buckets','Wt. Tank (Over Head)','Wt. Tank (Ground Lvl)','Wt. Tank (Under Gnd)','Cement Tank','Drain','Tyres','Other Containers','Flower Pots','Flower Trays','Mud Pots','Coolers / Refrig.','Broken Utensils','Coconut Shells','Tree Holes','Miscellaneous'];
+    const ctBody=document.getElementById('me-cont-body');
+    if(ctBody){
+      ctBody.innerHTML=CONT_NAMES_D.map((n,i)=>{
+        const ct=(s.containerSummary||[]).find(x=>x.name===n)||{examined:0,positive:0};
+        return`<tr style="${i%2===0?'':'background:rgba(0,0,0,.02)'}"><td style="padding:4px 8px;font-size:11px;">${n}</td><td style="padding:3px 4px;"><input type="number" min="0" id="me-ce-${i}" value="${ct.examined||0}" style="width:64px;text-align:center;height:28px;border:1px solid var(--bdr);border-radius:4px;background:var(--sf);color:var(--txt);font-size:11px;" onchange="if(parseInt(this.value)||0>parseInt(document.getElementById('me-ce-${i}')?.value)||0)this.value=parseInt(document.getElementById('me-ce-${i}')?.value)||0"></td><td style="padding:3px 4px;"><input type="number" min="0" id="me-cp-${i}" value="${ct.positive||0}" style="width:64px;text-align:center;height:28px;border:1px solid var(--bdr);border-radius:4px;background:var(--sf);color:var(--txt);font-size:11px;" onchange="const ex=parseInt(document.getElementById('me-ce-${i}')?.value)||0;if((parseInt(this.value)||0)>ex)this.value=ex;"></td></tr>`;
+      }).join('');
+    }
   }
   modal.style.display='flex';
 }
@@ -1134,6 +1153,9 @@ async function saveManualDashEdit(){
     updated.CI=((updated.totalPositive/cont)*100).toFixed(1);
     updated.BI=((updated.totalPositive/hEx)*100).toFixed(1);
     updated.PI=((updated.totalPupalContainers/hEx)*100).toFixed(1);
+    const CONT_NAMES_SV=['Pl. Drum','Mt. Drum','Buckets','Wt. Tank (Over Head)','Wt. Tank (Ground Lvl)','Wt. Tank (Under Gnd)','Cement Tank','Drain','Tyres','Other Containers','Flower Pots','Flower Trays','Mud Pots','Coolers / Refrig.','Broken Utensils','Coconut Shells','Tree Holes','Miscellaneous'];
+    const newContSummary=CONT_NAMES_SV.map((name,i)=>({name,examined:parseInt(document.getElementById('me-ce-'+i)?.value)||0,positive:parseInt(document.getElementById('me-cp-'+i)?.value)||0}));
+    if(newContSummary.some(ct=>ct.examined>0||ct.positive>0))updated.containerSummary=newContSummary;
   }
   setStatus('Saving edit to GitHub…','info');
   const ok=await ghPut(path,updated,sha);
