@@ -274,7 +274,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.0.60</p>
+      <p>Admin Dashboard · v2.0.61</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -306,7 +306,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>v2.0.60 · A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.0.61 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -565,40 +565,68 @@ tr:hover td{background:var(--teal-lt);}
 
     <!-- Manual Data Panel -->
     <div class="panel" id="panel-manual">
+      <!-- Adult Manual Surveys -->
       <div class="section-head">
         <h2>Manual Data — Adult Surveys</h2>
         <div class="section-head-actions">
-          <button class="tb-btn blue" onclick="exportManual('adult')">⬇ Export Adult XLSX</button>
+          <button class="tb-btn ghost" onclick="selectAllManual('adult',true)">☑ All</button>
+          <button class="tb-btn ghost" onclick="selectAllManual('adult',false)">☐ Clear</button>
+          <button class="tb-btn blue" onclick="exportSelectedManual('adult')">⬇ <span class="tb-lbl">Export Selected</span></button>
+          <button class="tb-btn secondary" onclick="exportFilteredManual('adult')">⬇ <span class="tb-lbl">Export Filtered</span></button>
+          <button class="tb-btn danger" onclick="deleteSelectedManual('adult')">🗑 <span class="tb-lbl">Delete Selected</span></button>
+        </div>
+      </div>
+      <div class="panel-toolbar">
+        <input class="pt-search" id="search-manual-adult" placeholder="🔍  Search location, district, officer…" oninput="filterManual('adult')">
+        <div class="date-range-group">
+          <label>From</label><input type="date" class="pt-select" id="filter-manadult-from" onchange="filterManual('adult')">
+          <label>To</label><input type="date" class="pt-select" id="filter-manadult-to" onchange="filterManual('adult')">
+          <button class="pt-btn ghost" onclick="resetManualFilter('adult')" title="Clear date range" style="height:34px;padding:0 10px;font-size:13px;">✕</button>
         </div>
       </div>
       <div class="tbl-outer">
         <div class="tbl-wrap">
           <table id="tbl-manual-adult">
             <thead><tr>
+              <th><input type="checkbox" class="row-cb" onchange="selectAllManual('adult',this.checked)"></th>
               <th>#</th><th>Survey ID</th><th>Entered By</th><th>Date</th><th>Location</th><th>State</th><th>District</th>
               <th>Type</th><th>Collectors</th><th>Man-Hrs</th><th>Houses</th><th>+ve Houses</th>
-              <th>Non-Culex</th><th>Culex</th><th>Total Mosq</th><th>Officer</th><th>Saved</th><th>Sync</th><th>Del</th>
+              <th>Non-Culex</th><th>Culex</th><th>Total Mosq</th><th>Officer</th><th>Saved</th><th>Sync</th><th>Edit</th><th>Del</th>
             </tr></thead>
-            <tbody id="tbody-manual-adult"><tr><td colspan="19" class="tbl-empty">No manual adult entries found</td></tr></tbody>
+            <tbody id="tbody-manual-adult"><tr><td colspan="21" class="tbl-empty">No manual adult entries found</td></tr></tbody>
           </table>
         </div>
       </div>
+      <!-- Larval Manual Surveys -->
       <div class="section-head" style="margin-top:20px;">
         <h2>Manual Data — Larval Surveys</h2>
         <div class="section-head-actions">
-          <button class="tb-btn blue" onclick="exportManual('larval')">⬇ Export Larval XLSX</button>
+          <button class="tb-btn ghost" onclick="selectAllManual('larval',true)">☑ All</button>
+          <button class="tb-btn ghost" onclick="selectAllManual('larval',false)">☐ Clear</button>
+          <button class="tb-btn blue" onclick="exportSelectedManual('larval')">⬇ <span class="tb-lbl">Export Selected</span></button>
+          <button class="tb-btn secondary" onclick="exportFilteredManual('larval')">⬇ <span class="tb-lbl">Export Filtered</span></button>
+          <button class="tb-btn danger" onclick="deleteSelectedManual('larval')">🗑 <span class="tb-lbl">Delete Selected</span></button>
+        </div>
+      </div>
+      <div class="panel-toolbar">
+        <input class="pt-search" id="search-manual-larval" placeholder="🔍  Search location, district, officer…" oninput="filterManual('larval')">
+        <div class="date-range-group">
+          <label>From</label><input type="date" class="pt-select" id="filter-manlarval-from" onchange="filterManual('larval')">
+          <label>To</label><input type="date" class="pt-select" id="filter-manlarval-to" onchange="filterManual('larval')">
+          <button class="pt-btn ghost" onclick="resetManualFilter('larval')" title="Clear date range" style="height:34px;padding:0 10px;font-size:13px;">✕</button>
         </div>
       </div>
       <div class="tbl-outer">
         <div class="tbl-wrap">
           <table id="tbl-manual-larval">
-            <thead><tr>
+            <thead><tr style="background:var(--blue-dk);">
+              <th><input type="checkbox" class="row-cb" onchange="selectAllManual('larval',this.checked)"></th>
               <th>#</th><th>Survey ID</th><th>Entered By</th><th>Date</th><th>Location</th><th>State</th><th>District</th>
               <th>Houses</th><th>+ve Houses</th><th>Containers</th><th>+ve Cont</th><th>Pupal Cont</th>
               <th>Dips</th><th>Larvae (An/Cx)</th><th>Pupae (An/Cx)</th>
-              <th>HI%</th><th>CI%</th><th>PI%</th><th>Officer</th><th>Saved</th><th>Sync</th><th>Del</th>
+              <th>HI%</th><th>CI%</th><th>PI%</th><th>Officer</th><th>Saved</th><th>Sync</th><th>Edit</th><th>Del</th>
             </tr></thead>
-            <tbody id="tbody-manual-larval"><tr><td colspan="22" class="tbl-empty">No manual larval entries found</td></tr></tbody>
+            <tbody id="tbody-manual-larval"><tr><td colspan="24" class="tbl-empty">No manual larval entries found</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -607,6 +635,72 @@ tr:hover td{background:var(--teal-lt);}
   </div><!-- .main-content -->
 </div><!-- .main-wrapper -->
 </div><!-- #app -->
+
+<!-- Manual Edit Modal -->
+<div id="manual-edit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:1001;align-items:center;justify-content:center;padding:16px;">
+  <div style="background:var(--sf);border-radius:14px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.7);">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--bdr);background:var(--sf2);border-radius:14px 14px 0 0;position:sticky;top:0;z-index:1;">
+      <div style="font-size:14px;font-weight:700;color:var(--txt);">✏ Edit Manual Survey</div>
+      <button onclick="document.getElementById('manual-edit-modal').style.display='none'" style="background:rgba(255,255,255,.1);border:1px solid var(--bdr);color:var(--txt2);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:16px;">✕</button>
+    </div>
+    <div id="manual-edit-form" style="padding:16px 18px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+        <div><label class="sf-label">Date</label><input type="date" id="me-date" class="sf-input"></div>
+        <div><label class="sf-label">Officer / Supervisor</label><input type="text" id="me-officers" class="sf-input" placeholder="Officer name"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+        <div><label class="sf-label">Location</label><input type="text" id="me-location" class="sf-input" placeholder="Location"></div>
+        <div><label class="sf-label">State / UT</label><input type="text" id="me-state" class="sf-input" placeholder="State"></div>
+        <div><label class="sf-label">District</label><input type="text" id="me-district" class="sf-input" placeholder="District"></div>
+      </div>
+      <!-- Adult-specific fields -->
+      <div id="me-adult-fields">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);margin-bottom:8px;padding-top:4px;border-top:1px solid var(--bdr);">Adult Survey Fields</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
+          <div><label class="sf-label">Coll. Type</label>
+            <select id="me-colltype" class="sf-input">
+              <option value="resting">Resting</option>
+              <option value="hlc">HLC</option>
+              <option value="hbr">HBR</option>
+              <option value="alr">ALR</option>
+            </select>
+          </div>
+          <div><label class="sf-label">Collectors</label><input type="number" id="me-collectors" class="sf-input" min="1"></div>
+          <div><label class="sf-label">Man-Hours</label><input type="number" id="me-manhours" class="sf-input" step="0.5" min="0"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;">
+          <div><label class="sf-label">Houses Exam.</label><input type="number" id="me-housesex" class="sf-input" min="0"></div>
+          <div><label class="sf-label">+ve Houses</label><input type="number" id="me-housepos" class="sf-input" min="0"></div>
+          <div><label class="sf-label">Non-Culex</label><input type="number" id="me-nonculex" class="sf-input" min="0"></div>
+          <div><label class="sf-label">Culex</label><input type="number" id="me-culex" class="sf-input" min="0"></div>
+        </div>
+      </div>
+      <!-- Larval-specific fields -->
+      <div id="me-larval-fields" style="display:none;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);margin-bottom:8px;padding-top:4px;border-top:1px solid var(--bdr);">Larval Survey Fields</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+          <div><label class="sf-label">Houses Examined</label><input type="number" id="me-l-housesex" class="sf-input" min="0"></div>
+          <div><label class="sf-label">+ve Houses</label><input type="number" id="me-l-housepos" class="sf-input" min="0"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
+          <div><label class="sf-label">Containers</label><input type="number" id="me-l-containers" class="sf-input" min="0"></div>
+          <div><label class="sf-label">+ve Containers</label><input type="number" id="me-l-positive" class="sf-input" min="0"></div>
+          <div><label class="sf-label">Pupal Cont.</label><input type="number" id="me-l-pupal" class="sf-input" min="0"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+          <div><label class="sf-label">Total Dips</label><input type="number" id="me-l-dips" class="sf-input" min="0"></div>
+          <div><label class="sf-label">Larvae (An/Cx)</label><input type="number" id="me-l-larvae" class="sf-input" min="0"></div>
+          <div><label class="sf-label">Pupae (An/Cx)</label><input type="number" id="me-l-pupae" class="sf-input" min="0"></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:8px;">HI / CI / BI / PI indices are recalculated automatically on save.</div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:12px;border-top:1px solid var(--bdr);">
+        <button onclick="document.getElementById('manual-edit-modal').style.display='none'" class="tb-btn ghost">Cancel</button>
+        <button onclick="saveManualDashEdit()" class="tb-btn primary">💾 Save to GitHub</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Map Modal -->
 <div id="map-modal">
@@ -627,7 +721,8 @@ tr:hover td{background:var(--teal-lt);}
 const DASH_U='ANIENTO', DASH_P='2026', DASH_KEY='est_dash_creds';
 let GH={owner:'',repo:'EST-v2.0',token:''};
 let allAdult=[],allLarval=[],adultF=[],larvalF=[],usersCfg=[];
-let allManualAdult=[],allManualLarval=[];
+let allManualAdult=[],allManualLarval=[],manualAdultF=[],manualLarvalF=[];
+let manualDashSel={adult:new Set(),larval:new Set()};
 /* Compact human-readable Survey ID: A-260531-1437 */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -729,7 +824,7 @@ async function loadAll(){
     allLarval.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
     allManualAdult.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
     allManualLarval.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
-    adultF=[...allAdult];larvalF=[...allLarval];
+    adultF=[...allAdult];larvalF=[...allLarval];manualAdultF=[...allManualAdult];manualLarvalF=[...allManualLarval];
     const cfg=await ghGet('config.json').then(d=>JSON.parse(b64d(d.content))).catch(()=>null);
     if(cfg)usersCfg=cfg.credentials||[];
     updateStats();renderAdult();renderLarval();renderManualAdult();renderManualLarval();renderUsers();renderAlerts();buildMapCarousel();
@@ -829,12 +924,14 @@ function addUser(){usersCfg.push({username:'',password:'',role:'field',active:tr
 function renderManualAdult(){
   const tb=document.getElementById('tbody-manual-adult');
   if(!tb)return;
-  if(!allManualAdult.length){tb.innerHTML='<tr><td colspan="19" class="tbl-empty">No manual adult entries found</td></tr>';return;}
-  tb.innerHTML=allManualAdult.map((s,i)=>{
+  if(!manualAdultF.length){tb.innerHTML='<tr><td colspan="21" class="tbl-empty">No manual adult entries found</td></tr>';return;}
+  tb.innerHTML=manualAdultF.map((s,i)=>{
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
     const typeLabel=s.collType==='resting'?'Resting':s.collType==='hlc'?'HLC':s.collType==='hbr'?'HBR':'ALR';
     const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','adult')" title="Delete" style="padding:0 8px;height:28px;">🗑</button>`:'—';
+    const editBtn=`<button class="pt-btn blue" onclick="openEditManualDash('${String(s.id)}','adult')" style="padding:0 8px;height:26px;font-size:11px;">✏ Edit</button>`;
     return `<tr>
+      <td><input type="checkbox" class="row-cb man-adult-cb" data-idx="${i}"></td>
       <td>${i+1}</td>
       <td style="font-family:monospace;font-size:11px;color:var(--warn);">${fmtSid('adult',s.id)}</td>
       <td style="font-weight:600;">${s.savedBy||'-'}</td>
@@ -849,6 +946,7 @@ function renderManualAdult(){
       <td>${s.officers||'-'}</td>
       <td>${saved}</td>
       <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓':'Pending'}</span></td>
+      <td>${editBtn}</td>
       <td>${delBtn}</td>
     </tr>`;
   }).join('');
@@ -857,11 +955,13 @@ function renderManualAdult(){
 function renderManualLarval(){
   const tb=document.getElementById('tbody-manual-larval');
   if(!tb)return;
-  if(!allManualLarval.length){tb.innerHTML='<tr><td colspan="22" class="tbl-empty">No manual larval entries found</td></tr>';return;}
-  tb.innerHTML=allManualLarval.map((s,i)=>{
+  if(!manualLarvalF.length){tb.innerHTML='<tr><td colspan="24" class="tbl-empty">No manual larval entries found</td></tr>';return;}
+  tb.innerHTML=manualLarvalF.map((s,i)=>{
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
     const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','larval')" title="Delete" style="padding:0 8px;height:28px;">🗑</button>`:'—';
+    const editBtn=`<button class="pt-btn blue" onclick="openEditManualDash('${String(s.id)}','larval')" style="padding:0 8px;height:26px;font-size:11px;">✏ Edit</button>`;
     return `<tr>
+      <td><input type="checkbox" class="row-cb man-larval-cb" data-idx="${i}"></td>
       <td>${i+1}</td>
       <td style="font-family:monospace;font-size:11px;color:var(--warn);">${fmtSid('larval',s.id)}</td>
       <td style="font-weight:600;">${s.savedBy||'-'}</td>
@@ -875,6 +975,7 @@ function renderManualLarval(){
       <td>${s.officers||'-'}</td>
       <td>${saved}</td>
       <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓':'Pending'}</span></td>
+      <td>${editBtn}</td>
       <td>${delBtn}</td>
     </tr>`;
   }).join('');
@@ -885,6 +986,164 @@ function exportManual(mod){
   const src=mod==='adult'?allManualAdult:allManualLarval;
   if(!src.length){alert('No manual '+mod+' data to export.');return;}
   dlXLSX(mod==='adult'?buildAdultXLSX(src,src.length>1):buildLarvalXLSX(src,src.length>1),'EST_Manual_'+mod+'_'+dn+'.xlsx');
+}
+
+/* ── MANUAL DATA DASHBOARD HELPERS ── */
+function filterManual(mod){
+  const q=(document.getElementById('search-manual-'+mod)?.value||'').toLowerCase();
+  const fromD=document.getElementById('filter-man'+mod+'-from')?.value||'';
+  const toD=document.getElementById('filter-man'+mod+'-to')?.value||'';
+  const src=mod==='adult'?allManualAdult:allManualLarval;
+  const filtered=src.filter(s=>{
+    if(q&&!((s.location||'')+(s.district||'')+(s.workers||'')+(s.officers||'')+(s.state||'')).toLowerCase().includes(q))return false;
+    const sd=normDate(s.date);
+    if(fromD&&(!sd||sd<fromD))return false;
+    if(toD&&(!sd||sd>toD))return false;
+    return true;
+  });
+  if(mod==='adult'){manualAdultF=filtered;renderManualAdult();}
+  else{manualLarvalF=filtered;renderManualLarval();}
+}
+function resetManualFilter(mod){
+  const f=document.getElementById('filter-man'+mod+'-from');
+  const t=document.getElementById('filter-man'+mod+'-to');
+  const s=document.getElementById('search-manual-'+mod);
+  if(f)f.value='';if(t)t.value='';if(s)s.value='';
+  if(mod==='adult'){manualAdultF=[...allManualAdult];renderManualAdult();}
+  else{manualLarvalF=[...allManualLarval];renderManualLarval();}
+}
+function selectAllManual(mod,state){
+  document.querySelectorAll('.man-'+mod+'-cb').forEach(c=>c.checked=state);
+}
+function exportSelectedManual(mod){
+  const checked=document.querySelectorAll('.man-'+mod+'-cb:checked');
+  if(!checked.length){alert('Tick rows first');return;}
+  const src=mod==='adult'?manualAdultF:manualLarvalF;
+  const selected=Array.from(checked).map(c=>src[parseInt(c.dataset.idx)]).filter(Boolean);
+  if(!selected.length){alert('No valid records selected');return;}
+  const dn=new Date().toISOString().slice(0,10).replace(/-/g,'');
+  dlXLSX(mod==='adult'?buildAdultXLSX(selected,selected.length>1):buildLarvalXLSX(selected,selected.length>1),'EST_Manual_'+mod+'_selected_'+dn+'.xlsx');
+}
+function exportFilteredManual(mod){
+  const src=mod==='adult'?manualAdultF:manualLarvalF;
+  if(!src.length){alert('No filtered '+mod+' data to export.');return;}
+  const dn=new Date().toISOString().slice(0,10).replace(/-/g,'');
+  dlXLSX(mod==='adult'?buildAdultXLSX(src,src.length>1):buildLarvalXLSX(src,src.length>1),'EST_Manual_'+mod+'_filtered_'+dn+'.xlsx');
+}
+async function deleteSelectedManual(mod){
+  if(!GH.owner||!GH.token){alert('Connect to GitHub first');return;}
+  const checked=document.querySelectorAll('.man-'+mod+'-cb:checked');
+  if(!checked.length){alert('Tick rows to select records first');return;}
+  const src=mod==='adult'?manualAdultF:manualLarvalF;
+  const toDelete=Array.from(checked).map(c=>src[parseInt(c.dataset.idx)]).filter(s=>s&&s._path&&s._sha);
+  if(!toDelete.length){alert('No deletable records selected (records must be synced to GitHub)');return;}
+  if(!confirm(`Delete ${toDelete.length} selected manual ${mod} record(s) from GitHub?\nThis cannot be undone.`))return;
+  setStatus('Deleting '+toDelete.length+' record(s)…','info');
+  let ok=0,fail=0;
+  for(const s of toDelete){
+    try{
+      const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${s._path}`,{
+        method:'DELETE',headers:{...ghH(),'Content-Type':'application/json'},
+        body:JSON.stringify({message:`[EST Dashboard] Delete manual ${mod} survey`,sha:s._sha,branch:'main'})
+      });
+      if(r.ok)ok++;else fail++;
+    }catch(e){fail++;}
+  }
+  setStatus(`✓ Deleted ${ok} record(s)${fail?' — '+fail+' failed':''}`,fail?'err':'ok');
+  loadAll();
+}
+function openEditManualDash(id,mod){
+  const src=mod==='adult'?allManualAdult:allManualLarval;
+  const s=src.find(x=>String(x.id)===String(id));
+  if(!s){alert('Survey not found');return;}
+  const modal=document.getElementById('manual-edit-modal');
+  const form=document.getElementById('manual-edit-form');
+  if(!modal||!form)return;
+  form.dataset.editId=id;
+  form.dataset.editMod=mod;
+  form.dataset.editPath=s._path||'';
+  form.dataset.editSha=s._sha||'';
+  document.getElementById('me-date').value=s.date||'';
+  document.getElementById('me-location').value=s.location||'';
+  document.getElementById('me-state').value=s.state||'';
+  document.getElementById('me-district').value=s.district||'';
+  document.getElementById('me-officers').value=s.officers||'';
+  if(mod==='adult'){
+    document.getElementById('me-adult-fields').style.display='block';
+    document.getElementById('me-larval-fields').style.display='none';
+    document.getElementById('me-colltype').value=s.collType||'resting';
+    document.getElementById('me-collectors').value=s.collectors||1;
+    document.getElementById('me-manhours').value=s.totalManHours||0;
+    document.getElementById('me-housesex').value=s.housesExamined||0;
+    document.getElementById('me-housepos').value=s.housePositive||0;
+    document.getElementById('me-nonculex').value=s.totNonCulex||0;
+    document.getElementById('me-culex').value=s.totCulex||0;
+  } else {
+    document.getElementById('me-adult-fields').style.display='none';
+    document.getElementById('me-larval-fields').style.display='block';
+    document.getElementById('me-l-housesex').value=s.housesExamined||0;
+    document.getElementById('me-l-housepos').value=s.housePositive||0;
+    document.getElementById('me-l-containers').value=s.totalContainers||0;
+    document.getElementById('me-l-positive').value=s.totalPositive||0;
+    document.getElementById('me-l-pupal').value=s.totalPupalContainers||0;
+    document.getElementById('me-l-dips').value=s.totalDips||0;
+    document.getElementById('me-l-larvae').value=s.totalLarvae||0;
+    document.getElementById('me-l-pupae').value=s.totalPupae||0;
+  }
+  modal.style.display='flex';
+}
+async function saveManualDashEdit(){
+  const form=document.getElementById('manual-edit-form');
+  if(!form)return;
+  const id=form.dataset.editId;
+  const mod=form.dataset.editMod;
+  const path=form.dataset.editPath;
+  const sha=form.dataset.editSha;
+  if(!path||!sha){alert('Cannot save — record must be synced to GitHub first.');return;}
+  if(!GH.owner||!GH.token){alert('Connect to GitHub first');return;}
+  const src=mod==='adult'?allManualAdult:allManualLarval;
+  const s=src.find(x=>String(x.id)===String(id));
+  if(!s){alert('Survey not found');return;}
+  const updated={...s};
+  updated.date=document.getElementById('me-date').value||s.date;
+  updated.location=document.getElementById('me-location').value||s.location;
+  updated.state=document.getElementById('me-state').value||s.state;
+  updated.district=document.getElementById('me-district').value||s.district;
+  updated.officers=document.getElementById('me-officers').value;
+  if(mod==='adult'){
+    updated.collType=document.getElementById('me-colltype').value||s.collType;
+    updated.collectors=parseInt(document.getElementById('me-collectors').value)||s.collectors;
+    updated.totalManHours=parseFloat(document.getElementById('me-manhours').value)||s.totalManHours;
+    updated.housesExamined=parseInt(document.getElementById('me-housesex').value)||0;
+    updated.housePositive=parseInt(document.getElementById('me-housepos').value)||0;
+    updated.totNonCulex=parseInt(document.getElementById('me-nonculex').value)||0;
+    updated.totCulex=parseInt(document.getElementById('me-culex').value)||0;
+    updated.totalMosq=(updated.totNonCulex)+(updated.totCulex);
+  } else {
+    updated.housesExamined=parseInt(document.getElementById('me-l-housesex').value)||0;
+    updated.housePositive=parseInt(document.getElementById('me-l-housepos').value)||0;
+    updated.totalContainers=parseInt(document.getElementById('me-l-containers').value)||0;
+    updated.totalPositive=parseInt(document.getElementById('me-l-positive').value)||0;
+    updated.totalPupalContainers=parseInt(document.getElementById('me-l-pupal').value)||0;
+    updated.totalDips=parseInt(document.getElementById('me-l-dips').value)||0;
+    updated.totalLarvae=parseInt(document.getElementById('me-l-larvae').value)||0;
+    updated.totalPupae=parseInt(document.getElementById('me-l-pupae').value)||0;
+    const hEx=updated.housesExamined||1;
+    const cont=updated.totalContainers||1;
+    updated.HI=((updated.housePositive/hEx)*100).toFixed(1);
+    updated.CI=((updated.totalPositive/cont)*100).toFixed(1);
+    updated.BI=((updated.totalPositive/hEx)*100).toFixed(1);
+    updated.PI=((updated.totalPupalContainers/hEx)*100).toFixed(1);
+  }
+  setStatus('Saving edit to GitHub…','info');
+  const ok=await ghPut(path,updated,sha);
+  if(ok){
+    setStatus('✓ Survey updated on GitHub','ok');
+    document.getElementById('manual-edit-modal').style.display='none';
+    loadAll();
+  }else{
+    setStatus('Failed to save — check token permissions','err');
+  }
 }
 
 async function saveUsers(){
@@ -1095,7 +1354,7 @@ function buildAdultXLSX(surveys,isCompiled){
   const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
   // ── Report Status ──
   const statusRows=[
-    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.60')],
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.61')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -1169,7 +1428,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   // ── Report Status sheet ──
   const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.60')],
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.61')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
