@@ -88,12 +88,21 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .breadcrumb{font-size:14px;font-weight:600;color:var(--txt);display:flex;align-items:center;gap:6px;}
 .breadcrumb-sub{font-size:12px;color:var(--muted);font-weight:400;}
 .topbar-right{display:flex;gap:6px;align-items:center;}
-.tb-btn{height:30px;padding:0 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;display:flex;align-items:center;gap:4px;transition:all .15s;}
+.tb-btn{height:36px;padding:0 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:all .15s;}
 .tb-btn.primary{background:var(--teal);color:#fff;}
 .tb-btn.primary:hover{background:var(--teal-dk);}
 .tb-btn.ghost{background:var(--sf2);color:var(--txt2);border:1px solid var(--bdr);}
 .tb-btn.ghost:hover{color:var(--txt);border-color:var(--bdr2);}
+.tb-btn.blue{background:var(--blue-lt);color:var(--blue);border:1px solid rgba(33,150,243,.3);}
+.tb-btn.blue:hover{background:rgba(33,150,243,.22);}
+.tb-btn.secondary{background:var(--teal-lt);color:var(--teal);border:1px solid rgba(0,191,165,.3);}
+.tb-btn.secondary:hover{background:rgba(0,191,165,.22);}
+.tb-btn.danger{background:rgba(239,83,80,.1);color:#ef5350;border:1px solid rgba(239,83,80,.3);}
+.tb-btn.danger:hover{background:rgba(239,83,80,.2);}
 .tb-btn.danger-ghost{background:rgba(239,83,80,.1);color:#ef5350;border:1px solid rgba(239,83,80,.25);}
+[data-theme="light"] .tb-btn.blue{background:#e3f2fd;color:var(--blue-dk);}
+[data-theme="light"] .tb-btn.secondary{background:#e0f2f1;color:var(--teal-dk);}
+[data-theme="light"] .tb-btn.danger{background:#ffdad6;color:#ba1a1a;border-color:#ba1a1a;}
 .tb-icon-btn{width:30px;height:30px;background:var(--sf2);border:1px solid var(--bdr);border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--txt2);font-size:13px;transition:all .15s;}
 .tb-icon-btn:hover{color:var(--txt);border-color:var(--bdr2);}
 .tb-lbl{display:none;}
@@ -184,7 +193,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 /* ═══ TABLE ═══ */
 .tbl-outer{padding:0 20px 20px;}
-.tbl-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--bdr);margin-top:12px;}
+.tbl-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--bdr);margin-top:12px;cursor:grab;user-select:none;}
+.tbl-wrap.dragging{cursor:grabbing;}
+.tbl-wrap input,.tbl-wrap button,.tbl-wrap select,.tbl-wrap label{cursor:pointer;user-select:auto;}
+.tbl-wrap input[type="checkbox"]{cursor:pointer;}
 table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap;}
 thead tr{background:var(--teal);}
 thead tr.blue-hd{background:var(--blue-dk);}
@@ -435,6 +447,7 @@ tr:hover td{background:var(--teal-lt);}
         <div class="date-range-group">
           <label>From</label><input type="date" class="pt-select" id="filter-adult-from" onchange="filterTable('adult')">
           <label>To</label><input type="date" class="pt-select" id="filter-adult-to" onchange="filterTable('adult')">
+          <button class="pt-btn ghost" onclick="resetDateFilter('adult')" title="Clear date range" style="height:34px;padding:0 10px;font-size:13px;">✕</button>
         </div>
       </div>
       <div class="tbl-outer">
@@ -470,6 +483,7 @@ tr:hover td{background:var(--teal-lt);}
         <div class="date-range-group">
           <label>From</label><input type="date" class="pt-select" id="filter-larval-from" onchange="filterTable('larval')">
           <label>To</label><input type="date" class="pt-select" id="filter-larval-to" onchange="filterTable('larval')">
+          <button class="pt-btn ghost" onclick="resetDateFilter('larval')" title="Clear date range" style="height:34px;padding:0 10px;font-size:13px;">✕</button>
         </div>
       </div>
       <div class="tbl-outer">
@@ -751,13 +765,36 @@ function filterTable(mod){
   const tf=document.getElementById('filter-type')?.value||'';
   const src=mod==='adult'?allAdult:allLarval;
   const filtered=src.filter(s=>{
-    if(q&&!(s.location+s.district+s.workers+s.officers+'').toLowerCase().includes(q))return false;
-    if(fromD&&s.date&&s.date<fromD)return false;
-    if(toD&&s.date&&s.date>toD)return false;
+    // Search: safe string concat
+    if(q&&!((s.location||'')+(s.district||'')+(s.workers||'')+(s.officers||'')+(s.state||'')).toLowerCase().includes(q))return false;
+    // Date filter: normalize to YYYY-MM-DD; surveys with no date are excluded when filter is active
+    const sd=normDate(s.date);
+    if(fromD&&(!sd||sd<fromD))return false;
+    if(toD&&(!sd||sd>toD))return false;
+    // Type filter (adult only)
     if(tf&&mod==='adult'&&s.collType!==tf)return false;
     return true;
   });
   if(mod==='adult'){adultF=filtered;renderAdult();}else{larvalF=filtered;renderLarval();}
+}
+function normDate(d){
+  if(!d)return '';
+  // Already YYYY-MM-DD
+  if(/^\d{4}-\d{2}-\d{2}$/.test(d))return d;
+  // DD/MM/YYYY or DD-MM-YYYY → YYYY-MM-DD
+  const m=d.match(/^(\d{2})[\/\-](\d{2})[\/\-](\d{4})$/);
+  if(m)return m[3]+'-'+m[2]+'-'+m[1];
+  // Try native Date parse as last resort
+  const p=new Date(d);
+  if(!isNaN(p.getTime()))return p.toISOString().slice(0,10);
+  return '';
+}
+function resetDateFilter(mod){
+  const f=document.getElementById('filter-'+mod+'-from');
+  const t=document.getElementById('filter-'+mod+'-to');
+  if(f)f.value='';
+  if(t)t.value='';
+  filterTable(mod);
 }
 async function deleteSelected(mod){
   if(!GH.owner||!GH.token){alert('Connect to GitHub first');return;}
@@ -1340,6 +1377,38 @@ function renderAlerts(){
   document.getElementById('alert-list').innerHTML=alerts.map(a=>`<div class="alert-item ${a.t}"><div class="alert-dot ${a.t}"></div><span>${a.m}</span></div>`).join('');
   sec.style.display='block';
 }
+
+/* ── SMART DRAG-TO-SCROLL (horizontal pan on table; click on interactive elements works normally) ── */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.tbl-wrap').forEach(el => {
+    let dragging=false, startX=0, scrollLeft=0;
+    el.addEventListener('mousedown', e => {
+      // If the click target is any interactive element, let it handle normally
+      if(e.target.closest('input,button,select,a,label,span.badge'))return;
+      dragging=true;
+      startX=e.pageX-el.offsetLeft;
+      scrollLeft=el.scrollLeft;
+      el.classList.add('dragging');
+      e.preventDefault();
+    });
+    document.addEventListener('mouseup', () => {
+      if(!dragging)return;
+      dragging=false;
+      el.classList.remove('dragging');
+    });
+    el.addEventListener('mouseleave', () => {
+      if(!dragging)return;
+      dragging=false;
+      el.classList.remove('dragging');
+    });
+    el.addEventListener('mousemove', e => {
+      if(!dragging)return;
+      e.preventDefault();
+      const x=e.pageX-el.offsetLeft;
+      el.scrollLeft=scrollLeft-(x-startX);
+    });
+  });
+});
 
 /* ── SIDEBAR NAVIGATION ── */
 function switchSection(name, btn) {
