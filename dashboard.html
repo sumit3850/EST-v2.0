@@ -649,7 +649,7 @@ function buildXLSX(sheets){
   // Shared strings XML
   const ssXML='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="'+allStrs.length+'" uniqueCount="'+allStrs.length+'">'+allStrs.map(s=>'<si><t xml:space="preserve">'+s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')+'</t></si>').join('')+'</sst>';
   // Workbook XML
-  const wbXML='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+sheets.map((sh,i)=>'<sheet name="'+sh.name.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'" sheetId="'+(i+1)+'" r:id="rId'+(i+1)+'"/>').join('')+'</sheets></workbook>';
+  const wbXML='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><calcPr fullCalcOnLoad="1"/><sheets>'+sheets.map((sh,i)=>'<sheet name="'+sh.name.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'" sheetId="'+(i+1)+'" r:id="rId'+(i+1)+'"/>').join('')+'</sheets></workbook>';
   // Workbook rels
   const wbRels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+sheets.map((sh,i)=>'<Relationship Id="rId'+(i+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(i+1)+'.xml"/>').join('')+'<Relationship Id="rId'+(sheets.length+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/><Relationship Id="rId'+(sheets.length+2)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>';
   const relsXML='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';
@@ -751,10 +751,10 @@ function buildAdultXLSX(surveys,isCompiled){
         0,
         s.totalMosq||0,
         s.collectors||1,
-        {f:'IF(S'+r+'*V'+r+'=0,"—",R'+r+'/(S'+r+'*V'+r+'))'},
-        {f:'IF(S'+r+'*V'+r+'=0,"—",Q'+r+'/(S'+r+'*V'+r+')*10)'},
-        {f:'IF(L'+r+'=0,"—",M'+r+'/L'+r+'*100)'},
-        {f:'IF(L'+r+'=0,"—",R'+r+'/L'+r+')'},
+        {f:'IFERROR(R'+r+'/(S'+r+'*V'+r+'),0)'},
+        {f:'IFERROR(Q'+r+'/(S'+r+'*V'+r+')*10,0)'},
+        {f:'IFERROR(M'+r+'/L'+r+'*100,0)'},
+        {f:'IFERROR(R'+r+'/L'+r+',0)'},
         s.lat||'',
         s.lng||'',
         s.workers||'',
@@ -802,13 +802,13 @@ function buildLarvalXLSX(surveys,isCompiled){
       si+1,fmtSid('larval',s.id),s.date||'',s.state||'',s.district||'',s.location||'',
       s.houses?.length||0,posH,s.totalContainers||0,s.totalPositive||0,s.totalDips||0,
       s.totalLarvae||0,pupCont,pupAnCx,
-      {f:'IF(G'+r+'=0,"—",H'+r+'/G'+r+'*100)'},
-      {f:'IF(I'+r+'=0,"—",J'+r+'/I'+r+'*100)'},
-      {f:'IF(G'+r+'=0,"—",J'+r+'/G'+r+'*100)'},
-      {f:'IF(G'+r+'=0,"—",M'+r+'/G'+r+'*100)'},
-      {f:'IF(K'+r+'=0,"—",L'+r+'/K'+r+')'},
-      {f:'IF(K'+r+'=0,"—",SUM(M'+r+':N'+r+')/K'+r+')'},
-      {f:'IF(K'+r+'=0,"—",SUM(L'+r+':N'+r+')/K'+r+')'},
+      {f:'IFERROR(H'+r+'/G'+r+'*100,0)'},
+      {f:'IFERROR(J'+r+'/I'+r+'*100,0)'},
+      {f:'IFERROR(J'+r+'/G'+r+'*100,0)'},
+      {f:'IFERROR(M'+r+'/G'+r+'*100,0)'},
+      {f:'IFERROR(L'+r+'/K'+r+',0)'},
+      {f:'IFERROR(SUM(M'+r+':N'+r+')/K'+r+',0)'},
+      {f:'IFERROR(SUM(L'+r+':N'+r+')/K'+r+',0)'},
       '',s.lat||'',s.lng||'',s.workers||'',s.officers||'',
       new Date(s.savedAt).toLocaleString('en-IN')
     ]);
@@ -843,7 +843,7 @@ function buildLarvalXLSX(surveys,isCompiled){
       s.dipSites.forEach(d=>{
         const lat=d.lat||'';const lng=d.lng||'';
         const maps=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
-        dipRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.location||'',d.siteNo,d.description||'',d.dips||0,d.larvae||0,d.pupae||0,{f:'IF(G'+dipRowN+'=0,"—",H'+dipRowN+'/G'+dipRowN+')'},d.species||'',d.remark||'',lat,lng,maps]);
+        dipRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.location||'',d.siteNo,d.description||'',d.dips||0,d.larvae||0,d.pupae||0,{f:'IFERROR(H'+dipRowN+'/G'+dipRowN+',0)'},d.species||'',d.remark||'',lat,lng,maps]);
         dipRowN++;
       });
     }
