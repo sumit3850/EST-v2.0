@@ -306,7 +306,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.0.60 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -840,7 +840,7 @@ function buildXLSX(sheets){
   function ss(v){const s=String(v);if(!(s in strIdx)){strIdx[s]=allStrs.length;allStrs.push(s);}return strIdx[s];}
   // Pre-scan strings — support both plain strings and {v,s} styled cells
   sheets.forEach(sh=>sh.rows.forEach(row=>(row||[]).forEach(cell=>{
-    if(!cell&&cell!==0)return;
+    if(cell===null||cell===undefined)return;
     const cv=(typeof cell==='object'&&!cell.f&&cell.v!==undefined)?cell.v:cell;
     if(typeof cv==='string')ss(cv);
   })));
