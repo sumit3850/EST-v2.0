@@ -833,34 +833,47 @@ function dlCSV(csv,name){const b=new Blob([csv],{type:'text/csv'});const u=URL.c
 
 /* ── XLSX BUILDER (pure JS, no libraries) ─────────────────── */
 function buildXLSX(sheets){
-  // CRC32
   const crcT=(()=>{const t=new Uint32Array(256);for(let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=c&1?(0xEDB88320^(c>>>1)):c>>>1;t[i]=c;}return t;})();
   function crc32(buf){let c=0xFFFFFFFF;for(let i=0;i<buf.length;i++)c=(c>>>8)^crcT[(c^buf[i])&0xFF];return(c^0xFFFFFFFF)>>>0;}
-  // UTF-8 encode
   function enc(s){return new TextEncoder().encode(s);}
-  // Build shared strings
   const allStrs=[];const strIdx={};
   function ss(v){const s=String(v);if(!(s in strIdx)){strIdx[s]=allStrs.length;allStrs.push(s);}return strIdx[s];}
-  // Pre-scan strings
-  sheets.forEach(sh=>sh.rows.forEach(row=>(row||[]).forEach(cell=>{if(typeof cell==='string')ss(cell);})));
-  // col letter
+  // Pre-scan strings — support both plain strings and {v,s} styled cells
+  sheets.forEach(sh=>sh.rows.forEach(row=>(row||[]).forEach(cell=>{
+    if(!cell&&cell!==0)return;
+    const cv=(typeof cell==='object'&&!cell.f&&cell.v!==undefined)?cell.v:cell;
+    if(typeof cv==='string')ss(cv);
+  })));
   function colLetter(n){let s='';n++;while(n>0){n--;s=String.fromCharCode(65+(n%26))+s;n=Math.floor(n/26);}return s;}
-  // Build worksheet XML
-  function wsXML(rows){
-    const parts=['<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>'];
+  // Build worksheet XML — supports sheet.cols (column widths) and {v,s} / {f,s} cells
+  // Cell styles: 0=default, 1=bold+lightblue+center(header), 2=center(data)
+  function wsXML(rows,sheet){
+    let colsXML='';
+    if(sheet&&sheet.cols&&sheet.cols.length){
+      colsXML='<cols>'+sheet.cols.map((w,i)=>'<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" bestFit="0" customWidth="1"/>').join('')+'</cols>';
+    }
+    const parts=['<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'+colsXML+'<sheetData>'];
     (rows||[]).forEach((row,ri)=>{
       if(!row||!row.length)return;
-      parts.push('<row r="'+(ri+1)+'">');
+      const isHdrRow=sheet&&sheet.headerRows&&sheet.headerRows.includes(ri);
+      parts.push('<row r="'+(ri+1)+'"'+(isHdrRow?' ht="28" customHeight="1"':'')+'>');
       row.forEach((cell,ci)=>{
         if(cell===null||cell===undefined)return;
         const ref=colLetter(ci)+(ri+1);
-        if(cell&&typeof cell==='object'&&cell.f){
-          parts.push('<c r="'+ref+'"><f>'+cell.f.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</f></c>');
-        } else if(typeof cell==='number'){
-          parts.push('<c r="'+ref+'" t="n"><v>'+cell+'</v></c>');
+        let sIdx=0,actualCell=cell;
+        if(typeof cell==='object'){
+          if(cell.s!==undefined)sIdx=cell.s;
+          if(cell.f!==undefined){
+            parts.push('<c r="'+ref+'"'+(sIdx?' s="'+sIdx+'"':'')+'><f>'+cell.f.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</f></c>');
+            return;
+          }
+          if(cell.v!==undefined)actualCell=cell.v;
+        }
+        const sa=sIdx?' s="'+sIdx+'"':'';
+        if(typeof actualCell==='number'){
+          parts.push('<c r="'+ref+'" t="n"'+sa+'><v>'+actualCell+'</v></c>');
         } else {
-          const idx=ss(String(cell));
-          parts.push('<c r="'+ref+'" t="s"><v>'+idx+'</v></c>');
+          parts.push('<c r="'+ref+'" t="s"'+sa+'><v>'+ss(String(actualCell))+'</v></c>');
         }
       });
       parts.push('</row>');
@@ -868,15 +881,13 @@ function buildXLSX(sheets){
     parts.push('</sheetData></worksheet>');
     return parts.join('');
   }
-  // Shared strings XML
   const ssXML='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="'+allStrs.length+'" uniqueCount="'+allStrs.length+'">'+allStrs.map(s=>'<si><t xml:space="preserve">'+s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')+'</t></si>').join('')+'</sst>';
-  // Workbook XML
   const wbXML='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+sheets.map((sh,i)=>'<sheet name="'+sh.name.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'" sheetId="'+(i+1)+'" r:id="rId'+(i+1)+'"/>').join('')+'</sheets><calcPr fullCalcOnLoad="1"/></workbook>';
-  // Workbook rels
   const wbRels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+sheets.map((sh,i)=>'<Relationship Id="rId'+(i+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(i+1)+'.xml"/>').join('')+'<Relationship Id="rId'+(sheets.length+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/><Relationship Id="rId'+(sheets.length+2)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>';
   const relsXML='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';
   const ctXML='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'+sheets.map((sh,i)=>'<Override PartName="/xl/worksheets/sheet'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join('')+'<Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>';
-  const stylesXML='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="1"><font><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs></styleSheet>';
+  // Styles: s=0 default | s=1 bold+light-blue-fill+center+wrap (headers) | s=2 center-aligned (data)
+  const stylesXML='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFB8D9F5"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="3"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf></cellXfs></styleSheet>';
   // ZIP builder (Stored / no compression)
   function zipEntry(name,data){
     const nb=enc(name);
@@ -895,7 +906,7 @@ function buildXLSX(sheets){
     {n:'xl/_rels/workbook.xml.rels',d:enc(wbRels)},
     {n:'xl/sharedStrings.xml',d:enc(ssXML)},
     {n:'xl/styles.xml',d:enc(stylesXML)},
-    ...sheets.map((sh,i)=>({n:'xl/worksheets/sheet'+(i+1)+'.xml',d:enc(wsXML(sh.rows))}))
+    ...sheets.map((sh,i)=>({n:'xl/worksheets/sheet'+(i+1)+'.xml',d:enc(wsXML(sh.rows,sh))}))
   ];
   // Build entries
   const entries=[];let offset=0;
@@ -929,7 +940,7 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.0.55)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.0.60)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -1000,65 +1011,110 @@ function buildAdultXLSX(surveys,isCompiled){
 }
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
+  // Helpers: H=header cell (bold+lightblue+center), C=center data, CF=center formula
+  const H=v=>({v,s:1});
+  const C=v=>({v,s:2});
+  const CF=f=>({f,s:2});
+
+  // ── Report Status sheet ──
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.0.55)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.0.60)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
     ['Indices Generated','Yes'],
     ['Coordinates Generated','Yes'],
     ['Abbreviations','Full Form'],
-    ['PMHD','Per Man Hour Density'],
-    ['TMHD','Ten Man Hour Density'],
-    ['API','Adult Premise Index'],
-    ['APH','Adult Per House']
+    ['HI','House Index'],
+    ['CI','Container Index'],
+    ['BI','Breteau Index'],
+    ['PI','Pupal Index'],
+    ['LD','Larval Density'],
+    ['PD','Pupal Density'],
+    ['ID','Immature Density']
   ];
-  // Summary sheet
-  const sumHDR=['Survey#','Survey ID','Date','State/UT','District','Location','Houses Examined','Positive Houses','Containers','Positive Containers','Dips Taken','Larvae Collected','Pupae Collected (containers)','Pupae Collected (An/Cx Data)','House Index (HI)','Container Index (CI)','Breteau Index (BI)','Pupal Index (PI)','Larval Density (LD)','Pupal Density (PD)','Immature Density (ID)','Remarks','GPS Lat','GPS Long','Workers','Officer','Saved At'];
+
+  // ── Summary sheet ──
+  // Columns: Survey#|Survey ID|Date|State/UT|District|Location|Houses Examined|Positive Houses|
+  //          Containers|Positive Containers|Dips Taken|Larvae Collected (An/Cx data)|
+  //          Pupae Collected (containers)|Pupae Collected (An/Cx Data)|HI|CI|BI|PI|LD|PD|ID|
+  //          Remarks|GPS Lat|GPS Long|Workers|Officer|Saved At
+  const sumHDR=[
+    'Survey#','Survey ID','Date','State/UT','District','Location',
+    'Houses Examined','Positive Houses','Containers','Positive Containers','Dips Taken',
+    'Larvae Collected (An/Cx data)','Pupae Collected (containers)','Pupae Collected (An/Cx Data)',
+    'House Index (HI)','Container Index (CI)','Breteau Index (BI)','Pupal Index (PI)',
+    'Larval Density (LD)','Pupal Density (PD)','Immature Density (ID)',
+    'Remarks','GPS Lat','GPS Long','Workers','Officer','Saved At'
+  ].map(H);
   const sumRows=[sumHDR];
   surveys.forEach((s,si)=>{
-    const r=si+2;
+    const r=si+2; // Excel row number (header is row 1, first data row is 2)
     const posH=(s.houses||[]).filter(h=>h.housePositive).length;
     const pupCont=(s.houses||[]).reduce((t,h)=>t+(h.pupal||0),0);
-    const pupAnCx=(s.dipSites||[]).reduce((t,d)=>t+(d.pupae||0),0);
+    const larvaeAnCx=(s.dipSites&&s.dipSites.length)
+      ?(s.dipSites||[]).reduce((t,d)=>t+(d.larvae||0),0)
+      :(s.totalLarvae||0);
+    const pupAnCx=(s.dipSites&&s.dipSites.length)
+      ?(s.dipSites||[]).reduce((t,d)=>t+(d.pupae||0),0)
+      :(s.totalPupae||0);
     sumRows.push([
-      si+1,fmtSid('larval',s.id),s.date||'',s.state||'',s.district||'',s.location||'',
-      s.houses?.length||0,posH,s.totalContainers||0,s.totalPositive||0,s.totalDips||0,
-      s.totalLarvae||0,pupCont,pupAnCx,
-      {f:'IFERROR(H'+r+'/G'+r+'*100,0)'},
-      {f:'IFERROR(J'+r+'/I'+r+'*100,0)'},
-      {f:'IFERROR(J'+r+'/G'+r+'*100,0)'},
-      {f:'IFERROR(M'+r+'/G'+r+'*100,0)'},
-      {f:'IFERROR(L'+r+'/K'+r+',0)'},
-      {f:'IFERROR(SUM(M'+r+':N'+r+')/K'+r+',0)'},
-      {f:'IFERROR(SUM(L'+r+':N'+r+')/K'+r+',0)'},
-      '',s.lat||'',s.lng||'',s.workers||'',s.officers||'',
-      new Date(s.savedAt).toLocaleString('en-IN')
+      C(si+1), C(fmtSid('larval',s.id)), C(s.date||''), C(s.state||''), C(s.district||''), s.location||'',
+      C(s.houses?.length||0), C(posH), C(s.totalContainers||0), C(s.totalPositive||0), C(s.totalDips||0),
+      C(larvaeAnCx), C(pupCont), C(pupAnCx),
+      // HI = Positive Houses / Houses * 100
+      CF('IFERROR(H'+r+'/G'+r+'*100,0)'),
+      // CI = Positive Containers / Total Containers * 100
+      CF('IFERROR(J'+r+'/I'+r+'*100,0)'),
+      // BI = Positive Containers / Houses * 100
+      CF('IFERROR(J'+r+'/G'+r+'*100,0)'),
+      // PI = Pupae(containers) / Houses * 100  [container pupae ONLY for PI]
+      CF('IFERROR(M'+r+'/G'+r+'*100,0)'),
+      // LD = Larvae(An/Cx) / Dips
+      CF('IFERROR(L'+r+'/K'+r+',0)'),
+      // PD = Pupae(An/Cx) / Dips  [container pupae excluded per specification]
+      CF('IFERROR(N'+r+'/K'+r+',0)'),
+      // ID = (Larvae + Pupae An/Cx) / Dips  [container pupae excluded per specification]
+      CF('IFERROR((L'+r+'+N'+r+')/K'+r+',0)'),
+      '', C(s.lat||''), C(s.lng||''), s.workers||'', s.officers||'',
+      C(s.savedAt?new Date(s.savedAt).toLocaleString('en-IN'):'')
     ]);
   });
-  // Container Inspection House wise
-  const ciHDR=['Survey#','Survey ID','Date','Location','House No.','Start Time','End Time','Containers Inspected','Positive Containers','Pupae Collected','House Positive (Aedes)','GPS Latitude','GPS Longitude','Google Maps Link'];
+
+  // ── Container Inspection House wise ──
+  const ciHDR=['Survey#','Survey ID','Date','Location','House No.','Start Time','End Time',
+    'Containers Inspected','Positive Containers','Pupae Collected (containers)','House Positive (Aedes)',
+    'GPS Latitude','GPS Longitude','Google Maps Link'].map(H);
   const ciRows=[ciHDR];
   surveys.forEach((s,si)=>{
     (s.houses||[]).forEach(h=>{
       const lat=h.lat||'';const lng=h.lng||'';
       const maps=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
-      ciRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.location||'',h.houseNo,h.start||'-',h.end||'-',h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No',lat,lng,maps]);
+      ciRows.push([
+        C(si+1),C(fmtSid('larval',s.id)),C(s.date||''),s.location||'',
+        C(h.houseNo),C(h.start||'-'),C(h.end||'-'),
+        C(h.containers||0),C(h.positive||0),C(h.pupal||0),
+        C(h.housePositive?'Yes':'No'),C(lat),C(lng),maps
+      ]);
     });
   });
-  // Container Type Breakdown
-  const ctHDR=['Survey#','Survey ID','Date','Location','Container Type','Examined','Positive','Positive (%)'];
+
+  // ── Container Type Breakdown ──
+  const ctHDR=['Survey#','Survey ID','Date','Location','Container Type','Examined','Positive','Positive (%)'].map(H);
   const ctRows=[ctHDR];
   surveys.forEach((s,si)=>{
     (s.containerSummary||[]).forEach(ct=>{
       if((ct.examined||0)>0||(ct.positive||0)>0){
         const pct=ct.examined>0?parseFloat(((ct.positive/ct.examined)*100).toFixed(1)):0;
-        ctRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.location||'',ct.name||'',ct.examined||0,ct.positive||0,pct]);
+        ctRows.push([C(si+1),C(fmtSid('larval',s.id)),C(s.date||''),s.location||'',ct.name||'',C(ct.examined||0),C(ct.positive||0),C(pct)]);
       }
     });
   });
-  // Anopheles and Culex Larval Data
-  const dipHDR=['Survey#','Survey ID','Date','Location','Dip Site No.','Dip Site Description','Dips Taken','Larvae Collected','Pupae Collected','Dip Index (Larval)','Species Collected','Observations','Latitude','Longitude','Google Maps Link'];
+
+  // ── Anopheles and Culex Larval Data ──
+  const dipHDR=['Survey#','Survey ID','Date','Location','Dip Site No.','Dip Site Description',
+    'Dips Taken','Larvae Collected','Pupae Collected','Dip Index (Larvae/Dip)',
+    'Species Collected','Observations','Latitude','Longitude','Google Maps Link'].map(H);
   const dipRows=[dipHDR];
   let dipRowN=2;
   surveys.forEach((s,si)=>{
@@ -1066,17 +1122,29 @@ function buildLarvalXLSX(surveys,isCompiled){
       s.dipSites.forEach(d=>{
         const lat=d.lat||'';const lng=d.lng||'';
         const maps=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
-        dipRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.location||'',d.siteNo,d.description||'',d.dips||0,d.larvae||0,d.pupae||0,{f:'IFERROR(H'+dipRowN+'/G'+dipRowN+',0)'},d.species||'',d.remark||'',lat,lng,maps]);
+        dipRows.push([
+          C(si+1),C(fmtSid('larval',s.id)),C(s.date||''),s.location||'',
+          C(d.siteNo),d.description||'',C(d.dips||0),C(d.larvae||0),C(d.pupae||0),
+          CF('IFERROR(H'+dipRowN+'/G'+dipRowN+',0)'),
+          d.species||'',d.remark||'',C(lat),C(lng),maps
+        ]);
         dipRowN++;
       });
     }
   });
+
+  // Column widths (characters) per sheet
+  const sumCols=[8,15,11,13,15,24,14,14,12,16,11,24,22,22,12,13,12,12,14,14,15,14,12,12,16,16,20];
+  const ciCols=[8,15,11,22,10,11,11,18,16,20,18,12,12,38];
+  const ctCols=[8,15,11,22,20,12,12,12];
+  const dipCols=[8,15,11,22,12,24,11,14,14,18,20,20,12,12,38];
+
   const sheets=[
-    {name:'Report Status',rows:statusRows},
-    {name:'Summary',rows:sumRows},
-    {name:'Container Inspection_House wise',rows:ciRows},
-    {name:'Container Type Break Down',rows:ctRows},
-    {name:'Anopheles and Culex Larval Data',rows:dipRows}
+    {name:'Report Status',rows:statusRows,cols:[22,36]},
+    {name:'Summary',rows:sumRows,cols:sumCols,headerRows:[0]},
+    {name:'Container Inspection_House wise',rows:ciRows,cols:ciCols,headerRows:[0]},
+    {name:'Container Type Break Down',rows:ctRows,cols:ctCols,headerRows:[0]},
+    {name:'Anopheles and Culex Larval Data',rows:dipRows,cols:dipCols,headerRows:[0]}
   ];
   return buildXLSX(sheets);
 }
