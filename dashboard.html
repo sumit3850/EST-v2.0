@@ -274,7 +274,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.0.61</p>
+      <p>Admin Dashboard · v2.0.64</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -306,7 +306,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>v2.0.61 · A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.0.64 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -1376,7 +1376,7 @@ function buildAdultXLSX(surveys,isCompiled){
   const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
   // ── Report Status ──
   const statusRows=[
-    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.61')],
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.64')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -1419,8 +1419,8 @@ function buildAdultXLSX(surveys,isCompiled){
         C(s.totNonCulex||0), C(s.totCulex||0), C(s.totalMosq||0),
         C(parseFloat((s.totalManHours||0).toFixed(2))),
         C(0), C(s.totalMosq||0), C(s.collectors||1),
-        CF('IFERROR(Q'+r+'/(R'+r+'*U'+r+'),0)'),
-        CF('IFERROR(P'+r+'/(R'+r+'*U'+r+')*10,0)'),
+        CF('IFERROR(Q'+r+'/R'+r+',0)'),
+        CF('IFERROR(P'+r+'/R'+r+'*10,0)'),
         CF('IFERROR(L'+r+'/K'+r+'*100,0)'),
         CF('IFERROR(Q'+r+'/K'+r+',0)'),
         s.lat||'', s.lng||'', s.workers||'', s.officers||'',
@@ -1450,7 +1450,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   // ── Report Status sheet ──
   const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.61')],
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.64')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -1592,7 +1592,7 @@ function buildAdultCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0 — Adult Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.64 — Adult Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -1644,7 +1644,7 @@ function buildAdultCSV(surveys){
     });
   });
   blank();
-  r('EST v2.0 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.64 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -1656,7 +1656,7 @@ function buildLarvalCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0 — Larval Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.64 — Larval Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -1737,7 +1737,7 @@ function buildLarvalCSV(surveys){
     }
   });
   blank();
-  r('EST v2.0 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.64 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
