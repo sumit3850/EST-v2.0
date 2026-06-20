@@ -472,6 +472,22 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
       </div>
       <div class="draft-pill" id="larval-draft-pill" style="display:none;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg><span id="larval-draft-txt">Draft exists</span></div>
     </div>
+    <!-- Manual Entry Card -->
+    <div class="mod-card" style="background:rgba(255,152,0,.06);border-color:rgba(255,152,0,.35);">
+      <div class="mod-hdr">
+        <div class="mod-icon" style="background:rgba(255,152,0,.13);">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#ff9800"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        </div>
+        <div><div class="mod-name">Manual Entry</div><div style="font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;">From paper records / registers</div></div>
+      </div>
+      <div class="mod-desc">Enter adult or larval survey data from field registers or paper forms. Indices are computed automatically. Data syncs to GitHub and appears as "Manual Data" in the dashboard.</div>
+      <div class="mod-btns">
+        <button class="mod-new" onclick="openManualEntry()" style="background:rgba(255,152,0,.15);border:1.5px solid rgba(255,152,0,.5);color:#ff9800;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          New Manual Entry
+        </button>
+      </div>
+    </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
       About <span id="dash-about-ver">EST v2.0</span>
@@ -515,6 +531,158 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg>Saved
   </button>
 </nav>
+
+<!-- ══ MANUAL ENTRY — CHOOSER ══ -->
+<div class="screen" id="screen-manual-entry">
+  <div class="scroll-area">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div class="page-title">Manual Entry</div>
+      <button onclick="goTo('dash')" style="display:flex;align-items:center;gap:5px;padding:7px 12px;background:var(--sfc);border:1.5px solid var(--olv);border-radius:var(--rmd);font-size:12px;font-weight:600;color:var(--osv);cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Home</button>
+    </div>
+    <div style="height:3px;width:36px;background:#ff9800;border-radius:2px;margin-bottom:16px;"></div>
+    <div style="font-size:13px;color:var(--osv);margin-bottom:20px;line-height:1.6;">Select the type of survey to enter manually from paper records or registers.</div>
+    <div class="submod-card" onclick="startManualAdult()">
+      <div class="submod-icon" style="background:rgba(0,191,165,.12);"><svg width="26" height="26" viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+      <div class="submod-body">
+        <div class="submod-name">Adult Mosquito Survey</div>
+        <div class="submod-sub">Resting · HLC · HBR · ALR — PMHD · TMHD</div>
+        <div class="submod-desc">Enter adult mosquito collection totals. Indices (PMHD, TMHD, API, APH) are computed automatically from the entered data.</div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--osv)" style="flex-shrink:0;margin-top:2px;"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+    </div>
+    <div class="submod-card larval-card" onclick="startManualLarval()">
+      <div class="submod-icon" style="background:rgba(21,101,192,.1);"><svg width="26" height="26" viewBox="0 0 24 24" fill="#64b5f6"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg></div>
+      <div class="submod-body">
+        <div class="submod-name">Larval Survey</div>
+        <div class="submod-sub">Container / Dipping — HI · CI · BI · PI · LD · PD</div>
+        <div class="submod-desc">Enter larval surveillance summary data. All Stegomyia and An/Cx indices are computed automatically.</div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--osv)" style="flex-shrink:0;margin-top:2px;"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+    </div>
+    <div style="height:16px;"></div>
+  </div>
+</div>
+
+<!-- ══ MANUAL ENTRY — ADULT FORM ══ -->
+<div class="screen" id="screen-manual-adult">
+  <div class="scroll-area">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div class="page-title">Adult — Manual Entry</div>
+      <button onclick="startManualAdult()" style="display:flex;align-items:center;gap:5px;padding:7px 12px;background:#fff3f3;border:1.5px solid var(--err);border-radius:var(--rmd);font-size:12px;font-weight:700;color:var(--err);cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>Reset</button>
+    </div>
+    <div class="page-accent adult"></div>
+    <div style="background:rgba(255,152,0,.08);border:1px solid rgba(255,152,0,.3);border-radius:var(--rmd);padding:9px 12px;font-size:11px;color:var(--amber);font-weight:600;margin-bottom:14px;line-height:1.5;">📋 Manual entry from paper records. No GPS track recorded. Indices computed from totals entered.</div>
+
+    <div class="field"><label class="flabel">Collection Type *</label><div class="sel-wrap"><select id="ma-colltype"><option value="resting">Resting Collection (AMD)</option><option value="hlc">Human Landing Catch (HLC)</option><option value="hbr">Human Biting Rate (HBR)</option><option value="alr">Adult Biting / Landing Rate (ALR)</option></select></div></div>
+    <div class="field"><label class="flabel">Date *</label><input type="text" id="ma-date" placeholder="DD-MM-YYYY" maxlength="10"></div>
+    <div class="field"><label class="flabel">State / UT *</label><div class="sel-wrap"><select id="ma-state" onchange="populateDistricts('ma-state','ma-district')"></select></div></div>
+    <div class="field"><label class="flabel">District *</label><div class="sel-wrap"><select id="ma-district"><option value="" disabled selected>Select District…</option></select></div></div>
+    <div class="field"><label class="flabel">Location / Area *</label><textarea id="ma-location" rows="2" placeholder="Village, ward, landmark…"></textarea></div>
+    <div class="field"><label class="flabel">Surveillance Worker(s) / Collector(s) *</label><textarea id="ma-workers" rows="2" placeholder="Names of collectors / field workers…"></textarea></div>
+    <div class="field"><label class="flabel">Senior Officer</label><textarea id="ma-officers" rows="1" placeholder="Name of supervising officer…"></textarea></div>
+
+    <div style="background:var(--sfc);border:1px solid var(--olv);border-radius:var(--rmd);padding:11px;margin-bottom:13px;">
+      <div class="sec-lbl" style="margin-bottom:9px;">GPS Coordinates (Optional)</div>
+      <div class="man-grid">
+        <div class="mf"><label>Latitude (°N)</label><input type="number" step="any" id="ma-lat" placeholder="e.g. 11.6234"></div>
+        <div class="mf"><label>Longitude (°E)</label><input type="number" step="any" id="ma-lng" placeholder="e.g. 92.7265"></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="sec-hdr"><span class="sec-lbl">Survey Duration &amp; Scale</span></div>
+    <div class="row2">
+      <div class="field"><label class="flabel">Collectors / Volunteers</label><input type="number" min="1" id="ma-collectors" value="1"></div>
+      <div class="field"><label class="flabel">Time Spent (hrs)</label><input type="number" min="0" step="0.01" id="ma-hours" value="0" placeholder="e.g. 2.5"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label class="flabel">Nights Surveyed</label><input type="number" min="0" id="ma-nights" value="1"></div>
+      <div class="field"><label class="flabel">Days Surveyed</label><input type="number" min="0" id="ma-days" value="0"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label class="flabel">Houses Examined</label><input type="number" min="0" id="ma-houses" value="0"></div>
+      <div class="field"><label class="flabel">House Positive</label><input type="number" min="0" id="ma-housepos" value="0"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label class="flabel">Rooms Examined</label><input type="number" min="0" id="ma-rooms" value="0"></div>
+      <div class="field"><label class="flabel">Rooms Positive</label><input type="number" min="0" id="ma-roomspos" value="0"></div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="sec-hdr"><span class="sec-lbl">Mosquito Collection Totals</span></div>
+    <div class="row2">
+      <div class="field"><label class="flabel">Non-Culex Collected</label><input type="number" min="0" id="ma-nonculex" value="0" oninput="maTotUpdate()"></div>
+      <div class="field"><label class="flabel">Culex Collected</label><input type="number" min="0" id="ma-culex" value="0" oninput="maTotUpdate()"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label class="flabel">Indoor (Resting)</label><input type="number" min="0" id="ma-indoor" value="0"></div>
+      <div class="field"><label class="flabel">Outdoor (Resting)</label><input type="number" min="0" id="ma-outdoor" value="0"></div>
+    </div>
+    <div style="background:var(--gbg);border:1.5px solid var(--pl);border-radius:var(--rmd);padding:11px 14px;margin-bottom:13px;display:flex;align-items:center;justify-content:space-between;">
+      <div><div class="sec-lbl" style="margin-bottom:2px;">Total Mosquitoes</div><div style="font-size:10px;color:var(--osv);">Non-Culex + Culex</div></div>
+      <div id="ma-total-disp" style="font-family:var(--mono);font-size:26px;font-weight:700;color:var(--primary);">0</div>
+    </div>
+
+    <div class="field-err" id="ma-err" style="margin-bottom:10px;font-size:12px;color:var(--err);display:none;"></div>
+    <button class="btn-p" onclick="saveManualAdult()"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>Save Adult Survey</button>
+    <div style="margin-top:9px;"><button class="btn-s" onclick="showScreen('manual-entry')"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>&nbsp;Back</button></div>
+    <div style="height:16px;"></div>
+  </div>
+</div>
+
+<!-- ══ MANUAL ENTRY — LARVAL FORM ══ -->
+<div class="screen" id="screen-manual-larval">
+  <div class="scroll-area">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div class="page-title">Larval — Manual Entry</div>
+      <button onclick="startManualLarval()" style="display:flex;align-items:center;gap:5px;padding:7px 12px;background:#fff3f3;border:1.5px solid var(--err);border-radius:var(--rmd);font-size:12px;font-weight:700;color:var(--err);cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>Reset</button>
+    </div>
+    <div class="page-accent larval"></div>
+    <div style="background:rgba(255,152,0,.08);border:1px solid rgba(255,152,0,.3);border-radius:var(--rmd);padding:9px 12px;font-size:11px;color:var(--amber);font-weight:600;margin-bottom:14px;line-height:1.5;">📋 Manual entry from paper records. Enter summary totals — all indices computed automatically.</div>
+
+    <div class="field"><label class="flabel">Date *</label><input type="text" id="ml-date" placeholder="DD-MM-YYYY" maxlength="10"></div>
+    <div class="field"><label class="flabel">State / UT *</label><div class="sel-wrap"><select id="ml-state" onchange="populateDistricts('ml-state','ml-district')"></select></div></div>
+    <div class="field"><label class="flabel">District *</label><div class="sel-wrap"><select id="ml-district"><option value="" disabled selected>Select District…</option></select></div></div>
+    <div class="field"><label class="flabel">Location / Area *</label><textarea id="ml-location" rows="2" placeholder="Village, ward, landmark…"></textarea></div>
+    <div class="field"><label class="flabel">Surveillance Worker(s) *</label><textarea id="ml-workers" rows="2" placeholder="Names of field workers…"></textarea></div>
+    <div class="field"><label class="flabel">Senior Officer</label><textarea id="ml-officers" rows="1" placeholder="Name of supervising officer…"></textarea></div>
+
+    <div style="background:var(--sfc);border:1px solid var(--olv);border-radius:var(--rmd);padding:11px;margin-bottom:13px;">
+      <div class="sec-lbl" style="margin-bottom:9px;">GPS Coordinates (Optional)</div>
+      <div class="man-grid">
+        <div class="mf"><label>Latitude (°N)</label><input type="number" step="any" id="ml-lat" placeholder="e.g. 11.6234"></div>
+        <div class="mf"><label>Longitude (°E)</label><input type="number" step="any" id="ml-lng" placeholder="e.g. 92.7265"></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="sec-hdr"><span class="sec-lbl" style="color:var(--larval);">Aedes Container Survey (Stegomyia Indices)</span></div>
+    <div class="row2">
+      <div class="field"><label class="flabel">Houses Examined</label><input type="number" min="0" id="ml-houses" value="0"></div>
+      <div class="field"><label class="flabel">House Positive (Aedes)</label><input type="number" min="0" id="ml-housepos" value="0"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label class="flabel">Total Containers</label><input type="number" min="0" id="ml-containers" value="0"></div>
+      <div class="field"><label class="flabel">Positive Containers</label><input type="number" min="0" id="ml-poscontainers" value="0"></div>
+    </div>
+    <div class="field"><label class="flabel">Pupae from Containers (Aedes — for Pupal Index)</label><input type="number" min="0" id="ml-pupalcont" value="0"></div>
+
+    <div class="divider"></div>
+    <div class="sec-hdr"><span class="sec-lbl" style="color:var(--larval);">Anopheles / Culex Larval Dipping</span></div>
+    <div class="row2">
+      <div class="field"><label class="flabel">Total Dips Taken</label><input type="number" min="0" id="ml-dips" value="0"></div>
+      <div class="field"><label class="flabel">Larvae Collected (An/Cx)</label><input type="number" min="0" id="ml-larvae" value="0"></div>
+    </div>
+    <div class="field"><label class="flabel">Pupae Collected (An/Cx)</label><input type="number" min="0" id="ml-pupae" value="0"></div>
+
+    <div class="field"><label class="flabel">Remarks (Optional)</label><textarea id="ml-remarks" rows="2" placeholder="Any observations or notes…"></textarea></div>
+
+    <div class="field-err" id="ml-err" style="margin-bottom:10px;font-size:12px;color:var(--err);display:none;"></div>
+    <button class="btn-p larval-btn" onclick="saveManualLarval()"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>Save Larval Survey</button>
+    <div style="margin-top:9px;"><button class="btn-s larval-s" onclick="showScreen('manual-entry')"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>&nbsp;Back</button></div>
+    <div style="height:16px;"></div>
+  </div>
+</div>
 
 <!-- ══ ADULT SUB-MODULE SELECTION ══ -->
 <div class="screen" id="screen-adult-submod">
@@ -2197,7 +2365,7 @@ function showScreen(id){
     else if(id!=='dash'){nav.style.display='flex';}
   }
   ['home','survey','collect','review','saved'].forEach(k=>{const b=document.getElementById('nav-'+k);if(b)b.classList.remove('active','larval-active');});
-  const nm={'dash':'home','adult-submod':'survey','adult-survey':'survey','adult-collect':'collect','adult-review':'review','larval-survey':'survey','larval-collect':'collect','larval-review':'review','saved':'saved'};
+  const nm={'dash':'home','adult-submod':'survey','adult-survey':'survey','adult-collect':'collect','adult-review':'review','larval-survey':'survey','larval-collect':'collect','larval-review':'review','saved':'saved','manual-entry':'survey','manual-adult':'survey','manual-larval':'survey'};
   const nb=nm[id];if(nb){const el=document.getElementById('nav-'+nb);if(el)el.classList.add(activeModule==='larval'?'larval-active':'active');}
   const badge=document.getElementById('hmod-badge');
   if(badge){
@@ -4720,6 +4888,169 @@ function exitViewMode(){
   const bar=document.getElementById('view-mode-bar');if(bar)bar.style.display='none';
   document.body.classList.remove('view-mode-active');
   showSavedTab(activeSavedTab);showScreen('saved');
+}
+
+/* ══ MANUAL ENTRY ════════════════════════════════════════════ */
+const MAN_A_SAVED='est_manual_adult', MAN_L_SAVED='est_manual_larval';
+
+function openManualEntry(){showScreen('manual-entry');}
+
+function startManualAdult(){
+  ['ma-date','ma-location','ma-workers','ma-officers'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('ma-date').value=todayStr();
+  const n1=document.getElementById('ma-nights');if(n1)n1.value='1';
+  const c1=document.getElementById('ma-collectors');if(c1)c1.value='1';
+  ['ma-hours','ma-days','ma-houses','ma-housepos','ma-rooms','ma-roomspos','ma-nonculex','ma-culex','ma-indoor','ma-outdoor'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='0';});
+  const latEl=document.getElementById('ma-lat');const lngEl=document.getElementById('ma-lng');if(latEl)latEl.value='';if(lngEl)lngEl.value='';
+  maTotUpdate();
+  const errEl=document.getElementById('ma-err');if(errEl)errEl.style.display='none';
+  if(document.getElementById('ma-state')&&document.getElementById('ma-state').options.length<2) populateStates('ma-state');
+  showScreen('manual-adult');
+}
+
+function maTotUpdate(){
+  const nc=parseInt(document.getElementById('ma-nonculex')?.value)||0;
+  const cx=parseInt(document.getElementById('ma-culex')?.value)||0;
+  const el=document.getElementById('ma-total-disp');
+  if(el)el.textContent=nc+cx;
+}
+
+function saveManualAdult(){
+  const date=(document.getElementById('ma-date')?.value||'').trim();
+  const location=(document.getElementById('ma-location')?.value||'').trim();
+  const workers=(document.getElementById('ma-workers')?.value||'').trim();
+  const state=document.getElementById('ma-state')?.value||'';
+  const district=document.getElementById('ma-district')?.value||'';
+  const errEl=document.getElementById('ma-err');
+  if(errEl)errEl.style.display='none';
+  const miss=[];
+  if(!date||date.length<6) miss.push('Date');
+  if(!state) miss.push('State/UT');
+  if(!district) miss.push('District');
+  if(!location) miss.push('Location');
+  if(!workers) miss.push('Workers');
+  if(miss.length){if(errEl){errEl.textContent='Required: '+miss.join(', ');errEl.style.display='block';}return;}
+  const nc=parseInt(document.getElementById('ma-nonculex')?.value)||0;
+  const cx=parseInt(document.getElementById('ma-culex')?.value)||0;
+  const totalMosq=nc+cx;
+  const hours=parseFloat(document.getElementById('ma-hours')?.value)||0;
+  const collectors=parseInt(document.getElementById('ma-collectors')?.value)||1;
+  const survey={
+    id:Date.now(), savedAt:new Date().toISOString(), savedBy:window._estUser?.username||'',
+    appType:'adult', entryType:'manual', v:'2.0',
+    collType:document.getElementById('ma-colltype')?.value||'resting',
+    date, state, district, location, workers,
+    officers:(document.getElementById('ma-officers')?.value||'').trim(),
+    collectors, nights:parseInt(document.getElementById('ma-nights')?.value)||0,
+    days:parseInt(document.getElementById('ma-days')?.value)||0,
+    lat:(document.getElementById('ma-lat')?.value||'').trim(),
+    lng:(document.getElementById('ma-lng')?.value||'').trim(),
+    houses:[],
+    housesExamined:parseInt(document.getElementById('ma-houses')?.value)||0,
+    housePositive:parseInt(document.getElementById('ma-housepos')?.value)||0,
+    totalRooms:parseInt(document.getElementById('ma-rooms')?.value)||0,
+    positiveRooms:parseInt(document.getElementById('ma-roomspos')?.value)||0,
+    totNonCulex:nc, totCulex:cx, totalMosq,
+    totIndoor:parseInt(document.getElementById('ma-indoor')?.value)||0,
+    totOutdoor:parseInt(document.getElementById('ma-outdoor')?.value)||0,
+    totalManHours:parseFloat((hours*collectors).toFixed(4)),
+    MHD:hours>0&&collectors>0?(totalMosq/(hours*collectors)).toFixed(2):'—',
+    TMHD:hours>0&&collectors>0?((cx/(hours*collectors))*10).toFixed(2):'—',
+    synced:false
+  };
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(MAN_A_SAVED)||'[]');}catch(e){}
+  saved.unshift(survey);
+  try{localStorage.setItem(MAN_A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}
+  ghPushManualSurvey(survey,'adult').then(ok=>{
+    if(ok){saved=saved.map(s=>s.id===survey.id?{...s,synced:true}:s);try{localStorage.setItem(MAN_A_SAVED,JSON.stringify(saved));}catch(e){}}
+  });
+  showToast('Adult manual survey saved ✓','check');
+  showScreen('manual-entry');
+}
+
+function startManualLarval(){
+  ['ml-date','ml-location','ml-workers','ml-officers','ml-remarks'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const dl=document.getElementById('ml-date');if(dl)dl.value=todayStr();
+  ['ml-houses','ml-housepos','ml-containers','ml-poscontainers','ml-pupalcont','ml-dips','ml-larvae','ml-pupae'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='0';});
+  const latEl=document.getElementById('ml-lat');const lngEl=document.getElementById('ml-lng');if(latEl)latEl.value='';if(lngEl)lngEl.value='';
+  const errEl=document.getElementById('ml-err');if(errEl)errEl.style.display='none';
+  if(document.getElementById('ml-state')&&document.getElementById('ml-state').options.length<2) populateStates('ml-state');
+  showScreen('manual-larval');
+}
+
+function saveManualLarval(){
+  const date=(document.getElementById('ml-date')?.value||'').trim();
+  const location=(document.getElementById('ml-location')?.value||'').trim();
+  const workers=(document.getElementById('ml-workers')?.value||'').trim();
+  const state=document.getElementById('ml-state')?.value||'';
+  const district=document.getElementById('ml-district')?.value||'';
+  const errEl=document.getElementById('ml-err');
+  if(errEl)errEl.style.display='none';
+  const miss=[];
+  if(!date||date.length<6) miss.push('Date');
+  if(!state) miss.push('State/UT');
+  if(!district) miss.push('District');
+  if(!location) miss.push('Location');
+  if(!workers) miss.push('Workers');
+  if(miss.length){if(errEl){errEl.textContent='Required: '+miss.join(', ');errEl.style.display='block';}return;}
+  const houses=parseInt(document.getElementById('ml-houses')?.value)||0;
+  const housePos=parseInt(document.getElementById('ml-housepos')?.value)||0;
+  const containers=parseInt(document.getElementById('ml-containers')?.value)||0;
+  const posContainers=parseInt(document.getElementById('ml-poscontainers')?.value)||0;
+  const pupalCont=parseInt(document.getElementById('ml-pupalcont')?.value)||0;
+  const dips=parseInt(document.getElementById('ml-dips')?.value)||0;
+  const larvae=parseInt(document.getElementById('ml-larvae')?.value)||0;
+  const pupae=parseInt(document.getElementById('ml-pupae')?.value)||0;
+  const survey={
+    id:Date.now(), savedAt:new Date().toISOString(), savedBy:window._estUser?.username||'',
+    appType:'larval', entryType:'manual', v:'2.0',
+    date, state, district, location, workers,
+    officers:(document.getElementById('ml-officers')?.value||'').trim(),
+    lat:(document.getElementById('ml-lat')?.value||'').trim(),
+    lng:(document.getElementById('ml-lng')?.value||'').trim(),
+    houses:[],
+    housesExamined:houses,
+    housePositive:housePos,
+    totalContainers:containers,
+    totalPositive:posContainers,
+    totalPupalContainers:pupalCont,
+    totalDips:dips,
+    totalLarvae:larvae,
+    totalPupae:pupae,
+    HI:houses>0?((housePos/houses)*100).toFixed(1):'0',
+    CI:containers>0?((posContainers/containers)*100).toFixed(1):'0',
+    BI:houses>0?((posContainers/houses)*100).toFixed(1):'0',
+    PI:houses>0?((pupalCont/houses)*100).toFixed(1):'0',
+    remarks:(document.getElementById('ml-remarks')?.value||'').trim(),
+    synced:false
+  };
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(MAN_L_SAVED)||'[]');}catch(e){}
+  saved.unshift(survey);
+  try{localStorage.setItem(MAN_L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}
+  ghPushManualSurvey(survey,'larval').then(ok=>{
+    if(ok){saved=saved.map(s=>s.id===survey.id?{...s,synced:true}:s);try{localStorage.setItem(MAN_L_SAVED,JSON.stringify(saved));}catch(e){}}
+  });
+  showToast('Larval manual survey saved ✓','check');
+  showScreen('manual-entry');
+}
+
+async function ghPushManualSurvey(surveyData,mod){
+  if(!GH_CONFIG.owner||!GH_CONFIG.token||!navigator.onLine) return false;
+  const d=new Date(surveyData.savedAt||Date.now());
+  const timeStr=d.toISOString().replace(/[:.]/g,'-').slice(0,19);
+  const filename=`${GH_DATA_PREFIX}manual/${mod}-${timeStr}-${surveyData.id}.json`;
+  const content=b64Encode(JSON.stringify(surveyData,null,2));
+  try{
+    const resp=await fetch(ghDataApiUrl(filename),{
+      method:'PUT',
+      headers:{...ghHeaders(),'Content-Type':'application/json'},
+      body:JSON.stringify({
+        message:`[EST Manual] ${mod} survey — ${surveyData.location||surveyData.district||'unknown'} — ${surveyData.date||''}`,
+        content,branch:GH_CONFIG.branch
+      })
+    });
+    return resp.ok||resp.status===422;
+  }catch(e){return false;}
 }
 
 /* ── SCREENSHOT DETERRENCE ─────────────────────────── */

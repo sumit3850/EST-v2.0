@@ -328,6 +328,10 @@ tr:hover td{background:var(--teal-lt);}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
       <span class="nav-item-label">Survey Maps</span>
     </button>
+    <button class="nav-item" id="nav-manual" onclick="switchSection('manual',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <span class="nav-item-label">Manual Data</span>
+    </button>
     <div class="nav-section">Admin</div>
     <button class="nav-item" id="nav-users" onclick="switchSection('users',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M3 20c0-3.3 2.7-6 6-6h1"/><circle cx="17" cy="17" r="3"/><path d="M17 14v2l1.5 1.5"/></svg>
@@ -559,6 +563,47 @@ tr:hover td{background:var(--teal-lt);}
       </div>
     </div>
 
+    <!-- Manual Data Panel -->
+    <div class="panel" id="panel-manual">
+      <div class="section-head">
+        <h2>Manual Data — Adult Surveys</h2>
+        <div class="section-head-actions">
+          <button class="tb-btn blue" onclick="exportManual('adult')">⬇ Export Adult XLSX</button>
+        </div>
+      </div>
+      <div class="tbl-outer">
+        <div class="tbl-wrap">
+          <table id="tbl-manual-adult">
+            <thead><tr>
+              <th>#</th><th>Survey ID</th><th>Entered By</th><th>Date</th><th>Location</th><th>State</th><th>District</th>
+              <th>Type</th><th>Collectors</th><th>Man-Hrs</th><th>Houses</th><th>+ve Houses</th>
+              <th>Non-Culex</th><th>Culex</th><th>Total Mosq</th><th>Officer</th><th>Saved</th><th>Sync</th><th>Del</th>
+            </tr></thead>
+            <tbody id="tbody-manual-adult"><tr><td colspan="19" class="tbl-empty">No manual adult entries found</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="section-head" style="margin-top:20px;">
+        <h2>Manual Data — Larval Surveys</h2>
+        <div class="section-head-actions">
+          <button class="tb-btn blue" onclick="exportManual('larval')">⬇ Export Larval XLSX</button>
+        </div>
+      </div>
+      <div class="tbl-outer">
+        <div class="tbl-wrap">
+          <table id="tbl-manual-larval">
+            <thead><tr>
+              <th>#</th><th>Survey ID</th><th>Entered By</th><th>Date</th><th>Location</th><th>State</th><th>District</th>
+              <th>Houses</th><th>+ve Houses</th><th>Containers</th><th>+ve Cont</th><th>Pupal Cont</th>
+              <th>Dips</th><th>Larvae (An/Cx)</th><th>Pupae (An/Cx)</th>
+              <th>HI%</th><th>CI%</th><th>PI%</th><th>Officer</th><th>Saved</th><th>Sync</th><th>Del</th>
+            </tr></thead>
+            <tbody id="tbody-manual-larval"><tr><td colspan="22" class="tbl-empty">No manual larval entries found</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </div><!-- .main-content -->
 </div><!-- .main-wrapper -->
 </div><!-- #app -->
@@ -582,6 +627,7 @@ tr:hover td{background:var(--teal-lt);}
 const DASH_U='ANIENTO', DASH_P='2026', DASH_KEY='est_dash_creds';
 let GH={owner:'',repo:'EST-v2.0',token:''};
 let allAdult=[],allLarval=[],adultF=[],larvalF=[],usersCfg=[];
+let allManualAdult=[],allManualLarval=[];
 /* Compact human-readable Survey ID: A-260531-1437 */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -673,26 +719,32 @@ async function loadAll(){
         files.forEach(f=>{if(f.name.startsWith('adult-'))aFiles.push(f.path);else if(f.name.startsWith('larval-'))lFiles.push(f.path);});
       }
     }
-    allAdult=(await Promise.all(aFiles.map(f=>ghGet(f).then(d=>{const s=JSON.parse(b64d(d.content));s._path=f;s._sha=d.sha;return s;}).catch(()=>null)))).filter(Boolean);
-    allLarval=(await Promise.all(lFiles.map(f=>ghGet(f).then(d=>{const s=JSON.parse(b64d(d.content));s._path=f;s._sha=d.sha;return s;}).catch(()=>null)))).filter(Boolean);
+    const loadedAdult=(await Promise.all(aFiles.map(f=>ghGet(f).then(d=>{const s=JSON.parse(b64d(d.content));s._path=f;s._sha=d.sha;return s;}).catch(()=>null)))).filter(Boolean);
+    const loadedLarval=(await Promise.all(lFiles.map(f=>ghGet(f).then(d=>{const s=JSON.parse(b64d(d.content));s._path=f;s._sha=d.sha;return s;}).catch(()=>null)))).filter(Boolean);
+    allManualAdult=loadedAdult.filter(s=>s.entryType==='manual');
+    allManualLarval=loadedLarval.filter(s=>s.entryType==='manual');
+    allAdult=loadedAdult.filter(s=>s.entryType!=='manual');
+    allLarval=loadedLarval.filter(s=>s.entryType!=='manual');
     allAdult.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
     allLarval.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
+    allManualAdult.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
+    allManualLarval.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
     adultF=[...allAdult];larvalF=[...allLarval];
     const cfg=await ghGet('config.json').then(d=>JSON.parse(b64d(d.content))).catch(()=>null);
     if(cfg)usersCfg=cfg.credentials||[];
-    updateStats();renderAdult();renderLarval();renderUsers();renderAlerts();buildMapCarousel();
-    pill.textContent='Connected ✓ ('+allAdult.length+'A + '+allLarval.length+'L)';pill.classList.add('ok');
+    updateStats();renderAdult();renderLarval();renderManualAdult();renderManualLarval();renderUsers();renderAlerts();buildMapCarousel();
+    pill.textContent='Connected ✓ ('+allAdult.length+'A + '+allLarval.length+'L'+(allManualAdult.length+allManualLarval.length?' + '+(allManualAdult.length+allManualLarval.length)+' Manual':'')+')';pill.classList.add('ok');
     document.getElementById('st-sync').textContent=new Date().toLocaleTimeString();
     setStatus('');
   }catch(e){setStatus('Error: '+e.message,'err');pill.textContent='Error';}
 }
 function updateStats(){
-  document.getElementById('st-adult').textContent=allAdult.length;
-  document.getElementById('st-larval').textContent=allLarval.length;
-  document.getElementById('st-mosq').textContent=allAdult.reduce((s,a)=>s+(a.totalMosq||0),0).toLocaleString();
+  document.getElementById('st-adult').textContent=allAdult.length+(allManualAdult.length?' (+'+allManualAdult.length+' manual)':'');
+  document.getElementById('st-larval').textContent=allLarval.length+(allManualLarval.length?' (+'+allManualLarval.length+' manual)':'');
+  document.getElementById('st-mosq').textContent=([...allAdult,...allManualAdult]).reduce((s,a)=>s+(a.totalMosq||0),0).toLocaleString();
   const hiVals=allLarval.map(l=>parseFloat(l.HI)).filter(v=>!isNaN(v));
   document.getElementById('st-hi').textContent=hiVals.length?(hiVals.reduce((a,b)=>a+b,0)/hiVals.length).toFixed(1)+'%':'—';
-  document.getElementById('st-loc').textContent=new Set([...allAdult.map(a=>a.location),...allLarval.map(l=>l.location)].filter(Boolean)).size;
+  document.getElementById('st-loc').textContent=new Set([...allAdult,...allManualAdult,...allLarval,...allManualLarval].map(a=>a.location).filter(Boolean)).size;
 }
 
 /* ── RENDER TABLES ── */
@@ -773,6 +825,68 @@ function renderUsers(){
     </div>`).join('');
 }
 function addUser(){usersCfg.push({username:'',password:'',role:'field',active:true});renderUsers();}
+
+function renderManualAdult(){
+  const tb=document.getElementById('tbody-manual-adult');
+  if(!tb)return;
+  if(!allManualAdult.length){tb.innerHTML='<tr><td colspan="19" class="tbl-empty">No manual adult entries found</td></tr>';return;}
+  tb.innerHTML=allManualAdult.map((s,i)=>{
+    const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
+    const typeLabel=s.collType==='resting'?'Resting':s.collType==='hlc'?'HLC':s.collType==='hbr'?'HBR':'ALR';
+    const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','adult')" title="Delete" style="padding:0 8px;height:28px;">🗑</button>`:'—';
+    return `<tr>
+      <td>${i+1}</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--warn);">${fmtSid('adult',s.id)}</td>
+      <td style="font-weight:600;">${s.savedBy||'-'}</td>
+      <td>${s.date||'-'}</td>
+      <td style="font-weight:600;">${s.location||'-'}</td>
+      <td>${s.state||'-'}</td><td>${s.district||'-'}</td>
+      <td><span class="badge rest">${typeLabel}</span></td>
+      <td>${s.collectors||1}</td>
+      <td>${s.totalManHours?.toFixed?s.totalManHours.toFixed(2):'-'}</td>
+      <td>${s.housesExamined||0}</td><td>${s.housePositive||0}</td>
+      <td>${s.totNonCulex||0}</td><td>${s.totCulex||0}</td><td>${s.totalMosq||0}</td>
+      <td>${s.officers||'-'}</td>
+      <td>${saved}</td>
+      <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓':'Pending'}</span></td>
+      <td>${delBtn}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderManualLarval(){
+  const tb=document.getElementById('tbody-manual-larval');
+  if(!tb)return;
+  if(!allManualLarval.length){tb.innerHTML='<tr><td colspan="22" class="tbl-empty">No manual larval entries found</td></tr>';return;}
+  tb.innerHTML=allManualLarval.map((s,i)=>{
+    const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
+    const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','larval')" title="Delete" style="padding:0 8px;height:28px;">🗑</button>`:'—';
+    return `<tr>
+      <td>${i+1}</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--warn);">${fmtSid('larval',s.id)}</td>
+      <td style="font-weight:600;">${s.savedBy||'-'}</td>
+      <td>${s.date||'-'}</td>
+      <td style="font-weight:600;">${s.location||'-'}</td>
+      <td>${s.state||'-'}</td><td>${s.district||'-'}</td>
+      <td>${s.housesExamined||0}</td><td>${s.housePositive||0}</td>
+      <td>${s.totalContainers||0}</td><td>${s.totalPositive||0}</td><td>${s.totalPupalContainers||0}</td>
+      <td>${s.totalDips||0}</td><td>${s.totalLarvae||0}</td><td>${s.totalPupae||0}</td>
+      <td>${s.HI||'0'}</td><td>${s.CI||'0'}</td><td>${s.PI||'0'}</td>
+      <td>${s.officers||'-'}</td>
+      <td>${saved}</td>
+      <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓':'Pending'}</span></td>
+      <td>${delBtn}</td>
+    </tr>`;
+  }).join('');
+}
+
+function exportManual(mod){
+  const dn=new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const src=mod==='adult'?allManualAdult:allManualLarval;
+  if(!src.length){alert('No manual '+mod+' data to export.');return;}
+  dlXLSX(mod==='adult'?buildAdultXLSX(src,src.length>1):buildLarvalXLSX(src,src.length>1),'EST_Manual_'+mod+'_'+dn+'.xlsx');
+}
+
 async function saveUsers(){
   if(!GH.owner||!GH.token){alert('Connect to GitHub first');return;}
   setStatus('Saving to GitHub…','info');
@@ -1006,8 +1120,11 @@ function buildAdultXLSX(surveys,isCompiled){
     const rows=[HDR];
     slist.forEach((s,si)=>{
       const r=si+2;
-      const posH=(s.houses||[]).filter(h=>(h.total||0)>0||(h.positiveRooms||0)>0).length;
-      const posRooms=(s.houses||[]).reduce((t,h)=>t+(h.positiveRooms||0),0);
+      const _posH=(s.houses||[]).filter(h=>(h.total||0)>0||(h.positiveRooms||0)>0).length;
+      const _posRooms=(s.houses||[]).reduce((t,h)=>t+(h.positiveRooms||0),0);
+      const posH=s.housePositive??_posH;
+      const posRooms=s.positiveRooms??_posRooms;
+      const housesEx=s.housesExamined??s.houses?.length??0;
       const indOut=(s.totIndoor||0)>=(s.totOutdoor||0)?'Indoor':'Outdoor';
       // Cols (no null gap): A=Survey# B=ID C=Date D=State E=District F=Location G=Type H=In/Out
       //   I=Nights J=Days K=Houses L=HousePos M=Rooms N=RoomsPos O=NonCulex P=Culex Q=TotMosq
@@ -1016,7 +1133,7 @@ function buildAdultXLSX(surveys,isCompiled){
       rows.push([
         C(si+1), C(fmtSid('adult',s.id)), C(s.date||''), C(s.state||''), s.district||'', s.location||'',
         typeLabel, inoutLabel||indOut,
-        C(s.nights||0), C(s.days||0), C(s.houses?.length||0), C(posH),
+        C(s.nights||0), C(s.days||0), C(housesEx), C(posH),
         C(s.totalRooms||0), C(posRooms),
         C(s.totNonCulex||0), C(s.totCulex||0), C(s.totalMosq||0),
         C(parseFloat((s.totalManHours||0).toFixed(2))),
@@ -1086,8 +1203,11 @@ function buildLarvalXLSX(surveys,isCompiled){
   const sumRows=[sumHDR];
   surveys.forEach((s,si)=>{
     const r=si+2; // Excel row number (header is row 1, first data row is 2)
-    const posH=(s.houses||[]).filter(h=>h.housePositive).length;
-    const pupCont=(s.houses||[]).reduce((t,h)=>t+(h.pupal||0),0);
+    const _posH=(s.houses||[]).filter(h=>h.housePositive).length;
+    const _pupCont=(s.houses||[]).reduce((t,h)=>t+(h.pupal||0),0);
+    const posH=s.housePositive??_posH;
+    const pupCont=s.totalPupalContainers??_pupCont;
+    const housesEx=s.housesExamined??s.houses?.length??0;
     const larvaeAnCx=(s.dipSites&&s.dipSites.length)
       ?(s.dipSites||[]).reduce((t,d)=>t+(d.larvae||0),0)
       :(s.totalLarvae||0);
@@ -1096,7 +1216,7 @@ function buildLarvalXLSX(surveys,isCompiled){
       :(s.totalPupae||0);
     sumRows.push([
       C(si+1), C(fmtSid('larval',s.id)), C(s.date||''), C(s.state||''), C(s.district||''), s.location||'',
-      C(s.houses?.length||0), C(posH), C(s.totalContainers||0), C(s.totalPositive||0), C(s.totalDips||0),
+      C(housesEx), C(posH), C(s.totalContainers||0), C(s.totalPositive||0), C(s.totalDips||0),
       C(larvaeAnCx), C(pupCont), C(pupAnCx),
       // HI = Positive Houses / Houses * 100
       CF('IFERROR(H'+r+'/G'+r+'*100,0)'),
@@ -1640,7 +1760,7 @@ function switchSection(name, btn) {
   btn.classList.add('active');
   const panel = document.getElementById('panel-' + name);
   if (panel) panel.classList.add('active');
-  const labels = {overview:'Overview', adult:'Adult Surveillance', larval:'Larval Surveillance', maps:'Survey Maps', users:'Manage Users'};
+  const labels = {overview:'Overview', adult:'Adult Surveillance', larval:'Larval Surveillance', maps:'Survey Maps', manual:'Manual Data', users:'Manage Users'};
   if(name==='maps') buildMapCarousel();
   const bc = document.getElementById('bc-main');
   if (bc) bc.textContent = labels[name] || name;
