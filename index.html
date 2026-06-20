@@ -445,7 +445,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
         </svg>
       </div>
       <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub" id="dash-sub-ver">EST v2.0.64</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.0.65</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -491,7 +491,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About <span id="dash-about-ver">EST v2.0.64</span>
+      About <span id="dash-about-ver">EST v2.0.65</span>
     </button>
     <div id="dash-bottom-ver" style="text-align:center;font-size:10px;color:rgba(255,255,255,.2);margin-top:8px;">EST v2.0 · Data stored locally — works offline</div>
   </div>
@@ -620,6 +620,10 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
       <div class="field"><label class="flabel">Indoor (Resting)</label><input type="number" min="0" id="ma-indoor" value="0"></div>
       <div class="field"><label class="flabel">Outdoor (Resting)</label><input type="number" min="0" id="ma-outdoor" value="0"></div>
     </div>
+    <div class="row2">
+      <div class="field"><label class="flabel">Total Male Collected</label><input type="number" min="0" id="ma-male" value="0"></div>
+      <div class="field"><label class="flabel">Total Female Collected</label><input type="number" min="0" id="ma-female" value="0"></div>
+    </div>
     <div style="background:var(--gbg);border:1.5px solid var(--pl);border-radius:var(--rmd);padding:11px 14px;margin-bottom:13px;display:flex;align-items:center;justify-content:space-between;">
       <div><div class="sec-lbl" style="margin-bottom:2px;">Total Mosquitoes</div><div style="font-size:10px;color:var(--osv);">Non-Culex + Culex</div></div>
       <div id="ma-total-disp" style="font-family:var(--mono);font-size:26px;font-weight:700;color:var(--primary);">0</div>
@@ -685,11 +689,15 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 
     <div class="divider"></div>
     <div class="sec-hdr"><span class="sec-lbl" style="color:var(--larval);">Anopheles / Culex Larval Dipping</span></div>
+    <div class="field"><label class="flabel">Total Dips Taken</label><input type="number" min="0" id="ml-dips" value="0"></div>
     <div class="row2">
-      <div class="field"><label class="flabel">Total Dips Taken</label><input type="number" min="0" id="ml-dips" value="0"></div>
-      <div class="field"><label class="flabel">Larvae Collected (An/Cx)</label><input type="number" min="0" id="ml-larvae" value="0"></div>
+      <div class="field"><label class="flabel">Anopheles Larvae</label><input type="number" min="0" id="ml-larvae" value="0"></div>
+      <div class="field"><label class="flabel">Culex Larvae</label><input type="number" min="0" id="ml-cx-larvae" value="0"></div>
     </div>
-    <div class="field"><label class="flabel">Pupae Collected (An/Cx)</label><input type="number" min="0" id="ml-pupae" value="0"></div>
+    <div class="row2">
+      <div class="field"><label class="flabel">Anopheles Pupae</label><input type="number" min="0" id="ml-pupae" value="0"></div>
+      <div class="field"><label class="flabel">Culex Pupae</label><input type="number" min="0" id="ml-cx-pupae" value="0"></div>
+    </div>
 
     <div class="field"><label class="flabel">Remarks (Optional)</label><textarea id="ml-remarks" rows="2" placeholder="Any observations or notes…"></textarea></div>
 
@@ -2088,7 +2096,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.0.64';
+const APP_VER='2.0.65';
 /* Compact human-readable Survey ID: A-260531-1437 (type + YYMMDD + HHMM) */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -3445,12 +3453,12 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.0.64)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.0.65)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
     ['Indices Generated','Yes'],
-    ['Coordinates Generated','Yes'],
+    ['Coordinates Generated',surveys.some(s=>s.lat&&s.lng)?'Yes':'No'],
     ['Abbreviations','Full Form'],
     ['PMHD','Per Man Hour Density'],
     ['TMHD','Ten Man Hour Density'],
@@ -3490,8 +3498,8 @@ function buildAdultXLSX(surveys,isCompiled){
         s.totCulex||0,
         s.totalMosq||0,
         parseFloat((s.totalManHours||0).toFixed(2)),
-        0,
-        s.totalMosq||0,
+        s.totalMale||0,
+        s.totalFemale||0,
         s.collectors||1,
         {f:'IFERROR(R'+r+'/S'+r+',0)'},
         {f:'IFERROR(Q'+r+'/S'+r+'*10,0)'},
@@ -3520,12 +3528,12 @@ function buildAdultXLSX(surveys,isCompiled){
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.0.64)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.0.65)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
     ['Indices Generated','Yes'],
-    ['Coordinates Generated','Yes'],
+    ['Coordinates Generated',surveys.some(s=>s.lat&&s.lng)?'Yes':'No'],
     ['Abbreviations','Full Form'],
     ['PMHD','Per Man Hour Density'],
     ['TMHD','Ten Man Hour Density'],
@@ -4980,7 +4988,7 @@ function startManualAdult(){
   document.getElementById('ma-date').value=todayStr();
   const n1=document.getElementById('ma-nights');if(n1)n1.value='1';
   const c1=document.getElementById('ma-collectors');if(c1)c1.value='1';
-  ['ma-hours','ma-days','ma-houses','ma-housepos','ma-rooms','ma-roomspos','ma-nonculex','ma-culex','ma-indoor','ma-outdoor'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='0';});
+  ['ma-hours','ma-days','ma-houses','ma-housepos','ma-rooms','ma-roomspos','ma-nonculex','ma-culex','ma-indoor','ma-outdoor','ma-male','ma-female'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='0';});
   const latEl=document.getElementById('ma-lat');const lngEl=document.getElementById('ma-lng');if(latEl)latEl.value='';if(lngEl)lngEl.value='';
   maTotUpdate();
   const errEl=document.getElementById('ma-err');if(errEl)errEl.style.display='none';
@@ -5022,6 +5030,8 @@ function saveManualAdult(){
   const totalMosq=nc+cx;
   const hours=parseFloat(document.getElementById('ma-hours')?.value)||0;
   const collectors=parseInt(document.getElementById('ma-collectors')?.value)||1;
+  const totalMale=parseInt(document.getElementById('ma-male')?.value)||0;
+  const totalFemale=parseInt(document.getElementById('ma-female')?.value)||0;
   const survey={
     id:Date.now(), savedAt:new Date().toISOString(), savedBy:window._estUser?.username||'',
     appType:'adult', entryType:'manual', v:'2.0.61',
@@ -5040,6 +5050,8 @@ function saveManualAdult(){
     totNonCulex:nc, totCulex:cx, totalMosq,
     totIndoor:parseInt(document.getElementById('ma-indoor')?.value)||0,
     totOutdoor:parseInt(document.getElementById('ma-outdoor')?.value)||0,
+    totalMale,
+    totalFemale,
     totalManHours:parseFloat((hours*collectors).toFixed(4)),
     MHD:hours>0&&collectors>0?(totalMosq/(hours*collectors)).toFixed(2):'—',
     TMHD:hours>0&&collectors>0?((cx/(hours*collectors))*10).toFixed(2):'—',
@@ -5097,8 +5109,12 @@ function saveManualLarval(){
   if(posContainers>containers&&containers>0){if(errEl){errEl.textContent='Positive Containers ('+posContainers+') cannot exceed Containers Examined ('+containers+')';errEl.style.display='block';}return;}
   const pupalCont=parseInt(document.getElementById('ml-pupalcont')?.value)||0;
   const dips=parseInt(document.getElementById('ml-dips')?.value)||0;
-  const larvae=parseInt(document.getElementById('ml-larvae')?.value)||0;
-  const pupae=parseInt(document.getElementById('ml-pupae')?.value)||0;
+  const anLarvae=parseInt(document.getElementById('ml-larvae')?.value)||0;
+  const cxLarvae=parseInt(document.getElementById('ml-cx-larvae')?.value)||0;
+  const anPupae=parseInt(document.getElementById('ml-pupae')?.value)||0;
+  const cxPupae=parseInt(document.getElementById('ml-cx-pupae')?.value)||0;
+  const larvae=anLarvae+cxLarvae;
+  const pupae=anPupae+cxPupae;
   const CONT_NAMES=['Pl. Drum','Mt. Drum','Buckets','Wt. Tank (Over Head)','Wt. Tank (Ground Lvl)','Wt. Tank (Under Gnd)','Cement Tank','Drain','Tyres','Other Containers','Flower Pots','Flower Trays','Mud Pots','Coolers / Refrig.','Broken Utensils','Coconut Shells','Tree Holes','Miscellaneous'];
   const containerSummary=CONT_NAMES.map((name,i)=>({
     name,
@@ -5125,6 +5141,9 @@ function saveManualLarval(){
     totalDips:dips,
     totalLarvae:larvae,
     totalPupae:pupae,
+    anLarvae,anPupae,cxLarvae,cxPupae,
+    LD:dips>0?(larvae/dips).toFixed(2):'0',
+    PD:dips>0?(pupae/dips).toFixed(2):'0',
     HI:houses>0?((housePos/houses)*100).toFixed(1):'0',
     CI:containers>0?((posContainers/containers)*100).toFixed(1):'0',
     BI:houses>0?((posContainers/houses)*100).toFixed(1):'0',
@@ -5174,7 +5193,7 @@ function clampContPos(i){
 function buildManualPDFHtml(s,type){
   const isAdult=type==='adult';
   const gpsStr=s.lat?parseFloat(s.lat).toFixed(5)+'°N, '+parseFloat(s.lng).toFixed(5)+'°E':'Not captured';
-  const css=`*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Times New Roman',serif;font-size:10.5pt;color:#111;}.page{width:210mm;min-height:297mm;margin:0 auto;padding:12mm 14mm 18mm;}.tb{background:linear-gradient(135deg,#004d42,#006b5c);color:#fff;border-radius:6px;padding:10px 14px;margin-bottom:10px;}.tb h1{font-size:13pt;font-weight:700;}.tb p{font-size:8.5pt;opacity:.8;margin-top:2px;}.ref{display:flex;flex-wrap:wrap;gap:4px;justify-content:space-between;font-size:8.5pt;color:#1b5e20;background:#e8f5e9;border-left:3px solid #006b5c;padding:5px 10px;margin-bottom:10px;}.sec{font-size:10.5pt;font-weight:bold;text-transform:uppercase;border-bottom:1.5px solid #a5d6a7;padding-bottom:2px;margin:12px 0 6px;color:#${isAdult?'006b5c':'1565c0'};letter-spacing:.04em;}.iw{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;}.ib{border:1px solid #80cbc4;border-radius:4px;padding:7px 6px;text-align:center;min-width:72px;flex:1;background:#e8f5e9;}.il{font-size:7pt;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#555;margin-bottom:2px;}.iv{font-size:13pt;font-weight:700;color:#006b5c;}.is{font-size:7pt;color:#777;margin-top:1px;}.mt{width:100%;border-collapse:collapse;margin-bottom:8px;}.mt td{padding:5px 8px;border:1px solid #ccc;font-size:9.5pt;text-align:left;}.mt td.lbl{background:#e8f5e9;font-weight:700;font-size:8.5pt;color:#1b5e20;width:25%;}table{width:100%;border-collapse:collapse;margin-bottom:8px;}thead tr{background:#${isAdult?'006b5c':'1565c0'};color:#fff;}thead th{padding:5px 7px;font-size:8pt;font-weight:700;text-align:center;}thead th:first-child{text-align:left;}td{padding:4px 7px;border-bottom:1px solid #e0e0e0;font-size:9.5pt;text-align:center;}td:first-child{text-align:left;}tr:nth-child(even) td{background:#f5fdf8;}.sig{display:flex;justify-content:space-between;gap:10px;margin-top:24px;padding-top:10px;border-top:1px solid #ccc;}.sb{flex:1;text-align:center;}.sl{border-top:1px solid #333;margin:0 auto 4px;width:88%;}.sn{font-size:9pt;font-weight:bold;}.sr{font-size:8pt;color:#555;margin-top:2px;}.footer{margin-top:12px;border-top:1px solid #ccc;padding-top:5px;font-size:7.5pt;color:#888;text-align:center;}.sb-fixed{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ccc;padding:10px;text-align:center;}.pb{background:#006b5c;color:#fff;border:none;padding:10px 30px;border-radius:6px;font-size:12pt;font-weight:bold;cursor:pointer;}.notice{background:#fff8e1;border:1px solid #ffd54f;border-radius:4px;padding:5px 10px;font-size:8.5pt;color:#7a5c00;margin-bottom:8px;}@media print{.sb-fixed{display:none!important;}@page{size:A4;margin:10mm;}}`;
+  const css=`*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Times New Roman',serif;font-size:10.5pt;color:#111;}.page{width:210mm;min-height:297mm;margin:0 auto;padding:12mm 14mm 18mm;}.tb{background:linear-gradient(135deg,#004d42,#006b5c);color:#fff;border-radius:6px;padding:10px 14px;margin-bottom:10px;}.tb h1{font-size:13pt;font-weight:700;}.tb p{font-size:8.5pt;opacity:.8;margin-top:2px;}.ref{display:flex;flex-wrap:wrap;gap:4px;justify-content:space-between;font-size:8.5pt;color:#1b5e20;background:#e8f5e9;border-left:3px solid #006b5c;padding:5px 10px;margin-bottom:10px;}.sec{font-size:10.5pt;font-weight:bold;text-transform:uppercase;border-bottom:1.5px solid #a5d6a7;padding-bottom:2px;margin:12px 0 6px;color:#${isAdult?'006b5c':'1565c0'};letter-spacing:.04em;}.iw{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;}.ib{border:1px solid #80cbc4;border-radius:4px;padding:7px 6px;text-align:center;min-width:72px;flex:1;background:#e8f5e9;}.il{font-size:7pt;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#555;margin-bottom:2px;}.iv{font-size:13pt;font-weight:700;color:#006b5c;}.is{font-size:7pt;color:#777;margin-top:1px;}.mt{width:100%;border-collapse:collapse;margin-bottom:8px;}.mt td{padding:5px 8px;border:1px solid #ccc;font-size:9.5pt;text-align:left;}.mt td.lbl{background:#e8f5e9;font-weight:700;font-size:8.5pt;color:#1b5e20;width:25%;}table{width:100%;border-collapse:collapse;margin-bottom:8px;}thead tr{background:#${isAdult?'006b5c':'1565c0'};color:#fff;}thead th{padding:5px 7px;font-size:8pt;font-weight:700;text-align:center;}thead th:first-child{text-align:left;}td{padding:4px 7px;border-bottom:1px solid #e0e0e0;font-size:9.5pt;text-align:center;}td:first-child{text-align:left;}tr:nth-child(even) td{background:#f5fdf8;}.sig{display:flex;justify-content:space-between;gap:10px;margin-top:52px;padding-top:10px;border-top:1px solid #ccc;}.sb{flex:1;text-align:center;}.sl{border-top:1px solid #333;margin:0 auto 4px;width:88%;}.sn{font-size:9pt;font-weight:bold;}.sr{font-size:8pt;color:#555;margin-top:2px;}.footer{margin-top:12px;border-top:1px solid #ccc;padding-top:5px;font-size:7.5pt;color:#888;text-align:center;}.sb-fixed{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ccc;padding:10px;text-align:center;}.pb{background:#006b5c;color:#fff;border:none;padding:10px 30px;border-radius:6px;font-size:12pt;font-weight:bold;cursor:pointer;}.notice{background:#fff8e1;border:1px solid #ffd54f;border-radius:4px;padding:5px 10px;font-size:8.5pt;color:#7a5c00;margin-bottom:8px;}@media print{.sb-fixed{display:none!important;}@page{size:A4;margin:10mm;}}`;
   let body='';
   if(isAdult){
     const collLabel=s.collType==='hlc'?'Human Landing Catch':s.collType==='hbr'?'HBR':s.collType==='alr'?'ALR':'Resting Collection';
@@ -5220,9 +5239,15 @@ ${s.totIndoor!==undefined?`<div class="ib"><div class="il">Indoor</div><div clas
     const CI=cont>0?((contPos/cont)*100).toFixed(1):'—';
     const BI=hEx>0?((contPos/hEx)*100).toFixed(1):'—';
     const PI=hEx>0?((pupCont/hEx)*100).toFixed(1):'—';
-    const imd=s.totalDips>0?(((s.totalLarvae||0)+(s.totalPupae||0))/s.totalDips*100).toFixed(1):'—';
-    let ctRows='';(s.containerSummary||[]).forEach(ct=>{if(ct.examined>0||ct.positive>0)ctRows+=`<tr><td>${ct.name}</td><td>${ct.examined}</td><td style="font-weight:700;">${ct.positive}</td><td>${ct.examined>0?((ct.positive/ct.examined)*100).toFixed(1)+'%':'—'}</td></tr>`;});
+    const _tLarv=(s.anLarvae||0)+(s.cxLarvae||0)||(s.totalLarvae||0);
+    const _tPup=(s.anPupae||0)+(s.cxPupae||0)||(s.totalPupae||0);
+    const LD_v=s.totalDips>0?(_tLarv/s.totalDips).toFixed(2):'—';
+    const PD_v=s.totalDips>0?(_tPup/s.totalDips).toFixed(2):'—';
+    const imd=s.totalDips>0?((_tLarv+_tPup)/s.totalDips).toFixed(2):'—';
+    let ctRows='';let _ctTotEx=0,_ctTotPos=0;
+    (s.containerSummary||[]).forEach(ct=>{if(ct.examined>0||ct.positive>0){ctRows+=`<tr><td>${ct.name}</td><td>${ct.examined}</td><td style="font-weight:700;">${ct.positive}</td><td>${ct.examined>0?((ct.positive/ct.examined)*100).toFixed(1)+'%':'—'}</td></tr>`;_ctTotEx+=ct.examined||0;_ctTotPos+=ct.positive||0;}});
     if(!ctRows)ctRows='<tr><td colspan="4" style="color:#999;text-align:center;">No container breakdown entered</td></tr>';
+    else ctRows+=`<tr style="background:#e3f2fd;font-weight:700;border-top:2px solid #1565c0;"><td>TOTAL</td><td>${_ctTotEx}</td><td>${_ctTotPos}</td><td>${_ctTotEx>0?((_ctTotPos/_ctTotEx)*100).toFixed(1)+'%':'—'}</td></tr>`;
     body=`<div class="tb" style="background:linear-gradient(135deg,#0d47a1,#1565c0);"><h1>Manual Larval Survey</h1><p>Paper Record Entry (EST Manual Entry System)</p></div>
 <div class="notice">⚠ This is a manually entered paper record, not a GPS-tracked field survey.</div>
 <div class="ref"><span><strong>Date:</strong> ${s.date||'—'}</span><span><strong>ID:</strong> ${fmtSid('larval',s.id)}</span><span><strong>District:</strong> ${s.district||'—'}</span><span><strong>State:</strong> ${s.state||'—'}</span></div>
@@ -5235,7 +5260,7 @@ ${s.totIndoor!==undefined?`<div class="ib"><div class="il">Indoor</div><div clas
 <tr><td class="lbl">Supervising Officer</td><td colspan="3">${s.officers||'—'}</td></tr>
 <tr><td class="lbl">Houses Examined</td><td>${hEx}</td><td class="lbl">Houses Positive</td><td>${hPos}</td></tr>
 <tr><td class="lbl">Total Containers</td><td>${cont}</td><td class="lbl">Positive Containers</td><td>${contPos}</td></tr>
-<tr><td class="lbl">Pupal Containers</td><td>${pupCont}</td><td class="lbl">Total Dips</td><td>${s.totalDips||0}</td></tr>
+<tr><td class="lbl">Pupae Collected (containers)</td><td>${pupCont}</td><td class="lbl">Total Dips</td><td>${s.totalDips||0}</td></tr>
 <tr><td class="lbl">Total Larvae (An/Cx)</td><td>${s.totalLarvae||0}</td><td class="lbl">Total Pupae (An/Cx)</td><td>${s.totalPupae||0}</td></tr>
 <tr><td class="lbl">Saved At</td><td colspan="3">${s.savedAt?new Date(s.savedAt).toLocaleString('en-IN'):'—'}</td></tr></table>
 <div class="sec">2. Aedes Larval Indices</div>
@@ -5245,18 +5270,20 @@ ${s.totIndoor!==undefined?`<div class="ib"><div class="il">Indoor</div><div clas
 <div class="ib"><div class="il">Breteau Index (BI)</div><div class="iv">${BI}</div><div class="is">+ve cont/100 HH</div></div>
 <div class="ib"><div class="il">Pupal Index (PI)</div><div class="iv">${PI}</div><div class="is">% pupal +ve</div></div>
 </div>
-<div class="sec">3. An./Cx. Dipping Indices</div>
+<div class="sec">3. Anophelines &amp; Culicinae Density</div>
 <div class="iw">
-<div class="ib"><div class="il">Larval Density</div><div class="iv">${s.LD||'—'}</div><div class="is">/dip</div></div>
-<div class="ib"><div class="il">Pupal Density</div><div class="iv">${s.PD||'—'}</div><div class="is">/dip</div></div>
+<div class="ib"><div class="il">Larval Density</div><div class="iv">${LD_v}</div><div class="is">larvae/dip</div></div>
+<div class="ib"><div class="il">Pupal Density</div><div class="iv">${PD_v}</div><div class="is">pupae/dip</div></div>
 <div class="ib"><div class="il">Immature Density</div><div class="iv">${imd}</div><div class="is">(L+P)/dip</div></div>
-<div class="ib"><div class="il">Total Larvae</div><div class="iv">${s.totalLarvae||0}</div></div>
-<div class="ib"><div class="il">Total Pupae</div><div class="iv">${s.totalPupae||0}</div></div>
+<div class="ib"><div class="il">Anopheles Larvae</div><div class="iv">${s.anLarvae??s.totalLarvae??0}</div></div>
+<div class="ib"><div class="il">Anopheles Pupae</div><div class="iv">${s.anPupae??s.totalPupae??0}</div></div>
+<div class="ib"><div class="il">Culex Larvae</div><div class="iv">${s.cxLarvae||0}</div></div>
+<div class="ib"><div class="il">Culex Pupae</div><div class="iv">${s.cxPupae||0}</div></div>
 </div>
 <div class="sec">4. Container Type Breakdown</div>
 <table><thead><tr><th>Container Type</th><th>Examined</th><th>Positive</th><th>Positive %</th></tr></thead><tbody>${ctRows}</tbody></table>`;
   }
-  return`<!DOCTYPE html><html><head><meta charset="utf-8"><title>EST Manual ${isAdult?'Adult':'Larval'} — ${s.location||''} — ${s.date||''}</title><style>${css}</style></head><body><div style="height:58px;"></div><div class="page">${body}<div class="sig"><div class="sb"><div class="sl"></div><div class="sn">${(s.workers||'—').split(/[\n,]/)[0]}</div><div class="sr">Surveillance Worker</div></div><div class="sb"><div class="sl"></div><div class="sn">${s.officers||'—'}</div><div class="sr">Supervising Officer</div></div><div class="sb"><div class="sl"></div><div class="sn">Medical Officer Incharge</div><div class="sr">Verification &amp; Approval</div></div></div><div class="footer">EST v${APP_VER||'2.0'} · Manual Entry Record | ${fmtSid(isAdult?'adult':'larval',s.id)} | Generated: ${new Date().toLocaleString('en-IN')}</div></div><div class="sb-fixed"><button class="pb" onclick="window.print()">&#128424; Print / Save PDF</button></div></body></html>`;
+  return`<!DOCTYPE html><html><head><meta charset="utf-8"><title>EST Manual ${isAdult?'Adult':'Larval'} — ${s.location||''} — ${s.date||''}</title><style>${css}</style></head><body><div style="height:58px;"></div><div class="page">${body}<div class="sig" style="margin-top:52px;"><div class="sb"><div class="sl"></div><div class="sn">${(s.workers||'—').split(/[\n,]/)[0]}</div><div class="sr">Surveillance Worker</div></div><div class="sb"><div class="sl"></div><div class="sn">${s.officers||'—'}</div><div class="sr">Supervising Officer</div></div><div class="sb"><div class="sl"></div><div class="sn">Medical Officer Incharge</div><div class="sr">Verification &amp; Approval</div></div></div><div class="footer">EST v${APP_VER||'2.0'} · Manual Entry Record | ${fmtSid(isAdult?'adult':'larval',s.id)} | Generated: ${new Date().toLocaleString('en-IN')}</div></div><div class="sb-fixed"><button class="pb" onclick="window.print()">&#128424; Print / Save PDF</button></div></body></html>`;
 }
 function exportManualOnePDF(id,type){
   const key=type==='adult'?MAN_A_SAVED:MAN_L_SAVED;
@@ -5334,7 +5361,8 @@ function editManualEntry(id,type){
       const nums={'ma-nights':'nights','ma-collectors':'collectors','ma-days':'days',
                   'ma-houses':'housesExamined','ma-housepos':'housePositive','ma-rooms':'totalRooms',
                   'ma-roomspos':'positiveRooms','ma-nonculex':'totNonCulex','ma-culex':'totCulex',
-                  'ma-indoor':'totIndoor','ma-outdoor':'totOutdoor'};
+                  'ma-indoor':'totIndoor','ma-outdoor':'totOutdoor',
+                  'ma-male':'totalMale','ma-female':'totalFemale'};
       Object.entries(nums).forEach(([fid,k])=>{const el=document.getElementById(fid);if(el)el.value=s[k]||0;});
       const c=s.collectors||1;const hrsEl=document.getElementById('ma-hours');
       if(hrsEl)hrsEl.value=c>0?((s.totalManHours||0)/c).toFixed(2):0;
@@ -5356,8 +5384,12 @@ function editManualEntry(id,type){
       const el_r=document.getElementById('ml-remarks');if(el_r)el_r.value=s.remarks||'';
       const nums={'ml-houses':'housesExamined','ml-housepos':'housePositive','ml-containers':'totalContainers',
                   'ml-poscontainers':'totalPositive','ml-pupalcont':'totalPupalContainers',
-                  'ml-dips':'totalDips','ml-larvae':'totalLarvae','ml-pupae':'totalPupae'};
+                  'ml-dips':'totalDips','ml-larvae':'anLarvae','ml-pupae':'anPupae',
+                  'ml-cx-larvae':'cxLarvae','ml-cx-pupae':'cxPupae'};
       Object.entries(nums).forEach(([fid,k])=>{const el=document.getElementById(fid);if(el)el.value=s[k]||0;});
+      // backward compat: old entries without anLarvae use totalLarvae
+      const _al=document.getElementById('ml-larvae');if(_al&&!s.anLarvae&&s.totalLarvae)_al.value=s.totalLarvae;
+      const _ap=document.getElementById('ml-pupae');if(_ap&&!s.anPupae&&s.totalPupae)_ap.value=s.totalPupae;
       const latEl=document.getElementById('ml-lat');const lngEl=document.getElementById('ml-lng');
       if(latEl)latEl.value=s.lat||'';if(lngEl)lngEl.value=s.lng||'';
       if(s.containerSummary&&s.containerSummary.length){
