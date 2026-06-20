@@ -1,27 +1,27 @@
 {
-  "id": 1779724988949,
-  "savedAt": "2026-05-25T16:03:08.949Z",
+  "id": 1779798972803,
+  "savedAt": "2026-05-26T12:36:12.803Z",
   "appType": "adult",
   "v": "2.0",
-  "collType": "resting",
-  "date": "25-05-2026",
+  "collType": "hlc",
+  "date": "26-05-2026",
   "state": "Andaman and Nicobar Islands",
-  "district": "South Andaman",
-  "location": "Dxx",
-  "workers": "Ccc",
-  "officers": "Xxx",
-  "collectors": 1,
+  "district": "Nicobar",
+  "location": "Kakana",
+  "workers": "Shiva shivan",
+  "officers": "Aunit",
+  "collectors": 2,
   "nights": 1,
-  "lat": "9.174596",
-  "lng": "92.816416",
+  "lat": "9.139585",
+  "lng": "92.812633",
   "houses": [
     {
-      "id": 1779724983505,
-      "houseNo": "HH-001",
+      "id": 1779798944793,
+      "houseNo": "ST-001",
       "rooms": 0,
-      "start": "-",
-      "end": "-",
-      "hours": 0,
+      "start": "17:30",
+      "end": "18:05",
+      "hours": 0.5833,
       "counts": [
         [
           0,
@@ -29,12 +29,7 @@
           0
         ],
         [
-          0,
-          0,
-          0
-        ],
-        [
-          0,
+          1,
           0,
           0
         ],
@@ -105,6 +100,11 @@
         ],
         [
           0,
+          0,
+          0
+        ],
+        [
+          24,
           0,
           0
         ],
@@ -159,7 +159,7 @@
           0
         ]
       ],
-      "total": 0,
+      "total": 25,
       "otherName": ""
     }
   ],
@@ -175,7 +175,7 @@
       "name": "Ae. albopictus",
       "genus": "AEDES",
       "isCulex": false,
-      "indoor": 0,
+      "indoor": 1,
       "outdoor": 0
     },
     {
@@ -280,7 +280,7 @@
       "name": "Cx. quinquefasciatus",
       "genus": "CULEX",
       "isCulex": true,
-      "indoor": 0,
+      "indoor": 24,
       "outdoor": 0
     },
     {
@@ -354,17 +354,17 @@
       "outdoor": 0
     }
   ],
-  "MHD": "—",
-  "TMHD": "—",
+  "MHD": "85.72",
+  "TMHD": "205.73",
   "indoorDensity": "0.00",
   "outdoorDensity": "0.00",
   "roomDensity": "—",
-  "HBR": "—",
-  "totalMosq": 0,
+  "HBR": "12.50",
+  "totalMosq": 25,
   "totIndoor": 0,
   "totOutdoor": 0,
-  "totNonCulex": 0,
-  "totCulex": 0,
+  "totNonCulex": 1,
+  "totCulex": 24,
   "totalRooms": 0,
-  "totalManHours": 0
+  "totalManHours": 1.1666
 }

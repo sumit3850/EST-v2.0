@@ -1,0 +1,11 @@
+name = "est-pay"
+main = "index.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+ALLOWED_ORIGIN = "https://sumit3850.github.io"
+
+# Set secrets via:
+# wrangler secret put RAZORPAY_KEY_ID
+# wrangler secret put RAZORPAY_KEY_SECRET
+# wrangler secret put JWT_PRIVATE_KEY_JWK
