@@ -262,7 +262,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.0</p>
+      <p>Admin Dashboard · v2.0.60</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -1222,12 +1222,6 @@ function exportSelected(mod){
 
 /* ── INIT ── */
 checkAuth();
-
-    document.addEventListener('mouseup',()=>{down=false;el.style.cursor='grab';});
-    el.addEventListener('mousemove',e=>{if(!down)return;e.preventDefault();el.scrollLeft=sl-(e.pageX-el.offsetLeft-sx);});
-    el.addEventListener('mouseleave',()=>{down=false;el.style.cursor='grab';});
-  });
-});
 
 /* ── TILE MAP — Google Satellite, interactive (zoom+pan+labels) ── */
 const _TileMap=(()=>{
