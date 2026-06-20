@@ -197,7 +197,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .tbl-wrap.dragging{cursor:grabbing;}
 .tbl-wrap input,.tbl-wrap button,.tbl-wrap select,.tbl-wrap label{cursor:pointer;user-select:auto;}
 .tbl-wrap input[type="checkbox"]{cursor:pointer;}
-table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap;}
+table{min-width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap;}
 thead tr{background:var(--teal);}
 thead tr.blue-hd{background:var(--blue-dk);}
 th{padding:9px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#fff;}
@@ -997,8 +997,9 @@ function buildAdultXLSX(surveys,isCompiled){
     [B('ALR'),'Adult Landing Rate — landings per man per hour']
   ];
   // ── Survey data header ──
-  const HDR=['Survey#','Survey ID','Date','State/UT','District','Location','Type','Indoor/Outdoor',null,'Night Spent','Days Spent','Houses Examined','House Positive','Rooms Examined','Rooms Positive','Non-Culex Collected','Culex Collected','Total Mosquitoes','Time Spent (hrs)','Total Male','Total Female','Collectors','PMHD','TMHD','API','APH','GPS Lat','GPS Long','Surveillance Workers/Collectors','Senior Officer','Saved At'].map(v=>v===null?null:H(v));
-  const adultCols=[8,15,11,13,15,22,18,14,8,12,12,16,14,14,14,18,16,17,14,12,16,12,12,12,12,12,12,12,22,16,20];
+  const HDR=['Survey#','Survey ID','Date','State/UT','District','Location','Type','Indoor/Outdoor','Night Spent','Days Spent','Houses Examined','House Positive','Rooms Examined','Rooms Positive','Non-Culex Collected','Culex Collected','Total Mosquitoes','Time Spent (hrs)','Total Male','Total Female','Collectors','PMHD','TMHD','API','APH','GPS Lat','GPS Long','Surveillance Workers/Collectors','Senior Officer','Saved At'].map(H);
+  // Col letters (0-indexed, no null gap): K=Houses Examined, L=House Positive, P=Culex, Q=Total Mosq, R=Time Spent, U=Collectors
+  const adultCols=[8,15,11,13,15,22,18,14,12,12,16,14,14,14,18,16,17,14,12,16,12,12,12,12,12,12,12,22,16,20];
   function makeAdultSheet(label,typeLabel,inoutLabel,filter){
     const slist=surveys.filter(filter);
     if(!slist.length)return null;
@@ -1008,18 +1009,22 @@ function buildAdultXLSX(surveys,isCompiled){
       const posH=(s.houses||[]).filter(h=>(h.total||0)>0||(h.positiveRooms||0)>0).length;
       const posRooms=(s.houses||[]).reduce((t,h)=>t+(h.positiveRooms||0),0);
       const indOut=(s.totIndoor||0)>=(s.totOutdoor||0)?'Indoor':'Outdoor';
+      // Cols (no null gap): A=Survey# B=ID C=Date D=State E=District F=Location G=Type H=In/Out
+      //   I=Nights J=Days K=Houses L=HousePos M=Rooms N=RoomsPos O=NonCulex P=Culex Q=TotMosq
+      //   R=TimeSpent S=TotalMale T=TotalFemale U=Collectors V=PMHD W=TMHD X=API Y=APH
+      //   Z=GPSLat AA=GPSLng AB=Workers AC=Officers AD=SavedAt
       rows.push([
         C(si+1), C(fmtSid('adult',s.id)), C(s.date||''), C(s.state||''), s.district||'', s.location||'',
-        typeLabel, inoutLabel||indOut, null,
+        typeLabel, inoutLabel||indOut,
         C(s.nights||0), C(s.days||0), C(s.houses?.length||0), C(posH),
         C(s.totalRooms||0), C(posRooms),
         C(s.totNonCulex||0), C(s.totCulex||0), C(s.totalMosq||0),
         C(parseFloat((s.totalManHours||0).toFixed(2))),
         C(0), C(s.totalMosq||0), C(s.collectors||1),
-        CF('IFERROR(R'+r+'/(S'+r+'*V'+r+'),0)'),
-        CF('IFERROR(Q'+r+'/(S'+r+'*V'+r+')*10,0)'),
-        CF('IFERROR(M'+r+'/L'+r+'*100,0)'),
-        CF('IFERROR(R'+r+'/L'+r+',0)'),
+        CF('IFERROR(Q'+r+'/(R'+r+'*U'+r+'),0)'),
+        CF('IFERROR(P'+r+'/(R'+r+'*U'+r+')*10,0)'),
+        CF('IFERROR(L'+r+'/K'+r+'*100,0)'),
+        CF('IFERROR(Q'+r+'/K'+r+',0)'),
         s.lat||'', s.lng||'', s.workers||'', s.officers||'',
         C(s.savedAt?new Date(s.savedAt).toLocaleString('en-IN'):'')
       ]);
