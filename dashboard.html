@@ -100,6 +100,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .tb-btn.danger{background:rgba(239,83,80,.1);color:#ef5350;border:1px solid rgba(239,83,80,.3);}
 .tb-btn.danger:hover{background:rgba(239,83,80,.2);}
 .tb-btn.danger-ghost{background:rgba(239,83,80,.1);color:#ef5350;border:1px solid rgba(239,83,80,.25);}
+.man-subtabs{display:flex;border-bottom:2px solid var(--bdr);margin:0 0 0 0;background:var(--sf2);}
+.man-subtab{flex:1;height:44px;border:none;background:transparent;font-size:13px;font-weight:700;cursor:pointer;color:var(--txt2);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;letter-spacing:.01em;}
+.man-subtab.active-adult{color:var(--teal);border-bottom-color:var(--teal);}
+.man-subtab.active-larval{color:var(--blue);border-bottom-color:var(--blue);}
 [data-theme="light"] .tb-btn.blue{background:#e3f2fd;color:var(--blue-dk);}
 [data-theme="light"] .tb-btn.secondary{background:#e0f2f1;color:var(--teal-dk);}
 [data-theme="light"] .tb-btn.danger{background:#ffdad6;color:#ba1a1a;border-color:#ba1a1a;}
@@ -274,7 +278,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.0.65</p>
+      <p>Admin Dashboard · v2.0.66</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -306,7 +310,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>v2.0.65 · A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.0.66 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -565,7 +569,12 @@ tr:hover td{background:var(--teal-lt);}
 
     <!-- Manual Data Panel -->
     <div class="panel" id="panel-manual">
+      <div class="man-subtabs">
+        <button class="man-subtab active-adult" id="man-stab-adult" onclick="switchManualTab('adult')">Adult Survey Entries</button>
+        <button class="man-subtab" id="man-stab-larval" onclick="switchManualTab('larval')">Larval Survey Entries</button>
+      </div>
       <!-- Adult Manual Surveys -->
+      <div id="man-section-adult">
       <div class="section-head">
         <h2>Manual Data — Adult Surveys</h2>
         <div class="section-head-actions">
@@ -597,8 +606,10 @@ tr:hover td{background:var(--teal-lt);}
           </table>
         </div>
       </div>
+      </div><!-- /man-section-adult -->
       <!-- Larval Manual Surveys -->
-      <div class="section-head" style="margin-top:20px;">
+      <div id="man-section-larval" style="display:none;">
+      <div class="section-head">
         <h2>Manual Data — Larval Surveys</h2>
         <div class="section-head-actions">
           <button class="tb-btn ghost" onclick="selectAllManual('larval',true)">☑ All</button>
@@ -630,6 +641,7 @@ tr:hover td{background:var(--teal-lt);}
           </table>
         </div>
       </div>
+      </div><!-- /man-section-larval -->
     </div>
 
   </div><!-- .main-content -->
@@ -679,12 +691,12 @@ tr:hover td{background:var(--teal-lt);}
       <div id="me-larval-fields" style="display:none;">
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);margin-bottom:8px;padding-top:4px;border-top:1px solid var(--bdr);">Larval Survey Fields</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-          <div><label class="sf-label">Houses Examined</label><input type="number" id="me-l-housesex" class="sf-input" min="0"></div>
-          <div><label class="sf-label">+ve Houses</label><input type="number" id="me-l-housepos" class="sf-input" min="0"></div>
+          <div><label class="sf-label">Houses Examined</label><input type="number" id="me-l-housesex" class="sf-input" min="0" oninput="const p=document.getElementById('me-l-housepos');if(p&&(parseInt(p.value)||0)>(parseInt(this.value)||0))p.value=parseInt(this.value)||0;"></div>
+          <div><label class="sf-label">+ve Houses</label><input type="number" id="me-l-housepos" class="sf-input" min="0" oninput="const ex=parseInt(document.getElementById('me-l-housesex')?.value)||0;if((parseInt(this.value)||0)>ex)this.value=ex;"></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
-          <div><label class="sf-label">Containers</label><input type="number" id="me-l-containers" class="sf-input" min="0"></div>
-          <div><label class="sf-label">+ve Containers</label><input type="number" id="me-l-positive" class="sf-input" min="0"></div>
+          <div><label class="sf-label">Containers</label><input type="number" id="me-l-containers" class="sf-input" min="0" oninput="const p=document.getElementById('me-l-positive');if(p&&(parseInt(p.value)||0)>(parseInt(this.value)||0))p.value=parseInt(this.value)||0;"></div>
+          <div><label class="sf-label">+ve Containers</label><input type="number" id="me-l-positive" class="sf-input" min="0" oninput="const ex=parseInt(document.getElementById('me-l-containers')?.value)||0;if((parseInt(this.value)||0)>ex)this.value=ex;"></div>
           <div><label class="sf-label">Pupal Cont.</label><input type="number" id="me-l-pupal" class="sf-input" min="0"></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
@@ -1000,6 +1012,14 @@ function exportManual(mod){
 }
 
 /* ── MANUAL DATA DASHBOARD HELPERS ── */
+function switchManualTab(tab){
+  ['adult','larval'].forEach(t=>{
+    const sec=document.getElementById('man-section-'+t);
+    const btn=document.getElementById('man-stab-'+t);
+    if(sec)sec.style.display=t===tab?'':'none';
+    if(btn)btn.className='man-subtab'+(t===tab?' active-'+t:'');
+  });
+}
 function filterManual(mod){
   const q=(document.getElementById('search-manual-'+mod)?.value||'').toLowerCase();
   const fromD=document.getElementById('filter-man'+mod+'-from')?.value||'';
@@ -1105,7 +1125,7 @@ function openEditManualDash(id,mod){
     if(ctBody){
       ctBody.innerHTML=CONT_NAMES_D.map((n,i)=>{
         const ct=(s.containerSummary||[]).find(x=>x.name===n)||{examined:0,positive:0};
-        return`<tr style="${i%2===0?'':'background:rgba(0,0,0,.02)'}"><td style="padding:4px 8px;font-size:11px;">${n}</td><td style="padding:3px 4px;"><input type="number" min="0" id="me-ce-${i}" value="${ct.examined||0}" style="width:64px;text-align:center;height:28px;border:1px solid var(--bdr);border-radius:4px;background:var(--sf);color:var(--txt);font-size:11px;" onchange="if(parseInt(this.value)||0>parseInt(document.getElementById('me-ce-${i}')?.value)||0)this.value=parseInt(document.getElementById('me-ce-${i}')?.value)||0"></td><td style="padding:3px 4px;"><input type="number" min="0" id="me-cp-${i}" value="${ct.positive||0}" style="width:64px;text-align:center;height:28px;border:1px solid var(--bdr);border-radius:4px;background:var(--sf);color:var(--txt);font-size:11px;" onchange="const ex=parseInt(document.getElementById('me-ce-${i}')?.value)||0;if((parseInt(this.value)||0)>ex)this.value=ex;"></td></tr>`;
+        return`<tr style="${i%2===0?'':'background:rgba(0,0,0,.02)'}"><td style="padding:4px 8px;font-size:11px;">${n}</td><td style="padding:3px 4px;"><input type="number" min="0" id="me-ce-${i}" value="${parseInt(ct.examined)||0}" style="width:64px;text-align:center;height:28px;border:1px solid var(--bdr);border-radius:4px;background:var(--sf);color:var(--txt);font-size:11px;" oninput="const p=document.getElementById('me-cp-${i}');if(p&&(parseInt(p.value)||0)>(parseInt(this.value)||0))p.value=parseInt(this.value)||0;"></td><td style="padding:3px 4px;"><input type="number" min="0" id="me-cp-${i}" value="${parseInt(ct.positive)||0}" style="width:64px;text-align:center;height:28px;border:1px solid var(--bdr);border-radius:4px;background:var(--sf);color:var(--txt);font-size:11px;" oninput="const ex=parseInt(document.getElementById('me-ce-${i}')?.value)||0;if((parseInt(this.value)||0)>ex)this.value=ex;"></td></tr>`;
       }).join('');
     }
   }
@@ -1376,7 +1396,7 @@ function buildAdultXLSX(surveys,isCompiled){
   const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
   // ── Report Status ──
   const statusRows=[
-    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.65')],
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.66')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -1450,7 +1470,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   // ── Report Status sheet ──
   const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.65')],
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.66')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -1592,7 +1612,7 @@ function buildAdultCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.65 — Adult Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.66 — Adult Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -1644,7 +1664,7 @@ function buildAdultCSV(surveys){
     });
   });
   blank();
-  r('EST v2.0.65 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.66 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -1656,7 +1676,7 @@ function buildLarvalCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.65 — Larval Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.66 — Larval Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -1737,7 +1757,7 @@ function buildLarvalCSV(surveys){
     }
   });
   blank();
-  r('EST v2.0.65 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.66 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
