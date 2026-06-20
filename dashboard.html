@@ -324,6 +324,10 @@ tr:hover td{background:var(--teal-lt);}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3C9 3 5 5 5 10c0 3 2 5 4 6"/><path d="M15 3c0 0 4 2 4 7c0 3-2 5-4 6"/><ellipse cx="12" cy="17" rx="4" ry="3"/><line x1="12" y1="20" x2="12" y2="23"/></svg>
       <span class="nav-item-label">Larval Surveillance</span>
     </button>
+    <button class="nav-item" id="nav-maps" onclick="switchSection('maps',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+      <span class="nav-item-label">Survey Maps</span>
+    </button>
     <div class="nav-section">Admin</div>
     <button class="nav-item" id="nav-users" onclick="switchSection('users',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M3 20c0-3.3 2.7-6 6-6h1"/><circle cx="17" cy="17" r="3"/><path d="M17 14v2l1.5 1.5"/></svg>
@@ -523,6 +527,38 @@ tr:hover td{background:var(--teal-lt);}
       </div>
     </div>
 
+    <!-- Maps Panel -->
+    <div class="panel" id="panel-maps">
+      <div class="section-head">
+        <h2>Survey Maps</h2>
+        <div class="section-head-actions">
+          <span id="map-carousel-pos" style="font-size:12px;color:var(--muted);align-self:center;"></span>
+          <button class="tb-btn ghost" onclick="mapCarouselNav(-1)">◀ Prev</button>
+          <button class="tb-btn ghost" onclick="mapCarouselNav(1)">Next ▶</button>
+          <button class="tb-btn blue" onclick="downloadCurrentMap()">⬇ Download Map</button>
+        </div>
+      </div>
+      <div style="padding:16px 20px 8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <select id="map-type-filter" class="pt-select" onchange="buildMapCarousel()" style="width:160px;">
+          <option value="all">All Surveys</option>
+          <option value="adult">Adult Only</option>
+          <option value="larval">Larval Only</option>
+        </select>
+        <span id="map-no-data" style="color:var(--muted);font-size:13px;display:none;">No surveys with GPS tracks found.</span>
+      </div>
+      <div style="padding:0 20px 20px;">
+        <div id="map-carousel-wrap" style="width:100%;height:500px;border-radius:10px;overflow:hidden;border:1px solid var(--bdr);background:var(--sf2);position:relative;">
+          <div id="map-carousel-body" style="width:100%;height:100%;"></div>
+          <div id="map-carousel-info" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));padding:14px 16px 12px;color:#fff;font-size:12px;pointer-events:none;">
+            <div id="map-carousel-title" style="font-weight:700;font-size:13px;margin-bottom:2px;">—</div>
+            <div id="map-carousel-sub" style="color:rgba(255,255,255,.7);">—</div>
+          </div>
+        </div>
+        <!-- Thumbnail strip -->
+        <div id="map-thumbs" style="display:flex;gap:8px;margin-top:10px;overflow-x:auto;padding-bottom:4px;"></div>
+      </div>
+    </div>
+
   </div><!-- .main-content -->
 </div><!-- .main-wrapper -->
 </div><!-- #app -->
@@ -532,7 +568,10 @@ tr:hover td{background:var(--teal-lt);}
   <div class="map-modal-box">
     <div class="map-modal-hdr">
       <div id="map-meta">Survey track</div>
-      <button onclick="closeMapModal()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:16px;line-height:1;">✕</button>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <button id="map-dl-btn" onclick="downloadModalMap()" style="background:rgba(0,191,165,.25);border:1px solid rgba(0,191,165,.4);color:#00bfa5;padding:0 12px;height:28px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;white-space:nowrap;">⬇ Download</button>
+        <button onclick="closeMapModal()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:16px;line-height:1;">✕</button>
+      </div>
     </div>
     <div id="map-body" style="flex:1;min-height:420px;"></div>
   </div>
@@ -641,7 +680,7 @@ async function loadAll(){
     adultF=[...allAdult];larvalF=[...allLarval];
     const cfg=await ghGet('config.json').then(d=>JSON.parse(b64d(d.content))).catch(()=>null);
     if(cfg)usersCfg=cfg.credentials||[];
-    updateStats();renderAdult();renderLarval();renderUsers();renderAlerts();
+    updateStats();renderAdult();renderLarval();renderUsers();renderAlerts();buildMapCarousel();
     pill.textContent='Connected ✓ ('+allAdult.length+'A + '+allLarval.length+'L)';pill.classList.add('ok');
     document.getElementById('st-sync').textContent=new Date().toLocaleTimeString();
     setStatus('');
@@ -887,7 +926,7 @@ function buildXLSX(sheets){
   const relsXML='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';
   const ctXML='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'+sheets.map((sh,i)=>'<Override PartName="/xl/worksheets/sheet'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join('')+'<Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>';
   // Styles: s=0 default | s=1 bold+light-blue-fill+center+wrap (headers) | s=2 center-aligned (data)
-  const stylesXML='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFB8D9F5"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="3"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf></cellXfs></styleSheet>';
+  const stylesXML='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFB8D9F5"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="4"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"><alignment horizontal="left"/></xf></cellXfs></styleSheet>';
   // ZIP builder (Stored / no compression)
   function zipEntry(name,data){
     const nb=enc(name);
@@ -939,20 +978,27 @@ function buildXLSX(sheets){
 function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=filename;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(u),1000);}
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
+  const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
+  // ── Report Status ──
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.0.60)'],
-    ['Generated:',ts],
-    ['Compiled / Single',isCompiled?'Compiled':'Single'],
-    ['Surveys included:',surveys.length],
-    ['Indices Generated','Yes'],
-    ['Coordinates Generated','Yes'],
-    ['Abbreviations','Full Form'],
-    ['PMHD','Per Man Hour Density'],
-    ['TMHD','Ten Man Hour Density'],
-    ['API','Adult Premise Index'],
-    ['APH','Adult Per House']
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.60')],
+    [B('Generated:'), ts],
+    [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
+    [B('Surveys Included:'), String(surveys.length)],
+    [B('Indices Calculated:'), 'PMHD · TMHD · API · APH'],
+    [B('GPS Coordinates:'), 'Yes'],
+    ['',''],
+    [H('Abbreviation'), H('Full Form — Adult Surveillance Indices')],
+    [B('PMHD'),'Per Man Hour Density — mosquitoes caught per man-hour'],
+    [B('TMHD'),'Ten Man Hour Density — mosquitoes per 10 man-hours'],
+    [B('API'),'Adult Premise Index — % of premises with adult mosquitoes'],
+    [B('APH'),'Adult Per House — average adults per house visited'],
+    [B('HBR'),'Human Biting Rate — bites per man per hour (HLC)'],
+    [B('ALR'),'Adult Landing Rate — landings per man per hour']
   ];
-  const HDR=['Survey#','Survey ID','Date','State/UT','District','Location','Type','Indoor/Outdoor',null,'Night Spent','Days Spent','Houses Examined','House Positive','Rooms Examined','Rooms Positive','Non-Culex Collected','Culex Collected','Total Mosquitoes','Time Spent (hrs)','Total Male','Total Female','Collectors','PMHD','TMHD','API','APH','GPS Lat','GPS Long','Surveillance Workers/Collectors','Senior Officer','Saved At'];
+  // ── Survey data header ──
+  const HDR=['Survey#','Survey ID','Date','State/UT','District','Location','Type','Indoor/Outdoor',null,'Night Spent','Days Spent','Houses Examined','House Positive','Rooms Examined','Rooms Positive','Non-Culex Collected','Culex Collected','Total Mosquitoes','Time Spent (hrs)','Total Male','Total Female','Collectors','PMHD','TMHD','API','APH','GPS Lat','GPS Long','Surveillance Workers/Collectors','Senior Officer','Saved At'].map(v=>v===null?null:H(v));
+  const adultCols=[8,15,11,13,15,22,18,14,8,12,12,16,14,14,14,18,16,17,14,12,16,12,12,12,12,12,12,12,22,16,20];
   function makeAdultSheet(label,typeLabel,inoutLabel,filter){
     const slist=surveys.filter(filter);
     if(!slist.length)return null;
@@ -963,42 +1009,24 @@ function buildAdultXLSX(surveys,isCompiled){
       const posRooms=(s.houses||[]).reduce((t,h)=>t+(h.positiveRooms||0),0);
       const indOut=(s.totIndoor||0)>=(s.totOutdoor||0)?'Indoor':'Outdoor';
       rows.push([
-        si+1,
-        fmtSid('adult',s.id),
-        s.date||'',
-        s.state||'',
-        s.district||'',
-        s.location||'',
-        typeLabel,
-        inoutLabel||indOut,
-        null,
-        s.nights||0,
-        s.days||0,
-        s.houses?.length||0,
-        posH,
-        s.totalRooms||0,
-        posRooms,
-        s.totNonCulex||0,
-        s.totCulex||0,
-        s.totalMosq||0,
-        parseFloat((s.totalManHours||0).toFixed(2)),
-        0,
-        s.totalMosq||0,
-        s.collectors||1,
-        {f:'IFERROR(R'+r+'/(S'+r+'*V'+r+'),0)'},
-        {f:'IFERROR(Q'+r+'/(S'+r+'*V'+r+')*10,0)'},
-        {f:'IFERROR(M'+r+'/L'+r+'*100,0)'},
-        {f:'IFERROR(R'+r+'/L'+r+',0)'},
-        s.lat||'',
-        s.lng||'',
-        s.workers||'',
-        s.officers||'',
-        new Date(s.savedAt).toLocaleString('en-IN')
+        C(si+1), C(fmtSid('adult',s.id)), C(s.date||''), C(s.state||''), s.district||'', s.location||'',
+        typeLabel, inoutLabel||indOut, null,
+        C(s.nights||0), C(s.days||0), C(s.houses?.length||0), C(posH),
+        C(s.totalRooms||0), C(posRooms),
+        C(s.totNonCulex||0), C(s.totCulex||0), C(s.totalMosq||0),
+        C(parseFloat((s.totalManHours||0).toFixed(2))),
+        C(0), C(s.totalMosq||0), C(s.collectors||1),
+        CF('IFERROR(R'+r+'/(S'+r+'*V'+r+'),0)'),
+        CF('IFERROR(Q'+r+'/(S'+r+'*V'+r+')*10,0)'),
+        CF('IFERROR(M'+r+'/L'+r+'*100,0)'),
+        CF('IFERROR(R'+r+'/L'+r+',0)'),
+        s.lat||'', s.lng||'', s.workers||'', s.officers||'',
+        C(s.savedAt?new Date(s.savedAt).toLocaleString('en-IN'):'')
       ]);
     });
-    return{name:label,rows};
+    return{name:label,rows,cols:adultCols,headerRows:[0]};
   }
-  const sheets=[{name:'Report Status',rows:statusRows}];
+  const sheets=[{name:'Report Status',rows:statusRows,cols:[28,55],headerRows:[0,7]}];
   const rc=makeAdultSheet('Resting Collection','Resting Collection',null,s=>!s.collType||s.collType==='resting');
   if(rc)sheets.push(rc);
   const hlc=makeAdultSheet('Human Landing Catch','Human Landing Catch','N/A',s=>s.collType==='hlc');
@@ -1017,21 +1045,24 @@ function buildLarvalXLSX(surveys,isCompiled){
   const CF=f=>({f,s:2});
 
   // ── Report Status sheet ──
+  const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.0.60)'],
-    ['Generated:',ts],
-    ['Compiled / Single',isCompiled?'Compiled':'Single'],
-    ['Surveys included:',surveys.length],
-    ['Indices Generated','Yes'],
-    ['Coordinates Generated','Yes'],
-    ['Abbreviations','Full Form'],
-    ['HI','House Index'],
-    ['CI','Container Index'],
-    ['BI','Breteau Index'],
-    ['PI','Pupal Index'],
-    ['LD','Larval Density'],
-    ['PD','Pupal Density'],
-    ['ID','Immature Density']
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.60')],
+    [B('Generated:'), ts],
+    [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
+    [B('Surveys Included:'), String(surveys.length)],
+    [B('Indices Calculated:'), 'HI · CI · BI · PI · LD · PD · ID'],
+    [B('GPS Coordinates:'), 'Yes'],
+    [B('Larval Dip Data:'), 'Yes'],
+    ['',''],
+    [H('Abbreviation'), H('Full Form — Larval Surveillance Indices')],
+    [B('HI'),'House Index — % of houses with Aedes larvae/pupae'],
+    [B('CI'),'Container Index — % of positive containers'],
+    [B('BI'),'Breteau Index — positive containers per 100 houses'],
+    [B('PI'),'Pupal Index — pupae from container inspections per 100 houses'],
+    [B('LD'),'Larval Density — larvae (An/Cx) per dip'],
+    [B('PD'),'Pupal Density — pupae (An/Cx) per dip'],
+    [B('ID'),'Immature Density — (larvae + An/Cx pupae) per dip']
   ];
 
   // ── Summary sheet ──
@@ -1134,13 +1165,13 @@ function buildLarvalXLSX(surveys,isCompiled){
   });
 
   // Column widths (characters) per sheet
-  const sumCols=[8,15,11,13,15,24,14,14,12,16,11,24,22,22,12,13,12,12,14,14,15,14,12,12,16,16,20];
-  const ciCols=[8,15,11,22,10,11,11,18,16,20,18,12,12,38];
+  const sumCols=[8,15,11,13,15,24,18,16,13,20,13,28,26,26,16,16,16,16,16,16,18,14,12,12,16,16,20];
+  const ciCols=[8,15,11,22,10,11,11,18,16,24,22,12,14,38];
   const ctCols=[8,15,11,22,20,12,12,12];
-  const dipCols=[8,15,11,22,12,24,11,14,14,18,20,20,12,12,38];
+  const dipCols=[8,15,11,22,12,24,11,18,18,22,20,20,12,12,38];
 
   const sheets=[
-    {name:'Report Status',rows:statusRows,cols:[22,36]},
+    {name:'Report Status',rows:statusRows,cols:[28,55],headerRows:[0,8]},
     {name:'Summary',rows:sumRows,cols:sumCols,headerRows:[0]},
     {name:'Container Inspection_House wise',rows:ciRows,cols:ciCols,headerRows:[0]},
     {name:'Container Type Break Down',rows:ctRows,cols:ctCols,headerRows:[0]},
@@ -1446,6 +1477,125 @@ function renderAlerts(){
   sec.style.display='block';
 }
 
+/* ── MAP CAROUSEL ── */
+let _mapSurveys=[], _mapIdx=0;
+
+function buildMapCarousel(){
+  const type=document.getElementById('map-type-filter')?.value||'all';
+  const adult=(allAdult||[]).filter(s=>s.track&&s.track.waypoints&&s.track.waypoints.length>=2).map(s=>({...s,_type:'adult'}));
+  const larval=(allLarval||[]).filter(s=>s.track&&s.track.waypoints&&s.track.waypoints.length>=2).map(s=>({...s,_type:'larval'}));
+  if(type==='adult') _mapSurveys=adult;
+  else if(type==='larval') _mapSurveys=larval;
+  else _mapSurveys=[...adult,...larval].sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
+  const nd=document.getElementById('map-no-data');
+  if(!_mapSurveys.length){
+    if(nd)nd.style.display='block';
+    document.getElementById('map-carousel-pos').textContent='';
+    document.getElementById('map-thumbs').innerHTML='';
+    document.getElementById('map-carousel-title').textContent='No surveys with GPS tracks';
+    document.getElementById('map-carousel-sub').textContent='Surveys must have GPS enabled and ≥2 waypoints';
+    return;
+  }
+  if(nd)nd.style.display='none';
+  _mapIdx=0;
+  renderCarouselThumbs();
+  showCarouselMap(0);
+}
+
+function renderCarouselThumbs(){
+  const wrap=document.getElementById('map-thumbs');
+  if(!wrap)return;
+  wrap.innerHTML=_mapSurveys.map((s,i)=>`
+    <div onclick="showCarouselMap(${i})" style="flex-shrink:0;width:90px;cursor:pointer;border-radius:8px;overflow:hidden;border:2px solid ${i===_mapIdx?'var(--teal)':'var(--bdr)'};background:var(--sf2);" id="mthumb-${i}">
+      <div style="height:60px;background:#0d1117;display:flex;align-items:center;justify-content:center;font-size:20px;">${s._type==='adult'?'🦟':'💧'}</div>
+      <div style="padding:4px 5px;">
+        <div style="font-size:9px;font-weight:700;color:${s._type==='adult'?'var(--teal)':'var(--blue)'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s._type==='adult'?'Adult':'Larval'}</div>
+        <div style="font-size:9px;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.date||'—'}</div>
+        <div style="font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${(s.location||s.district||'').slice(0,12)}</div>
+      </div>
+    </div>`).join('');
+}
+
+function showCarouselMap(idx){
+  if(!_mapSurveys.length)return;
+  _mapIdx=Math.max(0,Math.min(idx,_mapSurveys.length-1));
+  const s=_mapSurveys[_mapIdx];
+  // Update position badge
+  document.getElementById('map-carousel-pos').textContent=(_mapIdx+1)+' / '+_mapSurveys.length;
+  // Update info overlay
+  document.getElementById('map-carousel-title').textContent=(s.location||s.district||'Unknown location')+' — '+(s.date||'');
+  document.getElementById('map-carousel-sub').textContent=
+    (s._type==='adult'?'🦟 Adult':'💧 Larval')+' · '+
+    (s.state||'')+' · '+(s.district||'')+' · '+
+    'Track: '+(s.track.waypoints.length)+' pts · '+
+    (s.track.distanceKm!=null?s.track.distanceKm.toFixed(2)+'km':'—');
+  // Rebuild thumbnails with new selection
+  renderCarouselThumbs();
+  // Build map
+  const body=document.getElementById('map-carousel-body');
+  body.innerHTML='';
+  setTimeout(()=>_TileMap.build(body,s.track,s.houses||[]),40);
+}
+
+function mapCarouselNav(dir){
+  showCarouselMap(_mapIdx+dir);
+  const thumbs=document.getElementById('map-thumbs');
+  const el=document.getElementById('mthumb-'+_mapIdx);
+  if(el&&thumbs)thumbs.scrollLeft=el.offsetLeft-40;
+}
+
+/* Map download using html2canvas / canvas capture */
+function downloadModalMap(){
+  const body=document.getElementById('map-body');
+  const canvas=body.querySelector('canvas');
+  if(canvas){dlMapCanvas(canvas,'EST_Map_modal');return;}
+  // Fallback: capture tileDiv tiles via compositing
+  captureMapToCanvas(body,'EST_Map_modal');
+}
+function downloadCurrentMap(){
+  if(!_mapSurveys.length)return;
+  const s=_mapSurveys[_mapIdx];
+  const body=document.getElementById('map-carousel-body');
+  const canvas=body.querySelector('canvas');
+  if(canvas){dlMapCanvas(canvas,'EST_Map_'+(s.location||s.date||'survey').replace(/[^a-zA-Z0-9]/g,'_'));return;}
+  captureMapToCanvas(body,'EST_Map_'+(s.location||s.date||'survey').replace(/[^a-zA-Z0-9]/g,'_'));
+}
+function captureMapToCanvas(container,filename){
+  // Draw tiles and SVG overlay onto a single canvas for download
+  const tmt=container.querySelector('._tmt');
+  const tms=container.querySelector('._tms');
+  const w=container.offsetWidth||660,h=container.offsetHeight||420;
+  const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle='#1a1a2e';ctx.fillRect(0,0,w,h);
+  // Draw tile images
+  if(tmt){
+    const imgs=tmt.querySelectorAll('img');
+    imgs.forEach(img=>{
+      if(!img.complete)return;
+      try{const r=img.getBoundingClientRect(),pr=tmt.getBoundingClientRect();ctx.drawImage(img,r.left-pr.left,r.top-pr.top,img.width,img.height);}catch(e){}
+    });
+  }
+  // Draw SVG overlay
+  if(tms){
+    const svgStr=new XMLSerializer().serializeToString(tms);
+    const blob=new Blob([svgStr],{type:'image/svg+xml'});
+    const url=URL.createObjectURL(blob);
+    const img2=new Image();
+    img2.onload=()=>{ctx.drawImage(img2,0,0,w,h);URL.revokeObjectURL(url);dlMapCanvas(cv,filename);};
+    img2.onerror=()=>{dlMapCanvas(cv,filename);};
+    img2.src=url;
+    return;
+  }
+  dlMapCanvas(cv,filename);
+}
+function dlMapCanvas(canvas,filename){
+  const a=document.createElement('a');
+  a.download=filename+'.png';
+  a.href=canvas.toDataURL('image/png');
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+
 /* ── SMART DRAG-TO-SCROLL (horizontal pan on table; click on interactive elements works normally) ── */
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.tbl-wrap').forEach(el => {
@@ -1485,7 +1635,8 @@ function switchSection(name, btn) {
   btn.classList.add('active');
   const panel = document.getElementById('panel-' + name);
   if (panel) panel.classList.add('active');
-  const labels = {overview:'Overview', adult:'Adult Surveillance', larval:'Larval Surveillance', users:'Manage Users'};
+  const labels = {overview:'Overview', adult:'Adult Surveillance', larval:'Larval Surveillance', maps:'Survey Maps', users:'Manage Users'};
+  if(name==='maps') buildMapCarousel();
   const bc = document.getElementById('bc-main');
   if (bc) bc.textContent = labels[name] || name;
   // Close sidebar on mobile after nav
