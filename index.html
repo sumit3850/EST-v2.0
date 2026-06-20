@@ -719,9 +719,13 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
         <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px;"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
         HLC mode: site number locked. Tap + to unlock &amp; add another site.
       </div>
-      <div id="a-rooms-row" style="display:flex;align-items:center;justify-content:space-between;background:var(--sfc);border:1px solid var(--olv);border-radius:var(--rmd);padding:9px 14px;margin-bottom:11px;">
+      <div id="a-rooms-row" style="display:flex;align-items:center;justify-content:space-between;background:var(--sfc);border:1px solid var(--olv);border-radius:var(--rmd);padding:9px 14px;margin-bottom:6px;">
         <span style="font-size:12px;font-weight:700;">Rooms Inspected</span>
         <div class="cnt-row"><button class="cnt-btn" onclick="changeRms('a',-1)">-</button><div class="cnt-val" id="a-rooms-disp">0</div><button class="cnt-btn" onclick="changeRms('a',1)">+</button></div>
+      </div>
+      <div id="a-posrooms-row" style="display:flex;align-items:center;justify-content:space-between;background:var(--sfc);border:1px solid rgba(186,26,26,.3);border-radius:var(--rmd);padding:9px 14px;margin-bottom:11px;">
+        <span style="font-size:12px;font-weight:700;color:#b91c1c;">Positive Rooms <span style="font-size:10px;font-weight:400;color:var(--osv);">(with mosquitoes)</span></span>
+        <div class="cnt-row"><button class="cnt-btn" style="color:#b91c1c;" onclick="changePosRms(-1)">-</button><div class="cnt-val" id="a-posrooms-disp" style="color:#b91c1c;font-weight:700;">0</div><button class="cnt-btn" style="color:#b91c1c;" onclick="changePosRms(1)">+</button></div>
       </div>
       <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--osv);margin-bottom:7px;">Collection Count by Species</div>
       <div class="matrix-wrap"><table class="mtbl" id="a-mtbl"><thead><tr id="a-mtbl-head"><th style="text-align:left;padding-left:10px;">Species</th></tr></thead><tbody id="a-sp-body"></tbody></table></div>
@@ -943,13 +947,9 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
             <div style="font-size:12px;font-weight:700;color:var(--os);">Containers Inspected <span style="font-size:10px;color:var(--osv);font-weight:400;">(auto)</span></div>
             <div class="cnt-val lv" id="l-containers" style="font-size:18px;font-weight:700;min-width:40px;text-align:right;">0</div>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 11px;border-bottom:1px solid rgba(21,101,192,.1);">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 11px;">
             <div style="font-size:12px;font-weight:700;color:var(--os);">Positive Containers <span style="font-size:10px;color:var(--osv);font-weight:400;">(auto)</span></div>
             <div class="cnt-val lv" id="l-positive" style="font-size:18px;font-weight:700;min-width:40px;text-align:right;">0</div>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 11px;">
-            <div style="font-size:12px;font-weight:700;color:var(--os);">Pupae Collected</div>
-            <div class="cnt-row"><button class="cnt-btn" style="color:var(--larval);" onclick="changeLarvalCnt('pupal',-1)">-</button><div class="cnt-val lv" id="l-pupal" style="min-width:40px;font-size:17px;font-weight:700;">0</div><button class="cnt-btn" style="color:var(--larval);" onclick="changeLarvalCnt('pupal',1)">+</button></div>
           </div>
         </div>
         <!-- HI/CI/BI BELOW counts -->
@@ -971,7 +971,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
       </div>
 
       <!-- SPECIES IDENTIFIED -->
-      <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--osv);margin-bottom:6px;">Species Identified (Larvae / Pupae)</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--osv);margin-bottom:6px;">Specimens Collected (Larvae / Pupae)</div>
       <div class="matrix-wrap"><table class="mtbl lrv"><thead><tr><th style="text-align:left;padding-left:10px;">Species</th><th class="lrv1">Larvae</th><th class="lrv2">Pupae</th></tr></thead><tbody id="l-sp-body"></tbody></table></div>
       <!-- Unidentified / Other Species Log — dipping-style card (larval) -->
       <div style="background:rgba(21,80,160,.05);border:1.5px solid rgba(21,80,160,.2);border-radius:var(--rmd);padding:12px;margin-bottom:11px;">
@@ -1889,7 +1889,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.0.57';
+const APP_VER='2.0.58';
 /* Compact human-readable Survey ID: A-260531-1437 (type + YYMMDD + HHMM) */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -1915,7 +1915,7 @@ const LSP=[
 ];
 const LNS=LSP.length;
 let activeModule=null,activeSavedTab='adult',lastSavedId=null,lastSavedType=null;
-const aS={collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,days:0,nights:0,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curCounts:Array.from({length:ANS},()=>[0,0,0]),curOtherN:1,curOtherLog:[]};
+const aS={collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,days:0,nights:0,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curPosRooms:0,curCounts:Array.from({length:ANS},()=>[0,0,0]),curOtherN:1,curOtherLog:[]};
 const lS={date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipSites:[],curHN:1,curSiteN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curCounts:Array.from({length:LNS},()=>[0,0]),curOtherN:1,curOtherLog:[],curRemarks:''};
 function aCols(){return aS.collType==='resting'?['Indoor','Outdoor']:['Landing Catch'];}
 function aTotSp(i){return aS.collType==='resting'?aS.houses.reduce((s,h)=>s+h.counts[i][0]+h.counts[i][1],0):aS.houses.reduce((s,h)=>s+h.counts[i][0],0);}
@@ -2255,7 +2255,7 @@ function startModule(mod,mode){
   }
 }
 function resetStateOnly(mod){
-  if(mod==='adult'){Object.assign(aS,{collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,days:0,nights:0,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curOtherN:1,curOtherLog:[]});aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);}
+  if(mod==='adult'){Object.assign(aS,{collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,days:0,nights:0,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curPosRooms:0,curOtherN:1,curOtherLog:[]});aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);}
   else{Object.assign(lS,{date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipSites:[],curHN:1,curSiteN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curOtherN:1,curOtherLog:[],curRemarks:''});lS.curCounts=Array.from({length:LNS},()=>[0,0]);lContainers=CONTAINERS.map(c=>({...c}));}
 }
 function resetModule(mod){
@@ -2520,6 +2520,7 @@ function changeHouseN(pfx,d){
   const nn=document.getElementById(pfx+'-next-num');if(nn)nn.textContent=s.curHN;
 }
 function changeRms(pfx,d){const s=pfx==='a'?aS:lS;s.curRooms=Math.max(0,s.curRooms+d);const el=document.getElementById(pfx+'-rooms-disp');if(el)el.textContent=s.curRooms;}
+function changePosRms(d){aS.curPosRooms=Math.max(0,Math.min(aS.curRooms||999,aS.curPosRooms+d));const el=document.getElementById('a-posrooms-disp');if(el)el.textContent=aS.curPosRooms;}
 function changeHousePos(d){
   lS.curHousePos=Math.max(0,Math.min(1,(lS.curHousePos||0)+d));
   const el=document.getElementById('l-housepos-disp');if(el)el.textContent=lS.curHousePos;
@@ -2588,7 +2589,7 @@ function logAdultHouse(){
   const total=baseTotal+otherLogTotal;
   const remarks=document.getElementById('a-remarks')?.value.trim()||'';
   const cached=TrackRecorder.getLastPos();
-  const entry={id:Date.now(),houseNo:code,rooms:aS.curRooms,start:start||'-',end:end||'-',hours,counts,total,otherSpLog,remarks,lat:cached?.lat||'',lng:cached?.lng||''};
+  const entry={id:Date.now(),houseNo:code,rooms:aS.curRooms,positiveRooms:aS.curPosRooms,start:start||'-',end:end||'-',hours,counts,total,otherSpLog,remarks,lat:cached?.lat||'',lng:cached?.lng||''};
   aS.houses.push(entry);
   aS.curHN++;const nc=hCode(aS.curHN);
   const hd=document.getElementById('a-hnum-disp');if(hd)hd.textContent=nc;
@@ -2599,6 +2600,7 @@ function logAdultHouse(){
   const re=document.getElementById('a-remarks');if(re)re.value='';
   aS.curOtherLog=[];_aOtherLogCnt=0;aS.curOtherN=1;const olcEl=document.getElementById('a-other-log-cnt');if(olcEl)olcEl.textContent=0;const aed=document.getElementById('a-other-entry-disp');if(aed)aed.textContent='UO-001';const abc=document.getElementById('a-other-entry-btn-code');if(abc)abc.textContent='UO-001';renderOtherLog('a');
   aS.curRooms=0;const ard=document.getElementById('a-rooms-disp');if(ard)ard.textContent='0';
+  aS.curPosRooms=0;const aprd=document.getElementById('a-posrooms-disp');if(aprd)aprd.textContent='0';
   aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);
   buildAdultMatrix();updateTimeCalc('a');renderAdultHouses();updateAdultSummary();saveDraft('adult');
   if(btn)btn.disabled=false;
@@ -2818,7 +2820,8 @@ function updateContSummary(){
   }
   // LIVE indices — include current form data for responsive feedback
   const curH=lS.houses.length+1; // current house not yet logged
-  const curPosH=lPositiveHouses()+(tp>0||lS.curPupal>0?1:0);
+  const curPupalSp=lS.curCounts.reduce((s,r)=>s+r[1],0);
+  const curPosH=lPositiveHouses()+(tp>0||curPupalSp>0?1:0);
   const curTotE=lTotContainers()+te;
   const curTotP=lTotPositive()+tp;
   const lhEl=document.getElementById('live-hi'),lciEl=document.getElementById('live-ci'),lbiEl=document.getElementById('live-bi');
@@ -2893,11 +2896,12 @@ function logLarvalHouse(){
   const totPositive=contSnap.reduce((s,c)=>s+c.positive,0);
   lS.curContainers=totExamined;lS.curPositive=totPositive;
   const hpDisp=document.getElementById('l-housepos-disp');
-  const isHousePositive=(hpDisp?parseInt(hpDisp.textContent)>0:false)||(totPositive>0)||(lS.curPupal>0);
+  const pupalFromSp=counts.reduce((s,r)=>s+r[1],0);
+  const isHousePositive=(hpDisp?parseInt(hpDisp.textContent)>0:false)||(totPositive>0)||(pupalFromSp>0);
   const cached=TrackRecorder.getLastPos();
   const lOtherLog=[...lS.curOtherLog];
   const lRemarks=document.getElementById('l-remarks')?.value.trim()||'';
-  const entry={id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:lS.curPupal,dips:0,larvae:0,pupae:0,housePositive:isHousePositive,counts,contDetails:contSnap,otherSpLog:lOtherLog,remarks:lRemarks,lat:cached?.lat||'',lng:cached?.lng||''};
+  const entry={id:Date.now(),houseNo:code,rooms:lS.curRooms,start:start||'-',end:end||'-',containers:totExamined,positive:totPositive,pupal:pupalFromSp,dips:0,larvae:0,pupae:0,housePositive:isHousePositive,counts,contDetails:contSnap,otherSpLog:lOtherLog,remarks:lRemarks,lat:cached?.lat||'',lng:cached?.lng||''};
   lS.houses.push(entry);
   lS.curHN++;const nc=hCode(lS.curHN);
   const lhd=document.getElementById('l-hnum-disp');if(lhd)lhd.textContent=nc;
@@ -3261,7 +3265,8 @@ function buildAdultXLSX(surveys,isCompiled){
     const rows=[HDR];
     slist.forEach((s,si)=>{
       const r=si+2;
-      const posH=(s.houses||[]).filter(h=>(h.total||0)>0).length;
+      const posH=(s.houses||[]).filter(h=>(h.total||0)>0||(h.positiveRooms||0)>0).length;
+      const posRooms=(s.houses||[]).reduce((t,h)=>t+(h.positiveRooms||0),0);
       const indOut=(s.totIndoor||0)>=(s.totOutdoor||0)?'Indoor':'Outdoor';
       rows.push([
         si+1,
@@ -3278,7 +3283,7 @@ function buildAdultXLSX(surveys,isCompiled){
         s.houses?.length||0,
         posH,
         s.totalRooms||0,
-        0,
+        posRooms,
         s.totNonCulex||0,
         s.totCulex||0,
         s.totalMosq||0,
@@ -3972,7 +3977,7 @@ function renderSavedMod(mod){
     const meta=(s.state||'')+(s.state&&s.district?' · ':'')+( s.district||'')+(s.date?' · '+s.date:'')+( savedTime?' · '+savedTime:'');
     const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');div.dataset.sid=String(s.id);
     const serialNo=surveyIdx+1;
-    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?('Synced '+new Date(s.syncedAt||'').toLocaleDateString('en-IN')):'Not synced to GitHub'}</div><div class="sit-views"><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','survey')">Survey</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','collect')">Collect</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','review')">Review</button></div><div class="sit-acts"><button class="sit-act" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act" onclick="exportOneSavedKML('${mod}','${s.id}')" style="${mod==='adult'?'':'border-color:rgba(21,101,192,.3);color:var(--larval);'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="${mod==='adult'?'var(--primary)':'var(--larval)'}"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> KML</button><button class="sit-act" onclick="resaveSurvey('${mod}','${s.id}')" ${s.resaved?'disabled':''} style="border-color:rgba(100,100,100,.3);color:#555;${s.resaved?'opacity:.4;cursor:not-allowed;':''}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg> Resave</button><button class="sit-sync-btn sit-act" onclick="syncOneSurvey('${mod}','${s.id}')" style="${s.synced?'border-color:rgba(0,107,92,.25);color:var(--osv);':'border-color:rgba(0,107,92,.6);color:var(--primary);font-weight:700;'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg> ${s.synced?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
+    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?('Synced '+new Date(s.syncedAt||'').toLocaleDateString('en-IN')):'Not synced to GitHub'}</div><div class="sit-views"><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','survey')">Survey</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','collect')">Collect</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','review')">Review</button></div><div class="sit-acts"><button class="sit-act" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act" onclick="showSavedMap('${mod}','${s.id}')" style="${mod==='adult'?'':'border-color:rgba(21,101,192,.3);color:var(--larval);'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="${mod==='adult'?'var(--primary)':'var(--larval)'}"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg> Map</button><button class="sit-act" onclick="resaveSurvey('${mod}','${s.id}')" ${s.resaved?'disabled':''} style="border-color:rgba(100,100,100,.3);color:#555;${s.resaved?'opacity:.4;cursor:not-allowed;':''}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg> Resave</button><button class="sit-sync-btn sit-act" onclick="syncOneSurvey('${mod}','${s.id}')" style="${s.synced?'border-color:rgba(0,107,92,.25);color:var(--osv);':'border-color:rgba(0,107,92,.6);color:var(--primary);font-weight:700;'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg> ${s.synced?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
     list.appendChild(div);
   });
 }
@@ -4477,6 +4482,7 @@ const _TileMap=(()=>{
     tDiv.addEventListener('touchstart',e=>{if(e.touches.length===1)lt={x:e.touches[0].clientX,y:e.touches[0].clientY};e.preventDefault();},{passive:false});
     tDiv.addEventListener('touchmove',e=>{if(e.touches.length===1&&lt){ox-=(e.touches[0].clientX-lt.x)/TS;oy-=(e.touches[0].clientY-lt.y)/TS;lt={x:e.touches[0].clientX,y:e.touches[0].clientY};draw();}e.preventDefault();},{passive:false});
     tDiv.addEventListener('touchend',()=>{lt=null;});
+    wrap.addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY>0?-1:1);},{passive:false});
     fit();draw();
   }
   return{build};
@@ -4488,6 +4494,18 @@ function openSurveyMap(cid){
   setTimeout(()=>{_TileMap.build(document.getElementById('smap-body'),d.track,d.houses);},60);
 }
 function closeSurveyMap(){document.getElementById('survey-map-modal').style.display='none';}
+function showSavedMap(mod,id){
+  if(!isPremium()){showPaymentModal();return;}
+  const s=getSavedById(mod,id);if(!s)return;
+  const trk=s.track,houses=s.houses||[];
+  const dipMarkers=(s.dipSites||[]).filter(d=>d.lat&&d.lng).map(d=>({...d,houseNo:d.siteNo,housePositive:(d.larvae||0)+(d.pupae||0)>0,isDipSite:true}));
+  const allMarkers=[...houses,...dipMarkers];
+  if(!trk?.waypoints?.length&&!allMarkers.some(h=>h.lat&&h.lng)){showToast('No GPS data in this survey','warn');return;}
+  const meta=document.getElementById('smap-meta');
+  if(meta)meta.textContent=(s.location||'—')+' · '+(s.date||'—')+(trk?.waypoints?.length?' · '+trk.waypoints.length+' GPS pts':'');
+  document.getElementById('survey-map-modal').style.display='flex';
+  setTimeout(()=>{_TileMap.build(document.getElementById('smap-body'),trk||{waypoints:[]},allMarkers);},60);
+}
 </script>
 
 
@@ -4663,7 +4681,7 @@ function viewSavedSurvey(mod,id,view){
     Object.assign(aS,s);
     aS.houses=(s.houses||[]).map(h=>({...h,counts:(h.counts||[]).map(r=>[...r])}));
     aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);
-    aS.curRooms=0;aS.curHN=(s.houses?.length||0)+1;
+    aS.curRooms=0;aS.curPosRooms=0;aS.curHN=(s.houses?.length||0)+1;
     setCollType(s.collType||'resting');
     if(view==='review'){populateAdultReview();showScreen('adult-review');}
     else if(view==='collect'){buildAdultMatrix();renderAdultHouses();updateAdultSummary();updateTimeCalc('a');showScreen('adult-collect');}

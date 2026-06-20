@@ -76,7 +76,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .pt-btn.blue{background:var(--blue-lt);color:var(--blue);border:1px solid var(--blue);}
 .pt-btn.ghost{background:#f5f5f5;color:var(--muted);border:1px solid var(--bdr);}
 /* ─ TABLE ─ */
-.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--bdr);}
+.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--bdr);cursor:grab;user-select:none;}
+.tbl-wrap:active{cursor:grabbing;}
 table{width:100%;border-collapse:collapse;background:var(--card);font-size:12px;white-space:nowrap;}
 thead tr{background:var(--teal);color:#fff;}
 thead tr.blue-hd{background:var(--blue);}
@@ -259,11 +260,9 @@ tr:nth-child(even) td{background:#f8faf9;}
       <thead><tr>
         <th><input type="checkbox" class="row-cb" onchange="selectAll('adult',this.checked)"></th>
         <th>#</th><th>Survey ID</th><th>Username</th><th>Date</th><th>Location</th><th>State/UT</th><th>District</th>
-        <th>Type</th><th>Houses</th><th>Mosq</th><th>Non-Cx</th><th>Culex</th>
-        <th>PMHD</th><th>TMHD</th><th>Indoor Den</th><th>Outdoor Den</th><th>HBR</th>
-        <th>Collectors</th><th>Man-Hrs</th><th>Nights</th><th>Officer</th><th>GPS</th><th>Map</th><th>Saved</th><th>Sync</th><th>Del</th>
+        <th>Type</th><th>Collectors</th><th>Man-Hrs</th><th>Nights</th><th>Officer</th><th>GPS</th><th>Map</th><th>Saved</th><th>Sync</th><th>Del</th>
       </tr></thead>
-      <tbody id="tbody-adult"><tr><td colspan="27" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+      <tbody id="tbody-adult"><tr><td colspan="18" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -289,12 +288,11 @@ tr:nth-child(even) td{background:#f8faf9;}
       <thead><tr class="blue-hd">
         <th><input type="checkbox" class="row-cb" onchange="selectAll('larval',this.checked)"></th>
         <th>#</th><th>Survey ID</th><th>Username</th><th>Date</th><th>Location</th><th>State/UT</th><th>District</th>
-        <th>Houses</th><th>HI%</th><th>CI%</th><th>BI</th><th>Pupal Idx</th>
-        <th>Larval Den</th><th>Pupal Den</th><th>Immature Den</th>
-        <th>Containers</th><th>+ve Cont</th><th>Larvae</th><th>Pupae</th><th>Dips</th>
+        <th>Houses</th><th>+ve Houses</th><th>Containers</th><th>+ve Cont</th><th>Pupae (Aedes)</th>
+        <th>Dips</th><th>Larvae</th><th>Pupae (An/Cx)</th>
         <th>Workers</th><th>Officer</th><th>GPS</th><th>Map</th><th>Saved</th><th>Sync</th><th>Del</th>
       </tr></thead>
-      <tbody id="tbody-larval"><tr><td colspan="28" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+      <tbody id="tbody-larval"><tr><td colspan="23" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -449,27 +447,19 @@ function updateStats(){
 /* ── RENDER TABLES ── */
 function renderAdult(){
   const tb=document.getElementById('tbody-adult');
-  if(!adultF.length){tb.innerHTML='<tr><td colspan="27" class="tbl-empty">No adult surveys found</td></tr>';return;}
+  if(!adultF.length){tb.innerHTML='<tr><td colspan="18" class="tbl-empty">No adult surveys found</td></tr>';return;}
   tb.innerHTML=adultF.map((s,i)=>{
     const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
     const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','adult')" title="Delete record" style="padding:0 8px;height:28px;">🗑</button>`:'—';
     const mapBtn=(s.track&&s.track.waypoints&&s.track.waypoints.length>=2)?`<button class="pt-btn ghost" style="padding:0 7px;height:26px;font-size:11px;" onclick="showTrackMap(${i},'adult')" title="View survey map">🗺</button>`:`<span style="color:var(--muted);">—</span>`;
+    const typeLabel=s.collType==='resting'?'Resting':s.collType==='hlc'?'HLC':s.collType==='hbr'?'HBR':'ALR';
     return `<tr>
       <td><input type="checkbox" class="row-cb adult-cb" data-idx="${i}"></td>
       <td>${i+1}</td><td style="font-family:monospace;font-size:11px;color:var(--teal);">${fmtSid('adult',s.id)}</td><td style="font-weight:600;">${s.savedBy||'-'}</td><td>${s.date||'-'}</td>
       <td style="font-weight:600;min-width:120px;">${s.location||'-'}</td>
       <td>${s.state||'-'}</td><td>${s.district||'-'}</td>
-      <td><span class="badge ${s.collType==='resting'?'rest':'hlc'}">${s.collType==='resting'?'Resting':'HLC'}</span></td>
-      <td>${s.houses?.length||0}</td>
-      <td class="idx-cell">${s.totalMosq||0}</td>
-      <td>${s.totNonCulex||0}</td>
-      <td class="idx-cell">${s.totCulex||0}</td>
-      <td class="idx-cell">${s.MHD||'-'}</td>
-      <td class="idx-cell">${s.TMHD||'-'}</td>
-      <td>${s.indoorDensity||'-'}</td>
-      <td>${s.outdoorDensity||'-'}</td>
-      <td>${s.HBR||'-'}</td>
+      <td><span class="badge ${s.collType==='resting'?'rest':'hlc'}">${typeLabel}</span></td>
       <td>${s.collectors||1}</td>
       <td>${s.totalManHours?.toFixed?s.totalManHours.toFixed(2):'-'}</td>
       <td>${s.nights||1}</td>
@@ -483,11 +473,13 @@ function renderAdult(){
 }
 function renderLarval(){
   const tb=document.getElementById('tbody-larval');
-  if(!larvalF.length){tb.innerHTML='<tr><td colspan="28" class="tbl-empty">No larval surveys found</td></tr>';return;}
+  if(!larvalF.length){tb.innerHTML='<tr><td colspan="23" class="tbl-empty">No larval surveys found</td></tr>';return;}
   tb.innerHTML=larvalF.map((s,i)=>{
     const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
-    const imd=s.totalDips>0?(((s.totalLarvae+s.totalPupae)/s.totalDips)*100).toFixed(1):'-';
+    const posH=(s.houses||[]).filter(h=>h.housePositive).length;
+    const pupAedes=(s.houses||[]).reduce((t,h)=>t+(h.pupal||0),0);
+    const pupAnCx=s.totalPupae||0;
     const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','larval')" title="Delete record" style="padding:0 8px;height:28px;">🗑</button>`:'—';
     const mapBtn=(s.track&&s.track.waypoints&&s.track.waypoints.length>=2)?`<button class="pt-btn ghost" style="padding:0 7px;height:26px;font-size:11px;" onclick="showTrackMap(${i},'larval')" title="View survey map">🗺</button>`:`<span style="color:var(--muted);">—</span>`;
     return `<tr>
@@ -496,18 +488,13 @@ function renderLarval(){
       <td style="font-weight:600;min-width:120px;">${s.location||'-'}</td>
       <td>${s.state||'-'}</td><td>${s.district||'-'}</td>
       <td>${s.houses?.length||0}</td>
-      <td class="idx-cell blue">${s.HI||'-'}</td>
-      <td class="idx-cell blue">${s.CI||'-'}</td>
-      <td class="idx-cell blue">${s.BI||'-'}</td>
-      <td>${s.PI||'-'}</td>
-      <td class="idx-cell blue">${s.LD||'-'}</td>
-      <td>${s.PD||'-'}</td>
-      <td>${imd}</td>
+      <td class="idx-cell blue" style="font-weight:700;">${posH}</td>
       <td>${s.totalContainers||0}</td>
-      <td>${s.totalPositive||0}</td>
-      <td>${s.totalLarvae||0}</td>
-      <td>${s.totalPupae||0}</td>
+      <td class="idx-cell blue">${s.totalPositive||0}</td>
+      <td style="color:#1565c0;font-weight:600;">${pupAedes}</td>
       <td>${s.totalDips||0}</td>
+      <td>${s.totalLarvae||0}</td>
+      <td style="color:var(--primary);font-weight:600;">${pupAnCx}</td>
       <td>${s.workers||'-'}</td>
       <td>${s.officers||'-'}</td>
       <td style="font-size:10px;font-family:monospace;">${gps}</td>
@@ -726,7 +713,8 @@ function buildAdultXLSX(surveys,isCompiled){
     const rows=[HDR];
     slist.forEach((s,si)=>{
       const r=si+2;
-      const posH=(s.houses||[]).filter(h=>(h.total||0)>0).length;
+      const posH=(s.houses||[]).filter(h=>(h.total||0)>0||(h.positiveRooms||0)>0).length;
+      const posRooms=(s.houses||[]).reduce((t,h)=>t+(h.positiveRooms||0),0);
       const indOut=(s.totIndoor||0)>=(s.totOutdoor||0)?'Indoor':'Outdoor';
       rows.push([
         si+1,
@@ -743,7 +731,7 @@ function buildAdultXLSX(surveys,isCompiled){
         s.houses?.length||0,
         posH,
         s.totalRooms||0,
-        0,
+        posRooms,
         s.totNonCulex||0,
         s.totCulex||0,
         s.totalMosq||0,
@@ -1037,6 +1025,17 @@ function exportSelected(mod){
 /* ── INIT ── */
 checkAuth();
 
+/* ── DRAG-TO-SCROLL for tables ── */
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.tbl-wrap').forEach(el=>{
+    let down=false,sx=0,sl=0;
+    el.addEventListener('mousedown',e=>{if(e.target.tagName==='INPUT'||e.target.tagName==='BUTTON'||e.target.tagName==='SELECT')return;down=true;sx=e.pageX-el.offsetLeft;sl=el.scrollLeft;el.style.cursor='grabbing';});
+    document.addEventListener('mouseup',()=>{down=false;el.style.cursor='grab';});
+    el.addEventListener('mousemove',e=>{if(!down)return;e.preventDefault();el.scrollLeft=sl-(e.pageX-el.offsetLeft-sx);});
+    el.addEventListener('mouseleave',()=>{down=false;el.style.cursor='grab';});
+  });
+});
+
 /* ── TILE MAP — Google Satellite, interactive (zoom+pan+labels) ── */
 const _TileMap=(()=>{
   const TS=256;
@@ -1101,6 +1100,7 @@ const _TileMap=(()=>{
     tDiv.addEventListener('touchstart',e=>{if(e.touches.length===1)lt={x:e.touches[0].clientX,y:e.touches[0].clientY};e.preventDefault();},{passive:false});
     tDiv.addEventListener('touchmove',e=>{if(e.touches.length===1&&lt){ox-=(e.touches[0].clientX-lt.x)/TS;oy-=(e.touches[0].clientY-lt.y)/TS;lt={x:e.touches[0].clientX,y:e.touches[0].clientY};draw();}e.preventDefault();},{passive:false});
     tDiv.addEventListener('touchend',()=>{lt=null;});
+    wrap.addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY>0?-1:1);},{passive:false});
     fit();draw();
   }
   return{build};
