@@ -4,38 +4,39 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>EST v2.0 — Database Dashboard</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23006b5c'/%3E%3Cg transform='translate(50,52)' fill='rgba(255,255,255,.92)'%3E%3Cellipse cx='0' cy='4' rx='5' ry='14'/%3E%3Ccircle cy='-13' r='5'/%3E%3Cellipse cx='-16' cy='-3' rx='14' ry='5' transform='rotate(-18 -16 -3)' opacity='.75'/%3E%3Cellipse cx='16' cy='-3' rx='14' ry='5' transform='rotate(18 16 -3)' opacity='.75'/%3E%3Cline x1='-5' y1='8' x2='-22' y2='18' stroke='rgba(255,255,255,.92)' stroke-width='1.5'/%3E%3Cline x1='5' y1='8' x2='22' y2='18' stroke='rgba(255,255,255,.92)' stroke-width='1.5'/%3E%3Cline x1='-4' y1='-17' x2='-12' y2='-27' stroke='rgba(255,255,255,.92)' stroke-width='1.5'/%3E%3Cline x1='4' y1='-17' x2='12' y2='-27' stroke='rgba(255,255,255,.92)' stroke-width='1.5'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E %3Crect width='100' height='100' rx='18' fill='%230d2018'/%3E %3Cg stroke='rgba(130,200,165,.4)' fill='none' stroke-linecap='round'%3E %3Cpolyline points='50,47 26,18' stroke-width='0.85'/%3E %3Cpolyline points='57,49 82,22 92,16' stroke-width='0.8'/%3E %3Cpolyline points='62,54 88,36 96,44' stroke-width='0.8'/%3E %3C/g%3E %3Cpath d='M50,44 Q44,22 64,13 Q78,7 87,18 Q91,27 85,35 Q76,41 63,44 Q57,44 51,44Z' fill='rgba(180,240,218,.11)' stroke='rgba(200,240,225,.8)' stroke-width='0.7'/%3E %3Cellipse cx='54' cy='46' rx='10' ry='9.5' fill='%236dbd9e' stroke='%239ed0b8' stroke-width='0.75'/%3E %3Ccircle cx='42' cy='50' r='6.2' fill='%236dbd9e' stroke='%239ed0b8' stroke-width='0.75'/%3E %3Cellipse cx='76' cy='63' rx='18' ry='6.5' transform='rotate(26 76 63)' fill='%236dbd9e' stroke='%239ed0b8' stroke-width='0.65'/%3E %3C/svg%3E">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#0d1b2a;--sf:#112233;--sf2:#162840;
-  --bdr:rgba(255,255,255,.08);--bdr2:rgba(255,255,255,.14);
+  --sb:#061a14;--sb2:#0a2318;--sb-txt:rgba(255,255,255,.6);--sb-active:#00bfa5;--sb-hover:rgba(255,255,255,.07);
+  --bg:#0f1923;--sf:#162535;--sf2:#1c2f42;
+  --bdr:rgba(255,255,255,.08);--bdr2:rgba(255,255,255,.13);
   --teal:#00bfa5;--teal-dk:#00897b;--teal-lt:rgba(0,191,165,.13);
-  --blue:#2196f3;--blue-lt:rgba(33,150,243,.12);
+  --blue:#2196f3;--blue-dk:#1565c0;--blue-lt:rgba(33,150,243,.12);
   --gold:#ffd600;--err:#ef5350;--warn:#ff9800;
-  --txt:#e8eaed;--txt2:#b0bec5;--muted:rgba(255,255,255,.38);
-  --card:rgba(255,255,255,.04);--shadow:0 4px 24px rgba(0,0,0,.45);
-  --r:12px;--r-sm:8px;
+  --txt:#e8eaed;--txt2:#90a4ae;--muted:rgba(255,255,255,.35);
+  --shadow:0 4px 24px rgba(0,0,0,.5);--r:12px;--r-sm:8px;
 }
 [data-theme="light"]{
+  --sb:#006b5c;--sb2:#005548;--sb-txt:rgba(255,255,255,.75);--sb-active:#fff;--sb-hover:rgba(255,255,255,.12);
   --bg:#f0f5f4;--sf:#fff;--sf2:#f5f9f8;
-  --bdr:#dde8e5;--bdr2:#c8d8d4;
+  --bdr:#dce8e5;--bdr2:#c4d8d3;
   --teal:#006b5c;--teal-dk:#004d42;--teal-lt:#e6f7f4;
-  --blue:#1565c0;--blue-lt:#e3f2fd;
-  --txt:#191c1d;--txt2:#3c4a46;--muted:#6c7a76;
-  --card:#fff;--shadow:0 2px 12px rgba(0,0,0,.1);
+  --blue:#1565c0;--blue-dk:#0d47a1;--blue-lt:#e3f2fd;
+  --txt:#191c1d;--txt2:#546e6a;--muted:#7a9490;
+  --shadow:0 2px 12px rgba(0,0,0,.1);
 }
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);transition:background .25s,color .25s;}
 
-/* ── LOGIN ── */
+/* ═══ LOGIN ═══ */
 #login-screen{position:fixed;inset:0;background:linear-gradient(160deg,#001e18 0%,#003528 40%,#004d42 100%);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;}
 #login-screen.gone{display:none;}
-.login-wrap{width:100%;max-width:400px;}
-.login-logo{text-align:center;margin-bottom:28px;}
-.login-logo-icon{width:80px;height:80px;background:rgba(0,191,165,.15);border:1.5px solid rgba(0,191,165,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
-.login-logo h1{font-family:monospace;font-size:24px;font-weight:700;color:#fff;margin-bottom:3px;}
-.login-logo p{font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.1em;text-transform:uppercase;}
-.login-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:28px 24px;backdrop-filter:blur(10px);}
+.lw{width:100%;max-width:400px;}
+.ll{text-align:center;margin-bottom:28px;}
+.ll-icon{width:80px;height:80px;background:rgba(0,191,165,.15);border:1.5px solid rgba(0,191,165,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+.ll h1{font-family:monospace;font-size:24px;font-weight:700;color:#fff;margin-bottom:3px;}
+.ll p{font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.1em;text-transform:uppercase;}
+.lc{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:28px 24px;backdrop-filter:blur(10px);}
 .lf-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5);display:block;margin-bottom:5px;}
 .lf-input{width:100%;height:48px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:10px;padding:0 14px;font-size:15px;color:#fff;outline:none;margin-bottom:14px;font-family:monospace;}
 .lf-input:focus{border-color:rgba(0,191,165,.6);background:rgba(0,191,165,.08);}
@@ -47,69 +48,106 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .login-btn:hover{opacity:.88;}
 .login-err{color:#ff8a80;font-size:12px;text-align:center;margin-top:10px;display:none;padding:8px;background:rgba(186,26,26,.15);border-radius:6px;}
 
-/* ── APP SHELL ── */
-#app{display:none;flex-direction:column;min-height:100vh;}
-#app.show{display:flex;}
+/* ═══ APP LAYOUT ═══ */
+#app{display:none;}
+#app.show{display:flex;min-height:100vh;}
+.sidebar{width:232px;background:var(--sb);display:flex;flex-direction:column;flex-shrink:0;position:relative;z-index:100;transition:width .2s;}
+.sidebar.collapsed{width:60px;}
+.main-wrapper{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;}
 
-/* ── TOPBAR ── */
-.topbar{background:linear-gradient(135deg,#002d24,#005745);color:#fff;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(0,0,0,.5);flex-shrink:0;}
-[data-theme="light"] .topbar{background:linear-gradient(135deg,#004d42,#006b5c);}
-.topbar-left{display:flex;align-items:center;gap:11px;}
-.tb-logo{width:34px;height:34px;background:rgba(255,255,255,.12);border-radius:50%;border:1px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.tb-title h1{font-family:monospace;font-size:14px;font-weight:700;line-height:1.25;}
-.tb-title p{font-size:9px;opacity:.52;margin-top:1px;letter-spacing:.04em;}
-.topbar-right{display:flex;gap:7px;align-items:center;}
-#conn-pill{font-size:10px;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);white-space:nowrap;}
-#conn-pill.ok{background:rgba(0,191,165,.22);border-color:rgba(0,191,165,.5);}
+/* ═══ SIDEBAR ═══ */
+.sb-brand{padding:20px 16px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;}
+.sb-logo{width:36px;height:36px;background:rgba(0,191,165,.18);border:1px solid rgba(0,191,165,.35);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-title{overflow:hidden;}
+.sb-title h2{font-family:monospace;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;}
+.sb-title p{font-size:9px;color:var(--sb-txt);white-space:nowrap;margin-top:1px;}
+.sidebar.collapsed .sb-title{display:none;}
+
+.sb-nav{flex:1;padding:10px 8px;overflow-y:auto;}
+.nav-section{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.25);padding:12px 8px 4px;white-space:nowrap;overflow:hidden;}
+.sidebar.collapsed .nav-section{opacity:0;}
+.nav-item{width:100%;display:flex;align-items:center;gap:10px;padding:9px 10px;border:none;background:none;color:var(--sb-txt);font-size:12px;font-weight:500;cursor:pointer;border-radius:8px;text-align:left;transition:all .15s;white-space:nowrap;margin-bottom:2px;}
+.nav-item:hover{background:var(--sb-hover);color:#fff;}
+.nav-item.active{background:rgba(0,191,165,.18);color:var(--sb-active);font-weight:600;}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;}
+.nav-item-label{overflow:hidden;}
+.sidebar.collapsed .nav-item-label{display:none;}
+
+.sb-footer{padding:12px 8px;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0;}
+#conn-pill{display:block;font-size:10px;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.07);color:var(--sb-txt);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#conn-pill.ok{background:rgba(0,191,165,.18);color:var(--sb-active);}
+.sidebar.collapsed #conn-pill{font-size:0;padding:6px;}
+.sidebar.collapsed #conn-pill::after{content:'●';font-size:10px;}
+.sidebar.collapsed #conn-pill.ok::after{color:#00bfa5;}
+
+/* ═══ TOPBAR ═══ */
+.topbar{background:var(--sf);border-bottom:1px solid var(--bdr);padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 1px 8px rgba(0,0,0,.2);}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.sb-toggle{width:32px;height:32px;background:none;border:1px solid var(--bdr);border-radius:7px;cursor:pointer;color:var(--txt2);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.sb-toggle:hover{background:var(--sf2);color:var(--txt);}
+.breadcrumb{font-size:14px;font-weight:600;color:var(--txt);display:flex;align-items:center;gap:6px;}
+.breadcrumb-sub{font-size:12px;color:var(--muted);font-weight:400;}
+.topbar-right{display:flex;gap:6px;align-items:center;}
 .tb-btn{height:30px;padding:0 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;display:flex;align-items:center;gap:4px;transition:all .15s;}
-.tb-btn.primary{background:#68fadd;color:#002820;}
-.tb-btn.primary:hover{background:#4df5d3;}
-.tb-btn.ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);}
-.tb-btn.ghost:hover{background:rgba(255,255,255,.18);}
-.tb-icon-btn{width:30px;height:30px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:13px;transition:background .15s;flex-shrink:0;}
-.tb-icon-btn:hover{background:rgba(255,255,255,.2);}
+.tb-btn.primary{background:var(--teal);color:#fff;}
+.tb-btn.primary:hover{background:var(--teal-dk);}
+.tb-btn.ghost{background:var(--sf2);color:var(--txt2);border:1px solid var(--bdr);}
+.tb-btn.ghost:hover{color:var(--txt);border-color:var(--bdr2);}
+.tb-btn.danger-ghost{background:rgba(239,83,80,.1);color:#ef5350;border:1px solid rgba(239,83,80,.25);}
+.tb-icon-btn{width:30px;height:30px;background:var(--sf2);border:1px solid var(--bdr);border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--txt2);font-size:13px;transition:all .15s;}
+.tb-icon-btn:hover{color:var(--txt);border-color:var(--bdr2);}
+.tb-lbl{display:none;}
+@media(min-width:900px){.tb-lbl{display:inline;}}
 
-/* ── SETUP BANNER ── */
+/* ═══ SETUP BANNER ═══ */
 #setup-banner{background:var(--sf);border-bottom:1px solid var(--bdr);padding:14px 20px;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;}
 #setup-banner.hidden{display:none;}
 .sf-group{flex:1;min-width:180px;}
 .sf-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;display:block;}
-.sf-input{width:100%;height:38px;background:var(--sf2);border:1.5px solid var(--bdr);border-radius:7px;padding:0 11px;font-size:13px;font-family:monospace;color:var(--txt);}
+.sf-input{width:100%;height:36px;background:var(--sf2);border:1.5px solid var(--bdr);border-radius:7px;padding:0 11px;font-size:13px;font-family:monospace;color:var(--txt);}
 .sf-input:focus{outline:none;border-color:var(--teal);}
-.sf-btn{height:38px;padding:0 18px;background:var(--teal);color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;}
-.sf-dismiss{height:38px;padding:0 12px;background:none;border:1.5px solid var(--bdr);border-radius:7px;font-size:12px;color:var(--muted);cursor:pointer;}
+.sf-btn{height:36px;padding:0 16px;background:var(--teal);color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;}
+.sf-dismiss{height:36px;padding:0 12px;background:none;border:1.5px solid var(--bdr);border-radius:7px;font-size:12px;color:var(--muted);cursor:pointer;}
 
-/* ── STATUS BAR ── */
-.status-bar{padding:9px 20px;font-size:12px;font-weight:600;display:none;border-bottom:1px solid var(--bdr);}
-.status-bar.ok{background:var(--teal-lt);color:var(--teal);border-color:rgba(0,191,165,.25);}
-.status-bar.err{background:rgba(239,83,80,.1);color:#ef5350;border-color:rgba(239,83,80,.25);}
-.status-bar.info{background:rgba(255,214,0,.07);color:#ffd600;border-color:rgba(255,214,0,.2);}
-[data-theme="light"] .status-bar.ok{background:var(--teal-lt);color:var(--teal);}
+/* ═══ STATUS BAR ═══ */
+.status-bar{padding:8px 20px;font-size:12px;font-weight:600;display:none;}
+.status-bar.ok{background:var(--teal-lt);color:var(--teal);}
+.status-bar.err{background:rgba(239,83,80,.1);color:#ef5350;}
+.status-bar.info{background:rgba(255,214,0,.07);color:#ffd600;}
+[data-theme="light"] .status-bar.ok{background:var(--teal-lt);color:var(--teal-dk);}
 [data-theme="light"] .status-bar.err{background:#ffdad6;color:#ba1a1a;}
 [data-theme="light"] .status-bar.info{background:#fff8e1;color:#7a5c00;}
 
-/* ── KPI SECTION ── */
-.kpi-section{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:11px;padding:16px 20px 0;}
-.kpi-card{background:var(--sf);border:1px solid var(--bdr);border-radius:var(--r);padding:14px 16px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;cursor:default;}
+/* ═══ CONTENT ═══ */
+.main-content{flex:1;overflow-y:auto;}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ═══ OVERVIEW PANEL ═══ */
+.overview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px 20px 0;}
+.kpi-card{background:var(--sf);border:1px solid var(--bdr);border-radius:var(--r);padding:16px 18px;display:flex;align-items:flex-start;gap:14px;transition:transform .2s,box-shadow .2s;cursor:default;}
 .kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
-.kpi-accent{position:absolute;left:0;top:0;bottom:0;width:3px;}
-.kpi-accent.teal{background:linear-gradient(to bottom,var(--teal),var(--teal-dk));}
-.kpi-accent.blue{background:linear-gradient(to bottom,var(--blue),#1565c0);}
-.kpi-accent.gold{background:linear-gradient(to bottom,#ffd600,#f59e0b);}
-.kpi-accent.red{background:linear-gradient(to bottom,#ef5350,#c62828);}
-.kpi-icon{font-size:18px;margin-bottom:8px;display:block;}
-.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px;}
-.kpi-value{font-family:monospace;font-size:26px;font-weight:700;color:var(--teal);line-height:1;}
+.kpi-icon-wrap{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.kpi-icon-wrap.teal{background:var(--teal-lt);}
+.kpi-icon-wrap.blue{background:var(--blue-lt);}
+.kpi-icon-wrap.gold{background:rgba(255,214,0,.1);}
+.kpi-icon-wrap.red{background:rgba(239,83,80,.1);}
+.kpi-icon-wrap.purple{background:rgba(156,39,176,.1);}
+.kpi-body{flex:1;min-width:0;}
+.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;}
+.kpi-value{font-family:monospace;font-size:28px;font-weight:700;color:var(--teal);line-height:1;}
 .kpi-value.blue{color:var(--blue);}
 .kpi-value.gold{color:var(--gold);}
 .kpi-value.red{color:var(--err);}
-.kpi-value.sm{font-size:16px;margin-top:3px;}
-.kpi-trend{font-size:10px;color:var(--muted);margin-top:5px;}
+.kpi-value.sm{font-size:17px;margin-top:2px;}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+@media(max-width:900px){.overview-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.overview-grid{grid-template-columns:1fr;}}
 
-/* ── ALERT CENTER ── */
-#alert-section{margin:12px 20px 0;display:none;}
+/* ═══ ALERT CENTER ═══ */
+#alert-section{margin:14px 20px;display:none;}
 .alert-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
-.alert-hdr-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
+.alert-hdr h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
 .alert-dismiss{background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;}
 .alert-list{display:flex;flex-direction:column;gap:5px;}
 .alert-item{display:flex;align-items:flex-start;gap:9px;padding:9px 13px;border-radius:var(--r-sm);font-size:12px;border:1px solid;}
@@ -120,27 +158,21 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 [data-theme="light"] .alert-item.info{background:var(--blue-lt);border-color:#90caf9;color:var(--blue);}
 [data-theme="light"] .alert-item.ok{background:var(--teal-lt);color:var(--teal-dk);}
 .alert-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:3px;}
-.alert-dot.warn{background:#ff9800;}
-.alert-dot.info{background:#2196f3;}
-.alert-dot.ok{background:#00bfa5;}
+.alert-dot.warn{background:#ff9800;}.alert-dot.info{background:#2196f3;}.alert-dot.ok{background:#00bfa5;}
 
-/* ── SECTION BAR (tabs) ── */
-.section-bar{display:flex;align-items:center;border-bottom:1px solid var(--bdr);padding:0 20px;background:var(--sf);margin-top:14px;}
-.tab-item{padding:11px 16px;background:none;border:none;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;white-space:nowrap;}
-.tab-item:hover:not(.active){color:var(--txt);}
-.tab-item.active{color:var(--teal);border-bottom-color:var(--teal);}
-.tab-item.lv.active{color:var(--blue);border-bottom-color:var(--blue);}
+/* ═══ SECTION HEADER ═══ */
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid var(--bdr);}
+.section-head h2{font-size:15px;font-weight:700;color:var(--txt);}
+.section-head-actions{display:flex;gap:6px;flex-wrap:wrap;}
 
-/* ── PANELS ── */
-.panel{display:none;padding:14px 20px;}
-.panel.active{display:block;}
-.panel-toolbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:11px;}
-.pt-search{height:36px;padding:0 12px;background:var(--sf);border:1.5px solid var(--bdr);border-radius:var(--r-sm);font-size:13px;color:var(--txt);flex:1;min-width:180px;}
+/* ═══ PANEL TOOLBAR ═══ */
+.panel-toolbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center;padding:12px 20px;background:var(--sf2);border-bottom:1px solid var(--bdr);}
+.pt-search{height:34px;padding:0 12px;background:var(--sf);border:1.5px solid var(--bdr);border-radius:6px;font-size:12px;color:var(--txt);flex:1;min-width:160px;}
 .pt-search:focus{outline:none;border-color:var(--teal);}
 .pt-search::placeholder{color:var(--muted);}
-.pt-select{height:36px;padding:0 10px;background:var(--sf);border:1.5px solid var(--bdr);border-radius:var(--r-sm);font-size:13px;color:var(--txt);cursor:pointer;}
+.pt-select{height:34px;padding:0 10px;background:var(--sf);border:1.5px solid var(--bdr);border-radius:6px;font-size:12px;color:var(--txt);cursor:pointer;}
 .pt-select:focus{outline:none;border-color:var(--teal);}
-.pt-btn{height:36px;padding:0 13px;border-radius:var(--r-sm);font-size:11px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;transition:all .15s;}
+.pt-btn{height:34px;padding:0 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;transition:all .15s;}
 .pt-btn.primary{background:var(--teal);color:#fff;}
 .pt-btn.secondary{background:var(--teal-lt);color:var(--teal);border:1px solid rgba(0,191,165,.3);}
 .pt-btn.blue{background:var(--blue-lt);color:var(--blue);border:1px solid rgba(33,150,243,.3);}
@@ -150,20 +182,17 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .date-range-group{display:flex;align-items:center;gap:4px;}
 .date-range-group label{font-size:10px;font-weight:700;color:var(--muted);white-space:nowrap;}
 
-/* ── TABLE ── */
-.tbl-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--bdr);cursor:grab;user-select:none;background:var(--sf);}
-.tbl-wrap:active{cursor:grabbing;}
+/* ═══ TABLE ═══ */
+.tbl-outer{padding:0 20px 20px;}
+.tbl-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--bdr);margin-top:12px;}
 table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap;}
 thead tr{background:var(--teal);}
-thead tr.blue-hd{background:var(--blue);}
-[data-theme="light"] thead tr{background:#006b5c;}
-[data-theme="light"] thead tr.blue-hd{background:#1565c0;}
+thead tr.blue-hd{background:var(--blue-dk);}
 th{padding:9px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#fff;}
-th:not(:first-child):not(:nth-child(2)):not(:nth-child(3)):not(:nth-child(4)){text-align:center;}
 td{padding:7px 10px;border-bottom:1px solid var(--bdr);vertical-align:middle;color:var(--txt);}
-td:not(:first-child):not(:nth-child(2)):not(:nth-child(3)):not(:nth-child(4)){text-align:center;}
+tr:last-child td{border-bottom:none;}
 tr:nth-child(even) td{background:rgba(255,255,255,.02);}
-[data-theme="light"] tr:nth-child(even) td{background:#f8faf9;}
+[data-theme="light"] tr:nth-child(even) td{background:#f7fbfa;}
 tr:hover td{background:var(--teal-lt);}
 .idx-cell{font-weight:700;color:var(--teal);}
 .idx-cell.blue{color:var(--blue);}
@@ -174,57 +203,52 @@ tr:hover td{background:var(--teal-lt);}
 .badge.hlc{background:rgba(239,83,80,.1);color:#ef5350;}
 [data-theme="light"] .badge.pend{background:#fff8e1;color:#7a5c00;}
 [data-theme="light"] .badge.hlc{background:#fce4ec;color:#c62828;}
-.tbl-empty{text-align:center;padding:36px;color:var(--muted);font-style:italic;}
+.tbl-empty{text-align:center;padding:40px;color:var(--muted);font-style:italic;}
 .row-cb{width:16px;height:16px;accent-color:var(--teal);cursor:pointer;}
+.del-btn{height:28px;padding:0 8px;background:rgba(239,83,80,.1);border:1px solid rgba(239,83,80,.3);border-radius:6px;font-size:11px;color:#ef5350;cursor:pointer;font-weight:700;}
+[data-theme="light"] .del-btn{background:#ffdad6;border-color:#ba1a1a;color:#ba1a1a;}
 
-/* ── USERS ── */
+/* ═══ USERS ═══ */
+.users-wrap{padding:20px;}
 .users-form{background:var(--sf);border:1px solid var(--bdr);border-radius:var(--r);padding:16px;margin-bottom:14px;}
 .users-form h3{font-size:13px;font-weight:700;color:var(--teal);margin-bottom:12px;}
 .user-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;}
-.user-row input,.user-row select{height:36px;padding:0 10px;background:var(--sf2);border:1.5px solid var(--bdr);border-radius:7px;font-size:13px;font-family:monospace;color:var(--txt);}
+.user-row input,.user-row select{height:34px;padding:0 10px;background:var(--sf2);border:1.5px solid var(--bdr);border-radius:7px;font-size:13px;font-family:monospace;color:var(--txt);}
 .user-row input{min-width:120px;}
-.del-btn{height:32px;padding:0 10px;background:rgba(239,83,80,.1);border:1px solid rgba(239,83,80,.3);border-radius:7px;font-size:11px;color:#ef5350;cursor:pointer;font-weight:700;}
-[data-theme="light"] .del-btn{background:#ffdad6;border-color:#ba1a1a;color:#ba1a1a;}
 .note-box{background:rgba(255,214,0,.06);border:1px solid rgba(255,214,0,.18);border-radius:var(--r-sm);padding:12px;font-size:12px;color:#ffd600;line-height:1.6;}
 [data-theme="light"] .note-box{background:#fff8e1;border-color:#f0c040;color:#7a5c00;}
 
-/* ── MAP MODAL ── */
+/* ═══ MAP MODAL ═══ */
 #map-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:1000;align-items:center;justify-content:center;padding:16px;}
 .map-modal-box{background:#111827;border-radius:14px;overflow:hidden;width:100%;max-width:760px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.7);}
 .map-modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#0d1117;color:#fff;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.08);}
 #map-meta{font-size:12px;color:rgba(255,255,255,.72);}
 #map-body{flex:1;min-height:420px;}
 
-/* ── ANIMATIONS ── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.kpi-card{animation:fadeUp .35s ease both;}
-.kpi-card:nth-child(1){animation-delay:.04s}.kpi-card:nth-child(2){animation-delay:.08s}
-.kpi-card:nth-child(3){animation-delay:.12s}.kpi-card:nth-child(4){animation-delay:.16s}
-.kpi-card:nth-child(5){animation-delay:.20s}.kpi-card:nth-child(6){animation-delay:.24s}
+/* ═══ ANIMATIONS ═══ */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.kpi-card{animation:fadeIn .3s ease both;}
+.kpi-card:nth-child(1){animation-delay:.03s}.kpi-card:nth-child(2){animation-delay:.06s}
+.kpi-card:nth-child(3){animation-delay:.09s}.kpi-card:nth-child(4){animation-delay:.12s}
+.kpi-card:nth-child(5){animation-delay:.15s}.kpi-card:nth-child(6){animation-delay:.18s}
 
-/* ── RESPONSIVE ── */
+/* ═══ RESPONSIVE ═══ */
 @media(max-width:768px){
-  .topbar{height:auto;padding:8px 12px;flex-wrap:wrap;gap:6px;}
-  .topbar-right{flex-wrap:wrap;gap:5px;}
-  .tb-btn{height:27px;padding:0 8px;font-size:10px;}
-  .tb-lbl{display:none;}
-  .kpi-section{grid-template-columns:repeat(2,1fr);padding:10px 12px 0;}
-  .panel{padding:10px 12px;}
-  .panel-toolbar{gap:5px;}
-  .pt-search{min-width:0;flex:1 1 100%;}
-  .tab-item{padding:10px 10px;font-size:11px;}
-  .kpi-value{font-size:22px;}
-  .date-range-group{flex:1 1 100%;overflow-x:auto;}
+  .sidebar{width:0;overflow:hidden;}.sidebar.mobile-open{width:232px;position:fixed;inset:0 auto 0 0;z-index:200;}
+  .main-wrapper{width:100%;}
+  .overview-grid{grid-template-columns:repeat(2,1fr);padding:12px 12px 0;}
+  .section-head{padding:12px;}.section-head-actions .tb-btn .tb-lbl{display:none;}
+  .panel-toolbar{padding:10px 12px;}.tbl-outer{padding:0 12px 16px;}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════ LOGIN SCREEN ═══════════════ -->
+<!-- ═══════════════ LOGIN ═══════════════ -->
 <div id="login-screen">
-  <div class="login-wrap">
-    <div class="login-logo">
-      <div class="login-logo-icon">
+  <div class="lw">
+    <div class="ll">
+      <div class="ll-icon">
         <svg width="44" height="44" viewBox="0 0 100 100" fill="rgba(255,255,255,.9)">
           <ellipse cx="50" cy="56" rx="7" ry="19"/>
           <circle cx="50" cy="33" r="7"/>
@@ -240,15 +264,12 @@ tr:hover td{background:var(--teal-lt);}
       <h1>EST Database</h1>
       <p>Admin Dashboard · v2.0</p>
     </div>
-    <div class="login-card">
+    <div class="lc">
       <label class="lf-label">Username</label>
       <input id="lf-user" class="lf-input" type="text" placeholder="ANIENTO" autocomplete="username">
       <label class="lf-label">Password</label>
       <input id="lf-pass" class="lf-input" type="password" placeholder="••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
-      <div class="lf-rem">
-        <input type="checkbox" id="lf-rem">
-        <label for="lf-rem">Remember me on this device</label>
-      </div>
+      <div class="lf-rem"><input type="checkbox" id="lf-rem"><label for="lf-rem">Remember me on this device</label></div>
       <button class="login-btn" onclick="doLogin()">SIGN IN TO DASHBOARD</button>
       <div class="login-err" id="lf-err">Invalid credentials. Please try again.</div>
     </div>
@@ -257,187 +278,239 @@ tr:hover td{background:var(--teal-lt);}
 
 <!-- ═══════════════ APP ═══════════════ -->
 <div id="app">
-
-<!-- Top bar -->
-<div class="topbar">
-  <div class="topbar-left">
-    <div class="tb-logo">
-      <svg width="22" height="22" viewBox="0 0 100 100" fill="rgba(255,255,255,.9)">
+<div class="sidebar" id="sidebar">
+  <!-- Brand -->
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <svg width="20" height="20" viewBox="0 0 100 100" fill="rgba(255,255,255,.9)">
         <ellipse cx="50" cy="56" rx="7" ry="19"/>
         <circle cx="50" cy="33" r="7"/>
-        <line x1="50" y1="40" x2="50" y2="88" stroke="rgba(255,255,255,.9)" stroke-width="2.5"/>
+        <line x1="50" y1="40" x2="50" y2="88" stroke="rgba(255,255,255,.9)" stroke-width="3"/>
         <ellipse cx="28" cy="46" rx="19" ry="7" transform="rotate(-18 28 46)" opacity=".75"/>
         <ellipse cx="72" cy="46" rx="19" ry="7" transform="rotate(18 72 46)" opacity=".75"/>
-        <line x1="43" y1="60" x2="18" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
-        <line x1="57" y1="60" x2="82" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
-        <line x1="43" y1="66" x2="16" y2="82" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
-        <line x1="57" y1="66" x2="84" y2="82" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
-        <line x1="45" y1="27" x2="34" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
-        <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/>
+        <line x1="43" y1="60" x2="18" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
+        <line x1="57" y1="60" x2="82" y2="74" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
+        <line x1="45" y1="27" x2="34" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
+        <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="tb-title"><h1>EST Database</h1><p>Entomological Surveillance · A&amp;N Islands</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>A&amp;N Entomological Surveillance</p></div>
   </div>
-  <div class="topbar-right">
+  <!-- Nav -->
+  <nav class="sb-nav">
+    <div class="nav-section">Dashboard</div>
+    <button class="nav-item active" id="nav-overview" onclick="switchSection('overview',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span class="nav-item-label">Overview</span>
+    </button>
+    <div class="nav-section">Surveillance</div>
+    <button class="nav-item" id="nav-adult" onclick="switchSection('adult',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><path d="M18 8l2-2m0 0l1-1m-1 1l1 1"/></svg>
+      <span class="nav-item-label">Adult Surveillance</span>
+    </button>
+    <button class="nav-item" id="nav-larval" onclick="switchSection('larval',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3C9 3 5 5 5 10c0 3 2 5 4 6"/><path d="M15 3c0 0 4 2 4 7c0 3-2 5-4 6"/><ellipse cx="12" cy="17" rx="4" ry="3"/><line x1="12" y1="20" x2="12" y2="23"/></svg>
+      <span class="nav-item-label">Larval Surveillance</span>
+    </button>
+    <div class="nav-section">Admin</div>
+    <button class="nav-item" id="nav-users" onclick="switchSection('users',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M3 20c0-3.3 2.7-6 6-6h1"/><circle cx="17" cy="17" r="3"/><path d="M17 14v2l1.5 1.5"/></svg>
+      <span class="nav-item-label">Manage Users</span>
+    </button>
+  </nav>
+  <!-- Footer -->
+  <div class="sb-footer">
     <span id="conn-pill">Not connected</span>
-    <button class="tb-icon-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle dark / light mode">☀</button>
-    <button class="tb-btn ghost" onclick="toggleSetup()" title="GitHub Setup">⚙ <span class="tb-lbl">Setup</span></button>
-    <button class="tb-btn primary" onclick="loadAll()" title="Refresh data">↻ <span class="tb-lbl">Refresh</span></button>
-    <button class="tb-btn primary" onclick="exportAllCSV()" title="Export all data">⬇ <span class="tb-lbl">Export All</span></button>
-    <button class="tb-btn ghost" onclick="doLogout()" title="Sign out">⎋ <span class="tb-lbl">Sign Out</span></button>
   </div>
 </div>
 
-<!-- GitHub Setup Banner -->
-<div id="setup-banner" class="hidden">
-  <div class="sf-group"><label class="sf-label">GitHub Username</label><input id="sf-owner" class="sf-input" placeholder="sumit3850"></div>
-  <div class="sf-group"><label class="sf-label">Repository Name</label><input id="sf-repo" class="sf-input" value="EST-v2.0"></div>
-  <div class="sf-group" style="flex:2;"><label class="sf-label">Personal Access Token</label><input id="sf-token" class="sf-input" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"></div>
-  <button class="sf-btn" onclick="saveSetup()">Connect</button>
-  <button class="sf-dismiss" onclick="toggleSetup()">Hide</button>
-</div>
-
-<div id="status-bar" class="status-bar"></div>
-
-<!-- KPI Cards -->
-<div class="kpi-section">
-  <div class="kpi-card">
-    <div class="kpi-accent teal"></div>
-    <span class="kpi-icon">🦟</span>
-    <div class="kpi-label">Adult Surveys</div>
-    <div class="kpi-value" id="st-adult">—</div>
-    <div class="kpi-trend">Resting + HLC collections</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-accent blue"></div>
-    <span class="kpi-icon">🔬</span>
-    <div class="kpi-label">Larval Surveys</div>
-    <div class="kpi-value blue" id="st-larval">—</div>
-    <div class="kpi-trend">Container + dipping</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-accent gold"></div>
-    <span class="kpi-icon">📊</span>
-    <div class="kpi-label">Total Mosquitoes</div>
-    <div class="kpi-value gold" id="st-mosq">—</div>
-    <div class="kpi-trend">Adult collections total</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-accent red"></div>
-    <span class="kpi-icon">🏠</span>
-    <div class="kpi-label">Avg House Index</div>
-    <div class="kpi-value red" id="st-hi">—</div>
-    <div class="kpi-trend">Aedes positivity (HI%)</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-accent teal"></div>
-    <span class="kpi-icon">📍</span>
-    <div class="kpi-label">Locations</div>
-    <div class="kpi-value" id="st-loc">—</div>
-    <div class="kpi-trend">Unique survey sites</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-accent blue"></div>
-    <span class="kpi-icon">🕐</span>
-    <div class="kpi-label">Last Synced</div>
-    <div class="kpi-value sm" id="st-sync">—</div>
-    <div class="kpi-trend">From GitHub repository</div>
-  </div>
-</div>
-
-<!-- Alert Center -->
-<div id="alert-section">
-  <div class="alert-hdr">
-    <span class="alert-hdr-title">Intelligence Alerts</span>
-    <button class="alert-dismiss" onclick="document.getElementById('alert-section').style.display='none'">Dismiss ✕</button>
-  </div>
-  <div class="alert-list" id="alert-list"></div>
-</div>
-
-<!-- Tab bar -->
-<div class="section-bar">
-  <button class="tab-item active" onclick="switchTab('adult',this)">Adult Surveillance</button>
-  <button class="tab-item lv" onclick="switchTab('larval',this)">Larval Surveillance</button>
-  <button class="tab-item" onclick="switchTab('users',this)">Manage Users</button>
-</div>
-
-<!-- Adult Panel -->
-<div class="panel active" id="panel-adult">
-  <div class="panel-toolbar">
-    <input class="pt-search" id="search-adult" placeholder="🔍  Search location, district, officer…" oninput="filterTable('adult')">
-    <select class="pt-select" id="filter-type" onchange="filterTable('adult')" style="flex:0 0 auto;">
-      <option value="">All Types</option><option value="resting">Resting</option><option value="hlc">HLC</option>
-    </select>
-    <div class="date-range-group">
-      <label>From</label><input type="date" class="pt-select" id="filter-adult-from" onchange="filterTable('adult')" style="flex:0 0 auto;">
-      <label>To</label><input type="date" class="pt-select" id="filter-adult-to" onchange="filterTable('adult')" style="flex:0 0 auto;">
+<div class="main-wrapper">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="sb-toggle" onclick="toggleSidebar()" title="Toggle sidebar">☰</button>
+      <div class="breadcrumb"><span id="bc-main">Overview</span></div>
     </div>
-    <button class="pt-btn ghost" onclick="selectAll('adult',true)">☑ All</button>
-    <button class="pt-btn ghost" onclick="selectAll('adult',false)">☐ Clear</button>
-    <button class="pt-btn blue" onclick="exportSelected('adult')">⬇ Export Sel.</button>
-    <button class="pt-btn secondary" onclick="exportFiltered('adult')">⬇ Export Filtered</button>
-    <button class="pt-btn danger" onclick="deleteSelected('adult')">🗑 Delete Sel.</button>
-  </div>
-  <div class="tbl-wrap">
-    <table id="tbl-adult">
-      <thead><tr>
-        <th><input type="checkbox" class="row-cb" onchange="selectAll('adult',this.checked)"></th>
-        <th>#</th><th>Date</th><th>Location</th><th>State/UT</th><th>District</th>
-        <th>Type</th><th>Houses</th><th>Mosq</th><th>Non-Cx</th><th>Culex</th>
-        <th>PMHD</th><th>TMHD</th><th>Indoor Den</th><th>Outdoor Den</th><th>HBR</th>
-        <th>Collectors</th><th>Man-Hrs</th><th>Nights</th><th>Officer</th><th>GPS</th><th>Map</th><th>Saved</th><th>Sync</th><th>Del</th>
-      </tr></thead>
-      <tbody id="tbody-adult"><tr><td colspan="25" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
-    </table>
-  </div>
-</div>
-
-<!-- Larval Panel -->
-<div class="panel" id="panel-larval">
-  <div class="panel-toolbar">
-    <input class="pt-search" id="search-larval" placeholder="🔍  Search location, district, officer…" oninput="filterTable('larval')">
-    <div class="date-range-group">
-      <label>From</label><input type="date" class="pt-select" id="filter-larval-from" onchange="filterTable('larval')" style="flex:0 0 auto;">
-      <label>To</label><input type="date" class="pt-select" id="filter-larval-to" onchange="filterTable('larval')" style="flex:0 0 auto;">
-    </div>
-    <button class="pt-btn ghost" onclick="selectAll('larval',true)">☑ All</button>
-    <button class="pt-btn ghost" onclick="selectAll('larval',false)">☐ Clear</button>
-    <button class="pt-btn blue" onclick="exportSelected('larval')">⬇ Export Sel.</button>
-    <button class="pt-btn secondary" onclick="exportFiltered('larval')">⬇ Export Filtered</button>
-    <button class="pt-btn danger" onclick="deleteSelected('larval')">🗑 Delete Sel.</button>
-  </div>
-  <div class="tbl-wrap">
-    <table id="tbl-larval">
-      <thead><tr class="blue-hd">
-        <th><input type="checkbox" class="row-cb" onchange="selectAll('larval',this.checked)"></th>
-        <th>#</th><th>Date</th><th>Location</th><th>State/UT</th><th>District</th>
-        <th>Houses</th><th>HI%</th><th>CI%</th><th>BI</th><th>Pupal Idx</th>
-        <th>Larval Den</th><th>Pupal Den</th><th>Immature Den</th>
-        <th>Containers</th><th>+ve Cont</th><th>Larvae</th><th>Pupae</th><th>Dips</th>
-        <th>Workers</th><th>Officer</th><th>GPS</th><th>Map</th><th>Saved</th><th>Sync</th><th>Del</th>
-      </tr></thead>
-      <tbody id="tbody-larval"><tr><td colspan="26" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
-    </table>
-  </div>
-</div>
-
-<!-- Users Panel -->
-<div class="panel" id="panel-users">
-  <div class="users-form">
-    <h3>User Management</h3>
-    <div id="users-list"></div>
-    <div style="display:flex;gap:8px;margin-top:12px;">
-      <button class="pt-btn secondary" onclick="addUser()">+ Add User</button>
-      <button class="pt-btn primary" onclick="saveUsers()">💾 Save to GitHub</button>
+    <div class="topbar-right">
+      <button class="tb-icon-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">☀</button>
+      <button class="tb-btn ghost" onclick="toggleSetup()">⚙ <span class="tb-lbl">Setup</span></button>
+      <button class="tb-btn primary" onclick="loadAll()">↻ <span class="tb-lbl">Refresh</span></button>
+      <button class="tb-btn ghost" onclick="exportAllCSV()">⬇ <span class="tb-lbl">Export All</span></button>
+      <button class="tb-btn danger-ghost" onclick="doLogout()">⎋ <span class="tb-lbl">Sign Out</span></button>
     </div>
   </div>
-  <div class="note-box">
-    <strong>How credentials work:</strong> The EST app checks GitHub's <code>config.json</code> on each login when online.
-    Setting a user to <strong>Inactive</strong> immediately blocks their access on next online login.
-    The hardcoded admin (ANIENTO/2026) always works even offline.
-  </div>
-</div>
 
+  <!-- Setup Banner -->
+  <div id="setup-banner" class="hidden">
+    <div class="sf-group"><label class="sf-label">GitHub Username</label><input id="sf-owner" class="sf-input" placeholder="sumit3850"></div>
+    <div class="sf-group"><label class="sf-label">Repository Name</label><input id="sf-repo" class="sf-input" value="EST-v2.0"></div>
+    <div class="sf-group" style="flex:2;"><label class="sf-label">Personal Access Token</label><input id="sf-token" class="sf-input" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"></div>
+    <button class="sf-btn" onclick="saveSetup()">Connect</button>
+    <button class="sf-dismiss" onclick="toggleSetup()">Hide</button>
+  </div>
+  <div id="status-bar" class="status-bar"></div>
+
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <div class="main-content">
+
+    <!-- Overview Panel -->
+    <div class="panel active" id="panel-overview">
+      <div class="overview-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap teal">🦟</div>
+          <div class="kpi-body">
+            <div class="kpi-label">Adult Surveys</div>
+            <div class="kpi-value" id="st-adult">—</div>
+            <div class="kpi-sub">Resting + HLC collections</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap blue">🔬</div>
+          <div class="kpi-body">
+            <div class="kpi-label">Larval Surveys</div>
+            <div class="kpi-value blue" id="st-larval">—</div>
+            <div class="kpi-sub">Container + dipping</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap gold">📊</div>
+          <div class="kpi-body">
+            <div class="kpi-label">Total Mosquitoes</div>
+            <div class="kpi-value gold" id="st-mosq">—</div>
+            <div class="kpi-sub">Adult collections total</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap red">⚠️</div>
+          <div class="kpi-body">
+            <div class="kpi-label">Avg House Index</div>
+            <div class="kpi-value red" id="st-hi">—</div>
+            <div class="kpi-sub">Aedes HI% across surveys</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap teal">📍</div>
+          <div class="kpi-body">
+            <div class="kpi-label">Locations</div>
+            <div class="kpi-value" id="st-loc">—</div>
+            <div class="kpi-sub">Unique survey sites</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap blue">🕐</div>
+          <div class="kpi-body">
+            <div class="kpi-label">Last Synced</div>
+            <div class="kpi-value sm" id="st-sync">—</div>
+            <div class="kpi-sub">From GitHub repository</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="alert-section">
+        <div class="alert-hdr">
+          <h3>Intelligence Alerts</h3>
+          <button class="alert-dismiss" onclick="document.getElementById('alert-section').style.display='none'">Dismiss ✕</button>
+        </div>
+        <div class="alert-list" id="alert-list"></div>
+      </div>
+    </div>
+
+    <!-- Adult Surveillance Panel -->
+    <div class="panel" id="panel-adult">
+      <div class="section-head">
+        <h2>Adult Surveillance</h2>
+        <div class="section-head-actions">
+          <button class="tb-btn ghost" onclick="selectAll('adult',true)">☑ All</button>
+          <button class="tb-btn ghost" onclick="selectAll('adult',false)">☐ Clear</button>
+          <button class="tb-btn blue" onclick="exportSelected('adult')">⬇ <span class="tb-lbl">Export Selected</span></button>
+          <button class="tb-btn secondary" onclick="exportFiltered('adult')">⬇ <span class="tb-lbl">Export Filtered</span></button>
+          <button class="tb-btn danger" onclick="deleteSelected('adult')">🗑 <span class="tb-lbl">Delete Selected</span></button>
+        </div>
+      </div>
+      <div class="panel-toolbar">
+        <input class="pt-search" id="search-adult" placeholder="🔍  Search location, district, officer…" oninput="filterTable('adult')">
+        <select class="pt-select" id="filter-type" onchange="filterTable('adult')">
+          <option value="">All Types</option><option value="resting">Resting</option><option value="hlc">HLC</option>
+        </select>
+        <div class="date-range-group">
+          <label>From</label><input type="date" class="pt-select" id="filter-adult-from" onchange="filterTable('adult')">
+          <label>To</label><input type="date" class="pt-select" id="filter-adult-to" onchange="filterTable('adult')">
+        </div>
+      </div>
+      <div class="tbl-outer">
+        <div class="tbl-wrap">
+          <table id="tbl-adult">
+            <thead><tr>
+              <th><input type="checkbox" class="row-cb" onchange="selectAll('adult',this.checked)"></th>
+              <th>#</th><th>Survey ID</th><th>Username</th><th>Date</th><th>Location</th>
+              <th>State/UT</th><th>District</th><th>Type</th><th>Collectors</th>
+              <th>Man-Hrs</th><th>Nights</th><th>Officer</th><th>GPS</th><th>Map</th>
+              <th>Saved</th><th>Sync</th><th>Del</th>
+            </tr></thead>
+            <tbody id="tbody-adult"><tr><td colspan="18" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Larval Surveillance Panel -->
+    <div class="panel" id="panel-larval">
+      <div class="section-head">
+        <h2>Larval Surveillance</h2>
+        <div class="section-head-actions">
+          <button class="tb-btn ghost" onclick="selectAll('larval',true)">☑ All</button>
+          <button class="tb-btn ghost" onclick="selectAll('larval',false)">☐ Clear</button>
+          <button class="tb-btn blue" onclick="exportSelected('larval')">⬇ <span class="tb-lbl">Export Selected</span></button>
+          <button class="tb-btn secondary" onclick="exportFiltered('larval')">⬇ <span class="tb-lbl">Export Filtered</span></button>
+          <button class="tb-btn danger" onclick="deleteSelected('larval')">🗑 <span class="tb-lbl">Delete Selected</span></button>
+        </div>
+      </div>
+      <div class="panel-toolbar">
+        <input class="pt-search" id="search-larval" placeholder="🔍  Search location, district, officer…" oninput="filterTable('larval')">
+        <div class="date-range-group">
+          <label>From</label><input type="date" class="pt-select" id="filter-larval-from" onchange="filterTable('larval')">
+          <label>To</label><input type="date" class="pt-select" id="filter-larval-to" onchange="filterTable('larval')">
+        </div>
+      </div>
+      <div class="tbl-outer">
+        <div class="tbl-wrap">
+          <table id="tbl-larval">
+            <thead><tr style="background:var(--blue-dk);">
+              <th><input type="checkbox" class="row-cb" onchange="selectAll('larval',this.checked)"></th>
+              <th>#</th><th>Survey ID</th><th>Username</th><th>Date</th><th>Location</th>
+              <th>State/UT</th><th>District</th>
+              <th>Houses</th><th>+ve Houses</th><th>Containers</th><th>+ve Cont</th>
+              <th>Pupae (Aedes)</th><th>Dips</th><th>Larvae</th><th>Pupae (An/Cx)</th>
+              <th>Workers</th><th>Officer</th><th>GPS</th><th>Map</th><th>Saved</th><th>Sync</th><th>Del</th>
+            </tr></thead>
+            <tbody id="tbody-larval"><tr><td colspan="23" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Panel -->
+    <div class="panel" id="panel-users">
+      <div class="section-head"><h2>Manage Users</h2></div>
+      <div class="users-wrap">
+        <div class="users-form">
+          <h3>User Credentials</h3>
+          <div id="users-list"></div>
+          <div style="display:flex;gap:8px;margin-top:12px;">
+            <button class="pt-btn secondary" onclick="addUser()">+ Add User</button>
+            <button class="pt-btn primary" onclick="saveUsers()">💾 Save to GitHub</button>
+          </div>
+        </div>
+        <div class="note-box">
+          <strong>How credentials work:</strong> The EST app checks GitHub's <code>config.json</code> on each login when online.
+          Setting a user to <strong>Inactive</strong> immediately blocks access on next online login.
+          The hardcoded admin (ANIENTO/2026) always works even offline.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- .main-content -->
+</div><!-- .main-wrapper -->
 </div><!-- #app -->
 
 <!-- Map Modal -->
@@ -1150,11 +1223,6 @@ function exportSelected(mod){
 /* ── INIT ── */
 checkAuth();
 
-/* ── DRAG-TO-SCROLL for tables ── */
-document.addEventListener('DOMContentLoaded',()=>{
-  document.querySelectorAll('.tbl-wrap').forEach(el=>{
-    let down=false,sx=0,sl=0;
-    el.addEventListener('mousedown',e=>{if(e.target.tagName==='INPUT'||e.target.tagName==='BUTTON'||e.target.tagName==='SELECT')return;down=true;sx=e.pageX-el.offsetLeft;sl=el.scrollLeft;el.style.cursor='grabbing';});
     document.addEventListener('mouseup',()=>{down=false;el.style.cursor='grab';});
     el.addEventListener('mousemove',e=>{if(!down)return;e.preventDefault();el.scrollLeft=sl-(e.pageX-el.offsetLeft-sx);});
     el.addEventListener('mouseleave',()=>{down=false;el.style.cursor='grab';});
@@ -1278,6 +1346,27 @@ function renderAlerts(){
   document.getElementById('alert-list').innerHTML=alerts.map(a=>`<div class="alert-item ${a.t}"><div class="alert-dot ${a.t}"></div><span>${a.m}</span></div>`).join('');
   sec.style.display='block';
 }
+
+/* ── SIDEBAR NAVIGATION ── */
+function switchSection(name, btn) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  const panel = document.getElementById('panel-' + name);
+  if (panel) panel.classList.add('active');
+  const labels = {overview:'Overview', adult:'Adult Surveillance', larval:'Larval Surveillance', users:'Manage Users'};
+  const bc = document.getElementById('bc-main');
+  if (bc) bc.textContent = labels[name] || name;
+  // Close sidebar on mobile after nav
+  if (window.innerWidth < 768) {
+    document.getElementById('sidebar').classList.add('collapsed');
+  }
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+}
+
 </script>
 </body>
 </html>
