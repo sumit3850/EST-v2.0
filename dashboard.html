@@ -552,7 +552,7 @@ tr:hover td{background:var(--teal-lt);}
         <div class="risk-card-hdr">
           <div>
             <div class="risk-card-title">Aedes Breeding Risk Assessment</div>
-            <div class="risk-card-sub">NVBDCP 2022 Guidelines · District &amp; Location Stegomyia Indices</div>
+            <div class="risk-card-sub">District &amp; Location Stegomyia Indices</div>
           </div>
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
             <div class="risk-lvl-badge nodata" id="risk-overall-badge">No Data</div>
@@ -601,10 +601,11 @@ tr:hover td{background:var(--teal-lt);}
         <div class="risk-loc-section" id="risk-loc-section"></div>
         <div id="risk-breeding-sec" style="display:none;"></div>
         <div class="risk-ref">
-          <b>NVBDCP 2022 Risk Thresholds:</b><br>
-          House Index (HI): Low &lt;1% · Moderate 1–10% · High &gt;10%<br>
-          Container Index (CI): Low &lt;1% · Moderate 1–10% · High &gt;10%<br>
-          Breteau Index (BI): Low &lt;1 · Moderate 1–50 · High &gt;50
+          <b>Risk Thresholds:</b>
+          House Index (HI): Low &lt;5% · Moderate 5–10% · High &gt;10% &nbsp;|&nbsp;
+          Container Index (CI): Low &lt;5% · Moderate 5–10% · High &gt;10% &nbsp;|&nbsp;
+          Breteau Index (BI): Low &lt;5 · Moderate 5–50 · High &gt;50 &nbsp;|&nbsp;
+          BI shown as N/A when &lt;100 houses inspected
         </div>
       </div>
 
@@ -1081,11 +1082,11 @@ function _riskDateRange(period){
 function updateRiskCard(period){
   period=period||_riskPeriod;
   const card=document.getElementById('risk-card');
-  const allL=[...allLarval,...allManualLarval].filter(s=>s.HI!==undefined||s.CI!==undefined||s.BI!==undefined);
+  // Include all survey types; filter to those with larval stegomyia indices
+  const allL=[...allAdult,...allManualAdult,...allLarval,...allManualLarval].filter(s=>s.HI!==undefined||s.CI!==undefined||s.BI!==undefined);
   if(!allL.length){if(card)card.style.display='none';return;}
   if(card)card.style.display='';
   const range=_riskDateRange(period);
-  // Show date label
   const lbl=document.getElementById('risk-period-label');
   if(lbl)lbl.textContent=range.label||'';
   let src=allL;
@@ -1098,12 +1099,12 @@ function updateRiskCard(period){
     });
   }
   if(!src.length)src=allL;
+  // Thresholds: HI/CI Low <5%, Moderate 5–10%, High >10%; BI Low <5, Moderate 5–50, High >50
+  const riskLvl=(v,mod,hiT)=>v>=hiT?'high':v>=mod?'moderate':v>0?'low':'nodata';
   const avgIdx=(key)=>{const v=src.map(s=>parseFloat(s[key])).filter(x=>!isNaN(x)&&x>0);return v.length?v.reduce((a,b)=>a+b,0)/v.length:0;};
   const hi=avgIdx('HI'),ci=avgIdx('CI'),bi=avgIdx('BI');
-  // NVBDCP thresholds: Low <1, Moderate 1–10 (HI/CI) / 1–50 (BI), High >10/>50
-  const riskLvl=(v,mod,hiT)=>v>=hiT?'high':v>=mod?'moderate':v>0?'low':'nodata';
-  const hiR=riskLvl(hi,1,10),ciR=riskLvl(ci,1,10),biR=riskLvl(bi,1,50);
-  const overall=[hiR,ciR,biR].includes('high')?'high':[hiR,ciR,biR].includes('moderate')?'moderate':'low';
+  const hiR=riskLvl(hi,5,10),ciR=riskLvl(ci,5,10),biR=riskLvl(bi,5,50);
+  const overall=[hiR,ciR,biR].includes('high')?'high':[hiR,ciR,biR].includes('moderate')?'moderate':(hi>0||ci>0||bi>0)?'low':'nodata';
   const lblMap={high:'HIGH RISK',moderate:'MODERATE',low:'LOW RISK',nodata:'No Data'};
   const badge=document.getElementById('risk-overall-badge');
   if(badge){badge.textContent=lblMap[overall]||'No Data';badge.className='risk-lvl-badge '+(overall==='nodata'?'nodata':overall);}
@@ -1116,20 +1117,22 @@ function updateRiskCard(period){
   setIdx('risk-ci-val','risk-ci-lbl',ci,false,ciR);
   setIdx('risk-bi-val','risk-bi-lbl',bi,true,biR);
 
-  // ── Build district data ──
+  // ── Build district data with raw aggregation for accurate BI ──
   const byDist={};
   const byDistCont={};
   src.forEach(s=>{
     const dk=s.district||'Unknown';
-    if(!byDist[dk])byDist[dk]={hi:[],ci:[],bi:[],locs:{}};
+    if(!byDist[dk])byDist[dk]={hi:[],ci:[],housesEx:0,posCont:0,locs:{}};
     if(parseFloat(s.HI)>0)byDist[dk].hi.push(parseFloat(s.HI));
     if(parseFloat(s.CI)>0)byDist[dk].ci.push(parseFloat(s.CI));
-    if(parseFloat(s.BI)>0)byDist[dk].bi.push(parseFloat(s.BI));
+    byDist[dk].housesEx+=(s.housesExamined||0);
+    byDist[dk].posCont+=(s.totalPositive||0);
     const lk=s.location||'Unknown';
-    if(!byDist[dk].locs[lk])byDist[dk].locs[lk]={hi:[],ci:[],bi:[]};
+    if(!byDist[dk].locs[lk])byDist[dk].locs[lk]={hi:[],ci:[],housesEx:0,posCont:0};
     if(parseFloat(s.HI)>0)byDist[dk].locs[lk].hi.push(parseFloat(s.HI));
     if(parseFloat(s.CI)>0)byDist[dk].locs[lk].ci.push(parseFloat(s.CI));
-    if(parseFloat(s.BI)>0)byDist[dk].locs[lk].bi.push(parseFloat(s.BI));
+    byDist[dk].locs[lk].housesEx+=(s.housesExamined||0);
+    byDist[dk].locs[lk].posCont+=(s.totalPositive||0);
     if(!byDistCont[dk])byDistCont[dk]={};
     (s.containerSummary||[]).forEach(ct=>{
       if((ct.positive||0)>0){
@@ -1139,22 +1142,33 @@ function updateRiskCard(period){
     });
   });
   const avg=(arr)=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;
-  const distEntries=Object.entries(byDist).map(([name,v])=>({name,hi:avg(v.hi),ci:avg(v.ci),bi:avg(v.bi),locs:v.locs}));
+  // BI per district: (positive containers / houses inspected) × 100; N/A if < 100 houses
+  const calcBI=(hEx,pCont)=>hEx>=100?(pCont/hEx*100):null;
+  const distEntries=Object.entries(byDist).map(([name,v])=>{
+    const dbi=calcBI(v.housesEx,v.posCont);
+    return{name,hi:avg(v.hi),ci:avg(v.ci),bi:dbi,housesEx:v.housesEx,locs:v.locs};
+  });
 
-  // ── District HI bars ──
+  // ── District bar charts ──
   const mkDistBars=(id,key,entries,modT,hiT,isPct)=>{
     const el=document.getElementById(id);if(!el)return;
-    const sorted=[...entries].filter(e=>e[key]>0).sort((a,b)=>b[key]-a[key]);
+    const sorted=[...entries].filter(e=>e[key]!=null&&e[key]>0).sort((a,b)=>b[key]-a[key]);
+    if(!sorted.length){el.innerHTML='<div style="font-size:11px;color:var(--muted);padding:4px 0;">No data</div>';return;}
     const mx=Math.max(...sorted.map(e=>e[key]),hiT);
     el.innerHTML=sorted.map(e=>{
-      const r=e[key]>=hiT?'high':e[key]>=modT?'moderate':'low';
+      const r=riskLvl(e[key],modT,hiT);
       const disp=isPct?e[key].toFixed(1)+'%':e[key].toFixed(1);
       return`<div class="risk-dist-row"><div class="risk-dist-name">${e.name}</div><div class="risk-dist-bar-wrap"><div class="risk-dist-bar ${r}" style="width:${Math.min(100,e[key]/mx*100).toFixed(0)}%"></div></div><div class="risk-dist-val ${r}">${disp}</div></div>`;
-    }).join('')||'<div style="font-size:11px;color:var(--muted);padding:4px 0;">No data</div>';
+    }).join('');
+    // Add entries with no valid data (bi null)
+    if(id==='risk-dist-bi-list'){
+      const naEntries=entries.filter(e=>e.bi===null);
+      if(naEntries.length)el.innerHTML+=naEntries.map(e=>`<div class="risk-dist-row"><div class="risk-dist-name">${e.name}</div><div class="risk-dist-bar-wrap"></div><div class="risk-dist-val" style="color:var(--muted);">N/A <span style="font-size:9px;font-weight:400;">&lt;100 houses</span></div></div>`).join('');
+    }
   };
-  mkDistBars('risk-dist-hi-list','hi',distEntries,1,10,true);
-  mkDistBars('risk-dist-ci-list','ci',distEntries,1,10,true);
-  mkDistBars('risk-dist-bi-list','bi',distEntries,1,50,false);
+  mkDistBars('risk-dist-hi-list','hi',distEntries,5,10,true);
+  mkDistBars('risk-dist-ci-list','ci',distEntries,5,10,true);
+  mkDistBars('risk-dist-bi-list','bi',distEntries,5,50,false);
 
   // ── Location breakdown per district ──
   const locSec=document.getElementById('risk-loc-section');
@@ -1162,17 +1176,16 @@ function updateRiskCard(period){
     if(!distEntries.length){locSec.innerHTML='';}
     else{
       locSec.innerHTML='<div style="padding:10px 16px 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);">Location-level Indices by District</div>'+
-      distEntries.sort((a,b)=>b.hi-a.hi).filter(e=>Object.keys(e.locs).length>0).map(de=>{
-        const dr=de.hi>=10?'high':de.hi>=1?'moderate':de.hi>0?'low':'nodata';
+      [...distEntries].sort((a,b)=>b.hi-a.hi).filter(e=>Object.keys(e.locs).length>0).map(de=>{
+        const dr=riskLvl(de.hi,5,10);
         const locRows=Object.entries(de.locs).sort((a,b)=>avg(b[1].hi)-avg(a[1].hi)).map(([lname,lv])=>{
-          const lhi=avg(lv.hi),lci=avg(lv.ci),lbi=avg(lv.bi);
-          const lr=lhi>=10?'high':lhi>=1?'moderate':lhi>0?'low':'nodata';
-          const lcr=lci>=10?'high':lci>=1?'moderate':lci>0?'low':'nodata';
-          const lbr=lbi>=50?'high':lbi>=1?'moderate':lbi>0?'low':'nodata';
-          return`<tr><td>${lname}</td><td><span class="rv ${lr}">${lhi>0?lhi.toFixed(1)+'%':'—'}</span></td><td><span class="rv ${lcr}">${lci>0?lci.toFixed(1)+'%':'—'}</span></td><td><span class="rv ${lbr}">${lbi>0?lbi.toFixed(1):'—'}</span></td></tr>`;
+          const lhi=avg(lv.hi),lci=avg(lv.ci),lbi=calcBI(lv.housesEx,lv.posCont);
+          const lr=riskLvl(lhi,5,10),lcr=riskLvl(lci,5,10),lbr=lbi!=null?riskLvl(lbi,5,50):'nodata';
+          const biDisp=lbi!=null?lbi.toFixed(1):'N/A';
+          return`<tr><td>${lname}</td><td><span class="rv ${lr}">${lhi>0?lhi.toFixed(1)+'%':'—'}</span></td><td><span class="rv ${lcr}">${lci>0?lci.toFixed(1)+'%':'—'}</span></td><td><span class="rv ${lbr}">${biDisp}</span></td></tr>`;
         }).join('');
-        return`<div class="risk-loc-dist-hdr"><div class="risk-loc-dist-name">${de.name}</div><div class="risk-loc-dist-badge ${dr}">${lblMap[dr]||'—'} · HI ${de.hi>0?de.hi.toFixed(1)+'%':'—'}</div></div><table class="risk-loc-table"><thead><tr><th>Location / Area</th><th>HI %</th><th>CI %</th><th>BI</th></tr></thead><tbody>${locRows}</tbody></table>`;
-      }).join('');
+        return`<div class="risk-loc-dist-hdr"><div class="risk-loc-dist-name">${de.name}</div><div class="risk-loc-dist-badge ${dr}">${lblMap[dr]||'—'} · HI ${de.hi>0?de.hi.toFixed(1)+'%':'—'}</div></div><table class="risk-loc-table"><thead><tr><th>Location / Area</th><th>HI %</th><th>CI %</th><th>BI *</th></tr></thead><tbody>${locRows}</tbody></table>`;
+      }).join('')+'<div style="padding:4px 16px 8px;font-size:9px;color:var(--muted);">* BI shown only when ≥100 houses inspected; otherwise N/A</div>';
     }
   }
 
@@ -1183,6 +1196,7 @@ function updateRiskCard(period){
     if(distKeys.length){
       breedSec.style.display='';
       breedSec.innerHTML='<div class="risk-breeding-sec"><div class="risk-breeding-hdr">Breeding Preferred Containers by District</div>'+
+        '<div style="display:flex;gap:14px;margin-bottom:8px;font-size:9px;"><span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#00bfa5;border-radius:2px;display:inline-block;"></span>Positive containers</span></div>'+
         distKeys.map(dk=>{
           const contData=byDistCont[dk];
           const sorted=Object.entries(contData).sort((a,b)=>b[1]-a[1]).slice(0,7);
@@ -1199,7 +1213,8 @@ function updateRiskCard(period){
 
 function exportRiskPDF(){
   const range=_riskDateRange(_riskPeriod);
-  const allL=[...allLarval,...allManualLarval].filter(s=>s.HI!==undefined||s.CI!==undefined||s.BI!==undefined);
+  // All survey types — larval-only ones have HI/CI/BI; filter applied below
+  const allL=[...allAdult,...allManualAdult,...allLarval,...allManualLarval].filter(s=>s.HI!==undefined||s.CI!==undefined||s.BI!==undefined);
   let src=allL;
   if(range.from||range.to){
     src=allL.filter(s=>{const d=_parseSDate(s.date);if(!d)return false;if(range.from&&d<range.from)return false;if(range.to&&d>range.to)return false;return true;});
@@ -1208,39 +1223,52 @@ function exportRiskPDF(){
   const avgArr=(arr)=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;
   const avgIdx=(key)=>{const v=src.map(s=>parseFloat(s[key])).filter(x=>!isNaN(x)&&x>0);return v.length?v.reduce((a,b)=>a+b,0)/v.length:0;};
   const hi=avgIdx('HI'),ci=avgIdx('CI'),bi=avgIdx('BI');
-  const rLvl=(v,mod,hiT)=>v>=hiT?'HIGH RISK':v>=mod?'MODERATE':v>0?'LOW RISK':'—';
-  const rClr=(v,mod,hiT)=>v>=hiT?'#ef5350':v>=mod?'#e65100':v>0?'#00695c':'#aaa';
+  // Thresholds: HI/CI moderate=5-10, BI moderate=5-50
+  const rLvl=(v,mod,hiT)=>v==null?'N/A':v>=hiT?'HIGH RISK':v>=mod?'MODERATE':v>0?'LOW RISK':'LOW';
+  const rClr=(v,mod,hiT)=>v==null?'#999':v>=hiT?'#c62828':v>=mod?'#e65100':v>0?'#1b5e20':'#999';
+  const calcBI2=(hEx,pCont)=>hEx>=100?(pCont/hEx*100):null;
   const byDist2={};const byDistCont2={};
   src.forEach(s=>{
     const dk=s.district||'Unknown';
-    if(!byDist2[dk])byDist2[dk]={hi:[],ci:[],bi:[],locs:{}};
+    if(!byDist2[dk])byDist2[dk]={hi:[],ci:[],housesEx:0,posCont:0,locs:{}};
     if(parseFloat(s.HI)>0)byDist2[dk].hi.push(parseFloat(s.HI));
     if(parseFloat(s.CI)>0)byDist2[dk].ci.push(parseFloat(s.CI));
-    if(parseFloat(s.BI)>0)byDist2[dk].bi.push(parseFloat(s.BI));
+    byDist2[dk].housesEx+=(s.housesExamined||0);
+    byDist2[dk].posCont+=(s.totalPositive||0);
     const lk=s.location||'Unknown';
-    if(!byDist2[dk].locs[lk])byDist2[dk].locs[lk]={hi:[],ci:[],bi:[]};
+    if(!byDist2[dk].locs[lk])byDist2[dk].locs[lk]={hi:[],ci:[],housesEx:0,posCont:0};
     if(parseFloat(s.HI)>0)byDist2[dk].locs[lk].hi.push(parseFloat(s.HI));
     if(parseFloat(s.CI)>0)byDist2[dk].locs[lk].ci.push(parseFloat(s.CI));
-    if(parseFloat(s.BI)>0)byDist2[dk].locs[lk].bi.push(parseFloat(s.BI));
+    byDist2[dk].locs[lk].housesEx+=(s.housesExamined||0);
+    byDist2[dk].locs[lk].posCont+=(s.totalPositive||0);
     if(!byDistCont2[dk])byDistCont2[dk]={};
     (s.containerSummary||[]).forEach(ct=>{if((ct.positive||0)>0){if(!byDistCont2[dk][ct.name])byDistCont2[dk][ct.name]=0;byDistCont2[dk][ct.name]+=ct.positive||0;}});
   });
-  const distEntries2=Object.entries(byDist2).map(([name,v])=>({name,hi:avgArr(v.hi),ci:avgArr(v.ci),bi:avgArr(v.bi),locs:v.locs})).sort((a,b)=>b.hi-a.hi);
-  const overallR=[rLvl(hi,1,10),rLvl(ci,1,10),rLvl(bi,1,50)].includes('HIGH RISK')?'HIGH RISK':[rLvl(hi,1,10),rLvl(ci,1,10),rLvl(bi,1,50)].includes('MODERATE')?'MODERATE':hi>0||ci>0||bi>0?'LOW RISK':'No Data';
-  const overallC=overallR==='HIGH RISK'?'#ef5350':overallR==='MODERATE'?'#e65100':hi>0||ci>0||bi>0?'#00695c':'#888';
+  const distEntries2=Object.entries(byDist2).map(([name,v])=>{
+    const dbi=calcBI2(v.housesEx,v.posCont);
+    return{name,hi:avgArr(v.hi),ci:avgArr(v.ci),bi:dbi,housesEx:v.housesEx,locs:v.locs};
+  }).sort((a,b)=>b.hi-a.hi);
+  const overallR=[rLvl(hi,5,10),rLvl(ci,5,10),rLvl(bi,5,50)].includes('HIGH RISK')?'HIGH RISK':[rLvl(hi,5,10),rLvl(ci,5,10),rLvl(bi,5,50)].includes('MODERATE')?'MODERATE':hi>0||ci>0||bi>0?'LOW RISK':'No Data';
+  const overallC=overallR==='HIGH RISK'?'#c62828':overallR==='MODERATE'?'#e65100':hi>0||ci>0||bi>0?'#1b5e20':'#888';
   const todayFmt=new Date().getDate()+' '+_MN[new Date().getMonth()]+' '+new Date().getFullYear();
-  const distTblRows=distEntries2.map(d=>`<tr><td>${d.name}</td><td style="color:${rClr(d.hi,1,10)};font-weight:700;">${d.hi>0?d.hi.toFixed(1)+'%':'—'}</td><td style="color:${rClr(d.hi,1,10)};font-size:10px;">${rLvl(d.hi,1,10)}</td><td style="color:${rClr(d.ci,1,10)};font-weight:700;">${d.ci>0?d.ci.toFixed(1)+'%':'—'}</td><td style="color:${rClr(d.ci,1,10)};font-size:10px;">${rLvl(d.ci,1,10)}</td><td style="color:${rClr(d.bi,1,50)};font-weight:700;">${d.bi>0?d.bi.toFixed(1):'—'}</td><td style="color:${rClr(d.bi,1,50)};font-size:10px;">${rLvl(d.bi,1,50)}</td></tr>`).join('');
+  const distTblRows=distEntries2.map(d=>{
+    const dbi=d.bi;
+    return`<tr><td>${d.name}</td><td style="color:${rClr(d.hi,5,10)};font-weight:700;">${d.hi>0?d.hi.toFixed(1):'—'}</td><td style="color:${rClr(d.hi,5,10)};font-size:10px;">${d.hi>0?rLvl(d.hi,5,10):'—'}</td><td style="color:${rClr(d.ci,5,10)};font-weight:700;">${d.ci>0?d.ci.toFixed(1):'—'}</td><td style="color:${rClr(d.ci,5,10)};font-size:10px;">${d.ci>0?rLvl(d.ci,5,10):'—'}</td><td style="color:${rClr(dbi,5,50)};font-weight:700;">${dbi!=null?dbi.toFixed(1):'N/A'}</td><td style="color:${rClr(dbi,5,50)};font-size:10px;">${dbi!=null?rLvl(dbi,5,50):'<100 houses'}</td></tr>`;
+  }).join('');
   const locSections2=distEntries2.filter(d=>Object.keys(d.locs).length>0).map(d=>{
-    const rows=Object.entries(d.locs).sort((a,b)=>avgArr(b[1].hi)-avgArr(a[1].hi)).map(([ln,lv])=>{const lhi=avgArr(lv.hi),lci=avgArr(lv.ci),lbi=avgArr(lv.bi);return`<tr><td>${ln}</td><td style="color:${rClr(lhi,1,10)};font-weight:700;">${lhi>0?lhi.toFixed(1)+'%':'—'}</td><td style="color:${rClr(lci,1,10)};font-weight:700;">${lci>0?lci.toFixed(1)+'%':'—'}</td><td style="color:${rClr(lbi,1,50)};font-weight:700;">${lbi>0?lbi.toFixed(1):'—'}</td></tr>`;}).join('');
-    return`<h3>${d.name} — Location Breakdown</h3><table><thead><tr><th>Location / Area</th><th>HI %</th><th>CI %</th><th>BI</th></tr></thead><tbody>${rows}</tbody></table>`;
+    const rows=Object.entries(d.locs).sort((a,b)=>avgArr(b[1].hi)-avgArr(a[1].hi)).map(([ln,lv])=>{
+      const lhi=avgArr(lv.hi),lci=avgArr(lv.ci),lbi=calcBI2(lv.housesEx,lv.posCont);
+      return`<tr><td>${ln}</td><td style="color:${rClr(lhi,5,10)};font-weight:700;">${lhi>0?lhi.toFixed(1):'—'}</td><td style="color:${rClr(lci,5,10)};font-weight:700;">${lci>0?lci.toFixed(1):'—'}</td><td style="color:${rClr(lbi,5,50)};font-weight:700;">${lbi!=null?lbi.toFixed(1):'N/A'}</td><td style="font-size:10px;color:#666;">${lv.housesEx} houses</td></tr>`;
+    }).join('');
+    return`<h3>${d.name} — Location Breakdown</h3><table><thead><tr><th>Location / Area</th><th>HI</th><th>CI</th><th>BI †</th><th>Houses Inspected</th></tr></thead><tbody>${rows}</tbody></table>`;
   }).join('');
   const contSections2=Object.entries(byDistCont2).filter(([,cc])=>Object.keys(cc).length>0).map(([dk,cc])=>{
     const sorted=Object.entries(cc).sort((a,b)=>b[1]-a[1]).slice(0,8);const mx=sorted[0][1];
-    const rows=sorted.map(([name,cnt])=>`<tr><td>${name}</td><td style="font-weight:700;">${cnt}</td><td><div style="height:9px;border-radius:4px;background:#00695c;width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%;min-width:4px;"></div></td></tr>`).join('');
-    return`<h3>${dk} — Breeding Preferred Containers</h3><table><thead><tr><th>Container Type</th><th>Positive</th><th style="min-width:100px;">Proportion</th></tr></thead><tbody>${rows}</tbody></table>`;
+    const rows=sorted.map(([name,cnt],idx)=>`<tr style="${idx%2===0?'':'background:#f9f9f9;'}"><td>${name}</td><td style="font-weight:700;color:#00695c;">${cnt}</td><td style="padding:4px 8px;"><div style="height:10px;border-radius:5px;background:#00695c;width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%;min-width:4px;"></div></td></tr>`).join('');
+    return`<h3>${dk} — Breeding Preferred Containers</h3><table><thead><tr><th>Container Type</th><th>Positive Count</th><th style="min-width:120px;">Proportion</th></tr></thead><tbody>${rows}</tbody></table>`;
   }).join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Aedes Risk Assessment Report</title><style>body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:800px;margin:0 auto;padding:28px 32px;}h1{font-size:19px;margin:0 0 2px;color:#00352a;font-weight:800;}h2{font-size:13px;font-weight:700;color:#00352a;margin:20px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:14px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.subtitle{font-size:10px;color:#666;margin-bottom:2px;}.period{font-size:11px;font-weight:700;color:#00695c;margin-bottom:14px;}.badge{display:inline-block;padding:4px 14px;border-radius:16px;font-size:11px;font-weight:700;margin-bottom:14px;background:${overallC}22;color:${overallC};border:1px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px;}.kpi-box{border:1px solid #ddd;border-radius:7px;padding:10px;text-align:center;}.kpi-name{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#888;margin-bottom:5px;}.kpi-val{font-size:20px;font-weight:800;letter-spacing:-.02em;}.kpi-risk{font-size:9px;font-weight:700;margin-top:3px;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:6px;}th{padding:5px 8px;background:#f0f7f5;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#555;text-align:left;border-bottom:2px solid #cce8e3;}td{padding:4px 8px;border-bottom:1px solid #eee;}.ref{margin-top:18px;padding:9px 12px;background:#f0f7f5;border-left:3px solid #00695c;font-size:9.5px;color:#444;line-height:1.9;}.footer{margin-top:20px;padding-top:8px;border-top:1px solid #ddd;font-size:9px;color:#999;display:flex;justify-content:space-between;}@media print{.page{padding:16px 18px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;"><div><h1>Aedes Breeding Risk Assessment</h1><div class="subtitle">NVBDCP 2022 Guidelines · Stegomyia Indices Report</div><div class="period">${range.label||'All Data'}</div></div><div style="text-align:right;font-size:9px;color:#999;">Generated: ${todayFmt}</div></div><div class="badge">Overall: ${overallR}</div><h2>Overall Stegomyia Indices</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,1,10)}">${hi>0?hi.toFixed(1)+'%':'—'}</div><div class="kpi-risk" style="color:${rClr(hi,1,10)}">${rLvl(hi,1,10)}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,1,10)}">${ci>0?ci.toFixed(1)+'%':'—'}</div><div class="kpi-risk" style="color:${rClr(ci,1,10)}">${rLvl(ci,1,10)}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,1,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,1,50)}">${rLvl(bi,1,50)}</div></div></div><h2>District-level Indices</h2><table><thead><tr><th>District</th><th>HI %</th><th>HI Risk</th><th>CI %</th><th>CI Risk</th><th>BI</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table><h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<h2>Breeding Preferred Containers by District</h2>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>NVBDCP 2022 Risk Thresholds:</b><br>House Index (HI): Low &lt;1% · Moderate 1–10% · High &gt;10%<br>Container Index (CI): Low &lt;1% · Moderate 1–10% · High &gt;10%<br>Breteau Index (BI): Low &lt;1 · Moderate 1–50 · High &gt;50</div><div class="footer"><span>EST v2.0 — Entomological Surveillance Tool</span><span>${range.label||'All Data'}</span></div></div></body></html>`;
-  const win=window.open('','_blank','width=900,height=720');
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#00695c;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #00695c;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:14px;font-weight:700;color:#00695c;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:8px 12px;background:#fff8e1;border-left:3px solid #f9a825;font-size:10px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #00695c;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${range.label||'All Data'}</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><div class="badge">Overall Risk: ${overallR}</div><h2>Overall Stegomyia Indices</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;5 · BI &lt;5)</div><div class="leg-item"><div class="leg-dot" style="background:#e65100;"></div>Moderate (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table><h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#00695c;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;5 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;5 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;5 · Moderate 5–50 · High &gt;50</div><div class="note-box">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div><div class="footer"><span>EST v2.0.67 · Developed by A&amp;N Entomological Surveillance Team</span><span>${todayFmt}</span></div></div></body></html>`;
+  const win=window.open('','_blank','width=920,height=740');
   if(win){win.document.write(html);win.document.close();setTimeout(()=>win.print(),700);}
 }
 
