@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>EST v2.0 — Database Dashboard</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E %3Crect width='100' height='100' rx='18' fill='%230d2018'/%3E %3Cg stroke='rgba(130,200,165,.4)' fill='none' stroke-linecap='round'%3E %3Cpolyline points='50,47 26,18' stroke-width='0.85'/%3E %3Cpolyline points='57,49 82,22 92,16' stroke-width='0.8'/%3E %3Cpolyline points='62,54 88,36 96,44' stroke-width='0.8'/%3E %3C/g%3E %3Cpath d='M50,44 Q44,22 64,13 Q78,7 87,18 Q91,27 85,35 Q76,41 63,44 Q57,44 51,44Z' fill='rgba(180,240,218,.11)' stroke='rgba(200,240,225,.8)' stroke-width='0.7'/%3E %3Cellipse cx='54' cy='46' rx='10' ry='9.5' fill='%236dbd9e' stroke='%239ed0b8' stroke-width='0.75'/%3E %3Ccircle cx='42' cy='50' r='6.2' fill='%236dbd9e' stroke='%239ed0b8' stroke-width='0.75'/%3E %3Cellipse cx='76' cy='63' rx='18' ry='6.5' transform='rotate(26 76 63)' fill='%236dbd9e' stroke='%239ed0b8' stroke-width='0.65'/%3E %3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -26,7 +28,7 @@
   --txt:#191c1d;--txt2:#546e6a;--muted:#7a9490;
   --shadow:0 2px 12px rgba(0,0,0,.1);
 }
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);transition:background .25s,color .25s;}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--txt);transition:background .25s,color .25s;-webkit-font-smoothing:antialiased;}
 
 /* ═══ LOGIN ═══ */
 #login-screen{position:fixed;inset:0;background:linear-gradient(160deg,#001e18 0%,#003528 40%,#004d42 100%);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;}
@@ -137,25 +139,48 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .panel.active{display:block;}
 
 /* ═══ OVERVIEW PANEL ═══ */
-.overview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px 20px 0;}
-.kpi-card{background:var(--sf);border:1px solid var(--bdr);border-radius:var(--r);padding:16px 18px;display:flex;align-items:flex-start;gap:14px;transition:transform .2s,box-shadow .2s;cursor:default;}
-.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
-.kpi-icon-wrap{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.overview-hdr{padding:20px 24px 14px;border-bottom:1px solid var(--bdr);background:var(--sf);}
+.overview-hdr-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.overview-title{font-size:15px;font-weight:700;color:var(--txt);letter-spacing:-.01em;}
+.overview-sub{font-size:12px;color:var(--txt2);margin-top:2px;font-weight:400;}
+.overview-date-chip{font-size:11px;font-weight:500;color:var(--muted);background:var(--sf2);border:1px solid var(--bdr);border-radius:20px;padding:4px 12px;white-space:nowrap;align-self:flex-start;}
+[data-theme="light"] .overview-date-chip{background:#f0f5f4;}
+.overview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px 24px 0;}
+.kpi-card{background:var(--sf);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;transition:box-shadow .2s;cursor:default;border-left:3px solid transparent;}
+.kpi-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.25);}
+.kpi-card.teal-acc{border-left-color:var(--teal);}
+.kpi-card.blue-acc{border-left-color:var(--blue);}
+.kpi-card.gold-acc{border-left-color:var(--gold);}
+.kpi-card.red-acc{border-left-color:var(--err);}
+.kpi-icon-wrap{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .kpi-icon-wrap.teal{background:var(--teal-lt);}
 .kpi-icon-wrap.blue{background:var(--blue-lt);}
 .kpi-icon-wrap.gold{background:rgba(255,214,0,.1);}
 .kpi-icon-wrap.red{background:rgba(239,83,80,.1);}
-.kpi-icon-wrap.purple{background:rgba(156,39,176,.1);}
+.kpi-icon-wrap svg{width:18px;height:18px;}
+.kpi-icon-wrap.teal svg{color:var(--teal);}
+.kpi-icon-wrap.blue svg{color:var(--blue);}
+.kpi-icon-wrap.gold svg{color:var(--gold);}
+.kpi-icon-wrap.red svg{color:var(--err);}
 .kpi-body{flex:1;min-width:0;}
-.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;}
-.kpi-value{font-family:monospace;font-size:28px;font-weight:700;color:var(--teal);line-height:1;}
+.kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:3px;}
+.kpi-value{font-size:22px;font-weight:700;color:var(--teal);line-height:1.1;letter-spacing:-.02em;}
 .kpi-value.blue{color:var(--blue);}
 .kpi-value.gold{color:var(--gold);}
 .kpi-value.red{color:var(--err);}
-.kpi-value.sm{font-size:17px;margin-top:2px;}
-.kpi-sub{font-size:11px;color:var(--muted);margin-top:4px;}
-@media(max-width:900px){.overview-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:560px){.overview-grid{grid-template-columns:1fr;}}
+.kpi-value.sm{font-size:14px;font-weight:600;margin-top:1px;letter-spacing:0;}
+.kpi-badge{display:inline-block;font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;margin-left:5px;vertical-align:middle;background:rgba(0,191,165,.14);color:var(--teal);}
+.kpi-badge.blue{background:rgba(33,150,243,.14);color:var(--blue);}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.kpi-card{animation:fadeIn .25s ease both;}
+.kpi-card:nth-child(1){animation-delay:.02s}.kpi-card:nth-child(2){animation-delay:.05s}
+.kpi-card:nth-child(3){animation-delay:.08s}.kpi-card:nth-child(4){animation-delay:.11s}
+.kpi-card:nth-child(5){animation-delay:.14s}.kpi-card:nth-child(6){animation-delay:.17s}
+@media(max-width:900px){.overview-grid{grid-template-columns:repeat(2,1fr);padding:14px 16px 0;}
+.overview-hdr{padding:14px 16px 12px;}}
+@media(max-width:480px){.overview-grid{grid-template-columns:repeat(2,1fr);padding:12px 12px 0;}
+.kpi-card{padding:12px;gap:10px;}.kpi-value{font-size:20px;}.kpi-icon-wrap{width:34px;height:34px;}}
 
 /* ═══ ALERT CENTER ═══ */
 #alert-section{margin:14px 20px;display:none;}
@@ -241,20 +266,21 @@ tr:hover td{background:var(--teal-lt);}
 #map-meta{font-size:12px;color:rgba(255,255,255,.72);}
 #map-body{flex:1;min-height:420px;}
 
-/* ═══ ANIMATIONS ═══ */
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.kpi-card{animation:fadeIn .3s ease both;}
-.kpi-card:nth-child(1){animation-delay:.03s}.kpi-card:nth-child(2){animation-delay:.06s}
-.kpi-card:nth-child(3){animation-delay:.09s}.kpi-card:nth-child(4){animation-delay:.12s}
-.kpi-card:nth-child(5){animation-delay:.15s}.kpi-card:nth-child(6){animation-delay:.18s}
-
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:768px){
   .sidebar{width:0;overflow:hidden;}.sidebar.mobile-open{width:232px;position:fixed;inset:0 auto 0 0;z-index:200;}
   .main-wrapper{width:100%;}
   .overview-grid{grid-template-columns:repeat(2,1fr);padding:12px 12px 0;}
-  .section-head{padding:12px;}.section-head-actions .tb-btn .tb-lbl{display:none;}
-  .panel-toolbar{padding:10px 12px;}.tbl-outer{padding:0 12px 16px;}
+  .section-head{padding:10px 12px;flex-wrap:wrap;gap:8px;}
+  .section-head h2{font-size:13px;font-weight:700;white-space:nowrap;}
+  .section-head-actions{gap:4px;}
+  .section-head-actions .tb-btn{height:30px;padding:0 8px;font-size:12px;}
+  .section-head-actions .tb-btn .tb-lbl{display:none;}
+  .panel-toolbar{padding:8px 12px;gap:6px;}
+  .pt-search{font-size:12px;}
+  .tbl-outer{padding:0 12px 16px;}
+  .topbar{padding:0 12px;height:48px;}
+  .breadcrumb{font-size:13px;}
 }
 </style>
 </head>
@@ -379,49 +405,70 @@ tr:hover td{background:var(--teal-lt);}
 
     <!-- Overview Panel -->
     <div class="panel active" id="panel-overview">
+      <div class="overview-hdr">
+        <div class="overview-hdr-inner">
+          <div>
+            <div class="overview-title">Entomological Surveillance Dashboard</div>
+            <div class="overview-sub">A&amp;N Islands Vector Control Unit — Real-time data from GitHub</div>
+          </div>
+          <div class="overview-date-chip" id="ov-date-chip">Loading…</div>
+        </div>
+      </div>
       <div class="overview-grid">
-        <div class="kpi-card">
-          <div class="kpi-icon-wrap teal">🦟</div>
+        <div class="kpi-card teal-acc">
+          <div class="kpi-icon-wrap teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
           <div class="kpi-body">
             <div class="kpi-label">Adult Surveys</div>
             <div class="kpi-value" id="st-adult">—</div>
             <div class="kpi-sub">Resting + HLC collections</div>
           </div>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-icon-wrap blue">🔬</div>
+        <div class="kpi-card blue-acc">
+          <div class="kpi-icon-wrap blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6 2 2 7 2 12c0 5.5 4.5 10 10 10s10-4.5 10-10c0-5-4-10-10-10z" opacity=".4"/><path d="M12 6v6l3 3"/><circle cx="12" cy="12" r="3" fill="currentColor" opacity=".5"/></svg>
+          </div>
           <div class="kpi-body">
             <div class="kpi-label">Larval Surveys</div>
             <div class="kpi-value blue" id="st-larval">—</div>
             <div class="kpi-sub">Container + dipping</div>
           </div>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-icon-wrap gold">📊</div>
+        <div class="kpi-card gold-acc">
+          <div class="kpi-icon-wrap gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
           <div class="kpi-body">
             <div class="kpi-label">Total Mosquitoes</div>
             <div class="kpi-value gold" id="st-mosq">—</div>
             <div class="kpi-sub">Adult collections total</div>
           </div>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-icon-wrap red">⚠️</div>
+        <div class="kpi-card red-acc">
+          <div class="kpi-icon-wrap red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
           <div class="kpi-body">
             <div class="kpi-label">Avg House Index</div>
             <div class="kpi-value red" id="st-hi">—</div>
             <div class="kpi-sub">Aedes HI% across surveys</div>
           </div>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-icon-wrap teal">📍</div>
+        <div class="kpi-card teal-acc">
+          <div class="kpi-icon-wrap teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
           <div class="kpi-body">
             <div class="kpi-label">Locations</div>
             <div class="kpi-value" id="st-loc">—</div>
             <div class="kpi-sub">Unique survey sites</div>
           </div>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-icon-wrap blue">🕐</div>
+        <div class="kpi-card blue-acc">
+          <div class="kpi-icon-wrap blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          </div>
           <div class="kpi-body">
             <div class="kpi-label">Last Synced</div>
             <div class="kpi-value sm" id="st-sync">—</div>
@@ -442,7 +489,7 @@ tr:hover td{background:var(--teal-lt);}
     <!-- Adult Surveillance Panel -->
     <div class="panel" id="panel-adult">
       <div class="section-head">
-        <h2>Adult Surveillance</h2>
+        <h2 title="Adult Surveillance">Adult Surveillance</h2>
         <div class="section-head-actions">
           <button class="tb-btn ghost" onclick="selectAll('adult',true)">☑ All</button>
           <button class="tb-btn ghost" onclick="selectAll('adult',false)">☐ Clear</button>
@@ -481,7 +528,7 @@ tr:hover td{background:var(--teal-lt);}
     <!-- Larval Surveillance Panel -->
     <div class="panel" id="panel-larval">
       <div class="section-head">
-        <h2>Larval Surveillance</h2>
+        <h2 title="Larval Surveillance">Larval Surveillance</h2>
         <div class="section-head-actions">
           <button class="tb-btn ghost" onclick="selectAll('larval',true)">☑ All</button>
           <button class="tb-btn ghost" onclick="selectAll('larval',false)">☐ Clear</button>
@@ -538,7 +585,7 @@ tr:hover td{background:var(--teal-lt);}
     <!-- Maps Panel -->
     <div class="panel" id="panel-maps">
       <div class="section-head">
-        <h2>Survey Maps</h2>
+        <h2 title="Survey Maps">Survey Maps</h2>
         <div class="section-head-actions">
           <span id="map-carousel-pos" style="font-size:12px;color:var(--muted);align-self:center;"></span>
           <button class="tb-btn ghost" onclick="mapCarouselNav(-1)">◀ Prev</button>
@@ -853,12 +900,13 @@ async function loadAll(){
     updateStats();renderAdult();renderLarval();renderManualAdult();renderManualLarval();renderUsers();renderAlerts();buildMapCarousel();
     pill.textContent='Connected ✓ ('+allAdult.length+'A + '+allLarval.length+'L'+(allManualAdult.length+allManualLarval.length?' + '+(allManualAdult.length+allManualLarval.length)+' Manual':'')+')';pill.classList.add('ok');
     document.getElementById('st-sync').textContent=new Date().toLocaleTimeString();
+    const _dc=document.getElementById('ov-date-chip');if(_dc)_dc.textContent=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
     setStatus('');
   }catch(e){setStatus('Error: '+e.message,'err');pill.textContent='Error';}
 }
 function updateStats(){
-  document.getElementById('st-adult').textContent=allAdult.length+(allManualAdult.length?' (+'+allManualAdult.length+' manual)':'');
-  document.getElementById('st-larval').textContent=allLarval.length+(allManualLarval.length?' (+'+allManualLarval.length+' manual)':'');
+  document.getElementById('st-adult').innerHTML=allAdult.length+(allManualAdult.length?'<span class="kpi-badge">+'+allManualAdult.length+' manual</span>':'');
+  document.getElementById('st-larval').innerHTML=allLarval.length+(allManualLarval.length?'<span class="kpi-badge blue">+'+allManualLarval.length+' manual</span>':'');
   document.getElementById('st-mosq').textContent=([...allAdult,...allManualAdult]).reduce((s,a)=>s+(a.totalMosq||0),0).toLocaleString();
   const hiVals=allLarval.map(l=>parseFloat(l.HI)).filter(v=>!isNaN(v));
   document.getElementById('st-hi').textContent=hiVals.length?(hiVals.reduce((a,b)=>a+b,0)/hiVals.length).toFixed(1)+'%':'—';
