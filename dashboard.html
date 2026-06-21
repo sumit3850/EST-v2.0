@@ -179,8 +179,11 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .kpi-card:nth-child(5){animation-delay:.14s}.kpi-card:nth-child(6){animation-delay:.17s}
 @media(max-width:900px){.overview-grid{grid-template-columns:repeat(2,1fr);padding:14px 16px 0;}
 .overview-hdr{padding:14px 16px 12px;}}
-@media(max-width:480px){.overview-grid{grid-template-columns:repeat(2,1fr);padding:12px 12px 0;}
-.kpi-card{padding:12px;gap:10px;}.kpi-value{font-size:20px;}.kpi-icon-wrap{width:34px;height:34px;}}
+@media(max-width:600px){.overview-grid{grid-template-columns:1fr;padding:10px 10px 0;}
+.overview-hdr{padding:12px 12px 10px;overflow:hidden;}
+.overview-title{font-size:13px;}.overview-sub{font-size:11px;white-space:normal;}
+.overview-date-chip{font-size:10px;padding:3px 8px;}
+.kpi-card{padding:12px;gap:10px;}.kpi-value{font-size:19px;}.kpi-icon-wrap{width:34px;height:34px;}}
 
 /* ═══ ALERT CENTER ═══ */
 #alert-section{margin:14px 20px;display:none;}
@@ -197,6 +200,40 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 [data-theme="light"] .alert-item.ok{background:var(--teal-lt);color:var(--teal-dk);}
 .alert-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:3px;}
 .alert-dot.warn{background:#ff9800;}.alert-dot.info{background:#2196f3;}.alert-dot.ok{background:#00bfa5;}
+
+/* ═══ RISK CARD ═══ */
+.risk-card{margin:16px 24px 0;background:var(--sf);border:1px solid var(--bdr);border-radius:10px;overflow:hidden;}
+.risk-card-hdr{padding:12px 16px;background:var(--sf2);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.risk-card-title{font-size:13px;font-weight:700;color:var(--txt);}
+.risk-card-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.risk-lvl-badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;}
+.risk-lvl-badge.high{background:rgba(239,83,80,.18);color:#ef5350;border:1px solid rgba(239,83,80,.35);}
+.risk-lvl-badge.moderate{background:rgba(255,152,0,.15);color:#ffa726;border:1px solid rgba(255,152,0,.3);}
+.risk-lvl-badge.low{background:rgba(0,191,165,.15);color:var(--teal);border:1px solid rgba(0,191,165,.3);}
+.risk-lvl-badge.nodata{background:var(--sf2);color:var(--muted);border:1px solid var(--bdr);}
+.risk-period-tabs{display:flex;border-bottom:1px solid var(--bdr);}
+.risk-ptab{flex:1;padding:8px 4px;font-size:11px;font-weight:600;text-align:center;cursor:pointer;border:none;background:transparent;color:var(--muted);border-bottom:2px solid transparent;transition:all .15s;font-family:inherit;}
+.risk-ptab.active{color:var(--teal);border-bottom-color:var(--teal);}
+.risk-idx-grid{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--bdr);}
+.risk-idx-cell{padding:12px 8px;text-align:center;border-right:1px solid var(--bdr);}
+.risk-idx-cell:last-child{border-right:none;}
+.risk-idx-name{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px;}
+.risk-idx-val{font-size:20px;font-weight:700;line-height:1;letter-spacing:-.02em;}
+.risk-idx-val.high{color:#ef5350;}.risk-idx-val.moderate{color:#ffa726;}.risk-idx-val.low{color:var(--teal);}
+.risk-idx-lbl{font-size:9px;font-weight:700;text-transform:uppercase;margin-top:3px;}
+.risk-idx-lbl.high{color:#ef5350;}.risk-idx-lbl.moderate{color:#ffa726;}.risk-idx-lbl.low{color:var(--teal);}
+.risk-idx-thr{font-size:9px;color:var(--muted);margin-top:2px;}
+.risk-districts{padding:12px 16px 14px;}
+.risk-dist-hdr{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px;}
+.risk-dist-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.risk-dist-name{font-size:11px;color:var(--txt2);min-width:100px;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.risk-dist-bar-wrap{flex:1;height:5px;background:var(--sf2);border-radius:3px;overflow:hidden;}
+.risk-dist-bar{height:100%;border-radius:3px;transition:width .4s ease;}
+.risk-dist-bar.high{background:#ef5350;}.risk-dist-bar.moderate{background:#ffa726;}.risk-dist-bar.low{background:#00bfa5;}
+.risk-dist-val{font-size:10px;font-weight:700;min-width:38px;text-align:right;}
+.risk-dist-val.high{color:#ef5350;}.risk-dist-val.moderate{color:#ffa726;}.risk-dist-val.low{color:var(--teal);}
+.risk-ref{padding:0 16px 12px;font-size:10px;color:var(--muted);font-style:italic;}
+@media(max-width:600px){.risk-card{margin:10px 10px 0;}.risk-idx-val{font-size:17px;}.risk-idx-cell{padding:10px 5px;}}
 
 /* ═══ SECTION HEADER ═══ */
 .section-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid var(--bdr);}
@@ -270,7 +307,8 @@ tr:hover td{background:var(--teal-lt);}
 @media(max-width:768px){
   .sidebar{width:0;overflow:hidden;}.sidebar.mobile-open{width:232px;position:fixed;inset:0 auto 0 0;z-index:200;}
   .main-wrapper{width:100%;}
-  .overview-grid{grid-template-columns:repeat(2,1fr);padding:12px 12px 0;}
+  .overview-grid{grid-template-columns:1fr;padding:10px 10px 0;}
+  .overview-hdr{overflow:hidden;}
   .section-head{padding:10px 12px;flex-wrap:wrap;gap:8px;}
   .section-head h2{font-size:13px;font-weight:700;white-space:nowrap;}
   .section-head-actions{gap:4px;}
@@ -477,6 +515,48 @@ tr:hover td{background:var(--teal-lt);}
         </div>
       </div>
 
+      <!-- Aedes Risk Assessment Card -->
+      <div class="risk-card" id="risk-card" style="display:none;">
+        <div class="risk-card-hdr">
+          <div>
+            <div class="risk-card-title">Aedes Breeding Risk Assessment</div>
+            <div class="risk-card-sub">NVBDCP 2022 Guidelines · District-level Stegomyia Indices</div>
+          </div>
+          <div class="risk-lvl-badge nodata" id="risk-overall-badge">No Data</div>
+        </div>
+        <div class="risk-period-tabs">
+          <button class="risk-ptab active" id="rtab-week" onclick="switchRiskPeriod('week')">This Week</button>
+          <button class="risk-ptab" id="rtab-month" onclick="switchRiskPeriod('month')">This Month</button>
+          <button class="risk-ptab" id="rtab-all" onclick="switchRiskPeriod('all')">All Time</button>
+        </div>
+        <div class="risk-idx-grid">
+          <div class="risk-idx-cell">
+            <div class="risk-idx-name">House Index</div>
+            <div class="risk-idx-val low" id="risk-hi-val">—</div>
+            <div class="risk-idx-lbl low" id="risk-hi-lbl">—</div>
+            <div class="risk-idx-thr">High: &gt;10%</div>
+          </div>
+          <div class="risk-idx-cell">
+            <div class="risk-idx-name">Container Index</div>
+            <div class="risk-idx-val low" id="risk-ci-val">—</div>
+            <div class="risk-idx-lbl low" id="risk-ci-lbl">—</div>
+            <div class="risk-idx-thr">High: &gt;10%</div>
+          </div>
+          <div class="risk-idx-cell">
+            <div class="risk-idx-name">Breteau Index</div>
+            <div class="risk-idx-val low" id="risk-bi-val">—</div>
+            <div class="risk-idx-lbl low" id="risk-bi-lbl">—</div>
+            <div class="risk-idx-thr">High: &gt;50</div>
+          </div>
+        </div>
+        <div class="risk-districts">
+          <div class="risk-dist-hdr">District breakdown — House Index (HI %)</div>
+          <div id="risk-dist-list"></div>
+        </div>
+        <div class="risk-ref">Ref: NVBDCP risk thresholds · HI &gt;10% = High, CI &gt;10% = High, BI &gt;50 = High</div>
+      </div>
+
+      <div style="height:16px;"></div>
       <div id="alert-section">
         <div class="alert-hdr">
           <h3>Intelligence Alerts</h3>
@@ -904,6 +984,66 @@ async function loadAll(){
     setStatus('');
   }catch(e){setStatus('Error: '+e.message,'err');pill.textContent='Error';}
 }
+/* ── RISK ASSESSMENT ── */
+let _riskPeriod='week';
+function switchRiskPeriod(p){
+  _riskPeriod=p;
+  ['week','month','all'].forEach(t=>{const b=document.getElementById('rtab-'+t);if(b)b.className='risk-ptab'+(t===p?' active':'');});
+  updateRiskCard(p);
+}
+function _parseSDate(d){
+  if(!d)return null;
+  const m1=d.match(/^(\d{2})-(\d{2})-(\d{4})$/);if(m1)return new Date(+m1[3],+m1[2]-1,+m1[1]);
+  const m2=d.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m2)return new Date(+m2[1],+m2[2]-1,+m2[3]);
+  return null;
+}
+function updateRiskCard(period){
+  period=period||_riskPeriod;
+  const card=document.getElementById('risk-card');
+  const allL=[...allLarval,...allManualLarval].filter(s=>s.HI!==undefined||s.CI!==undefined||s.BI!==undefined);
+  if(!allL.length){if(card)card.style.display='none';return;}
+  if(card)card.style.display='';
+  const now=new Date();
+  let src=allL;
+  if(period==='week'){const c=new Date(now-7*864e5);src=allL.filter(s=>{const d=_parseSDate(s.date);return d&&d>=c;});}
+  else if(period==='month'){const c=new Date(now-30*864e5);src=allL.filter(s=>{const d=_parseSDate(s.date);return d&&d>=c;});}
+  if(!src.length)src=allL;
+  const avgIdx=(key)=>{const v=src.map(s=>parseFloat(s[key])).filter(x=>!isNaN(x)&&x>0);return v.length?v.reduce((a,b)=>a+b,0)/v.length:0;};
+  const hi=avgIdx('HI'),ci=avgIdx('CI'),bi=avgIdx('BI');
+  const riskLvl=(v,modThr,hiThr)=>v>=hiThr?'high':v>=modThr?'moderate':v>0?'low':'nodata';
+  const hiR=riskLvl(hi,1,10),ciR=riskLvl(ci,1,10),biR=riskLvl(bi,1,50);
+  const overall=[hiR,ciR,biR].includes('high')?'high':[hiR,ciR,biR].includes('moderate')?'moderate':'low';
+  const lblMap={high:'HIGH RISK',moderate:'MODERATE',low:'LOW RISK',nodata:'No Data'};
+  const b=document.getElementById('risk-overall-badge');
+  if(b){b.textContent=lblMap[overall]||'No Data';b.className='risk-lvl-badge '+(overall==='nodata'?'nodata':overall);}
+  const setIdx=(vId,lId,val,isCount,r)=>{
+    const ve=document.getElementById(vId),le=document.getElementById(lId);
+    if(ve){ve.textContent=val>0?(isCount?val.toFixed(1):val.toFixed(1)+'%'):'—';ve.className='risk-idx-val '+r;}
+    if(le){le.textContent=val>0?lblMap[r]:'—';le.className='risk-idx-lbl '+r;}
+  };
+  setIdx('risk-hi-val','risk-hi-lbl',hi,false,hiR);
+  setIdx('risk-ci-val','risk-ci-lbl',ci,false,ciR);
+  setIdx('risk-bi-val','risk-bi-lbl',bi,true,biR);
+  // District breakdown
+  const byDist={};
+  src.forEach(s=>{
+    const d=s.district||'Unknown';
+    if(!byDist[d])byDist[d]={hi:[],ci:[],bi:[]};
+    if(parseFloat(s.HI)>0)byDist[d].hi.push(parseFloat(s.HI));
+    if(parseFloat(s.CI)>0)byDist[d].ci.push(parseFloat(s.CI));
+    if(parseFloat(s.BI)>0)byDist[d].bi.push(parseFloat(s.BI));
+  });
+  const distList=document.getElementById('risk-dist-list');
+  if(distList){
+    const entries=Object.entries(byDist).map(([name,v])=>{
+      const dhi=v.hi.length?v.hi.reduce((a,b)=>a+b,0)/v.hi.length:0;
+      return{name,hi:dhi,r:dhi>=10?'high':dhi>=1?'moderate':dhi>0?'low':'nodata'};
+    }).sort((a,b)=>b.hi-a.hi);
+    const mx=Math.max(...entries.map(e=>e.hi),10);
+    distList.innerHTML=entries.filter(e=>e.hi>0).map(e=>`<div class="risk-dist-row"><div class="risk-dist-name">${e.name}</div><div class="risk-dist-bar-wrap"><div class="risk-dist-bar ${e.r}" style="width:${Math.min(100,e.hi/mx*100).toFixed(0)}%"></div></div><div class="risk-dist-val ${e.r}">${e.hi.toFixed(1)}%</div></div>`).join('')||'<div style="font-size:11px;color:var(--muted);padding:4px 0;">No district data</div>';
+  }
+}
+
 function updateStats(){
   document.getElementById('st-adult').innerHTML=allAdult.length+(allManualAdult.length?'<span class="kpi-badge">+'+allManualAdult.length+' manual</span>':'');
   document.getElementById('st-larval').innerHTML=allLarval.length+(allManualLarval.length?'<span class="kpi-badge blue">+'+allManualLarval.length+' manual</span>':'');
@@ -911,6 +1051,7 @@ function updateStats(){
   const hiVals=allLarval.map(l=>parseFloat(l.HI)).filter(v=>!isNaN(v));
   document.getElementById('st-hi').textContent=hiVals.length?(hiVals.reduce((a,b)=>a+b,0)/hiVals.length).toFixed(1)+'%':'—';
   document.getElementById('st-loc').textContent=new Set([...allAdult,...allManualAdult,...allLarval,...allManualLarval].map(a=>a.location).filter(Boolean)).size;
+  updateRiskCard(_riskPeriod);
 }
 
 /* ── RENDER TABLES ── */
