@@ -232,8 +232,27 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .risk-dist-bar.high{background:#ef5350;}.risk-dist-bar.moderate{background:#ffa726;}.risk-dist-bar.low{background:#00bfa5;}
 .risk-dist-val{font-size:10px;font-weight:700;min-width:38px;text-align:right;}
 .risk-dist-val.high{color:#ef5350;}.risk-dist-val.moderate{color:#ffa726;}.risk-dist-val.low{color:var(--teal);}
-.risk-ref{padding:0 16px 12px;font-size:10px;color:var(--muted);font-style:italic;}
-@media(max-width:600px){.risk-card{margin:10px 10px 0;}.risk-idx-val{font-size:17px;}.risk-idx-cell{padding:10px 5px;}}
+.risk-ref{padding:8px 16px 12px;font-size:10px;color:var(--muted);border-top:1px solid var(--bdr);line-height:1.7;}
+.risk-ref b{color:var(--txt2);font-weight:600;}
+.risk-custom-row{display:flex;gap:8px;align-items:center;padding:8px 16px;background:var(--sf2);border-bottom:1px solid var(--bdr);flex-wrap:wrap;}
+.risk-custom-row label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);}
+.risk-date-inp{height:30px;padding:0 8px;font-size:11px;background:var(--sf);border:1.5px solid var(--bdr);border-radius:6px;color:var(--txt);font-family:inherit;}
+.risk-date-inp:focus{outline:none;border-color:var(--teal);}
+.risk-apply-btn{height:30px;padding:0 12px;font-size:11px;font-weight:600;background:var(--teal);color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:inherit;}
+.risk-loc-section{border-top:1px solid var(--bdr);}
+.risk-loc-dist-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 16px 6px;cursor:pointer;user-select:none;}
+.risk-loc-dist-name{font-size:11px;font-weight:700;color:var(--txt);}
+.risk-loc-dist-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;text-transform:uppercase;}
+.risk-loc-dist-badge.high{background:rgba(239,83,80,.15);color:#ef5350;}
+.risk-loc-dist-badge.moderate{background:rgba(255,152,0,.15);color:#ffa726;}
+.risk-loc-dist-badge.low{background:rgba(0,191,165,.13);color:var(--teal);}
+.risk-loc-table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:4px;}
+.risk-loc-table th{padding:5px 8px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;background:var(--sf2);border-bottom:1px solid var(--bdr);}
+.risk-loc-table td{padding:5px 8px;border-bottom:1px solid var(--bdr);color:var(--txt2);}
+.risk-loc-table td:first-child{color:var(--txt);font-weight:500;}
+.risk-loc-table tr:last-child td{border-bottom:none;}
+.risk-loc-table .rv.high{color:#ef5350;font-weight:700;}.risk-loc-table .rv.moderate{color:#ffa726;font-weight:700;}.risk-loc-table .rv.low{color:var(--teal);font-weight:600;}
+@media(max-width:600px){.risk-card{margin:10px 10px 0;}.risk-idx-val{font-size:17px;}.risk-idx-cell{padding:10px 5px;}.risk-custom-row{padding:8px 10px;}}
 
 /* ═══ SECTION HEADER ═══ */
 .section-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid var(--bdr);}
@@ -520,40 +539,54 @@ tr:hover td{background:var(--teal-lt);}
         <div class="risk-card-hdr">
           <div>
             <div class="risk-card-title">Aedes Breeding Risk Assessment</div>
-            <div class="risk-card-sub">NVBDCP 2022 Guidelines · District-level Stegomyia Indices</div>
+            <div class="risk-card-sub">NVBDCP 2022 Guidelines · District &amp; Location Stegomyia Indices</div>
           </div>
           <div class="risk-lvl-badge nodata" id="risk-overall-badge">No Data</div>
         </div>
         <div class="risk-period-tabs">
           <button class="risk-ptab active" id="rtab-week" onclick="switchRiskPeriod('week')">This Week</button>
           <button class="risk-ptab" id="rtab-month" onclick="switchRiskPeriod('month')">This Month</button>
-          <button class="risk-ptab" id="rtab-all" onclick="switchRiskPeriod('all')">All Time</button>
+          <button class="risk-ptab" id="rtab-year" onclick="switchRiskPeriod('year')">This Year</button>
+          <button class="risk-ptab" id="rtab-custom" onclick="switchRiskPeriod('custom')">Custom</button>
+        </div>
+        <div class="risk-custom-row" id="risk-custom-row" style="display:none;">
+          <label>From</label>
+          <input type="date" class="risk-date-inp" id="risk-from">
+          <label>To</label>
+          <input type="date" class="risk-date-inp" id="risk-to">
+          <button class="risk-apply-btn" onclick="updateRiskCard('custom')">Apply</button>
         </div>
         <div class="risk-idx-grid">
           <div class="risk-idx-cell">
-            <div class="risk-idx-name">House Index</div>
+            <div class="risk-idx-name">House Index (HI)</div>
             <div class="risk-idx-val low" id="risk-hi-val">—</div>
             <div class="risk-idx-lbl low" id="risk-hi-lbl">—</div>
-            <div class="risk-idx-thr">High: &gt;10%</div>
+            <div class="risk-idx-thr">Low &lt;1% · Mod 1–10% · High &gt;10%</div>
           </div>
           <div class="risk-idx-cell">
-            <div class="risk-idx-name">Container Index</div>
+            <div class="risk-idx-name">Container Index (CI)</div>
             <div class="risk-idx-val low" id="risk-ci-val">—</div>
             <div class="risk-idx-lbl low" id="risk-ci-lbl">—</div>
-            <div class="risk-idx-thr">High: &gt;10%</div>
+            <div class="risk-idx-thr">Low &lt;1% · Mod 1–10% · High &gt;10%</div>
           </div>
           <div class="risk-idx-cell">
-            <div class="risk-idx-name">Breteau Index</div>
+            <div class="risk-idx-name">Breteau Index (BI)</div>
             <div class="risk-idx-val low" id="risk-bi-val">—</div>
             <div class="risk-idx-lbl low" id="risk-bi-lbl">—</div>
-            <div class="risk-idx-thr">High: &gt;50</div>
+            <div class="risk-idx-thr">Low &lt;1 · Mod 1–50 · High &gt;50</div>
           </div>
         </div>
         <div class="risk-districts">
-          <div class="risk-dist-hdr">District breakdown — House Index (HI %)</div>
+          <div class="risk-dist-hdr">District-level House Index (HI %)</div>
           <div id="risk-dist-list"></div>
         </div>
-        <div class="risk-ref">Ref: NVBDCP risk thresholds · HI &gt;10% = High, CI &gt;10% = High, BI &gt;50 = High</div>
+        <div class="risk-loc-section" id="risk-loc-section"></div>
+        <div class="risk-ref">
+          <b>NVBDCP 2022 Risk Thresholds:</b><br>
+          House Index (HI): Low &lt;1% · Moderate 1–10% · High &gt;10%<br>
+          Container Index (CI): Low &lt;1% · Moderate 1–10% · High &gt;10%<br>
+          Breteau Index (BI): Low &lt;1 · Moderate 1–50 · High &gt;50
+        </div>
       </div>
 
       <div style="height:16px;"></div>
@@ -988,8 +1021,10 @@ async function loadAll(){
 let _riskPeriod='week';
 function switchRiskPeriod(p){
   _riskPeriod=p;
-  ['week','month','all'].forEach(t=>{const b=document.getElementById('rtab-'+t);if(b)b.className='risk-ptab'+(t===p?' active':'');});
-  updateRiskCard(p);
+  ['week','month','year','custom'].forEach(t=>{const b=document.getElementById('rtab-'+t);if(b)b.className='risk-ptab'+(t===p?' active':'');});
+  const cRow=document.getElementById('risk-custom-row');
+  if(cRow)cRow.style.display=p==='custom'?'flex':'none';
+  if(p!=='custom')updateRiskCard(p);
 }
 function _parseSDate(d){
   if(!d)return null;
@@ -997,25 +1032,53 @@ function _parseSDate(d){
   const m2=d.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m2)return new Date(+m2[1],+m2[2]-1,+m2[3]);
   return null;
 }
+function _riskDateRange(period){
+  const now=new Date();
+  if(period==='week'){
+    // Calendar week: Monday 00:00 to now
+    const dow=now.getDay();const diff=dow===0?-6:1-dow;
+    const mon=new Date(now);mon.setDate(now.getDate()+diff);mon.setHours(0,0,0,0);
+    return{from:mon,to:now};
+  }
+  if(period==='month'){
+    return{from:new Date(now.getFullYear(),now.getMonth(),1),to:now};
+  }
+  if(period==='year'){
+    return{from:new Date(now.getFullYear(),0,1),to:now};
+  }
+  if(period==='custom'){
+    const fv=document.getElementById('risk-from')?.value;
+    const tv=document.getElementById('risk-to')?.value;
+    const toD=tv?new Date(tv+'T23:59:59'):now;
+    return{from:fv?new Date(fv):null,to:toD};
+  }
+  return{from:null,to:now};
+}
 function updateRiskCard(period){
   period=period||_riskPeriod;
   const card=document.getElementById('risk-card');
   const allL=[...allLarval,...allManualLarval].filter(s=>s.HI!==undefined||s.CI!==undefined||s.BI!==undefined);
   if(!allL.length){if(card)card.style.display='none';return;}
   if(card)card.style.display='';
-  const now=new Date();
+  const range=_riskDateRange(period);
   let src=allL;
-  if(period==='week'){const c=new Date(now-7*864e5);src=allL.filter(s=>{const d=_parseSDate(s.date);return d&&d>=c;});}
-  else if(period==='month'){const c=new Date(now-30*864e5);src=allL.filter(s=>{const d=_parseSDate(s.date);return d&&d>=c;});}
+  if(range.from||range.to){
+    src=allL.filter(s=>{
+      const d=_parseSDate(s.date);if(!d)return false;
+      if(range.from&&d<range.from)return false;
+      if(range.to&&d>range.to)return false;
+      return true;
+    });
+  }
   if(!src.length)src=allL;
   const avgIdx=(key)=>{const v=src.map(s=>parseFloat(s[key])).filter(x=>!isNaN(x)&&x>0);return v.length?v.reduce((a,b)=>a+b,0)/v.length:0;};
   const hi=avgIdx('HI'),ci=avgIdx('CI'),bi=avgIdx('BI');
-  const riskLvl=(v,modThr,hiThr)=>v>=hiThr?'high':v>=modThr?'moderate':v>0?'low':'nodata';
+  const riskLvl=(v,mod,hiT)=>v>=hiT?'high':v>=mod?'moderate':v>0?'low':'nodata';
   const hiR=riskLvl(hi,1,10),ciR=riskLvl(ci,1,10),biR=riskLvl(bi,1,50);
   const overall=[hiR,ciR,biR].includes('high')?'high':[hiR,ciR,biR].includes('moderate')?'moderate':'low';
   const lblMap={high:'HIGH RISK',moderate:'MODERATE',low:'LOW RISK',nodata:'No Data'};
-  const b=document.getElementById('risk-overall-badge');
-  if(b){b.textContent=lblMap[overall]||'No Data';b.className='risk-lvl-badge '+(overall==='nodata'?'nodata':overall);}
+  const badge=document.getElementById('risk-overall-badge');
+  if(badge){badge.textContent=lblMap[overall]||'No Data';badge.className='risk-lvl-badge '+(overall==='nodata'?'nodata':overall);}
   const setIdx=(vId,lId,val,isCount,r)=>{
     const ve=document.getElementById(vId),le=document.getElementById(lId);
     if(ve){ve.textContent=val>0?(isCount?val.toFixed(1):val.toFixed(1)+'%'):'—';ve.className='risk-idx-val '+r;}
@@ -1024,23 +1087,48 @@ function updateRiskCard(period){
   setIdx('risk-hi-val','risk-hi-lbl',hi,false,hiR);
   setIdx('risk-ci-val','risk-ci-lbl',ci,false,ciR);
   setIdx('risk-bi-val','risk-bi-lbl',bi,true,biR);
-  // District breakdown
+
+  // ── District breakdown (bar chart) ──
   const byDist={};
   src.forEach(s=>{
-    const d=s.district||'Unknown';
-    if(!byDist[d])byDist[d]={hi:[],ci:[],bi:[]};
-    if(parseFloat(s.HI)>0)byDist[d].hi.push(parseFloat(s.HI));
-    if(parseFloat(s.CI)>0)byDist[d].ci.push(parseFloat(s.CI));
-    if(parseFloat(s.BI)>0)byDist[d].bi.push(parseFloat(s.BI));
+    const dk=s.district||'Unknown';
+    if(!byDist[dk])byDist[dk]={hi:[],ci:[],bi:[],locs:{}};
+    if(parseFloat(s.HI)>0)byDist[dk].hi.push(parseFloat(s.HI));
+    if(parseFloat(s.CI)>0)byDist[dk].ci.push(parseFloat(s.CI));
+    if(parseFloat(s.BI)>0)byDist[dk].bi.push(parseFloat(s.BI));
+    const lk=s.location||'Unknown';
+    if(!byDist[dk].locs[lk])byDist[dk].locs[lk]={hi:[],ci:[],bi:[]};
+    if(parseFloat(s.HI)>0)byDist[dk].locs[lk].hi.push(parseFloat(s.HI));
+    if(parseFloat(s.CI)>0)byDist[dk].locs[lk].ci.push(parseFloat(s.CI));
+    if(parseFloat(s.BI)>0)byDist[dk].locs[lk].bi.push(parseFloat(s.BI));
   });
+  const avg=(arr)=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;
+  const distEntries=Object.entries(byDist).map(([name,v])=>({name,hi:avg(v.hi),ci:avg(v.ci),bi:avg(v.bi),locs:v.locs})).sort((a,b)=>b.hi-a.hi);
+  const mx=Math.max(...distEntries.map(e=>e.hi),10);
   const distList=document.getElementById('risk-dist-list');
   if(distList){
-    const entries=Object.entries(byDist).map(([name,v])=>{
-      const dhi=v.hi.length?v.hi.reduce((a,b)=>a+b,0)/v.hi.length:0;
-      return{name,hi:dhi,r:dhi>=10?'high':dhi>=1?'moderate':dhi>0?'low':'nodata'};
-    }).sort((a,b)=>b.hi-a.hi);
-    const mx=Math.max(...entries.map(e=>e.hi),10);
-    distList.innerHTML=entries.filter(e=>e.hi>0).map(e=>`<div class="risk-dist-row"><div class="risk-dist-name">${e.name}</div><div class="risk-dist-bar-wrap"><div class="risk-dist-bar ${e.r}" style="width:${Math.min(100,e.hi/mx*100).toFixed(0)}%"></div></div><div class="risk-dist-val ${e.r}">${e.hi.toFixed(1)}%</div></div>`).join('')||'<div style="font-size:11px;color:var(--muted);padding:4px 0;">No district data</div>';
+    distList.innerHTML=distEntries.filter(e=>e.hi>0).map(e=>{
+      const r=e.hi>=10?'high':e.hi>=1?'moderate':'low';
+      return`<div class="risk-dist-row"><div class="risk-dist-name">${e.name}</div><div class="risk-dist-bar-wrap"><div class="risk-dist-bar ${r}" style="width:${Math.min(100,e.hi/mx*100).toFixed(0)}%"></div></div><div class="risk-dist-val ${r}">${e.hi.toFixed(1)}%</div></div>`;
+    }).join('')||'<div style="font-size:11px;color:var(--muted);padding:4px 0;">No district data</div>';
+  }
+
+  // ── Location breakdown per district ──
+  const locSec=document.getElementById('risk-loc-section');
+  if(locSec){
+    if(!distEntries.filter(e=>e.hi>0).length){locSec.innerHTML='';return;}
+    locSec.innerHTML='<div style="padding:10px 16px 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);">Location-level Indices by District</div>'+
+    distEntries.filter(e=>Object.keys(e.locs).length>0).map(de=>{
+      const dr=de.hi>=10?'high':de.hi>=1?'moderate':de.hi>0?'low':'nodata';
+      const locRows=Object.entries(de.locs).map(([lname,lv])=>{
+        const lhi=avg(lv.hi),lci=avg(lv.ci),lbi=avg(lv.bi);
+        const lr=lhi>=10?'high':lhi>=1?'moderate':lhi>0?'low':'nodata';
+        const lcr=lci>=10?'high':lci>=1?'moderate':lci>0?'low':'nodata';
+        const lbr=lbi>=50?'high':lbi>=1?'moderate':lbi>0?'low':'nodata';
+        return`<tr><td>${lname}</td><td><span class="rv ${lr}">${lhi>0?lhi.toFixed(1)+'%':'—'}</span></td><td><span class="rv ${lcr}">${lci>0?lci.toFixed(1)+'%':'—'}</span></td><td><span class="rv ${lbr}">${lbi>0?lbi.toFixed(1):'—'}</span></td></tr>`;
+      }).join('');
+      return`<div class="risk-loc-dist-hdr"><div class="risk-loc-dist-name">${de.name}</div><div class="risk-loc-dist-badge ${dr}">${lblMap[dr]||'—'} · HI ${de.hi>0?de.hi.toFixed(1)+'%':'—'}</div></div><table class="risk-loc-table"><thead><tr><th>Location / Area</th><th>HI %</th><th>CI %</th><th>BI</th></tr></thead><tbody>${locRows}</tbody></table>`;
+    }).join('');
   }
 }
 
