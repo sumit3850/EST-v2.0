@@ -4816,17 +4816,24 @@ function registerSW() {
   // Register external sw.js (works on GitHub Pages / any HTTPS server)
   navigator.serviceWorker.register('./sw.js', { scope: './' })
     .then(reg => {
-      console.log('[EST] SW registered:', reg.scope);
-      // Listen for update messages
+      // Listen for update messages from the service worker
       navigator.serviceWorker.addEventListener('message', evt => {
         if (evt.data && evt.data.type === 'UPDATE_AVAILABLE') showUpdateBanner(evt.data.version);
       });
-      // Check for updates every 30 minutes
-      setInterval(() => { if (navigator.onLine) reg.update(); }, 30 * 60 * 1000);
+      // Check immediately on open, then every 30 minutes
+      reg.update().catch(() => {});
+      setInterval(() => { if (navigator.onLine) reg.update().catch(() => {}); }, 30 * 60 * 1000);
+      // Also listen for a new SW being found during this session
+      reg.addEventListener('updatefound', () => {
+        const sw = reg.installing;
+        if (!sw) return;
+        sw.addEventListener('statechange', () => {
+          if (sw.state === 'installed' && navigator.serviceWorker.controller) showUpdateBanner('');
+        });
+      });
     })
     .catch(err => {
       console.warn('[EST] SW registration failed:', err.message);
-      // Fallback: still works, just no offline caching
     });
 }
 
