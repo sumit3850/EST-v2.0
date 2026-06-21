@@ -253,6 +253,19 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .risk-loc-table tr:last-child td{border-bottom:none;}
 .risk-loc-table .rv.high{color:#ef5350;font-weight:700;}.risk-loc-table .rv.moderate{color:#ffa726;font-weight:700;}.risk-loc-table .rv.low{color:var(--teal);font-weight:600;}
 @media(max-width:600px){.risk-card{margin:10px 10px 0;}.risk-idx-val{font-size:17px;}.risk-idx-cell{padding:10px 5px;}.risk-custom-row{padding:8px 10px;}}
+/* ── Breeding containers chart ── */
+.risk-breeding-sec{border-top:1px solid var(--bdr);padding:12px 16px 14px;}
+.risk-breeding-hdr{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:10px;}
+.bc-dist-block{margin-bottom:12px;}
+.bc-dist-block:last-child{margin-bottom:0;}
+.bc-dist-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--txt2);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--bdr);}
+.bc-row{display:flex;align-items:center;gap:7px;margin-bottom:4px;}
+.bc-name{font-size:10px;color:var(--txt2);width:130px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bc-bar-wrap{flex:1;height:10px;background:var(--sf2);border-radius:5px;overflow:hidden;}
+.bc-bar{height:100%;border-radius:5px;background:var(--blue);transition:width .4s ease;}
+.bc-val{font-size:10px;font-weight:700;color:var(--blue);min-width:24px;text-align:right;}
+.risk-export-btn{display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--blue-lt);color:var(--blue);border:1px solid rgba(33,150,243,.3);border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s;flex-shrink:0;}
+.risk-export-btn:hover{background:rgba(33,150,243,.22);}
 
 /* ═══ SECTION HEADER ═══ */
 .section-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid var(--bdr);}
@@ -361,7 +374,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.0.66</p>
+      <p>Admin Dashboard · v2.0.67</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -393,7 +406,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>v2.0.66 · A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.0.67 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -541,7 +554,10 @@ tr:hover td{background:var(--teal-lt);}
             <div class="risk-card-title">Aedes Breeding Risk Assessment</div>
             <div class="risk-card-sub">NVBDCP 2022 Guidelines · District &amp; Location Stegomyia Indices</div>
           </div>
-          <div class="risk-lvl-badge nodata" id="risk-overall-badge">No Data</div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <div class="risk-lvl-badge nodata" id="risk-overall-badge">No Data</div>
+            <button class="risk-export-btn" onclick="exportRiskPDF()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>Export PDF</button>
+          </div>
         </div>
         <div class="risk-period-tabs">
           <button class="risk-ptab active" id="rtab-week" onclick="switchRiskPeriod('week')">This Week</button>
@@ -583,6 +599,7 @@ tr:hover td{background:var(--teal-lt);}
           <div id="risk-dist-bi-list"></div>
         </div>
         <div class="risk-loc-section" id="risk-loc-section"></div>
+        <div id="risk-breeding-sec" style="display:none;"></div>
         <div class="risk-ref">
           <b>NVBDCP 2022 Risk Thresholds:</b><br>
           House Index (HI): Low &lt;1% · Moderate 1–10% · High &gt;10%<br>
@@ -1101,6 +1118,7 @@ function updateRiskCard(period){
 
   // ── Build district data ──
   const byDist={};
+  const byDistCont={};
   src.forEach(s=>{
     const dk=s.district||'Unknown';
     if(!byDist[dk])byDist[dk]={hi:[],ci:[],bi:[],locs:{}};
@@ -1112,6 +1130,13 @@ function updateRiskCard(period){
     if(parseFloat(s.HI)>0)byDist[dk].locs[lk].hi.push(parseFloat(s.HI));
     if(parseFloat(s.CI)>0)byDist[dk].locs[lk].ci.push(parseFloat(s.CI));
     if(parseFloat(s.BI)>0)byDist[dk].locs[lk].bi.push(parseFloat(s.BI));
+    if(!byDistCont[dk])byDistCont[dk]={};
+    (s.containerSummary||[]).forEach(ct=>{
+      if((ct.positive||0)>0){
+        if(!byDistCont[dk][ct.name])byDistCont[dk][ct.name]=0;
+        byDistCont[dk][ct.name]+=ct.positive||0;
+      }
+    });
   });
   const avg=(arr)=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;
   const distEntries=Object.entries(byDist).map(([name,v])=>({name,hi:avg(v.hi),ci:avg(v.ci),bi:avg(v.bi),locs:v.locs}));
@@ -1134,20 +1159,89 @@ function updateRiskCard(period){
   // ── Location breakdown per district ──
   const locSec=document.getElementById('risk-loc-section');
   if(locSec){
-    if(!distEntries.length){locSec.innerHTML='';return;}
-    locSec.innerHTML='<div style="padding:10px 16px 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);">Location-level Indices by District</div>'+
-    distEntries.sort((a,b)=>b.hi-a.hi).filter(e=>Object.keys(e.locs).length>0).map(de=>{
-      const dr=de.hi>=10?'high':de.hi>=1?'moderate':de.hi>0?'low':'nodata';
-      const locRows=Object.entries(de.locs).sort((a,b)=>avg(b[1].hi)-avg(a[1].hi)).map(([lname,lv])=>{
-        const lhi=avg(lv.hi),lci=avg(lv.ci),lbi=avg(lv.bi);
-        const lr=lhi>=10?'high':lhi>=1?'moderate':lhi>0?'low':'nodata';
-        const lcr=lci>=10?'high':lci>=1?'moderate':lci>0?'low':'nodata';
-        const lbr=lbi>=50?'high':lbi>=1?'moderate':lbi>0?'low':'nodata';
-        return`<tr><td>${lname}</td><td><span class="rv ${lr}">${lhi>0?lhi.toFixed(1)+'%':'—'}</span></td><td><span class="rv ${lcr}">${lci>0?lci.toFixed(1)+'%':'—'}</span></td><td><span class="rv ${lbr}">${lbi>0?lbi.toFixed(1):'—'}</span></td></tr>`;
+    if(!distEntries.length){locSec.innerHTML='';}
+    else{
+      locSec.innerHTML='<div style="padding:10px 16px 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);">Location-level Indices by District</div>'+
+      distEntries.sort((a,b)=>b.hi-a.hi).filter(e=>Object.keys(e.locs).length>0).map(de=>{
+        const dr=de.hi>=10?'high':de.hi>=1?'moderate':de.hi>0?'low':'nodata';
+        const locRows=Object.entries(de.locs).sort((a,b)=>avg(b[1].hi)-avg(a[1].hi)).map(([lname,lv])=>{
+          const lhi=avg(lv.hi),lci=avg(lv.ci),lbi=avg(lv.bi);
+          const lr=lhi>=10?'high':lhi>=1?'moderate':lhi>0?'low':'nodata';
+          const lcr=lci>=10?'high':lci>=1?'moderate':lci>0?'low':'nodata';
+          const lbr=lbi>=50?'high':lbi>=1?'moderate':lbi>0?'low':'nodata';
+          return`<tr><td>${lname}</td><td><span class="rv ${lr}">${lhi>0?lhi.toFixed(1)+'%':'—'}</span></td><td><span class="rv ${lcr}">${lci>0?lci.toFixed(1)+'%':'—'}</span></td><td><span class="rv ${lbr}">${lbi>0?lbi.toFixed(1):'—'}</span></td></tr>`;
+        }).join('');
+        return`<div class="risk-loc-dist-hdr"><div class="risk-loc-dist-name">${de.name}</div><div class="risk-loc-dist-badge ${dr}">${lblMap[dr]||'—'} · HI ${de.hi>0?de.hi.toFixed(1)+'%':'—'}</div></div><table class="risk-loc-table"><thead><tr><th>Location / Area</th><th>HI %</th><th>CI %</th><th>BI</th></tr></thead><tbody>${locRows}</tbody></table>`;
       }).join('');
-      return`<div class="risk-loc-dist-hdr"><div class="risk-loc-dist-name">${de.name}</div><div class="risk-loc-dist-badge ${dr}">${lblMap[dr]||'—'} · HI ${de.hi>0?de.hi.toFixed(1)+'%':'—'}</div></div><table class="risk-loc-table"><thead><tr><th>Location / Area</th><th>HI %</th><th>CI %</th><th>BI</th></tr></thead><tbody>${locRows}</tbody></table>`;
-    }).join('');
+    }
   }
+
+  // ── Breeding preferred containers per district ──
+  const breedSec=document.getElementById('risk-breeding-sec');
+  if(breedSec){
+    const distKeys=Object.keys(byDistCont).filter(dk=>Object.keys(byDistCont[dk]).length>0);
+    if(distKeys.length){
+      breedSec.style.display='';
+      breedSec.innerHTML='<div class="risk-breeding-sec"><div class="risk-breeding-hdr">Breeding Preferred Containers by District</div>'+
+        distKeys.map(dk=>{
+          const contData=byDistCont[dk];
+          const sorted=Object.entries(contData).sort((a,b)=>b[1]-a[1]).slice(0,7);
+          const mx=sorted[0][1];
+          return`<div class="bc-dist-block"><div class="bc-dist-title">${dk}</div>`+
+            sorted.map(([name,cnt])=>`<div class="bc-row"><div class="bc-name">${name}</div><div class="bc-bar-wrap"><div class="bc-bar" style="width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%"></div></div><div class="bc-val">${cnt}</div></div>`).join('')+
+          '</div>';
+        }).join('')+'</div>';
+    }else{
+      breedSec.style.display='none';
+    }
+  }
+}
+
+function exportRiskPDF(){
+  const range=_riskDateRange(_riskPeriod);
+  const allL=[...allLarval,...allManualLarval].filter(s=>s.HI!==undefined||s.CI!==undefined||s.BI!==undefined);
+  let src=allL;
+  if(range.from||range.to){
+    src=allL.filter(s=>{const d=_parseSDate(s.date);if(!d)return false;if(range.from&&d<range.from)return false;if(range.to&&d>range.to)return false;return true;});
+  }
+  if(!src.length)src=allL;
+  const avgArr=(arr)=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;
+  const avgIdx=(key)=>{const v=src.map(s=>parseFloat(s[key])).filter(x=>!isNaN(x)&&x>0);return v.length?v.reduce((a,b)=>a+b,0)/v.length:0;};
+  const hi=avgIdx('HI'),ci=avgIdx('CI'),bi=avgIdx('BI');
+  const rLvl=(v,mod,hiT)=>v>=hiT?'HIGH RISK':v>=mod?'MODERATE':v>0?'LOW RISK':'—';
+  const rClr=(v,mod,hiT)=>v>=hiT?'#ef5350':v>=mod?'#e65100':v>0?'#00695c':'#aaa';
+  const byDist2={};const byDistCont2={};
+  src.forEach(s=>{
+    const dk=s.district||'Unknown';
+    if(!byDist2[dk])byDist2[dk]={hi:[],ci:[],bi:[],locs:{}};
+    if(parseFloat(s.HI)>0)byDist2[dk].hi.push(parseFloat(s.HI));
+    if(parseFloat(s.CI)>0)byDist2[dk].ci.push(parseFloat(s.CI));
+    if(parseFloat(s.BI)>0)byDist2[dk].bi.push(parseFloat(s.BI));
+    const lk=s.location||'Unknown';
+    if(!byDist2[dk].locs[lk])byDist2[dk].locs[lk]={hi:[],ci:[],bi:[]};
+    if(parseFloat(s.HI)>0)byDist2[dk].locs[lk].hi.push(parseFloat(s.HI));
+    if(parseFloat(s.CI)>0)byDist2[dk].locs[lk].ci.push(parseFloat(s.CI));
+    if(parseFloat(s.BI)>0)byDist2[dk].locs[lk].bi.push(parseFloat(s.BI));
+    if(!byDistCont2[dk])byDistCont2[dk]={};
+    (s.containerSummary||[]).forEach(ct=>{if((ct.positive||0)>0){if(!byDistCont2[dk][ct.name])byDistCont2[dk][ct.name]=0;byDistCont2[dk][ct.name]+=ct.positive||0;}});
+  });
+  const distEntries2=Object.entries(byDist2).map(([name,v])=>({name,hi:avgArr(v.hi),ci:avgArr(v.ci),bi:avgArr(v.bi),locs:v.locs})).sort((a,b)=>b.hi-a.hi);
+  const overallR=[rLvl(hi,1,10),rLvl(ci,1,10),rLvl(bi,1,50)].includes('HIGH RISK')?'HIGH RISK':[rLvl(hi,1,10),rLvl(ci,1,10),rLvl(bi,1,50)].includes('MODERATE')?'MODERATE':hi>0||ci>0||bi>0?'LOW RISK':'No Data';
+  const overallC=overallR==='HIGH RISK'?'#ef5350':overallR==='MODERATE'?'#e65100':hi>0||ci>0||bi>0?'#00695c':'#888';
+  const todayFmt=new Date().getDate()+' '+_MN[new Date().getMonth()]+' '+new Date().getFullYear();
+  const distTblRows=distEntries2.map(d=>`<tr><td>${d.name}</td><td style="color:${rClr(d.hi,1,10)};font-weight:700;">${d.hi>0?d.hi.toFixed(1)+'%':'—'}</td><td style="color:${rClr(d.hi,1,10)};font-size:10px;">${rLvl(d.hi,1,10)}</td><td style="color:${rClr(d.ci,1,10)};font-weight:700;">${d.ci>0?d.ci.toFixed(1)+'%':'—'}</td><td style="color:${rClr(d.ci,1,10)};font-size:10px;">${rLvl(d.ci,1,10)}</td><td style="color:${rClr(d.bi,1,50)};font-weight:700;">${d.bi>0?d.bi.toFixed(1):'—'}</td><td style="color:${rClr(d.bi,1,50)};font-size:10px;">${rLvl(d.bi,1,50)}</td></tr>`).join('');
+  const locSections2=distEntries2.filter(d=>Object.keys(d.locs).length>0).map(d=>{
+    const rows=Object.entries(d.locs).sort((a,b)=>avgArr(b[1].hi)-avgArr(a[1].hi)).map(([ln,lv])=>{const lhi=avgArr(lv.hi),lci=avgArr(lv.ci),lbi=avgArr(lv.bi);return`<tr><td>${ln}</td><td style="color:${rClr(lhi,1,10)};font-weight:700;">${lhi>0?lhi.toFixed(1)+'%':'—'}</td><td style="color:${rClr(lci,1,10)};font-weight:700;">${lci>0?lci.toFixed(1)+'%':'—'}</td><td style="color:${rClr(lbi,1,50)};font-weight:700;">${lbi>0?lbi.toFixed(1):'—'}</td></tr>`;}).join('');
+    return`<h3>${d.name} — Location Breakdown</h3><table><thead><tr><th>Location / Area</th><th>HI %</th><th>CI %</th><th>BI</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }).join('');
+  const contSections2=Object.entries(byDistCont2).filter(([,cc])=>Object.keys(cc).length>0).map(([dk,cc])=>{
+    const sorted=Object.entries(cc).sort((a,b)=>b[1]-a[1]).slice(0,8);const mx=sorted[0][1];
+    const rows=sorted.map(([name,cnt])=>`<tr><td>${name}</td><td style="font-weight:700;">${cnt}</td><td><div style="height:9px;border-radius:4px;background:#00695c;width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%;min-width:4px;"></div></td></tr>`).join('');
+    return`<h3>${dk} — Breeding Preferred Containers</h3><table><thead><tr><th>Container Type</th><th>Positive</th><th style="min-width:100px;">Proportion</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Aedes Risk Assessment Report</title><style>body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:800px;margin:0 auto;padding:28px 32px;}h1{font-size:19px;margin:0 0 2px;color:#00352a;font-weight:800;}h2{font-size:13px;font-weight:700;color:#00352a;margin:20px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:14px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.subtitle{font-size:10px;color:#666;margin-bottom:2px;}.period{font-size:11px;font-weight:700;color:#00695c;margin-bottom:14px;}.badge{display:inline-block;padding:4px 14px;border-radius:16px;font-size:11px;font-weight:700;margin-bottom:14px;background:${overallC}22;color:${overallC};border:1px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px;}.kpi-box{border:1px solid #ddd;border-radius:7px;padding:10px;text-align:center;}.kpi-name{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#888;margin-bottom:5px;}.kpi-val{font-size:20px;font-weight:800;letter-spacing:-.02em;}.kpi-risk{font-size:9px;font-weight:700;margin-top:3px;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:6px;}th{padding:5px 8px;background:#f0f7f5;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#555;text-align:left;border-bottom:2px solid #cce8e3;}td{padding:4px 8px;border-bottom:1px solid #eee;}.ref{margin-top:18px;padding:9px 12px;background:#f0f7f5;border-left:3px solid #00695c;font-size:9.5px;color:#444;line-height:1.9;}.footer{margin-top:20px;padding-top:8px;border-top:1px solid #ddd;font-size:9px;color:#999;display:flex;justify-content:space-between;}@media print{.page{padding:16px 18px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;"><div><h1>Aedes Breeding Risk Assessment</h1><div class="subtitle">NVBDCP 2022 Guidelines · Stegomyia Indices Report</div><div class="period">${range.label||'All Data'}</div></div><div style="text-align:right;font-size:9px;color:#999;">Generated: ${todayFmt}</div></div><div class="badge">Overall: ${overallR}</div><h2>Overall Stegomyia Indices</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,1,10)}">${hi>0?hi.toFixed(1)+'%':'—'}</div><div class="kpi-risk" style="color:${rClr(hi,1,10)}">${rLvl(hi,1,10)}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,1,10)}">${ci>0?ci.toFixed(1)+'%':'—'}</div><div class="kpi-risk" style="color:${rClr(ci,1,10)}">${rLvl(ci,1,10)}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,1,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,1,50)}">${rLvl(bi,1,50)}</div></div></div><h2>District-level Indices</h2><table><thead><tr><th>District</th><th>HI %</th><th>HI Risk</th><th>CI %</th><th>CI Risk</th><th>BI</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table><h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<h2>Breeding Preferred Containers by District</h2>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>NVBDCP 2022 Risk Thresholds:</b><br>House Index (HI): Low &lt;1% · Moderate 1–10% · High &gt;10%<br>Container Index (CI): Low &lt;1% · Moderate 1–10% · High &gt;10%<br>Breteau Index (BI): Low &lt;1 · Moderate 1–50 · High &gt;50</div><div class="footer"><span>EST v2.0 — Entomological Surveillance Tool</span><span>${range.label||'All Data'}</span></div></div></body></html>`;
+  const win=window.open('','_blank','width=900,height=720');
+  if(win){win.document.write(html);win.document.close();setTimeout(()=>win.print(),700);}
 }
 
 function updateStats(){
@@ -1691,7 +1785,7 @@ function buildAdultXLSX(surveys,isCompiled){
   const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
   // ── Report Status ──
   const statusRows=[
-    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.66')],
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.67')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -1765,7 +1859,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   // ── Report Status sheet ──
   const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.66')],
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.67')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -1907,7 +2001,7 @@ function buildAdultCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.66 — Adult Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.67 — Adult Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -1959,7 +2053,7 @@ function buildAdultCSV(surveys){
     });
   });
   blank();
-  r('EST v2.0.66 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.67 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -1971,7 +2065,7 @@ function buildLarvalCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.66 — Larval Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.67 — Larval Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -2052,7 +2146,7 @@ function buildLarvalCSV(surveys){
     }
   });
   blank();
-  r('EST v2.0.66 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.67 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
