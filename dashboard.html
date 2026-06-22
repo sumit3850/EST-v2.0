@@ -228,13 +228,21 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;backgrou
 .risk-idx-thr{font-size:9px;color:var(--muted);margin-top:2px;}
 .risk-districts{padding:12px 16px 14px;}
 .risk-dist-hdr{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px;}
-.risk-dist-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
-.risk-dist-name{font-size:11px;color:var(--txt2);min-width:100px;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.risk-dist-bar-wrap{flex:1;height:5px;background:var(--sf2);border-radius:3px;overflow:hidden;}
-.risk-dist-bar{height:100%;border-radius:3px;transition:width .4s ease;}
-.risk-dist-bar.high{background:#ef5350;}.risk-dist-bar.moderate{background:#2196f3;}.risk-dist-bar.low{background:#00bfa5;}
-.risk-dist-val{font-size:10px;font-weight:700;min-width:38px;text-align:right;}
-.risk-dist-val.high{color:#ef5350;}.risk-dist-val.moderate{color:#2196f3;}.risk-dist-val.low{color:var(--teal);}
+/* ── Grouped district chart ── */
+.rdc-legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--bdr);}
+.rdc-leg{display:flex;align-items:center;gap:5px;font-size:9.5px;color:var(--txt2);}
+.rdc-leg-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+.rdc-district{margin-bottom:14px;}
+.rdc-dist-name{font-size:11px;font-weight:600;color:var(--txt);margin-bottom:6px;letter-spacing:-.01em;}
+.rdc-rows{display:flex;flex-direction:column;gap:5px;}
+.rdc-row{display:flex;align-items:center;gap:8px;}
+.rdc-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);width:18px;flex-shrink:0;text-align:right;}
+.rdc-track{flex:1;height:9px;background:var(--sf2);border-radius:5px;overflow:hidden;position:relative;}
+.rdc-fill{height:100%;border-radius:5px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.rdc-val{font-size:10px;font-weight:700;min-width:42px;font-variant-numeric:tabular-nums;text-align:right;}
+/* threshold tick marks on tracks */
+.rdc-tick{position:absolute;top:0;bottom:0;width:1.5px;background:rgba(255,255,255,.18);pointer-events:none;}
+[data-theme="light"] .rdc-tick{background:rgba(0,0,0,.14);}
 .risk-ref{padding:8px 16px 12px;font-size:10px;color:var(--muted);border-top:1px solid var(--bdr);line-height:1.7;}
 .risk-ref b{color:var(--txt2);font-weight:600;}
 .risk-custom-row{display:flex;gap:8px;align-items:center;padding:8px 16px;background:var(--sf2);border-bottom:1px solid var(--bdr);flex-wrap:wrap;}
@@ -598,12 +606,7 @@ tr:hover td{background:var(--teal-lt);}
           </div>
         </div>
         <div class="risk-districts">
-          <div class="risk-dist-hdr">District-level House Index (HI %)</div>
-          <div id="risk-dist-hi-list"></div>
-          <div class="risk-dist-hdr" style="margin-top:12px;">District-level Container Index (CI %)</div>
-          <div id="risk-dist-ci-list"></div>
-          <div class="risk-dist-hdr" style="margin-top:12px;">District-level Breteau Index (BI)</div>
-          <div id="risk-dist-bi-list"></div>
+          <div id="risk-dist-chart"></div>
         </div>
         <div class="risk-loc-section" id="risk-loc-section"></div>
         <div id="risk-breeding-sec" style="display:none;"></div>
@@ -1156,26 +1159,58 @@ function updateRiskCard(period){
     return{name,hi:avg(v.hi),ci:avg(v.ci),bi:dbi,housesEx:v.housesEx,locs:v.locs};
   });
 
-  // ── District bar charts ──
-  const mkDistBars=(id,key,entries,modT,hiT,isPct)=>{
-    const el=document.getElementById(id);if(!el)return;
-    const sorted=[...entries].filter(e=>e[key]!=null&&e[key]>0).sort((a,b)=>b[key]-a[key]);
-    if(!sorted.length){el.innerHTML='<div style="font-size:11px;color:var(--muted);padding:4px 0;">No data</div>';return;}
-    const mx=Math.max(...sorted.map(e=>e[key]),hiT);
-    el.innerHTML=sorted.map(e=>{
-      const r=riskLvl(e[key],modT,hiT);
-      const disp=isPct?e[key].toFixed(1)+'%':e[key].toFixed(1);
-      return`<div class="risk-dist-row"><div class="risk-dist-name">${e.name}</div><div class="risk-dist-bar-wrap"><div class="risk-dist-bar ${r}" style="width:${Math.min(100,e[key]/mx*100).toFixed(0)}%"></div></div><div class="risk-dist-val ${r}">${disp}</div></div>`;
-    }).join('');
-    // Add entries with no valid data (bi null)
-    if(id==='risk-dist-bi-list'){
-      const naEntries=entries.filter(e=>e.bi===null);
-      if(naEntries.length)el.innerHTML+=naEntries.map(e=>`<div class="risk-dist-row"><div class="risk-dist-name">${e.name}</div><div class="risk-dist-bar-wrap"></div><div class="risk-dist-val" style="color:var(--muted);">N/A <span style="font-size:9px;font-weight:400;">&lt;100 houses</span></div></div>`).join('');
-    }
-  };
-  mkDistBars('risk-dist-hi-list','hi',distEntries,5,10,true);
-  mkDistBars('risk-dist-ci-list','ci',distEntries,5,10,true);
-  mkDistBars('risk-dist-bi-list','bi',distEntries,5,50,false);
+  // ── Grouped district chart — all three indices per district ──
+  (()=>{
+    const el=document.getElementById('risk-dist-chart');if(!el)return;
+    if(!distEntries.length){el.innerHTML='<div style="font-size:11px;color:var(--muted);padding:4px 0;">No data</div>';return;}
+    const rClr=r=>r==='high'?'#ef5350':r==='moderate'?'#2196f3':r==='low'?'#00bfa5':'var(--sf2)';
+    const rTxt=r=>r==='high'?'#ef5350':r==='moderate'?'#2196f3':r==='low'?'var(--teal)':'var(--muted)';
+    const maxHI=Math.max(...distEntries.map(d=>d.hi||0),10);
+    const maxCI=Math.max(...distEntries.map(d=>d.ci||0),10);
+    const maxBI=Math.max(...distEntries.filter(d=>d.bi!=null).map(d=>d.bi||0),50);
+    // threshold tick positions as % of track
+    const hiTick=pct=>`<div class="rdc-tick" style="left:${pct}%"></div>`;
+    const sorted=[...distEntries].sort((a,b)=>b.hi-a.hi);
+    el.innerHTML=`
+      <div class="rdc-legend">
+        <div class="rdc-leg"><div class="rdc-leg-dot" style="background:#ef5350"></div>High risk</div>
+        <div class="rdc-leg"><div class="rdc-leg-dot" style="background:#2196f3"></div>Moderate</div>
+        <div class="rdc-leg"><div class="rdc-leg-dot" style="background:#00bfa5"></div>Low risk</div>
+        <div class="rdc-leg" style="margin-left:auto;color:var(--muted);">HI &amp; CI: High &gt;10% · BI: High &gt;50</div>
+      </div>
+      ${sorted.map(d=>{
+        const hiR=riskLvl(d.hi,5,10),ciR=riskLvl(d.ci,5,10),biR=d.bi!=null?riskLvl(d.bi,5,50):'nodata';
+        const hiW=d.hi>0?Math.min(100,d.hi/maxHI*100).toFixed(1):0;
+        const ciW=d.ci>0?Math.min(100,d.ci/maxCI*100).toFixed(1):0;
+        const biW=d.bi!=null?Math.min(100,d.bi/maxBI*100).toFixed(1):0;
+        // threshold ticks: moderate=5/max*100, high=hiT/max*100
+        const hiModT=(5/maxHI*100).toFixed(1),hiHiT=(10/maxHI*100).toFixed(1);
+        const ciModT=(5/maxCI*100).toFixed(1),ciHiT=(10/maxCI*100).toFixed(1);
+        const biModT=(5/maxBI*100).toFixed(1),biHiT=(50/maxBI*100).toFixed(1);
+        return`<div class="rdc-district">
+          <div class="rdc-dist-name">${d.name}</div>
+          <div class="rdc-rows">
+            <div class="rdc-row">
+              <div class="rdc-lbl">HI</div>
+              <div class="rdc-track">${hiTick(hiModT)}${hiTick(hiHiT)}<div class="rdc-fill" style="width:${hiW}%;background:${rClr(hiR)}"></div></div>
+              <div class="rdc-val" style="color:${rTxt(hiR)}">${d.hi>0?d.hi.toFixed(1)+'%':'—'}</div>
+            </div>
+            <div class="rdc-row">
+              <div class="rdc-lbl">CI</div>
+              <div class="rdc-track">${hiTick(ciModT)}${hiTick(ciHiT)}<div class="rdc-fill" style="width:${ciW}%;background:${rClr(ciR)}"></div></div>
+              <div class="rdc-val" style="color:${rTxt(ciR)}">${d.ci>0?d.ci.toFixed(1)+'%':'—'}</div>
+            </div>
+            <div class="rdc-row">
+              <div class="rdc-lbl">BI</div>
+              <div class="rdc-track">${hiTick(biModT)}${hiTick(biHiT)}<div class="rdc-fill" style="width:${biW}%;background:${rClr(biR)}"></div></div>
+              <div class="rdc-val" style="color:${d.bi!=null?rTxt(biR):'var(--muted)'}">
+                ${d.bi!=null?d.bi.toFixed(1):'<span style="font-size:9px;font-weight:400;">N/A</span>'}
+              </div>
+            </div>
+          </div>
+        </div>`;
+      }).join('')}`;
+  })();
 
   // ── Location breakdown per district ──
   const locSec=document.getElementById('risk-loc-section');
