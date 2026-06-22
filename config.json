@@ -21,13 +21,13 @@
     {
       "username": "Shiva-1",
       "password": "2004",
-      "role": "field",
+      "role": "admin",
       "active": true
     },
     {
       "username": "Shivan-1",
       "password": "1992",
-      "role": "field",
+      "role": "admin",
       "active": true
     }
   ],
