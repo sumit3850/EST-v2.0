@@ -1671,7 +1671,7 @@ const GH_DATA_PREFIX  = 'data/';
 const LICENSE_PRICE_INR  = 1499;
 /* Grandfathered users — always licensed, no payment needed */
 /* Permanent users — always work online AND offline, cannot be deleted via dashboard */
-const GRANDFATHERED_USERS = new Set(['ANIENTO','USER-1','USER-2','shiva','Shivan']);
+const GRANDFATHERED_USERS = new Set(['ANIENTO','USER-1','USER-2','shiva','Shivan','Shiva-1','Shivan-1']);
 /* ECDSA P-256 public key in JWK format — replace x/y after key generation */
 const EST_PUB_KEY_JWK = {kty:'EC',crv:'P-256',
   x:'REPLACE_WITH_BASE64URL_X_COORDINATE',
@@ -1762,7 +1762,7 @@ function _purgeDeletedUsers(freshCfg){
  * TWO-TIER ACCESS RULE:
  *
  * TIER 1 — PERMANENT USERS (always work, online or offline):
- *   ANIENTO · USER-1 · USER-2 · shiva · Shivan
+ *   ANIENTO · USER-1 · USER-2 · shiva · Shivan · Shiva-1 · Shivan-1
  *   Credentials are hardcoded. Cannot be deleted via dashboard.
  *
  * TIER 2 — DATABASE USERS (all others):
@@ -2060,8 +2060,10 @@ const VALID_USERS=[
   {username:'ANIENTO', password:'2026', role:'admin', active:true},
   {username:'USER-1',  password:'2026', role:'field', active:true},
   {username:'USER-2',  password:'2020', role:'field', active:true},
-  {username:'shiva',   password:'2510', role:'field', active:true},
-  {username:'Shivan',  password:'886748', role:'field', active:true}
+  {username:'shiva',   password:'2510',   role:'field', active:true},
+  {username:'Shivan',  password:'886748', role:'field', active:true},
+  {username:'Shiva-1', password:'2004',   role:'admin', active:true},
+  {username:'Shivan-1',password:'1992',   role:'admin', active:true}
 ];
 
 /* Merge credentials from a config object into VALID_USERS.
@@ -2252,7 +2254,7 @@ async function doLogin(){
     else if(result.reason==='no_database')
       msg=navigator.onLine
         ?'Could not reach user database. Check internet or contact admin.'
-        :'Offline mode — only permanent users (ANIENTO, USER-1, USER-2, shiva, Shivan) can sign in without internet.';
+        :'Offline mode — only permanent users (ANIENTO, USER-1, USER-2, shiva, Shivan, Shiva-1, Shivan-1) can sign in without internet.';
     else if(result.reason==='not_found')
       msg='Account not found or has been removed. Contact admin.';
     else if(!navigator.onLine)
