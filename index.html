@@ -451,7 +451,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
         </svg>
       </div>
       <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub" id="dash-sub-ver">EST v2.0.72</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.0.73</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -497,7 +497,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About <span id="dash-about-ver">EST v2.0.72</span>
+      About <span id="dash-about-ver">EST v2.0.73</span>
     </button>
     <div id="dash-bottom-ver" style="text-align:center;font-size:10px;color:rgba(255,255,255,.2);margin-top:8px;">EST v2.0 · Data stored locally — works offline</div>
   </div>
@@ -1796,6 +1796,7 @@ function validateCredentials(user, pass){
   if(GRANDFATHERED_USERS.has(u)){
     const local=VALID_USERS.find(c=>c.username===u);
     if(!local||local.active===false) return {valid:false,reason:'inactive',source:'hardcoded'};
+    if(local.role==='admin') return {valid:false,reason:'admin_dashboard_only',source:'hardcoded'};
     if(local.password===pass) return {valid:true,role:local.role,source:'hardcoded'};
     return {valid:false,reason:'wrong_password',source:'hardcoded'};
   }
@@ -1811,6 +1812,7 @@ function validateCredentials(user, pass){
   const found=ghCreds.find(c=>c.username&&c.username.trim()===u);
   if(!found) return {valid:false,reason:'not_found',source:'github'};
   if(found.active===false) return {valid:false,reason:'inactive',source:'github'};
+  if(found.role==='admin') return {valid:false,reason:'admin_dashboard_only',source:'github'};
   if(found.password===pass) return {valid:true,role:found.role||'field',source:'github'};
   return {valid:false,reason:'wrong_password',source:'github'};
 }
@@ -2114,7 +2116,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.0.72';
+const APP_VER='2.0.73';
 /* Compact human-readable Survey ID: A-260531-1437 (type + YYMMDD + HHMM) */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -2271,6 +2273,8 @@ async function doLogin(){
       msg=navigator.onLine
         ?'Could not reach user database. Check internet or contact admin.'
         :'Offline mode — only permanent users (ANIENTO, USER-1, USER-2, shiva, Shivan, Shiva-1, Shivan-1) can sign in without internet.';
+    else if(result.reason==='admin_dashboard_only')
+      msg='Admin accounts can only log in to the dashboard, not the field app.';
     else if(result.reason==='not_found')
       msg='Account not found or has been removed. Contact admin.';
     else if(!navigator.onLine)
@@ -3496,7 +3500,7 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.0.72)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.0.73)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -3571,7 +3575,7 @@ function buildAdultXLSX(surveys,isCompiled){
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.0.72)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.0.73)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],

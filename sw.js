@@ -1,5 +1,5 @@
 /* EST v2.0 Service Worker — Offline-First */
-const CACHE_NAME = 'est-v2.0.72';
+const CACHE_NAME = 'est-v2.0.73';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -41,7 +41,8 @@ self.addEventListener('fetch', e => {
   // External: GitHub API, Google Fonts, GPS — pass through, never cache
   if (url.origin !== self.location.origin) return;
 
-  const isHtml = url.pathname.endsWith('.html') || url.pathname.endsWith('/');
+  // config.json is network-first too — ensures deleted/updated users are reflected immediately
+  const isHtml = url.pathname.endsWith('.html') || url.pathname.endsWith('/') || url.pathname.endsWith('config.json');
 
   if (isHtml) {
     // Network-first for HTML: always show latest, fall back to cache if offline
