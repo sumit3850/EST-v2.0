@@ -2118,7 +2118,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.0.77';
+const APP_VER='2.0.78';
 /* Compact human-readable Survey ID: A-260531-1437 (type + YYMMDD + HHMM) */
 function fmtSid(type,id){
   const d=new Date(Number(id));
