@@ -1600,6 +1600,8 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 <script>
 'use strict';
 
+function _deb(fn,ms){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);};}
+
 /* ── INDIA STATE/DISTRICT DATA ─────────────────────────── */
 const INDIA_ST={
 "Andaman and Nicobar Islands":["Nicobar","North and Middle Andaman","South Andaman"],
@@ -2766,9 +2768,16 @@ const TrackRecorder=(()=>{
       document.body.classList.remove('tracking');
     },
     getLastPos(){return _pts.length?{lat:_pts[_pts.length-1].lat,lng:_pts[_pts.length-1].lng}:null;},
-    getTrack(){const end=_on?Date.now():(_t1||Date.now());return{waypoints:[..._pts],distanceKm:parseFloat(_dist.toFixed(3)),durationSec:Math.floor((end-_t0)/1000),startTime:new Date(_t0).toISOString(),endTime:new Date(end).toISOString()};}
+    getTrack(){const end=_on?Date.now():(_t1||Date.now());return{waypoints:[..._pts],distanceKm:parseFloat(_dist.toFixed(3)),durationSec:Math.floor((end-_t0)/1000),startTime:new Date(_t0).toISOString(),endTime:new Date(end).toISOString()};},
+    pauseGPS(){if(_wid!==null){navigator.geolocation.clearWatch(_wid);_wid=null;}}
   };
 })();
+// Release GPS when app goes to background to save battery
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && typeof TrackRecorder !== 'undefined') {
+    TrackRecorder.pauseGPS();
+  }
+});
 function liveCoords(pfx){const lat=parseFloat(document.getElementById(pfx+'-mlat').value);const lng=parseFloat(document.getElementById(pfx+'-mlng').value);if(!isNaN(lat)&&!isNaN(lng)){const s=pfx==='a'?aS:lS;s.lat=lat.toFixed(6);s.lng=lng.toFixed(6);document.getElementById(pfx+'-gps-status').textContent='Manual Location';document.getElementById(pfx+'-gps-coords').textContent=lat.toFixed(5)+'N  '+lng.toFixed(5)+'E';setGpsPill(pfx,'Manual coordinates set','ok');}}
 function applyCoords(pfx){const lat=parseFloat(document.getElementById(pfx+'-mlat').value);const lng=parseFloat(document.getElementById(pfx+'-mlng').value);if(isNaN(lat)||isNaN(lng)){showToast('Enter valid coordinates','warn');return;}const s=pfx==='a'?aS:lS;s.lat=lat.toFixed(6);s.lng=lng.toFixed(6);document.getElementById(pfx+'-gps-status').textContent='Manual Location';document.getElementById(pfx+'-gps-coords').textContent=lat.toFixed(5)+'N  '+lng.toFixed(5)+'E';setGpsPill(pfx,'Coordinates applied','ok');showToast('Coordinates applied','check');}
 function setNow(pfx,which){const now=new Date();const ts=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');const el=document.getElementById(pfx+'-'+which);if(el)el.value=ts;if(pfx==='a')updateTimeCalc('a');showToast((which==='start'?'Start':'End')+': '+ts,'check');}
