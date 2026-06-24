@@ -494,6 +494,26 @@ tr:hover td{background:var(--teal-lt);}
   .hs-toolbar-sep{display:none;}
 }
 
+/* ═══ ANALYTICS PANEL ═══ */
+.an-tabs{display:flex;border-bottom:2px solid var(--bdr);background:var(--sf2);}
+.an-tab{flex:1;height:40px;border:none;background:transparent;font-size:12px;font-weight:700;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;font-family:inherit;}
+.an-tab.active{color:var(--teal);border-bottom-color:var(--teal);}
+.an-section{display:block;}
+.intv-card{background:var(--sf2);border:1px solid var(--bdr);border-radius:10px;padding:16px 20px;display:inline-flex;flex-direction:column;align-items:center;min-width:120px;}
+.intv-card-val{font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.1;}
+.intv-card-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-top:4px;}
+.intv-card-change{font-size:11px;font-weight:700;margin-top:6px;padding:2px 8px;border-radius:12px;}
+.intv-card-change.good{background:rgba(76,175,80,.15);color:#4CAF50;}
+.intv-card-change.bad{background:rgba(239,83,80,.15);color:#ef5350;}
+.intv-card-change.same{background:rgba(158,158,158,.15);color:#9E9E9E;}
+#tbl-officers th,#tbl-officers td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--bdr);font-size:12px;white-space:nowrap;}
+#tbl-officers thead th{background:var(--sf2);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);}
+.officer-score{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
+.officer-score.excellent{background:rgba(76,175,80,.2);color:#4CAF50;}
+.officer-score.good{background:rgba(33,150,243,.2);color:#2196F3;}
+.officer-score.fair{background:rgba(255,152,0,.2);color:#FF9800;}
+.officer-score.poor{background:rgba(239,83,80,.2);color:#ef5350;}
+
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:768px){
   .sidebar{width:0;overflow:hidden;}.sidebar.mobile-open{width:232px;position:fixed;inset:0 auto 0 0;z-index:200;}
@@ -533,7 +553,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.0.76</p>
+      <p>Admin Dashboard · v2.0.77</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -571,7 +591,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>v2.0.76 · A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.0.77 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -593,6 +613,10 @@ tr:hover td{background:var(--teal-lt);}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
       <span class="nav-item-label">Survey Maps</span>
     </button>
+      <button class="nav-item" onclick="switchSection('analytics',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span>Analytics</span>
+      </button>
     <button class="nav-item" id="nav-manual" onclick="switchSection('manual',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       <span class="nav-item-label">Manual Data</span>
@@ -808,7 +832,7 @@ tr:hover td{background:var(--teal-lt);}
         </div>
       </div>
       <div class="panel-toolbar">
-        <input class="pt-search" id="search-adult" placeholder="🔍  Search location, district, officer…" oninput="filterTable('adult')">
+        <input class="pt-search" id="search-adult" placeholder="🔍  Search location, district, officer…" oninput="_deb(filterTable,150)('adult')">
         <select class="pt-select" id="filter-type" onchange="filterTable('adult')">
           <option value="">All Types</option><option value="resting">Resting</option><option value="hlc">HLC</option>
         </select>
@@ -847,7 +871,7 @@ tr:hover td{background:var(--teal-lt);}
         </div>
       </div>
       <div class="panel-toolbar">
-        <input class="pt-search" id="search-larval" placeholder="🔍  Search location, district, officer…" oninput="filterTable('larval')">
+        <input class="pt-search" id="search-larval" placeholder="🔍  Search location, district, officer…" oninput="_deb(filterTable,150)('larval')">
         <div class="date-range-group">
           <label>From</label><input type="date" class="pt-select" id="filter-larval-from" onchange="filterTable('larval')">
           <label>To</label><input type="date" class="pt-select" id="filter-larval-to" onchange="filterTable('larval')">
@@ -959,6 +983,85 @@ tr:hover td{background:var(--teal-lt);}
       </div>
     </div>
 
+    <!-- Analytics Panel -->
+    <div class="panel" id="panel-analytics">
+      <div class="an-tabs">
+        <button class="an-tab active" id="antab-seasonal" onclick="switchAnalyticsTab('seasonal')">📈 Seasonal Trends</button>
+        <button class="an-tab" id="antab-officers" onclick="switchAnalyticsTab('officers')">👥 Officer Performance</button>
+        <button class="an-tab" id="antab-intervention" onclick="switchAnalyticsTab('intervention')">🔬 Intervention Tracker</button>
+      </div>
+
+      <!-- Tab: Seasonal Trends -->
+      <div id="an-seasonal" class="an-section">
+        <div class="section-head">
+          <h2>Seasonal Trends — Monthly Indices</h2>
+          <div class="section-head-actions">
+            <select id="an-year-sel" class="pt-select" style="width:90px;" onchange="buildSeasonalChart()">
+            </select>
+            <select id="an-dist-sel" class="pt-select" style="width:160px;" onchange="buildSeasonalChart()">
+              <option value="all">All Districts</option>
+            </select>
+            <button class="tb-btn blue" onclick="exportSeasonalPDF()">⬇ Export PDF</button>
+          </div>
+        </div>
+        <div style="padding:16px 20px;">
+          <div style="position:relative;height:280px;">
+            <canvas id="seasonal-chart"></canvas>
+          </div>
+          <div id="seasonal-table" style="margin-top:16px;overflow-x:auto;"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Officer Performance -->
+      <div id="an-officers" class="an-section" style="display:none;">
+        <div class="section-head">
+          <h2>Field Officer Performance</h2>
+          <div class="section-head-actions">
+            <input class="pt-search" id="search-officers" style="width:200px;" placeholder="🔍 Search officer…" oninput="renderOfficerTable()">
+            <button class="tb-btn blue" onclick="exportOfficerExcel()">⬇ Export Excel</button>
+          </div>
+        </div>
+        <div class="tbl-outer">
+          <div class="tbl-wrap">
+            <table id="tbl-officers">
+              <thead><tr>
+                <th>Officer</th><th>Total Surveys</th><th>Larval</th><th>Adult</th>
+                <th>GPS Coverage</th><th>Avg HI (%)</th><th>Avg CI (%)</th>
+                <th>Positive Sites</th><th>Last Active</th><th>Data Score</th>
+              </tr></thead>
+              <tbody id="officer-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Intervention Tracker -->
+      <div id="an-intervention" class="an-section" style="display:none;">
+        <div class="section-head">
+          <h2>Intervention Effectiveness Tracker</h2>
+        </div>
+        <div style="padding:16px 20px;">
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px;">
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">Zone / District</div>
+              <select id="intv-zone-sel" class="pt-select" style="width:180px;" onchange="buildInterventionView()">
+                <option value="">— Select zone —</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">Before Date (up to)</div>
+              <input type="date" id="intv-before-date" class="pt-select" style="width:145px;" onchange="buildInterventionView()">
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">After Date (from)</div>
+              <input type="date" id="intv-after-date" class="pt-select" style="width:145px;" onchange="buildInterventionView()">
+            </div>
+          </div>
+          <div id="intervention-result" style="min-height:200px;"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- Maps Panel -->
     <div class="panel" id="panel-maps">
       <div class="section-head">
@@ -968,6 +1071,8 @@ tr:hover td{background:var(--teal-lt);}
           <button class="tb-btn ghost" onclick="mapCarouselNav(-1)">◀ Prev</button>
           <button class="tb-btn ghost" onclick="mapCarouselNav(1)">Next ▶</button>
           <button class="tb-btn blue" onclick="downloadCurrentMap()">⬇ Download Map</button>
+          <button class="tb-btn ghost" onclick="exportGeoJSON()" title="Download all GPS survey points as GeoJSON for QGIS/ArcGIS">⬇ GeoJSON</button>
+          <button class="tb-btn ghost" onclick="exportKML()" title="Download all GPS survey points as KML for Google Earth">⬇ KML</button>
         </div>
       </div>
       <div class="map-subtabs">
@@ -1037,7 +1142,7 @@ tr:hover td{background:var(--teal-lt);}
           <!-- Region sidebar -->
           <div class="hs-sidebar">
             <div class="hs-sidebar-hdr">
-              <input class="hs-search" id="hs-region-search" placeholder="Search district, zone…" oninput="hsFilterRegions()">
+              <input class="hs-search" id="hs-region-search" placeholder="Search district, zone…" oninput="_deb(hsFilterRegions,150)()">
             </div>
             <div class="hs-region-actions">
               <button onclick="hsSelectAllRegions(true)">☑ All</button>
@@ -1101,7 +1206,7 @@ tr:hover td{background:var(--teal-lt);}
         </div>
       </div>
       <div class="panel-toolbar">
-        <input class="pt-search" id="search-manual-adult" placeholder="🔍  Search location, district, officer…" oninput="filterManual('adult')">
+        <input class="pt-search" id="search-manual-adult" placeholder="🔍  Search location, district, officer…" oninput="_deb(filterManual,150)('adult')">
         <div class="date-range-group">
           <label>From</label><input type="date" class="pt-select" id="filter-manadult-from" onchange="filterManual('adult')">
           <label>To</label><input type="date" class="pt-select" id="filter-manadult-to" onchange="filterManual('adult')">
@@ -1135,7 +1240,7 @@ tr:hover td{background:var(--teal-lt);}
         </div>
       </div>
       <div class="panel-toolbar">
-        <input class="pt-search" id="search-manual-larval" placeholder="🔍  Search location, district, officer…" oninput="filterManual('larval')">
+        <input class="pt-search" id="search-manual-larval" placeholder="🔍  Search location, district, officer…" oninput="_deb(filterManual,150)('larval')">
         <div class="date-range-group">
           <label>From</label><input type="date" class="pt-select" id="filter-manlarval-from" onchange="filterManual('larval')">
           <label>To</label><input type="date" class="pt-select" id="filter-manlarval-to" onchange="filterManual('larval')">
@@ -1258,6 +1363,7 @@ tr:hover td{background:var(--teal-lt);}
 <script>
 const DASH_U='ANIENTO', DASH_P='2026', DASH_KEY='est_dash_creds';
 let GH={owner:'',repo:'EST-v2.0',token:''};
+function _deb(fn,ms){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);};}
 let allAdult=[],allLarval=[],adultF=[],larvalF=[],usersCfg=[];
 let allManualAdult=[],allManualLarval=[],manualAdultF=[],manualLarvalF=[];
 let manualDashSel={adult:new Set(),larval:new Set()};
@@ -1755,7 +1861,7 @@ function exportRiskPDF(){
     const rows=sorted.map(([name,cnt],idx)=>`<tr style="${idx%2===0?'':'background:#f9f9f9;'}"><td>${name}</td><td style="font-weight:700;color:#00695c;">${cnt}</td><td style="padding:4px 8px;"><div style="height:10px;border-radius:5px;background:#00695c;width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%;min-width:4px;"></div></td></tr>`).join('');
     return`<h3>${dk} — Breeding Preferred Containers</h3><table><thead><tr><th>Container Type</th><th>Positive Count</th><th style="min-width:120px;">Proportion</th></tr></thead><tbody>${rows}</tbody></table>`;
   }).join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#00695c;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #00695c;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:14px;font-weight:700;color:#00695c;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:8px 12px;background:#fff8e1;border-left:3px solid #f9a825;font-size:10px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #00695c;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${range.label||'All Data'}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><div class="badge" style="margin-top:12px;">Overall Risk: ${overallR}</div><h2>Overall Stegomyia Indices</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#00695c;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.0.76 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#00695c;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #00695c;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:14px;font-weight:700;color:#00695c;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:8px 12px;background:#fff8e1;border-left:3px solid #f9a825;font-size:10px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #00695c;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${range.label||'All Data'}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><div class="badge" style="margin-top:12px;">Overall Risk: ${overallR}</div><h2>Overall Stegomyia Indices</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#00695c;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.0.77 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
   const win=window.open('','_blank','width=920,height=740');
   if(win){win.document.write(html);win.document.close();setTimeout(()=>win.print(),700);}
 }
@@ -2489,7 +2595,7 @@ function buildAdultXLSX(surveys,isCompiled){
   const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
   // ── Report Status ──
   const statusRows=[
-    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.76')],
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.77')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -2562,7 +2668,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   // ── Report Status sheet ──
   const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.76')],
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.77')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -2706,7 +2812,7 @@ function buildAdultCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.76 — Adult Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.77 — Adult Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -2758,7 +2864,7 @@ function buildAdultCSV(surveys){
     });
   });
   blank();
-  r('EST v2.0.76 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.77 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -2770,7 +2876,7 @@ function buildLarvalCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.76 — Larval Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.77 — Larval Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -2851,7 +2957,7 @@ function buildLarvalCSV(surveys){
     }
   });
   blank();
-  r('EST v2.0.76 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.77 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -3677,6 +3783,390 @@ function hsExportExecute(){
   _hsMap.triggerRepaint();
 }
 
+/* ── ANALYTICS PANEL ── */
+let _anTab='seasonal', _seasonalChartInst=null;
+
+function switchAnalyticsTab(tab){
+  _anTab=tab;
+  ['seasonal','officers','intervention'].forEach(t=>{
+    const btn=document.getElementById('antab-'+t);
+    if(btn)btn.classList.toggle('active',t===tab);
+    const sec=document.getElementById('an-'+t);
+    if(sec)sec.style.display=t===tab?'':'none';
+  });
+  if(tab==='seasonal')buildSeasonalChart();
+  else if(tab==='officers')renderOfficerTable();
+  else if(tab==='intervention')_populateInterventionSelects();
+}
+
+function _anGetYears(){
+  const all=[...allAdult,...allLarval,...allManualAdult,...allManualLarval];
+  const yrs=new Set();
+  all.forEach(s=>{const d=_parseDateHS(s.date);if(d)yrs.add(d.slice(0,4));});
+  return [...yrs].sort().reverse();
+}
+
+function _populateSeasonalSelects(){
+  const ys=document.getElementById('an-year-sel');
+  const ds=document.getElementById('an-dist-sel');
+  if(!ys||!ds)return;
+  const years=_anGetYears();
+  const curY=ys.value;
+  ys.innerHTML=years.map(y=>`<option value="${y}"${y===curY?'selected':''}>${y}</option>`).join('');
+  // Districts from larval data
+  const dists=new Set();
+  [...allLarval,...allManualLarval].forEach(s=>{if(s.district)dists.add(s.district);});
+  const curD=ds.value;
+  ds.innerHTML='<option value="all">All Districts</option>'+
+    [...dists].sort().map(d=>`<option value="${d}"${d===curD?'selected':''}>${d}</option>`).join('');
+}
+
+function buildSeasonalChart(){
+  _populateSeasonalSelects();
+  const year=document.getElementById('an-year-sel')?.value;
+  const dist=document.getElementById('an-dist-sel')?.value||'all';
+  if(!year)return;
+
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const byMonth=Array(12).fill(null).map(()=>({hi:[],ci:[],bi:[],count:0}));
+
+  const src=[...allLarval,...allManualLarval];
+  src.filter(s=>{
+    const d=_parseDateHS(s.date);
+    if(!d||d.slice(0,4)!==year)return false;
+    if(dist!=='all'&&s.district!==dist)return false;
+    return true;
+  }).forEach(s=>{
+    const m=parseInt((_parseDateHS(s.date)||'').slice(5,7))-1;
+    if(m<0||m>11)return;
+    const hi=parseFloat(s.HI),ci=parseFloat(s.CI),bi=parseFloat(s.BI);
+    if(!isNaN(hi)&&hi>0)byMonth[m].hi.push(hi);
+    if(!isNaN(ci)&&ci>0)byMonth[m].ci.push(ci);
+    if(!isNaN(bi)&&bi>0)byMonth[m].bi.push(bi);
+    byMonth[m].count++;
+  });
+
+  const avg=arr=>arr.length?+(arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(2):null;
+  const hiData=byMonth.map(m=>avg(m.hi));
+  const ciData=byMonth.map(m=>avg(m.ci));
+  const biData=byMonth.map(m=>avg(m.bi));
+
+  const canvas=document.getElementById('seasonal-chart');
+  if(!canvas)return;
+  if(_seasonalChartInst){_seasonalChartInst.destroy();_seasonalChartInst=null;}
+
+  _seasonalChartInst=new Chart(canvas,{
+    type:'line',
+    data:{
+      labels:months,
+      datasets:[
+        {label:'House Index (HI %)',data:hiData,borderColor:'#ef5350',backgroundColor:'rgba(239,83,80,.12)',tension:.4,pointRadius:4,pointHoverRadius:6,fill:true,spanGaps:true},
+        {label:'Container Index (CI %)',data:ciData,borderColor:'#FF9800',backgroundColor:'rgba(255,152,0,.1)',tension:.4,pointRadius:4,pointHoverRadius:6,fill:true,spanGaps:true},
+        {label:'Breteau Index (BI)',data:biData,borderColor:'#2196F3',backgroundColor:'rgba(33,150,243,.1)',tension:.4,pointRadius:4,pointHoverRadius:6,fill:true,spanGaps:true}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{labels:{color:'var(--txt)',font:{size:11}}},
+        tooltip:{
+          backgroundColor:'rgba(13,17,23,.92)',titleColor:'#fff',bodyColor:'rgba(255,255,255,.8)',
+          callbacks:{label:ctx=>ctx.raw!==null?ctx.dataset.label+': '+ctx.raw:'No data'}
+        }
+      },
+      scales:{
+        x:{ticks:{color:'var(--muted)',font:{size:11}},grid:{color:'rgba(255,255,255,.06)'}},
+        y:{ticks:{color:'var(--muted)',font:{size:11}},grid:{color:'rgba(255,255,255,.06)'},beginAtZero:true,
+          title:{display:true,text:'Index Value (%)',color:'var(--muted)',font:{size:10}}}
+      }
+    }
+  });
+
+  // Monthly summary table
+  const tbl=document.getElementById('seasonal-table');
+  if(tbl){
+    let rows='';
+    months.forEach((mo,i)=>{
+      const h=hiData[i],c=ciData[i],b=biData[i],n=byMonth[i].count;
+      const rClr=v=>v===null?'color:var(--muted)':v>=10?'color:#ef5350;font-weight:700':v>=5?'color:#FF9800;font-weight:700':v>0?'color:#4CAF50':'color:var(--muted)';
+      rows+=`<tr>
+        <td style="font-weight:700;">${mo}</td>
+        <td>${n||'—'}</td>
+        <td style="${rClr(h)}">${h!==null?h+'%':'—'}</td>
+        <td style="${rClr(c)}">${c!==null?c+'%':'—'}</td>
+        <td style="${rClr(b)}">${b!==null?b:'—'}</td>
+      </tr>`;
+    });
+    tbl.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:11px;">
+      <thead><tr style="background:var(--sf2);">
+        <th style="padding:6px 10px;text-align:left;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--bdr);">Month</th>
+        <th style="padding:6px 10px;text-align:left;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--bdr);">Surveys</th>
+        <th style="padding:6px 10px;text-align:left;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--bdr);">HI (%)</th>
+        <th style="padding:6px 10px;text-align:left;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--bdr);">CI (%)</th>
+        <th style="padding:6px 10px;text-align:left;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--bdr);">BI</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+}
+
+function exportSeasonalPDF(){
+  const year=document.getElementById('an-year-sel')?.value||'—';
+  const dist=document.getElementById('an-dist-sel')?.value||'all';
+  const distLabel=dist==='all'?'All Districts':dist;
+  // Simple print-based PDF of the chart and table
+  const canvas=document.getElementById('seasonal-chart');
+  const imgData=canvas?canvas.toDataURL('image/png'):'';
+  const tblHTML=document.getElementById('seasonal-table')?.innerHTML||'';
+  const w=window.open('','_blank');
+  if(!w)return;
+  w.document.write(`<!DOCTYPE html><html><head><title>Seasonal Trends ${year}</title>
+  <style>body{font-family:Arial,sans-serif;padding:24px;color:#1a1a1a;}
+  h1{font-size:20px;color:#004d42;border-bottom:2px solid #004d42;padding-bottom:8px;}
+  p{font-size:12px;color:#555;}
+  img{max-width:100%;border:1px solid #ddd;border-radius:6px;margin:12px 0;}
+  table{width:100%;border-collapse:collapse;font-size:11px;margin-top:12px;}
+  th{background:#e8f5f0;padding:6px 10px;text-align:left;border-bottom:2px solid #b2dfdb;font-size:10px;text-transform:uppercase;letter-spacing:.05em;}
+  td{padding:5px 10px;border-bottom:1px solid #eee;}
+  @media print{body{padding:12px;}}
+  </style></head><body>
+  <h1>Seasonal Trends — Stegomyia Indices</h1>
+  <p><b>Year:</b> ${year} &nbsp;|&nbsp; <b>District:</b> ${distLabel} &nbsp;|&nbsp; <b>Generated:</b> ${new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'})}</p>
+  ${imgData?`<img src="${imgData}" alt="Seasonal chart">`:''}
+  ${tblHTML}
+  <p style="margin-top:20px;font-size:10px;color:#888;">EST v2.0.77 · Entomological Surveillance Tool · A&N Islands</p>
+  </body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(),500);
+}
+
+function renderOfficerTable(){
+  const q=(document.getElementById('search-officers')?.value||'').toLowerCase();
+  const all=[
+    ...allAdult.map(s=>({...s,_t:'adult'})),
+    ...allLarval.map(s=>({...s,_t:'larval'})),
+    ...allManualAdult.map(s=>({...s,_t:'madult'})),
+    ...allManualLarval.map(s=>({...s,_t:'mlarval'}))
+  ];
+
+  const byOfficer={};
+  all.forEach(s=>{
+    const name=(s.savedBy||'Unknown').trim();
+    if(!byOfficer[name])byOfficer[name]={name,total:0,larval:0,adult:0,gps:0,his:[],cis:[],positive:0,dates:[]};
+    const o=byOfficer[name];
+    o.total++;
+    if(s._t==='larval'||s._t==='mlarval'){o.larval++;const hi=parseFloat(s.HI),ci=parseFloat(s.CI);if(!isNaN(hi)&&hi>0)o.his.push(hi);if(!isNaN(ci)&&ci>0)o.cis.push(ci);o.positive+=(parseInt(s.totalPositive)||0);}
+    if(s._t==='adult'||s._t==='madult')o.adult++;
+    if(parseFloat(s.lat)&&parseFloat(s.lng))o.gps++;
+    if(s.date)o.dates.push(s.date);
+  });
+
+  const avg=arr=>arr.length?+(arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1):null;
+  const officers=Object.values(byOfficer)
+    .filter(o=>!q||o.name.toLowerCase().includes(q))
+    .sort((a,b)=>b.total-a.total);
+
+  const tbody=document.getElementById('officer-tbody');
+  if(!tbody)return;
+
+  if(!officers.length){tbody.innerHTML='<tr><td colspan="10" style="text-align:center;padding:24px;color:var(--muted);">No data found.</td></tr>';return;}
+
+  tbody.innerHTML=officers.map(o=>{
+    const gpcPct=o.total?Math.round(o.gps/o.total*100):0;
+    const hiAvg=avg(o.his), ciAvg=avg(o.cis);
+    const lastDate=o.dates.length?o.dates.sort().reverse()[0]:'—';
+    // Data score: GPS coverage 40%, has HI data 30%, survey count 30%
+    const scoreNum=Math.round((gpcPct*0.4)+(o.his.length?30:0)+(Math.min(o.total,20)/20*30));
+    const scoreLabel=scoreNum>=80?'Excellent':scoreNum>=60?'Good':scoreNum>=40?'Fair':'Poor';
+    const scoreCls=scoreNum>=80?'excellent':scoreNum>=60?'good':scoreNum>=40?'fair':'poor';
+    return `<tr>
+      <td style="font-weight:700;">${o.name}</td>
+      <td>${o.total}</td>
+      <td>${o.larval}</td>
+      <td>${o.adult}</td>
+      <td><span style="font-weight:700;color:${gpcPct>=80?'#4CAF50':gpcPct>=50?'#FF9800':'#ef5350'}">${gpcPct}%</span></td>
+      <td style="color:${hiAvg!==null?(hiAvg>=10?'#ef5350':hiAvg>=5?'#FF9800':'#4CAF50'):'var(--muted)'};font-weight:${hiAvg!==null?'700':'400'}">${hiAvg!==null?hiAvg+'%':'—'}</td>
+      <td style="color:${ciAvg!==null?(ciAvg>=10?'#ef5350':ciAvg>=5?'#FF9800':'#4CAF50'):'var(--muted)'};font-weight:${ciAvg!==null?'700':'400'}">${ciAvg!==null?ciAvg+'%':'—'}</td>
+      <td>${o.positive}</td>
+      <td style="color:var(--muted);font-size:11px;">${lastDate}</td>
+      <td><span class="officer-score ${scoreCls}">${scoreLabel} ${scoreNum}%</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function exportOfficerExcel(){
+  const all=[
+    ...allAdult.map(s=>({...s,_t:'adult'})),
+    ...allLarval.map(s=>({...s,_t:'larval'})),
+    ...allManualAdult.map(s=>({...s,_t:'madult'})),
+    ...allManualLarval.map(s=>({...s,_t:'mlarval'}))
+  ];
+  const byOfficer={};
+  all.forEach(s=>{
+    const name=(s.savedBy||'Unknown').trim();
+    if(!byOfficer[name])byOfficer[name]={name,total:0,larval:0,adult:0,gps:0,his:[],cis:[],positive:0,dates:[]};
+    const o=byOfficer[name];
+    o.total++;if(s._t==='larval'||s._t==='mlarval'){o.larval++;const hi=parseFloat(s.HI),ci=parseFloat(s.CI);if(!isNaN(hi)&&hi>0)o.his.push(hi);if(!isNaN(ci)&&ci>0)o.cis.push(ci);o.positive+=(parseInt(s.totalPositive)||0);}
+    if(s._t==='adult'||s._t==='madult')o.adult++;
+    if(parseFloat(s.lat)&&parseFloat(s.lng))o.gps++;
+    if(s.date)o.dates.push(s.date);
+  });
+  const avg=arr=>arr.length?+(arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1):null;
+  const H=v=>({v,s:{font:{bold:true},fill:{fgColor:{rgb:'E8F5F0'}}}});
+  const cols=['Officer','Total Surveys','Larval','Adult','GPS Coverage %','Avg HI (%)','Avg CI (%)','Positive Sites','Last Active'];
+  const rows=[cols.map(H)];
+  Object.values(byOfficer).sort((a,b)=>b.total-a.total).forEach(o=>{
+    const gp=o.total?Math.round(o.gps/o.total*100):0;
+    const last=o.dates.length?o.dates.sort().reverse()[0]:'—';
+    rows.push([o.name,o.total,o.larval,o.adult,gp+'%',avg(o.his)!==null?avg(o.his)+'%':'—',avg(o.cis)!==null?avg(o.cis)+'%':'—',o.positive,last]);
+  });
+  dlXLSX(buildXLSX([{name:'Officer Performance',rows,cols:[20,14,10,10,14,12,12,14,14],headerRows:[0]}]),
+    'EST_OfficerPerformance_'+new Date().toISOString().slice(0,10)+'.xlsx');
+}
+
+function _populateInterventionSelects(){
+  const sel=document.getElementById('intv-zone-sel');if(!sel)return;
+  const zones=new Set();
+  [...allLarval,...allManualLarval].forEach(s=>{
+    if(s.zone)zones.add('zone:'+s.zone);
+    if(s.district)zones.add('dist:'+s.district);
+  });
+  const cur=sel.value;
+  sel.innerHTML='<option value="">— Select zone or district —</option>'+
+    [...zones].sort().map(z=>{
+      const [type,name]=z.split(':');
+      const label=type==='zone'?'Zone: '+name:'District: '+name;
+      return `<option value="${z}"${z===cur?'selected':''}>${label}</option>`;
+    }).join('');
+}
+
+function buildInterventionView(){
+  const zoneVal=document.getElementById('intv-zone-sel')?.value;
+  const beforeDate=document.getElementById('intv-before-date')?.value;
+  const afterDate=document.getElementById('intv-after-date')?.value;
+  const el=document.getElementById('intervention-result');
+  if(!el)return;
+
+  if(!zoneVal||!beforeDate||!afterDate){
+    el.innerHTML='<div style="color:var(--muted);font-size:12px;padding:20px 0;">Select a zone/district, before date, and after date to compare indices.</div>';
+    return;
+  }
+  if(beforeDate>=afterDate){
+    el.innerHTML='<div style="color:#ef5350;font-size:12px;padding:20px 0;">⚠ Before date must be earlier than after date.</div>';
+    return;
+  }
+
+  const [type,name]=zoneVal.split(':');
+  const src=[...allLarval,...allManualLarval];
+  const match=s=>type==='zone'?(s.zone===name):(s.district===name);
+  const dateParsed=s=>_parseDateHS(s.date)||'';
+  const beforeSurveys=src.filter(s=>match(s)&&dateParsed(s)<=beforeDate&&dateParsed(s));
+  const afterSurveys=src.filter(s=>match(s)&&dateParsed(s)>=afterDate);
+
+  const avg=arr=>arr.length?+(arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1):null;
+  const his=surveys=>surveys.map(s=>parseFloat(s.HI)).filter(v=>!isNaN(v)&&v>0);
+  const cis=surveys=>surveys.map(s=>parseFloat(s.CI)).filter(v=>!isNaN(v)&&v>0);
+  const bis=surveys=>surveys.map(s=>parseFloat(s.BI)).filter(v=>!isNaN(v)&&v>0);
+
+  const bHI=avg(his(beforeSurveys)), bCI=avg(cis(beforeSurveys)), bBI=avg(bis(beforeSurveys));
+  const aHI=avg(his(afterSurveys)), aCI=avg(cis(afterSurveys)), aBI=avg(bis(afterSurveys));
+
+  const diff=(b,a)=>{
+    if(b===null||a===null)return null;
+    return +((a-b).toFixed(1));
+  };
+  const pct=(b,a)=>{
+    if(!b||a===null)return null;
+    return +((a-b)/b*100).toFixed(1);
+  };
+  const changeHtml=(b,a)=>{
+    const d=diff(b,a);if(d===null)return '';
+    const p=pct(b,a);
+    const good=d<0;
+    const cls=Math.abs(d)<0.1?'same':good?'good':'bad';
+    const arrow=d<0?'↓':d>0?'↑':'→';
+    return `<span class="intv-card-change ${cls}">${arrow} ${Math.abs(d)} (${p!==null?(p>0?'+':'')+p+'%':'—'})</span>`;
+  };
+  const card=(label,b,a)=>`<div class="intv-card">
+    <div class="intv-card-label">${label}</div>
+    <div style="display:flex;gap:16px;margin-top:8px;">
+      <div style="text-align:center;"><div style="font-size:9px;color:var(--muted);margin-bottom:2px;">BEFORE</div><div class="intv-card-val" style="font-size:22px;color:var(--muted);">${b!==null?b+'%':'—'}</div></div>
+      <div style="display:flex;align-items:center;color:var(--muted);font-size:18px;">→</div>
+      <div style="text-align:center;"><div style="font-size:9px;color:var(--muted);margin-bottom:2px;">AFTER</div><div class="intv-card-val" style="font-size:22px;color:${a!==null?(a>=10?'#ef5350':a>=5?'#FF9800':'#4CAF50'):'var(--muted)'};">${a!==null?a+'%':'—'}</div></div>
+    </div>
+    ${changeHtml(b,a)}
+  </div>`;
+
+  const noDataMsg=arr=>arr.length?'':'<span style="font-size:10px;color:var(--muted);display:block;margin-top:4px;">No surveys in this period</span>';
+
+  el.innerHTML=`
+    <div style="margin-bottom:14px;font-size:12px;color:var(--txt2);">
+      <b>${type==='zone'?'Zone':'District'}:</b> ${name} &nbsp;|&nbsp;
+      <b>Before:</b> up to ${beforeDate} (${beforeSurveys.length} surveys) &nbsp;|&nbsp;
+      <b>After:</b> from ${afterDate} (${afterSurveys.length} surveys)
+      ${!beforeSurveys.length||!afterSurveys.length?'<br><span style="color:#FF9800;font-size:11px;">⚠ One or both periods have no data for this zone/district.</span>':''}
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      ${card('House Index (HI)',bHI,aHI)}
+      ${card('Container Index (CI)',bCI,aCI)}
+      ${card('Breteau Index (BI)',bBI,aBI)}
+    </div>
+    <div style="margin-top:16px;font-size:11px;color:var(--muted);">
+      ↓ Green = improvement (risk reduced) · ↑ Red = deterioration (risk increased) · % change relative to baseline
+    </div>`;
+}
+
+/* ── GIS EXPORT ── */
+function exportGeoJSON(){
+  const surveys=[...allAdult,...allLarval,...allManualAdult,...allManualLarval]
+    .filter(s=>parseFloat(s.lat)&&parseFloat(s.lng));
+  if(!surveys.length){alert('No GPS-tagged surveys to export.');return;}
+  const gj=JSON.stringify({
+    type:'FeatureCollection',
+    name:'EST v2.0 Survey Sites — A&N Islands',
+    crs:{type:'name',properties:{name:'urn:ogc:def:crs:OGC:1.3:CRS84'}},
+    features:surveys.map(s=>({
+      type:'Feature',
+      geometry:{type:'Point',coordinates:[parseFloat(s.lng),parseFloat(s.lat)]},
+      properties:{
+        date:s.date||'',district:s.district||'',zone:s.zone||'',
+        officer:s.savedBy||'',location:s.location||'',
+        HI:parseFloat(s.HI)||null,CI:parseFloat(s.CI)||null,BI:parseFloat(s.BI)||null,
+        totalPositive:parseInt(s.totalPositive)||0,
+        housesExamined:parseInt(s.housesExamined)||0,
+        surveyType:s.entryType||s._st||'larval'
+      }
+    }))
+  },null,2);
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([gj],{type:'application/geo+json'}));
+  a.download='EST_SurveySites_'+new Date().toISOString().slice(0,10)+'.geojson';
+  a.click();
+}
+
+function exportKML(){
+  const surveys=[...allAdult,...allLarval,...allManualAdult,...allManualLarval]
+    .filter(s=>parseFloat(s.lat)&&parseFloat(s.lng));
+  if(!surveys.length){alert('No GPS-tagged surveys to export.');return;}
+  const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const placemarks=surveys.map(s=>{
+    const hi=parseFloat(s.HI)||0;
+    const kmlColor=hi>=10?'ff0000ef':hi>=5?'ff0080ff':hi>0?'ff00c04c':'ffb027c0';
+    return `  <Placemark>
+    <name>${esc(s.location||s.district||s.zone||'Survey Site')}</name>
+    <description><![CDATA[<b>Date:</b> ${s.date||'—'}<br><b>District:</b> ${s.district||'—'}<br><b>Zone:</b> ${s.zone||'—'}<br><b>Officer:</b> ${s.savedBy||'—'}<br><b>HI:</b> ${s.HI||'—'} &nbsp; <b>CI:</b> ${s.CI||'—'} &nbsp; <b>BI:</b> ${s.BI||'—'}<br><b>Positive:</b> ${s.totalPositive||0}]]></description>
+    <Style><IconStyle><color>${kmlColor}</color><scale>0.9</scale><Icon><href>http://maps.google.com/mapfiles/ms/icons/red-dot.png</href></Icon></IconStyle></Style>
+    <Point><coordinates>${parseFloat(s.lng)},${parseFloat(s.lat)},0</coordinates></Point>
+  </Placemark>`;
+  }).join('\n');
+  const kml=`<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n  <name>EST v2.0 Survey Sites — A&amp;N Islands</name>\n  <description>Entomological Surveillance Tool · Generated ${new Date().toLocaleDateString('en-IN')}</description>\n${placemarks}\n</Document>\n</kml>`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([kml],{type:'application/vnd.google-earth.kml+xml'}));
+  a.download='EST_SurveySites_'+new Date().toISOString().slice(0,10)+'.kml';
+  a.click();
+}
+
 /* ── SIDEBAR NAVIGATION ── */
 function switchSection(name, btn) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -3684,9 +4174,10 @@ function switchSection(name, btn) {
   btn.classList.add('active');
   const panel = document.getElementById('panel-' + name);
   if (panel) panel.classList.add('active');
-  const labels = {overview:'Overview', adult:'Adult Surveillance', larval:'Larval Surveillance', maps:'Survey Maps', manual:'Manual Data', users:'Manage Users', activity:'Activity Log', backup:'Backup & Restore'};
+  const labels = {overview:'Overview', adult:'Adult Surveillance', larval:'Larval Surveillance', maps:'Survey Maps', analytics:'Analytics', manual:'Manual Data', users:'Manage Users', activity:'Activity Log', backup:'Backup & Restore'};
   if(name==='maps') switchMapTab('tracks');
   if(name==='activity') updateActivityCard();
+  if(name==='analytics'){_populateSeasonalSelects();buildSeasonalChart();_populateInterventionSelects();}
   const bc = document.getElementById('bc-main');
   if (bc) bc.textContent = labels[name] || name;
   // Close sidebar on mobile after nav
