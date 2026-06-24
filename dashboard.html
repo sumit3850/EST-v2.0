@@ -7,6 +7,8 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E %3Crect width='100' height='100' rx='18' fill='%230d2018'/%3E %3Cg stroke='rgba(130,200,165,.4)' fill='none' stroke-linecap='round'%3E %3Cpolyline points='50,47 26,18' stroke-width='0.85'/%3E %3Cpolyline points='57,49 82,22 92,16' stroke-width='0.8'/%3E %3Cpolyline points='62,54 88,36 96,44' stroke-width='0.8'/%3E %3C/g%3E %3Cpath d='M50,44 Q44,22 64,13 Q78,7 87,18 Q91,27 85,35 Q76,41 63,44 Q57,44 51,44Z' fill='rgba(180,240,218,.11)' stroke='rgba(200,240,225,.8)' stroke-width='0.7'/%3E %3Cellipse cx='54' cy='46' rx='10' ry='9.5' fill='%236dbd9e' stroke='%239ed0b8' stroke-width='0.75'/%3E %3Ccircle cx='42' cy='50' r='6.2' fill='%236dbd9e' stroke='%239ed0b8' stroke-width='0.75'/%3E %3Cellipse cx='76' cy='63' rx='18' ry='6.5' transform='rotate(26 76 63)' fill='%236dbd9e' stroke='%239ed0b8' stroke-width='0.65'/%3E %3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="manifest" href="./dashboard-manifest.json">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -401,6 +403,22 @@ tr:hover td{background:var(--teal-lt);}
 #map-meta{font-size:12px;color:rgba(255,255,255,.72);}
 #map-body{flex:1;min-height:420px;}
 
+/* ═══ INSTALL BUTTON ═══ */
+.install-btn{height:34px;padding:0 12px;font-size:11px;font-weight:700;background:linear-gradient(135deg,var(--teal),#005c4f);color:#fff;border:none;border-radius:7px;cursor:pointer;display:none;align-items:center;gap:5px;white-space:nowrap;}
+.install-btn.show{display:flex;}
+
+/* ═══ HOTSPOT MAP ═══ */
+.map-subtabs{display:flex;border-bottom:2px solid var(--bdr);background:var(--sf2);}
+.map-subtab{flex:1;height:40px;border:none;background:transparent;font-size:12px;font-weight:700;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;font-family:inherit;}
+.map-subtab.active{color:var(--teal);border-bottom-color:var(--teal);}
+.hotspot-legend{display:flex;gap:16px;padding:10px 20px 14px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--bdr);}
+.hotspot-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--txt2);}
+.hotspot-leg-dot{width:13px;height:13px;border-radius:50%;box-shadow:0 0 6px currentColor;}
+.hotspot-info-bar{padding:8px 20px;background:var(--sf2);border-bottom:1px solid var(--bdr);font-size:11px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;}
+.leaflet-popup-content-wrapper{background:var(--sf)!important;color:var(--txt)!important;border:1px solid var(--bdr)!important;border-radius:10px!important;box-shadow:0 8px 32px rgba(0,0,0,.4)!important;}
+.leaflet-popup-tip{background:var(--sf)!important;}
+.leaflet-popup-close-button{color:var(--muted)!important;}
+
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:768px){
   .sidebar{width:0;overflow:hidden;}.sidebar.mobile-open{width:232px;position:fixed;inset:0 auto 0 0;z-index:200;}
@@ -440,7 +458,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.0.73</p>
+      <p>Admin Dashboard · v2.0.74</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -472,7 +490,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>v2.0.73 · A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.0.74 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -527,6 +545,10 @@ tr:hover td{background:var(--teal-lt);}
     </div>
     <div class="topbar-right">
       <button class="tb-icon-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">☀</button>
+      <button class="install-btn" id="install-btn" onclick="installDashApp()" title="Install EST Dashboard as app">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Install App
+      </button>
       <button class="tb-btn ghost" onclick="toggleSetup()">⚙ <span class="tb-lbl">Setup</span></button>
       <button class="tb-btn primary" onclick="loadAll()">↻ <span class="tb-lbl">Refresh</span></button>
       <button class="tb-btn ghost" onclick="exportAllCSV()">⬇ <span class="tb-lbl">Export All</span></button>
@@ -860,31 +882,56 @@ tr:hover td{background:var(--teal-lt);}
     <div class="panel" id="panel-maps">
       <div class="section-head">
         <h2 title="Survey Maps">Survey Maps</h2>
-        <div class="section-head-actions">
+        <div class="section-head-actions" id="map-track-actions">
           <span id="map-carousel-pos" style="font-size:12px;color:var(--muted);align-self:center;"></span>
           <button class="tb-btn ghost" onclick="mapCarouselNav(-1)">◀ Prev</button>
           <button class="tb-btn ghost" onclick="mapCarouselNav(1)">Next ▶</button>
           <button class="tb-btn blue" onclick="downloadCurrentMap()">⬇ Download Map</button>
         </div>
       </div>
-      <div style="padding:16px 20px 8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-        <select id="map-type-filter" class="pt-select" onchange="buildMapCarousel()" style="width:160px;">
-          <option value="all">All Surveys</option>
-          <option value="adult">Adult Only</option>
-          <option value="larval">Larval Only</option>
-        </select>
-        <span id="map-no-data" style="color:var(--muted);font-size:13px;display:none;">No surveys with GPS tracks found.</span>
+      <div class="map-subtabs">
+        <button class="map-subtab active" id="maptab-tracks" onclick="switchMapTab('tracks')">Survey Tracks</button>
+        <button class="map-subtab" id="maptab-hotspot" onclick="switchMapTab('hotspot')">🔥 Breeding Hotspot Map</button>
       </div>
-      <div style="padding:0 20px 20px;">
-        <div id="map-carousel-wrap" style="width:100%;height:500px;border-radius:10px;overflow:hidden;border:1px solid var(--bdr);background:var(--sf2);position:relative;">
-          <div id="map-carousel-body" style="width:100%;height:100%;"></div>
-          <div id="map-carousel-info" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));padding:14px 16px 12px;color:#fff;font-size:12px;pointer-events:none;">
-            <div id="map-carousel-title" style="font-weight:700;font-size:13px;margin-bottom:2px;">—</div>
-            <div id="map-carousel-sub" style="color:rgba(255,255,255,.7);">—</div>
-          </div>
+
+      <!-- Survey Tracks Section -->
+      <div id="map-tracks-section">
+        <div style="padding:12px 20px 8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <select id="map-type-filter" class="pt-select" onchange="buildMapCarousel()" style="width:160px;">
+            <option value="all">All Surveys</option>
+            <option value="adult">Adult Only</option>
+            <option value="larval">Larval Only</option>
+          </select>
+          <span id="map-no-data" style="color:var(--muted);font-size:13px;display:none;">No surveys with GPS tracks found.</span>
         </div>
-        <!-- Thumbnail strip -->
-        <div id="map-thumbs" style="display:flex;gap:8px;margin-top:10px;overflow-x:auto;padding-bottom:4px;"></div>
+        <div style="padding:0 20px 16px;">
+          <div id="map-carousel-wrap" style="width:100%;height:320px;border-radius:10px;overflow:hidden;border:1px solid var(--bdr);background:var(--sf2);position:relative;">
+            <div id="map-carousel-body" style="width:100%;height:100%;"></div>
+            <div id="map-carousel-info" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));padding:12px 16px 10px;color:#fff;font-size:12px;pointer-events:none;">
+              <div id="map-carousel-title" style="font-weight:700;font-size:13px;margin-bottom:2px;">—</div>
+              <div id="map-carousel-sub" style="color:rgba(255,255,255,.7);">—</div>
+            </div>
+          </div>
+          <div id="map-thumbs" style="display:flex;gap:8px;margin-top:8px;overflow-x:auto;padding-bottom:4px;"></div>
+        </div>
+      </div>
+
+      <!-- Breeding Hotspot Map Section -->
+      <div id="map-hotspot-section" style="display:none;">
+        <div class="hotspot-info-bar">
+          <span id="hotspot-survey-count">—</span>
+          <span>·</span>
+          <span>Column height = risk level · Size = survey count · Click marker for details</span>
+        </div>
+        <div id="hotspot-map" style="height:520px;width:100%;background:#0a1628;"></div>
+        <div class="hotspot-legend">
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-right:4px;">Risk Level:</span>
+          <div class="hotspot-leg-item"><div class="hotspot-leg-dot" style="background:#ef5350;color:#ef5350;"></div>High (HI ≥10%)</div>
+          <div class="hotspot-leg-item"><div class="hotspot-leg-dot" style="background:#2196f3;color:#2196f3;"></div>Moderate (HI 5–10%)</div>
+          <div class="hotspot-leg-item"><div class="hotspot-leg-dot" style="background:#00bfa5;color:#00bfa5;"></div>Low (HI &lt;5%)</div>
+          <div class="hotspot-leg-item"><div class="hotspot-leg-dot" style="background:#9c27b0;color:#9c27b0;"></div>GPS only (no index)</div>
+          <span style="font-size:10px;color:var(--muted);margin-left:auto;">3D column height proportional to HI value · Updates with every entry</span>
+        </div>
       </div>
     </div>
 
@@ -1559,7 +1606,7 @@ function exportRiskPDF(){
     const rows=sorted.map(([name,cnt],idx)=>`<tr style="${idx%2===0?'':'background:#f9f9f9;'}"><td>${name}</td><td style="font-weight:700;color:#00695c;">${cnt}</td><td style="padding:4px 8px;"><div style="height:10px;border-radius:5px;background:#00695c;width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%;min-width:4px;"></div></td></tr>`).join('');
     return`<h3>${dk} — Breeding Preferred Containers</h3><table><thead><tr><th>Container Type</th><th>Positive Count</th><th style="min-width:120px;">Proportion</th></tr></thead><tbody>${rows}</tbody></table>`;
   }).join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#00695c;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #00695c;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:14px;font-weight:700;color:#00695c;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:8px 12px;background:#fff8e1;border-left:3px solid #f9a825;font-size:10px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #00695c;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${range.label||'All Data'}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><div class="badge" style="margin-top:12px;">Overall Risk: ${overallR}</div><h2>Overall Stegomyia Indices</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#00695c;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.0.73 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#00695c;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #00695c;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:14px;font-weight:700;color:#00695c;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:8px 12px;background:#fff8e1;border-left:3px solid #f9a825;font-size:10px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #00695c;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${range.label||'All Data'}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><div class="badge" style="margin-top:12px;">Overall Risk: ${overallR}</div><h2>Overall Stegomyia Indices</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#00695c;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.0.74 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
   const win=window.open('','_blank','width=920,height=740');
   if(win){win.document.write(html);win.document.close();setTimeout(()=>win.print(),700);}
 }
@@ -2293,7 +2340,7 @@ function buildAdultXLSX(surveys,isCompiled){
   const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
   // ── Report Status ──
   const statusRows=[
-    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.73')],
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.74')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -2366,7 +2413,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   // ── Report Status sheet ──
   const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.73')],
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.74')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -2510,7 +2557,7 @@ function buildAdultCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.73 — Adult Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.74 — Adult Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -2562,7 +2609,7 @@ function buildAdultCSV(surveys){
     });
   });
   blank();
-  r('EST v2.0.73 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.74 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -2574,7 +2621,7 @@ function buildLarvalCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.73 — Larval Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.74 — Larval Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -2655,7 +2702,7 @@ function buildLarvalCSV(surveys){
     }
   });
   blank();
-  r('EST v2.0.73 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.74 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -2952,6 +2999,190 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+/* ── PWA INSTALL (DASHBOARD) ── */
+let _dashInstallEvt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();_dashInstallEvt=e;
+  const b=document.getElementById('install-btn');if(b)b.classList.add('show');
+});
+window.addEventListener('appinstalled',()=>{
+  const b=document.getElementById('install-btn');if(b)b.classList.remove('show');
+  _dashInstallEvt=null;
+});
+function installDashApp(){
+  if(!_dashInstallEvt)return;
+  _dashInstallEvt.prompt();
+  _dashInstallEvt.userChoice.then(r=>{
+    if(r.outcome==='accepted'){const b=document.getElementById('install-btn');if(b)b.classList.remove('show');}
+    _dashInstallEvt=null;
+  });
+}
+
+/* ── MAP SUBTABS ── */
+let _mapTab='tracks';
+function switchMapTab(tab){
+  _mapTab=tab;
+  ['tracks','hotspot'].forEach(t=>{
+    const b=document.getElementById('maptab-'+t);
+    if(b)b.className='map-subtab'+(t===tab?' active':'');
+    const s=document.getElementById('map-'+t+'-section');
+    if(s)s.style.display=t===tab?'':'none';
+  });
+  const tra=document.getElementById('map-track-actions');
+  if(tra)tra.style.display=tab==='tracks'?'':'none';
+  if(tab==='tracks')buildMapCarousel();
+  if(tab==='hotspot')buildHotspotMap();
+}
+
+/* ── 3D BREEDING HOTSPOT MAP ── */
+let _hotspotMapInst=null;
+function loadLeafletJS(cb){
+  if(window.L){cb();return;}
+  const s=document.createElement('script');
+  s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+  s.crossOrigin='';
+  s.onload=cb;
+  s.onerror=()=>{
+    const el=document.getElementById('hotspot-map');
+    if(el)el.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#0a1628;color:#aaa;flex-direction:column;gap:10px;font-family:sans-serif;"><div style="font-size:40px;">🌐</div><div>Map requires internet connection</div><div style="font-size:11px;color:#666;">Could not load Leaflet from CDN</div></div>';
+  };
+  document.head.appendChild(s);
+}
+function buildHotspotMap(){
+  loadLeafletJS(()=>{
+    const container=document.getElementById('hotspot-map');
+    if(!container)return;
+    if(_hotspotMapInst){_hotspotMapInst.remove();_hotspotMapInst=null;}
+    container.innerHTML='';
+    const allSurveys=[
+      ...allAdult.map(s=>({...s,_st:'adult'})),
+      ...allLarval.map(s=>({...s,_st:'larval'})),
+      ...allManualAdult.map(s=>({...s,_st:'madult'})),
+      ...allManualLarval.map(s=>({...s,_st:'mlarval'}))
+    ].filter(s=>{const la=parseFloat(s.lat),lo=parseFloat(s.lng);return !isNaN(la)&&!isNaN(lo)&&la!==0&&lo!==0;});
+    const infoEl=document.getElementById('hotspot-survey-count');
+    if(infoEl)infoEl.textContent=allSurveys.length+' GPS-tagged survey'+(allSurveys.length!==1?'s':'');
+    if(!allSurveys.length){
+      container.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#0a1628;color:#aaa;flex-direction:column;gap:10px;font-family:sans-serif;"><div style="font-size:40px;">📍</div><div style="font-size:14px;">No GPS-tagged surveys found</div><div style="font-size:11px;color:#555;">Enable GPS in the field app to see hotspots here</div></div>';
+      return;
+    }
+    // Cluster by ~0.01° (~1km)
+    const clusters={};
+    allSurveys.forEach(s=>{
+      const la=parseFloat(s.lat),lo=parseFloat(s.lng);
+      const key=la.toFixed(2)+','+lo.toFixed(2);
+      if(!clusters[key])clusters[key]={lat:la,lng:lo,surveys:[],his:[],cis:[],location:s.location||s.district||'Survey site'};
+      clusters[key].surveys.push(s);
+      const hi=parseFloat(s.HI),ci=parseFloat(s.CI);
+      if(!isNaN(hi)&&hi>0)clusters[key].his.push(hi);
+      if(!isNaN(ci)&&ci>0)clusters[key].cis.push(ci);
+    });
+    const avg=arr=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;
+    const hotspots=Object.values(clusters).map(cl=>({
+      lat:cl.lat,lng:cl.lng,count:cl.surveys.length,
+      hi:avg(cl.his),ci:avg(cl.cis),
+      location:cl.location,surveys:cl.surveys
+    }));
+    // Build Leaflet map
+    const map=window.L.map('hotspot-map',{center:[10.5,92.9],zoom:7,minZoom:5,maxZoom:15,zoomControl:true});
+    _hotspotMapInst=map;
+    window.L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+      attribution:'© OpenStreetMap © CartoDB | EST v2.0',subdomains:'abcd',maxZoom:19
+    }).addTo(map);
+    // 3D column canvas overlay layer
+    const Col3DLayer=window.L.Layer.extend({
+      _hs:hotspots,
+      onAdd(m){
+        this._m=m;
+        this._cv=window.L.DomUtil.create('canvas','');
+        Object.assign(this._cv.style,{position:'absolute',left:'0',top:'0',pointerEvents:'none',zIndex:400});
+        m.getPanes().overlayPane.appendChild(this._cv);
+        m.on('moveend zoomend resize viewreset',this._r,this);
+        this._r();
+      },
+      onRemove(m){m.off('moveend zoomend resize viewreset',this._r,this);this._cv.remove();},
+      _r(){
+        const sz=this._m.getSize();
+        this._cv.width=sz.x;this._cv.height=sz.y;
+        const ctx=this._cv.getContext('2d');
+        ctx.clearRect(0,0,sz.x,sz.y);
+        // Sort by lat desc so northern columns render behind southern ones (painter's algo)
+        const sorted=[...this._hs].sort((a,b)=>b.lat-a.lat);
+        sorted.forEach(h=>{
+          const pt=this._m.latLngToContainerPoint([h.lat,h.lng]);
+          this._col(ctx,pt.x,pt.y,h);
+        });
+      },
+      _col(ctx,cx,cy,h){
+        let col='#00bfa5';
+        if(h.hi>=10)col='#ef5350';
+        else if(h.hi>=5)col='#2196f3';
+        else if(!h.hi&&!h.ci)col='#9c27b0';
+        const zoom=this._m.getZoom();
+        const sc=Math.max(0.4,Math.min(2.2,(zoom-5)*0.28+0.4));
+        const rx=Math.max(7,Math.min(30,(7+h.count*2.5)*sc));
+        const ry=rx*0.36;
+        const ch=Math.max(10,Math.min(80,(10+h.hi*4+h.count*1.5)*sc));
+        // Shadow
+        ctx.save();ctx.globalAlpha=.22;ctx.fillStyle='#000';
+        ctx.beginPath();ctx.ellipse(cx+2,cy+2,rx*1.15,ry*1.15,0,0,Math.PI*2);ctx.fill();ctx.restore();
+        // Column body
+        const bodyG=ctx.createLinearGradient(cx-rx,cy-ch,cx+rx,cy);
+        bodyG.addColorStop(0,col+'dd');bodyG.addColorStop(.6,col+'99');bodyG.addColorStop(1,col+'44');
+        ctx.fillStyle=bodyG;
+        ctx.beginPath();
+        ctx.moveTo(cx-rx,cy);ctx.lineTo(cx-rx,cy-ch);
+        ctx.ellipse(cx,cy-ch,rx,ry,0,Math.PI,0,true);
+        ctx.lineTo(cx+rx,cy);
+        ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI,false);
+        ctx.closePath();ctx.fill();
+        ctx.strokeStyle=col+'66';ctx.lineWidth=0.7;ctx.stroke();
+        // Top cap
+        const capG=ctx.createRadialGradient(cx-rx*.3,cy-ch-ry*.5,0,cx,cy-ch,rx*1.4);
+        capG.addColorStop(0,'#ffffff44');capG.addColorStop(.35,col+'ee');capG.addColorStop(1,col+'55');
+        ctx.fillStyle=capG;
+        ctx.beginPath();ctx.ellipse(cx,cy-ch,rx,ry,0,0,Math.PI*2);ctx.fill();
+        ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.stroke();
+        // Glow halo
+        const glowG=ctx.createRadialGradient(cx,cy-ch,0,cx,cy-ch,rx*3);
+        glowG.addColorStop(0,col+'28');glowG.addColorStop(1,col+'00');
+        ctx.fillStyle=glowG;
+        ctx.beginPath();ctx.ellipse(cx,cy-ch,rx*3,rx*1.3,0,0,Math.PI*2);ctx.fill();
+        // Count label
+        if(rx>9){
+          ctx.save();ctx.fillStyle='#fff';ctx.font=`bold ${Math.max(7,Math.min(12,rx*.65))}px sans-serif`;
+          ctx.textAlign='center';ctx.textBaseline='middle';
+          ctx.shadowColor=col;ctx.shadowBlur=5;
+          ctx.fillText(h.count,cx,cy-ch);ctx.restore();
+        }
+      }
+    });
+    new Col3DLayer().addTo(map);
+    // Clickable invisible markers for popups
+    hotspots.forEach(h=>{
+      let col='#00bfa5';
+      if(h.hi>=10)col='#ef5350';else if(h.hi>=5)col='#2196f3';else if(!h.hi&&!h.ci)col='#9c27b0';
+      const icon=window.L.divIcon({className:'',html:'<div style="width:1px;height:1px;"></div>',iconSize:[1,1],iconAnchor:[0,0]});
+      const m=window.L.marker([h.lat,h.lng],{icon,interactive:true}).addTo(map);
+      m.bindPopup(`<div style="font-family:Plus Jakarta Sans,sans-serif;min-width:175px;font-size:12px;">
+        <div style="font-weight:800;color:${col};font-size:14px;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid ${col}33;">${h.location}</div>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 10px;">
+          <span style="color:#888;">Surveys</span><span style="font-weight:700;">${h.count}</span>
+          <span style="color:#888;">House Index</span><span style="font-weight:700;color:${col};">${h.hi>0?h.hi.toFixed(1)+'%':'—'}</span>
+          <span style="color:#888;">Container Index</span><span style="font-weight:700;color:${col};">${h.ci>0?h.ci.toFixed(1)+'%':'—'}</span>
+          <span style="color:#888;">Risk</span><span style="font-weight:700;color:${col};">${h.hi>=10?'HIGH RISK':h.hi>=5?'MODERATE':h.hi>0?'LOW RISK':'GPS SURVEYED'}</span>
+        </div>
+        <div style="font-size:10px;color:#666;margin-top:8px;">${h.lat.toFixed(4)}°N, ${h.lng.toFixed(4)}°E</div>
+      </div>`,{maxWidth:230});
+    });
+    // Fit bounds
+    if(hotspots.length>0){
+      const lats=hotspots.map(h=>h.lat),lngs=hotspots.map(h=>h.lng);
+      map.fitBounds([[Math.min(...lats)-.5,Math.min(...lngs)-.5],[Math.max(...lats)+.5,Math.max(...lngs)+.5]],{padding:[40,40]});
+    }else{map.fitBounds([[6.8,92.3],[13.8,94.1]]);}
+  });
+}
+
 /* ── SIDEBAR NAVIGATION ── */
 function switchSection(name, btn) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -2960,7 +3191,7 @@ function switchSection(name, btn) {
   const panel = document.getElementById('panel-' + name);
   if (panel) panel.classList.add('active');
   const labels = {overview:'Overview', adult:'Adult Surveillance', larval:'Larval Surveillance', maps:'Survey Maps', manual:'Manual Data', users:'Manage Users', activity:'Activity Log', backup:'Backup & Restore'};
-  if(name==='maps') buildMapCarousel();
+  if(name==='maps') switchMapTab('tracks');
   if(name==='activity') updateActivityCard();
   const bc = document.getElementById('bc-main');
   if (bc) bc.textContent = labels[name] || name;
