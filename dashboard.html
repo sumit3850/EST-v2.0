@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="manifest" href="./dashboard-manifest.json">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -407,17 +407,89 @@ tr:hover td{background:var(--teal-lt);}
 .install-btn{height:34px;padding:0 12px;font-size:11px;font-weight:700;background:linear-gradient(135deg,var(--teal),#005c4f);color:#fff;border:none;border-radius:7px;cursor:pointer;display:none;align-items:center;gap:5px;white-space:nowrap;}
 .install-btn.show{display:flex;}
 
-/* ═══ HOTSPOT MAP ═══ */
+/* ═══ MAP SUBTABS ═══ */
 .map-subtabs{display:flex;border-bottom:2px solid var(--bdr);background:var(--sf2);}
 .map-subtab{flex:1;height:40px;border:none;background:transparent;font-size:12px;font-weight:700;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;font-family:inherit;}
 .map-subtab.active{color:var(--teal);border-bottom-color:var(--teal);}
-.hotspot-legend{display:flex;gap:16px;padding:10px 20px 14px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--bdr);}
-.hotspot-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--txt2);}
-.hotspot-leg-dot{width:13px;height:13px;border-radius:50%;box-shadow:0 0 6px currentColor;}
-.hotspot-info-bar{padding:8px 20px;background:var(--sf2);border-bottom:1px solid var(--bdr);font-size:11px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;}
-.leaflet-popup-content-wrapper{background:var(--sf)!important;color:var(--txt)!important;border:1px solid var(--bdr)!important;border-radius:10px!important;box-shadow:0 8px 32px rgba(0,0,0,.4)!important;}
-.leaflet-popup-tip{background:var(--sf)!important;}
-.leaflet-popup-close-button{color:var(--muted)!important;}
+
+/* ═══ HOTSPOT MAP (MapLibre GL) ═══ */
+.hs-toolbar{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--sf2);border-bottom:1px solid var(--bdr);flex-wrap:wrap;}
+.hs-layer-btns,.hs-period-btns{display:flex;border:1px solid var(--bdr);border-radius:8px;overflow:hidden;}
+.hs-tool-btn{height:30px;padding:0 10px;border:none;background:transparent;font-size:11px;font-weight:700;cursor:pointer;color:var(--muted);font-family:inherit;transition:all .15s;white-space:nowrap;}
+.hs-tool-btn.active{background:var(--teal);color:#fff;}
+.hs-tool-btn:not(:last-child){border-right:1px solid var(--bdr);}
+.hs-toolbar-sep{width:1px;height:20px;background:var(--bdr);margin:0 2px;flex-shrink:0;}
+.hs-toolbar-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);white-space:nowrap;}
+.hs-custom-range{display:none;align-items:center;gap:4px;font-size:11px;color:var(--muted);}
+.hs-custom-range.show{display:flex;}
+.hs-custom-range input[type=date]{height:28px;padding:0 6px;border:1px solid var(--bdr);border-radius:5px;background:var(--sf);color:var(--txt);font-size:11px;font-family:inherit;}
+.hs-custom-range button{height:28px;padding:0 8px;border:none;border-radius:5px;background:var(--teal);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;}
+.hs-basemap-sel{height:30px;padding:0 6px;border:1px solid var(--bdr);border-radius:7px;background:var(--sf);color:var(--txt);font-size:11px;font-family:inherit;width:120px;}
+
+/* Body layout */
+.hs-body{display:flex;height:580px;overflow:hidden;}
+
+/* Region sidebar */
+.hs-sidebar{width:240px;min-width:180px;border-right:1px solid var(--bdr);display:flex;flex-direction:column;background:var(--sf2);flex-shrink:0;}
+.hs-sidebar-hdr{padding:8px 10px 6px;border-bottom:1px solid var(--bdr);}
+.hs-search{width:100%;box-sizing:border-box;height:30px;padding:0 8px 0 28px;border:1px solid var(--bdr);border-radius:7px;background:var(--sf);color:var(--txt);font-size:11px;font-family:inherit;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:8px center;}
+.hs-region-actions{display:flex;align-items:center;gap:5px;padding:5px 10px;border-bottom:1px solid var(--bdr);flex-shrink:0;}
+.hs-region-actions button{height:20px;padding:0 6px;border:1px solid var(--bdr);border-radius:4px;background:transparent;color:var(--muted);font-size:10px;cursor:pointer;font-family:inherit;}
+.hs-region-actions button:hover{background:var(--sf);color:var(--teal);}
+.hs-region-actions span{margin-left:auto;color:var(--muted);font-size:10px;white-space:nowrap;}
+.hs-region-tree{flex:1;overflow-y:auto;padding:4px 0;}
+.hs-district{border-bottom:1px solid rgba(255,255,255,.04);}
+.hs-dist-hdr{display:flex;align-items:center;gap:6px;padding:6px 10px;cursor:pointer;font-size:11px;font-weight:700;color:var(--txt);user-select:none;transition:background .1s;}
+.hs-dist-hdr:hover{background:rgba(255,255,255,.04);}
+.hs-dist-hdr input[type=checkbox]{accent-color:var(--teal);width:12px;height:12px;cursor:pointer;flex-shrink:0;}
+.hs-dist-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.hs-dist-count{font-size:9px;color:var(--muted);font-weight:400;padding:1px 5px;background:var(--sf);border-radius:10px;flex-shrink:0;}
+.hs-dist-arrow{font-size:9px;color:var(--muted);transition:transform .15s;flex-shrink:0;}
+.hs-dist-arrow.open{transform:rotate(90deg);}
+.hs-zones{display:none;}
+.hs-zones.open{display:block;}
+.hs-zone-row{display:flex;align-items:center;gap:5px;padding:3px 10px 3px 26px;font-size:10px;color:var(--txt2);cursor:default;transition:background .1s;}
+.hs-zone-row:hover{background:rgba(255,255,255,.03);}
+.hs-zone-row input[type=checkbox]{accent-color:var(--teal);width:11px;height:11px;cursor:pointer;flex-shrink:0;}
+.hs-zone-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.hs-zone-count{font-size:9px;color:var(--muted);padding:1px 4px;background:var(--sf);border-radius:8px;flex-shrink:0;}
+
+/* Map container */
+.hs-map-wrap{flex:1;position:relative;overflow:hidden;min-width:0;}
+#hotspot-map{width:100%;height:100%;}
+
+/* Map overlays */
+.hs-north-arrow{position:absolute;top:48px;right:10px;width:36px;height:36px;background:rgba(0,0,0,.75);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;z-index:10;border:1px solid rgba(255,255,255,.15);flex-direction:column;line-height:1.1;pointer-events:none;gap:0;}
+.hs-legend{position:absolute;bottom:30px;right:10px;background:rgba(13,17,23,.92);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:8px 10px;font-size:10px;color:rgba(255,255,255,.8);z-index:10;min-width:140px;pointer-events:none;max-width:180px;}
+.hs-legend-title{font-weight:800;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.45);margin-bottom:6px;}
+.hs-leg-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.hs-leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.hs-stats-bar{position:absolute;bottom:0;left:0;right:0;background:rgba(13,17,23,.88);border-top:1px solid rgba(255,255,255,.08);display:flex;gap:14px;padding:5px 12px;font-size:10px;color:rgba(255,255,255,.6);z-index:10;flex-wrap:wrap;}
+.hs-stat{display:flex;gap:4px;align-items:center;}
+.hs-stat-val{font-weight:700;color:rgba(255,255,255,.92);}
+
+/* MapLibre popup */
+.maplibregl-popup-content{background:var(--sf)!important;color:var(--txt)!important;border:1px solid var(--bdr)!important;border-radius:10px!important;box-shadow:0 8px 32px rgba(0,0,0,.5)!important;padding:12px 14px!important;font-family:Plus Jakarta Sans,sans-serif!important;font-size:12px!important;}
+.maplibregl-popup-close-button{color:var(--muted)!important;font-size:16px!important;right:4px!important;top:4px!important;}
+
+/* Export modal */
+.hs-export-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;align-items:center;justify-content:center;}
+.hs-export-modal.show{display:flex;}
+.hs-export-box{background:var(--sf);border:1px solid var(--bdr);border-radius:12px;padding:20px 24px;width:320px;}
+.hs-export-box h3{margin:0 0 14px;font-size:14px;font-weight:800;}
+.hs-export-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.hs-export-opt{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--bdr);border-radius:7px;cursor:pointer;font-size:12px;transition:all .15s;}
+.hs-export-opt:has(input:checked){border-color:var(--teal);background:rgba(0,107,92,.1);}
+.hs-export-opt input{accent-color:var(--teal);}
+.hs-export-meta{display:flex;align-items:center;gap:8px;font-size:11px;margin-bottom:14px;color:var(--txt2);}
+.hs-export-meta input{accent-color:var(--teal);}
+.hs-export-btns{display:flex;gap:8px;justify-content:flex-end;}
+
+@media(max-width:900px){
+  .hs-body{flex-direction:column;height:auto;}
+  .hs-sidebar{width:100%;height:180px;border-right:none;border-bottom:1px solid var(--bdr);}
+  .hs-map-wrap{height:400px;}
+}
 
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:768px){
@@ -458,7 +530,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.0.74</p>
+      <p>Admin Dashboard · v2.0.75</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -490,7 +562,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>v2.0.74 · A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.0.75 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -918,19 +990,85 @@ tr:hover td{background:var(--teal-lt);}
 
       <!-- Breeding Hotspot Map Section -->
       <div id="map-hotspot-section" style="display:none;">
-        <div class="hotspot-info-bar">
-          <span id="hotspot-survey-count">—</span>
-          <span>·</span>
-          <span>Column height = risk level · Size = survey count · Click marker for details</span>
+        <!-- Toolbar -->
+        <div class="hs-toolbar">
+          <span class="hs-toolbar-label">Layer:</span>
+          <div class="hs-layer-btns">
+            <button class="hs-tool-btn active" id="hslayer-heatmap" onclick="hsSetLayer('heatmap')">🌡 Heatmap</button>
+            <button class="hs-tool-btn" id="hslayer-points" onclick="hsSetLayer('points')">● Risk Points</button>
+            <button class="hs-tool-btn" id="hslayer-clusters" onclick="hsSetLayer('clusters')">⬡ Clusters</button>
+          </div>
+          <div class="hs-toolbar-sep"></div>
+          <span class="hs-toolbar-label">Period:</span>
+          <div class="hs-period-btns">
+            <button class="hs-tool-btn active" id="hsperiod-all" onclick="hsSetPeriod('all')">All Time</button>
+            <button class="hs-tool-btn" id="hsperiod-year" onclick="hsSetPeriod('year')">This Year</button>
+            <button class="hs-tool-btn" id="hsperiod-month" onclick="hsSetPeriod('month')">This Month</button>
+            <button class="hs-tool-btn" id="hsperiod-custom" onclick="hsSetPeriod('custom')">Custom</button>
+          </div>
+          <div class="hs-custom-range" id="hs-custom-range">
+            <label style="font-size:10px;color:var(--muted);">From</label>
+            <input type="date" id="hs-from-date">
+            <label style="font-size:10px;color:var(--muted);">To</label>
+            <input type="date" id="hs-to-date">
+            <button onclick="hsApplyCustomRange()">Apply</button>
+          </div>
+          <div style="margin-left:auto;display:flex;gap:6px;align-items:center;">
+            <select class="hs-basemap-sel" id="hs-basemap-sel" onchange="hsChangeBasemap(this.value)">
+              <option value="topo">Topo Map</option>
+              <option value="satellite">Satellite</option>
+              <option value="light">Light Canvas</option>
+              <option value="dark">Dark Canvas</option>
+            </select>
+            <button class="tb-btn blue" style="height:30px;padding:0 10px;font-size:11px;" onclick="hsExport()">⬇ Export</button>
+          </div>
         </div>
-        <div id="hotspot-map" style="height:520px;width:100%;background:#0a1628;"></div>
-        <div class="hotspot-legend">
-          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-right:4px;">Risk Level:</span>
-          <div class="hotspot-leg-item"><div class="hotspot-leg-dot" style="background:#ef5350;color:#ef5350;"></div>High (HI ≥10%)</div>
-          <div class="hotspot-leg-item"><div class="hotspot-leg-dot" style="background:#2196f3;color:#2196f3;"></div>Moderate (HI 5–10%)</div>
-          <div class="hotspot-leg-item"><div class="hotspot-leg-dot" style="background:#00bfa5;color:#00bfa5;"></div>Low (HI &lt;5%)</div>
-          <div class="hotspot-leg-item"><div class="hotspot-leg-dot" style="background:#9c27b0;color:#9c27b0;"></div>GPS only (no index)</div>
-          <span style="font-size:10px;color:var(--muted);margin-left:auto;">3D column height proportional to HI value · Updates with every entry</span>
+        <!-- Body -->
+        <div class="hs-body">
+          <!-- Region sidebar -->
+          <div class="hs-sidebar">
+            <div class="hs-sidebar-hdr">
+              <input class="hs-search" id="hs-region-search" placeholder="Search district, zone…" oninput="hsFilterRegions()">
+            </div>
+            <div class="hs-region-actions">
+              <button onclick="hsSelectAllRegions(true)">☑ All</button>
+              <button onclick="hsSelectAllRegions(false)">☐ Clear</button>
+              <span id="hs-sel-count"></span>
+            </div>
+            <div class="hs-region-tree" id="hs-region-tree">
+              <div style="padding:20px;text-align:center;color:var(--muted);font-size:11px;">Loading regions…</div>
+            </div>
+          </div>
+          <!-- Map area -->
+          <div class="hs-map-wrap">
+            <div id="hotspot-map"></div>
+            <div class="hs-north-arrow">↑<br><span style="font-size:8px;font-weight:700;letter-spacing:0;">N</span></div>
+            <div class="hs-legend" id="hs-legend"></div>
+            <div class="hs-stats-bar">
+              <div class="hs-stat"><span>Surveys:</span><span class="hs-stat-val" id="hs-s-total">—</span></div>
+              <div class="hs-stat"><span>Positive:</span><span class="hs-stat-val" id="hs-s-pos">—</span></div>
+              <div class="hs-stat"><span>Avg HI:</span><span class="hs-stat-val" id="hs-s-hi">—</span></div>
+              <div class="hs-stat"><span>Avg CI:</span><span class="hs-stat-val" id="hs-s-ci">—</span></div>
+              <div class="hs-stat" style="margin-left:auto;"><span>GPS sites:</span><span class="hs-stat-val" id="hs-s-gps">—</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Modal -->
+      <div class="hs-export-modal" id="hs-export-modal">
+        <div class="hs-export-box">
+          <h3>Export Hotspot Map</h3>
+          <div class="hs-export-opts">
+            <label class="hs-export-opt"><input type="radio" name="hs-dpi" value="300" checked> 300 DPI — Standard Publication</label>
+            <label class="hs-export-opt"><input type="radio" name="hs-dpi" value="600"> 600 DPI — High-Resolution Journal</label>
+            <label class="hs-export-opt"><input type="radio" name="hs-dpi" value="screen"> Screen Resolution — Quick Export</label>
+          </div>
+          <label class="hs-export-meta"><input type="checkbox" id="hs-exp-legend" checked> Include title, north arrow, scale bar &amp; metadata</label>
+          <div class="hs-export-btns">
+            <button class="tb-btn ghost" onclick="document.getElementById('hs-export-modal').classList.remove('show')">Cancel</button>
+            <button class="tb-btn blue" onclick="hsExportExecute()">Export PNG</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1606,7 +1744,7 @@ function exportRiskPDF(){
     const rows=sorted.map(([name,cnt],idx)=>`<tr style="${idx%2===0?'':'background:#f9f9f9;'}"><td>${name}</td><td style="font-weight:700;color:#00695c;">${cnt}</td><td style="padding:4px 8px;"><div style="height:10px;border-radius:5px;background:#00695c;width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%;min-width:4px;"></div></td></tr>`).join('');
     return`<h3>${dk} — Breeding Preferred Containers</h3><table><thead><tr><th>Container Type</th><th>Positive Count</th><th style="min-width:120px;">Proportion</th></tr></thead><tbody>${rows}</tbody></table>`;
   }).join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#00695c;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #00695c;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:14px;font-weight:700;color:#00695c;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:8px 12px;background:#fff8e1;border-left:3px solid #f9a825;font-size:10px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #00695c;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${range.label||'All Data'}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><div class="badge" style="margin-top:12px;">Overall Risk: ${overallR}</div><h2>Overall Stegomyia Indices</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#00695c;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.0.74 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#00695c;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #00695c;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:14px;font-weight:700;color:#00695c;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:8px 12px;background:#fff8e1;border-left:3px solid #f9a825;font-size:10px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #00695c;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${range.label||'All Data'}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><div class="badge" style="margin-top:12px;">Overall Risk: ${overallR}</div><h2>Overall Stegomyia Indices</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#00695c;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.0.75 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
   const win=window.open('','_blank','width=920,height=740');
   if(win){win.document.write(html);win.document.close();setTimeout(()=>win.print(),700);}
 }
@@ -2340,7 +2478,7 @@ function buildAdultXLSX(surveys,isCompiled){
   const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
   // ── Report Status ──
   const statusRows=[
-    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.74')],
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.75')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -2413,7 +2551,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   // ── Report Status sheet ──
   const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.74')],
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.75')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -2557,7 +2695,7 @@ function buildAdultCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.74 — Adult Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.75 — Adult Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -2609,7 +2747,7 @@ function buildAdultCSV(surveys){
     });
   });
   blank();
-  r('EST v2.0.74 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.75 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -2621,7 +2759,7 @@ function buildLarvalCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.74 — Larval Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.75 — Larval Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -2702,7 +2840,7 @@ function buildLarvalCSV(surveys){
     }
   });
   blank();
-  r('EST v2.0.74 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.75 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -3034,153 +3172,475 @@ function switchMapTab(tab){
   if(tab==='hotspot')buildHotspotMap();
 }
 
-/* ── 3D BREEDING HOTSPOT MAP ── */
-let _hotspotMapInst=null;
-function loadLeafletJS(cb){
-  if(window.L){cb();return;}
+/* ── BREEDING HOTSPOT MAP (MapLibre GL) ── */
+let _hsMap=null, _hsLayer='heatmap', _hsPeriod='all', _hsRegions=null, _hsSelDistricts=null;
+
+const _HS_TILES={
+  topo:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+  satellite:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  light:'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
+  dark:'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png'
+};
+
+function _hsParseDateStr(d){
+  if(!d)return null;
+  if(/^\d{4}-\d{2}-\d{2}$/.test(d))return d;
+  const p=d.split('-');
+  if(p.length===3&&p[0].length===2)return p[2]+'-'+p[1]+'-'+p[0];
+  return null;
+}
+
+function _hsGetSurveys(){
+  const td=new Date(), yyyy=td.getFullYear(), mm=String(td.getMonth()+1).padStart(2,'0');
+  let fromD=null, toD=null;
+  if(_hsPeriod==='year'){fromD=yyyy+'-01-01';toD=yyyy+'-12-31';}
+  else if(_hsPeriod==='month'){
+    fromD=yyyy+'-'+mm+'-01';
+    const nd=new Date(yyyy,td.getMonth()+1,0);
+    toD=yyyy+'-'+mm+'-'+String(nd.getDate()).padStart(2,'0');
+  }else if(_hsPeriod==='custom'){
+    fromD=document.getElementById('hs-from-date')?.value||null;
+    toD=document.getElementById('hs-to-date')?.value||null;
+  }
+  return [
+    ...allAdult.map(s=>({...s,_st:'adult'})),
+    ...allLarval.map(s=>({...s,_st:'larval'})),
+    ...allManualAdult.map(s=>({...s,_st:'madult'})),
+    ...allManualLarval.map(s=>({...s,_st:'mlarval'}))
+  ].filter(s=>{
+    const la=parseFloat(s.lat), lo=parseFloat(s.lng);
+    if(isNaN(la)||isNaN(lo)||la===0||lo===0)return false;
+    if(fromD||toD){const sd=_hsParseDateStr(s.date);if(!sd)return false;if(fromD&&sd<fromD)return false;if(toD&&sd>toD)return false;}
+    if(_hsSelDistricts&&_hsSelDistricts.size>0&&!_hsSelDistricts.has(s.district||''))return false;
+    return true;
+  });
+}
+
+function _hsBuildGeoJSON(surveys){
+  return {type:'FeatureCollection',features:surveys.map(s=>({
+    type:'Feature',
+    geometry:{type:'Point',coordinates:[parseFloat(s.lng),parseFloat(s.lat)]},
+    properties:{
+      hi:parseFloat(s.HI)||0, ci:parseFloat(s.CI)||0, bi:parseFloat(s.BI)||0,
+      positive:parseInt(s.totalPositive)||0,
+      district:s.district||'', zone:s.zone||'',
+      date:s.date||'', type:s._st,
+      location:s.location||s.district||s.zone||'Survey site'
+    }
+  }))};
+}
+
+function _hsUpdateStats(surveys){
+  const larval=surveys.filter(s=>s._st==='larval'||s._st==='mlarval');
+  const his=larval.map(s=>parseFloat(s.HI)).filter(v=>!isNaN(v)&&v>0);
+  const cis=larval.map(s=>parseFloat(s.CI)).filter(v=>!isNaN(v)&&v>0);
+  const pos=surveys.reduce((a,s)=>a+(parseInt(s.totalPositive)||0),0);
+  const avg=arr=>arr.length?(arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1):null;
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('hs-s-total',surveys.length);
+  set('hs-s-pos',pos);
+  set('hs-s-hi',avg(his)?avg(his)+'%':'—');
+  set('hs-s-ci',avg(cis)?avg(cis)+'%':'—');
+  set('hs-s-gps',surveys.length);
+}
+
+function _hsUpdateLegend(){
+  const el=document.getElementById('hs-legend');if(!el)return;
+  if(_hsLayer==='heatmap'){
+    el.innerHTML=`<div class="hs-legend-title">Breeding Intensity</div>
+      <div style="width:120px;height:8px;border-radius:4px;background:linear-gradient(to right,rgba(0,0,0,0),rgba(0,100,200,.6),rgba(0,200,100,.8),rgba(255,200,0,.9),rgba(255,80,0,1),rgba(200,0,0,1));margin-bottom:4px;"></div>
+      <div style="display:flex;justify-content:space-between;width:120px;font-size:9px;color:rgba(255,255,255,.45);">
+        <span>Low</span><span>Moderate</span><span>High</span>
+      </div>
+      <div style="font-size:9px;color:rgba(255,255,255,.35);margin-top:6px;">HI-weighted kernel density</div>`;
+  }else if(_hsLayer==='points'){
+    el.innerHTML=`<div class="hs-legend-title">Risk Level (NVBDCP)</div>
+      <div class="hs-leg-row"><div class="hs-leg-dot" style="background:#ef5350;box-shadow:0 0 6px #ef535066;"></div><span>High — HI ≥ 10%</span></div>
+      <div class="hs-leg-row"><div class="hs-leg-dot" style="background:#FF9800;box-shadow:0 0 6px #FF980066;"></div><span>Moderate — 5–10%</span></div>
+      <div class="hs-leg-row"><div class="hs-leg-dot" style="background:#4CAF50;box-shadow:0 0 6px #4CAF5066;"></div><span>Low — 1–5%</span></div>
+      <div class="hs-leg-row"><div class="hs-leg-dot" style="background:#00BCD4;box-shadow:0 0 6px #00BCD466;"></div><span>Minimal — &lt; 1%</span></div>
+      <div class="hs-leg-row"><div class="hs-leg-dot" style="background:#9C27B0;box-shadow:0 0 6px #9C27B066;"></div><span>GPS surveyed only</span></div>`;
+  }else{
+    el.innerHTML=`<div class="hs-legend-title">Survey Clusters</div>
+      <div class="hs-leg-row"><div class="hs-leg-dot" style="background:#4CAF50;"></div><span>1 – 9 surveys</span></div>
+      <div class="hs-leg-row"><div class="hs-leg-dot" style="background:#FF9800;"></div><span>10 – 29 surveys</span></div>
+      <div class="hs-leg-row"><div class="hs-leg-dot" style="background:#f44336;"></div><span>30+ surveys</span></div>
+      <div style="font-size:9px;color:rgba(255,255,255,.4);margin-top:5px;">Click cluster to zoom &amp; expand</div>`;
+  }
+}
+
+function _hsBuildRegionTree(){
+  const all=[
+    ...allAdult.map(s=>({...s,_st:'adult'})),
+    ...allLarval.map(s=>({...s,_st:'larval'})),
+    ...allManualAdult.map(s=>({...s,_st:'madult'})),
+    ...allManualLarval.map(s=>({...s,_st:'mlarval'}))
+  ].filter(s=>{const la=parseFloat(s.lat),lo=parseFloat(s.lng);return !isNaN(la)&&!isNaN(lo)&&la!==0&&lo!==0;});
+  const tree={};
+  all.forEach(s=>{
+    const d=s.district||'Unknown District', z=s.zone||s.location||'Unknown Area';
+    if(!tree[d])tree[d]={count:0,zones:{}};
+    tree[d].count++;
+    tree[d].zones[z]=(tree[d].zones[z]||0)+1;
+  });
+  _hsRegions=tree;
+}
+
+function _hsRenderRegionTree(q){
+  const container=document.getElementById('hs-region-tree');if(!container||!_hsRegions)return;
+  const sq=(q||'').toLowerCase();
+  let html='', totalDist=0, selDist=0;
+  Object.entries(_hsRegions).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([dist,dd])=>{
+    const distMatch=!sq||dist.toLowerCase().includes(sq)||Object.keys(dd.zones).some(z=>z.toLowerCase().includes(sq));
+    if(!distMatch)return;
+    totalDist++;
+    const isSel=!_hsSelDistricts||_hsSelDistricts.has(dist);
+    if(isSel)selDist++;
+    const distSafe=dist.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    html+=`<div class="hs-district">
+      <div class="hs-dist-hdr" onclick="hsToggleDist(this)">
+        <input type="checkbox" ${isSel?'checked':''} onclick="event.stopPropagation();hsCheckDist(this,'${distSafe}')">
+        <span class="hs-dist-name">${dist}</span>
+        <span class="hs-dist-count">${dd.count}</span>
+        <span class="hs-dist-arrow">▶</span>
+      </div>
+      <div class="hs-zones">`;
+    Object.entries(dd.zones).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([zone,cnt])=>{
+      const zMatch=!sq||zone.toLowerCase().includes(sq)||dist.toLowerCase().includes(sq);
+      if(!zMatch)return;
+      html+=`<div class="hs-zone-row"><input type="checkbox" checked><span class="hs-zone-name">${zone}</span><span class="hs-zone-count">${cnt}</span></div>`;
+    });
+    html+='</div></div>';
+  });
+  if(!html)html='<div style="padding:20px;text-align:center;color:var(--muted);font-size:11px;">No matching regions</div>';
+  container.innerHTML=html;
+  const sc=document.getElementById('hs-sel-count');
+  if(sc)sc.textContent=`${selDist}/${totalDist} districts`;
+}
+
+function hsToggleDist(hdr){
+  const zones=hdr.nextElementSibling, arrow=hdr.querySelector('.hs-dist-arrow');
+  const open=zones.classList.toggle('open');arrow.classList.toggle('open',open);
+}
+
+function hsCheckDist(cb,dist){
+  if(!_hsSelDistricts){
+    _hsSelDistricts=new Set(Object.keys(_hsRegions));
+    _hsSelDistricts.delete(dist);
+  }else if(cb.checked){_hsSelDistricts.add(dist);}
+  else{_hsSelDistricts.delete(dist);}
+  if(_hsSelDistricts&&_hsSelDistricts.size===Object.keys(_hsRegions||{}).length)_hsSelDistricts=null;
+  _hsRenderRegionTree(document.getElementById('hs-region-search')?.value||'');
+  hsRefreshMap();
+}
+
+function hsSelectAllRegions(sel){
+  _hsSelDistricts=sel?null:new Set();
+  _hsRenderRegionTree('');
+  if(document.getElementById('hs-region-search'))document.getElementById('hs-region-search').value='';
+  hsRefreshMap();
+}
+
+function hsFilterRegions(){
+  _hsRenderRegionTree(document.getElementById('hs-region-search')?.value||'');
+}
+
+function hsSetLayer(layer){
+  _hsLayer=layer;
+  ['heatmap','points','clusters'].forEach(l=>{
+    const b=document.getElementById('hslayer-'+l);if(b)b.classList.toggle('active',l===layer);
+  });
+  _hsUpdateLegend();
+  if(_hsMap&&_hsMap.loaded())_hsApplyLayerVisibility();
+}
+
+function hsSetPeriod(p){
+  _hsPeriod=p;
+  ['all','year','month','custom'].forEach(t=>{
+    const b=document.getElementById('hsperiod-'+t);if(b)b.classList.toggle('active',t===p);
+  });
+  const cr=document.getElementById('hs-custom-range');if(cr)cr.classList.toggle('show',p==='custom');
+  if(p!=='custom')hsRefreshMap();
+}
+
+function hsApplyCustomRange(){hsRefreshMap();}
+
+function hsChangeBasemap(val){
+  if(!_hsMap)return;
+  const src=_hsMap.getSource('basemap');
+  if(src)src.setTiles([_HS_TILES[val]||_HS_TILES.topo]);
+}
+
+function _hsApplyLayerVisibility(){
+  const m=_hsMap;if(!m)return;
+  const show={
+    'hm-layer':_hsLayer==='heatmap',
+    'pt-stroke':_hsLayer==='points','pt-layer':_hsLayer==='points',
+    'cl-circles':_hsLayer==='clusters','cl-count':_hsLayer==='clusters','cl-points':_hsLayer==='clusters'
+  };
+  Object.entries(show).forEach(([id,vis])=>{
+    if(m.getLayer(id))m.setLayoutProperty(id,'visibility',vis?'visible':'none');
+  });
+}
+
+function _hsSetData(gj){
+  if(!_hsMap||!_hsMap.loaded())return;
+  const f=_hsMap.getSource('surveys-flat'), c=_hsMap.getSource('surveys-cluster');
+  if(f)f.setData(gj);if(c)c.setData(gj);
+}
+
+function hsRefreshMap(){
+  if(!_hsMap){buildHotspotMap();return;}
+  const surveys=_hsGetSurveys();
+  _hsUpdateStats(surveys);
+  _hsBuildRegionTree();
+  _hsRenderRegionTree(document.getElementById('hs-region-search')?.value||'');
+  const gj=_hsBuildGeoJSON(surveys);
+  if(_hsMap.loaded()){_hsSetData(gj);}
+  else{_hsMap.once('load',()=>_hsSetData(gj));}
+  if(surveys.length>0){
+    const lats=surveys.map(s=>parseFloat(s.lat)),lngs=surveys.map(s=>parseFloat(s.lng));
+    _hsMap.fitBounds([[Math.min(...lngs)-.3,Math.min(...lats)-.3],[Math.max(...lngs)+.3,Math.max(...lats)+.3]],{padding:40,maxZoom:13,duration:600});
+  }
+}
+
+function loadMapLibreJS(cb){
+  if(window.maplibregl){cb();return;}
   const s=document.createElement('script');
-  s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-  s.crossOrigin='';
+  s.src='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js';
+  s.crossOrigin='anonymous';
   s.onload=cb;
   s.onerror=()=>{
     const el=document.getElementById('hotspot-map');
-    if(el)el.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#0a1628;color:#aaa;flex-direction:column;gap:10px;font-family:sans-serif;"><div style="font-size:40px;">🌐</div><div>Map requires internet connection</div><div style="font-size:11px;color:#666;">Could not load Leaflet from CDN</div></div>';
+    if(el)el.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#aaa;flex-direction:column;gap:12px;"><div style="font-size:40px;">🌐</div><div style="font-size:14px;">Map requires internet connection</div><div style="font-size:11px;color:#555;">Could not load MapLibre GL from CDN</div></div>';
   };
   document.head.appendChild(s);
 }
+
 function buildHotspotMap(){
-  loadLeafletJS(()=>{
-    const container=document.getElementById('hotspot-map');
-    if(!container)return;
-    if(_hotspotMapInst){_hotspotMapInst.remove();_hotspotMapInst=null;}
-    container.innerHTML='';
-    const allSurveys=[
-      ...allAdult.map(s=>({...s,_st:'adult'})),
-      ...allLarval.map(s=>({...s,_st:'larval'})),
-      ...allManualAdult.map(s=>({...s,_st:'madult'})),
-      ...allManualLarval.map(s=>({...s,_st:'mlarval'}))
-    ].filter(s=>{const la=parseFloat(s.lat),lo=parseFloat(s.lng);return !isNaN(la)&&!isNaN(lo)&&la!==0&&lo!==0;});
-    const infoEl=document.getElementById('hotspot-survey-count');
-    if(infoEl)infoEl.textContent=allSurveys.length+' GPS-tagged survey'+(allSurveys.length!==1?'s':'');
-    if(!allSurveys.length){
-      container.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#0a1628;color:#aaa;flex-direction:column;gap:10px;font-family:sans-serif;"><div style="font-size:40px;">📍</div><div style="font-size:14px;">No GPS-tagged surveys found</div><div style="font-size:11px;color:#555;">Enable GPS in the field app to see hotspots here</div></div>';
-      return;
+  loadMapLibreJS(()=>{
+    const container=document.getElementById('hotspot-map');if(!container)return;
+    if(_hsMap){_hsMap.remove();_hsMap=null;}
+
+    const surveys=_hsGetSurveys();
+    _hsUpdateStats(surveys);
+    _hsBuildRegionTree();
+    _hsRenderRegionTree('');
+
+    let bounds=[[92.0,6.5],[94.5,14.0]];
+    if(surveys.length>0){
+      const lats=surveys.map(s=>parseFloat(s.lat)),lngs=surveys.map(s=>parseFloat(s.lng));
+      bounds=[[Math.min(...lngs)-.4,Math.min(...lats)-.4],[Math.max(...lngs)+.4,Math.max(...lats)+.4]];
     }
-    // Cluster by ~0.01° (~1km)
-    const clusters={};
-    allSurveys.forEach(s=>{
-      const la=parseFloat(s.lat),lo=parseFloat(s.lng);
-      const key=la.toFixed(2)+','+lo.toFixed(2);
-      if(!clusters[key])clusters[key]={lat:la,lng:lo,surveys:[],his:[],cis:[],location:s.location||s.district||'Survey site'};
-      clusters[key].surveys.push(s);
-      const hi=parseFloat(s.HI),ci=parseFloat(s.CI);
-      if(!isNaN(hi)&&hi>0)clusters[key].his.push(hi);
-      if(!isNaN(ci)&&ci>0)clusters[key].cis.push(ci);
+
+    const bsv=document.getElementById('hs-basemap-sel')?.value||'topo';
+    const gj=_hsBuildGeoJSON(surveys);
+
+    _hsMap=new maplibregl.Map({
+      container:'hotspot-map',
+      style:{
+        version:8,
+        glyphs:'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+        sources:{basemap:{type:'raster',tiles:[_HS_TILES[bsv]],tileSize:256,attribution:'© ESRI | © OSM contributors | © CartoDB | EST v2.0'}},
+        layers:[{id:'basemap',type:'raster',source:'basemap'}]
+      },
+      bounds:bounds,fitBoundsOptions:{padding:40},
+      minZoom:5,maxZoom:18
     });
-    const avg=arr=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;
-    const hotspots=Object.values(clusters).map(cl=>({
-      lat:cl.lat,lng:cl.lng,count:cl.surveys.length,
-      hi:avg(cl.his),ci:avg(cl.cis),
-      location:cl.location,surveys:cl.surveys
-    }));
-    // Build Leaflet map
-    const map=window.L.map('hotspot-map',{center:[10.5,92.9],zoom:7,minZoom:5,maxZoom:15,zoomControl:true});
-    _hotspotMapInst=map;
-    window.L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-      attribution:'© OpenStreetMap © CartoDB | EST v2.0',subdomains:'abcd',maxZoom:19
-    }).addTo(map);
-    // 3D column canvas overlay layer
-    const Col3DLayer=window.L.Layer.extend({
-      _hs:hotspots,
-      onAdd(m){
-        this._m=m;
-        this._cv=window.L.DomUtil.create('canvas','');
-        Object.assign(this._cv.style,{position:'absolute',left:'0',top:'0',pointerEvents:'none',zIndex:400});
-        m.getPanes().overlayPane.appendChild(this._cv);
-        m.on('moveend zoomend resize viewreset',this._r,this);
-        this._r();
-      },
-      onRemove(m){m.off('moveend zoomend resize viewreset',this._r,this);this._cv.remove();},
-      _r(){
-        const sz=this._m.getSize();
-        this._cv.width=sz.x;this._cv.height=sz.y;
-        const ctx=this._cv.getContext('2d');
-        ctx.clearRect(0,0,sz.x,sz.y);
-        // Sort by lat desc so northern columns render behind southern ones (painter's algo)
-        const sorted=[...this._hs].sort((a,b)=>b.lat-a.lat);
-        sorted.forEach(h=>{
-          const pt=this._m.latLngToContainerPoint([h.lat,h.lng]);
-          this._col(ctx,pt.x,pt.y,h);
-        });
-      },
-      _col(ctx,cx,cy,h){
-        let col='#00bfa5';
-        if(h.hi>=10)col='#ef5350';
-        else if(h.hi>=5)col='#2196f3';
-        else if(!h.hi&&!h.ci)col='#9c27b0';
-        const zoom=this._m.getZoom();
-        const sc=Math.max(0.4,Math.min(2.2,(zoom-5)*0.28+0.4));
-        const rx=Math.max(7,Math.min(30,(7+h.count*2.5)*sc));
-        const ry=rx*0.36;
-        const ch=Math.max(10,Math.min(80,(10+h.hi*4+h.count*1.5)*sc));
-        // Shadow
-        ctx.save();ctx.globalAlpha=.22;ctx.fillStyle='#000';
-        ctx.beginPath();ctx.ellipse(cx+2,cy+2,rx*1.15,ry*1.15,0,0,Math.PI*2);ctx.fill();ctx.restore();
-        // Column body
-        const bodyG=ctx.createLinearGradient(cx-rx,cy-ch,cx+rx,cy);
-        bodyG.addColorStop(0,col+'dd');bodyG.addColorStop(.6,col+'99');bodyG.addColorStop(1,col+'44');
-        ctx.fillStyle=bodyG;
-        ctx.beginPath();
-        ctx.moveTo(cx-rx,cy);ctx.lineTo(cx-rx,cy-ch);
-        ctx.ellipse(cx,cy-ch,rx,ry,0,Math.PI,0,true);
-        ctx.lineTo(cx+rx,cy);
-        ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI,false);
-        ctx.closePath();ctx.fill();
-        ctx.strokeStyle=col+'66';ctx.lineWidth=0.7;ctx.stroke();
-        // Top cap
-        const capG=ctx.createRadialGradient(cx-rx*.3,cy-ch-ry*.5,0,cx,cy-ch,rx*1.4);
-        capG.addColorStop(0,'#ffffff44');capG.addColorStop(.35,col+'ee');capG.addColorStop(1,col+'55');
-        ctx.fillStyle=capG;
-        ctx.beginPath();ctx.ellipse(cx,cy-ch,rx,ry,0,0,Math.PI*2);ctx.fill();
-        ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.stroke();
-        // Glow halo
-        const glowG=ctx.createRadialGradient(cx,cy-ch,0,cx,cy-ch,rx*3);
-        glowG.addColorStop(0,col+'28');glowG.addColorStop(1,col+'00');
-        ctx.fillStyle=glowG;
-        ctx.beginPath();ctx.ellipse(cx,cy-ch,rx*3,rx*1.3,0,0,Math.PI*2);ctx.fill();
-        // Count label
-        if(rx>9){
-          ctx.save();ctx.fillStyle='#fff';ctx.font=`bold ${Math.max(7,Math.min(12,rx*.65))}px sans-serif`;
-          ctx.textAlign='center';ctx.textBaseline='middle';
-          ctx.shadowColor=col;ctx.shadowBlur=5;
-          ctx.fillText(h.count,cx,cy-ch);ctx.restore();
+
+    _hsMap.addControl(new maplibregl.ScaleControl({maxWidth:100,unit:'metric'}),'bottom-left');
+    _hsMap.addControl(new maplibregl.NavigationControl({showCompass:true}),'top-right');
+
+    _hsMap.on('load',()=>{
+      _hsMap.addSource('surveys-flat',{type:'geojson',data:gj});
+      _hsMap.addSource('surveys-cluster',{
+        type:'geojson',data:gj,
+        cluster:true,clusterMaxZoom:13,clusterRadius:50
+      });
+
+      // Heatmap
+      _hsMap.addLayer({
+        id:'hm-layer',type:'heatmap',source:'surveys-flat',
+        paint:{
+          'heatmap-weight':['interpolate',['linear'],['get','hi'],0,0.05,5,0.5,10,0.85,30,1],
+          'heatmap-intensity':['interpolate',['linear'],['zoom'],5,1,13,3],
+          'heatmap-color':['interpolate',['linear'],['heatmap-density'],
+            0,'rgba(0,0,0,0)',
+            0.1,'rgba(0,100,200,0.5)',
+            0.3,'rgba(0,180,120,0.7)',
+            0.5,'rgba(255,200,0,0.85)',
+            0.7,'rgba(255,100,0,0.9)',
+            1,'rgba(200,0,0,1)'
+          ],
+          'heatmap-radius':['interpolate',['linear'],['zoom'],5,18,13,45],
+          'heatmap-opacity':0.85
         }
-      }
+      });
+
+      // Risk points — outer stroke
+      _hsMap.addLayer({
+        id:'pt-stroke',type:'circle',source:'surveys-flat',
+        layout:{visibility:'none'},
+        paint:{
+          'circle-radius':['interpolate',['linear'],['zoom'],6,10,14,26],
+          'circle-color':'rgba(0,0,0,0)',
+          'circle-stroke-width':2,
+          'circle-stroke-opacity':0.4,
+          'circle-stroke-color':['case',
+            ['>=',['get','hi'],10],'#ef5350',
+            ['>=',['get','hi'],5],'#FF9800',
+            ['>',['get','hi'],0],'#4CAF50',
+            '#9C27B0'
+          ]
+        }
+      });
+      // Risk points — fill
+      _hsMap.addLayer({
+        id:'pt-layer',type:'circle',source:'surveys-flat',
+        layout:{visibility:'none'},
+        paint:{
+          'circle-radius':['interpolate',['linear'],['zoom'],6,7,14,20],
+          'circle-color':['case',
+            ['>=',['get','hi'],10],'#ef5350',
+            ['>=',['get','hi'],5],'#FF9800',
+            ['>',['get','hi'],0],'#4CAF50',
+            '#9C27B0'
+          ],
+          'circle-opacity':0.88,
+          'circle-stroke-width':1.2,
+          'circle-stroke-color':'rgba(255,255,255,0.55)'
+        }
+      });
+
+      // Cluster circles
+      _hsMap.addLayer({
+        id:'cl-circles',type:'circle',source:'surveys-cluster',
+        filter:['has','point_count'],layout:{visibility:'none'},
+        paint:{
+          'circle-color':['step',['get','point_count'],'#4CAF50',10,'#FF9800',30,'#f44336'],
+          'circle-radius':['step',['get','point_count'],22,10,32,30,42],
+          'circle-opacity':0.82,
+          'circle-stroke-width':2,'circle-stroke-color':'rgba(255,255,255,0.35)'
+        }
+      });
+      _hsMap.addLayer({
+        id:'cl-count',type:'symbol',source:'surveys-cluster',
+        filter:['has','point_count'],layout:{
+          'text-field':['get','point_count_abbreviated'],
+          'text-font':['Open Sans Bold'],'text-size':12,visibility:'none'
+        },
+        paint:{'text-color':'#fff'}
+      });
+      _hsMap.addLayer({
+        id:'cl-points',type:'circle',source:'surveys-cluster',
+        filter:['!',['has','point_count']],layout:{visibility:'none'},
+        paint:{
+          'circle-radius':8,
+          'circle-color':['case',['>=',['get','hi'],10],'#ef5350',['>=',['get','hi'],5],'#FF9800',['>',['get','hi'],0],'#4CAF50','#9C27B0'],
+          'circle-stroke-width':1.5,'circle-stroke-color':'rgba(255,255,255,0.65)'
+        }
+      });
+
+      _hsApplyLayerVisibility();
+      _hsUpdateLegend();
+
+      // Popups for risk-points mode
+      ['pt-layer','cl-points'].forEach(lid=>{
+        _hsMap.on('click',lid,e=>{
+          const p=e.features[0].properties;
+          const col=p.hi>=10?'#ef5350':p.hi>=5?'#FF9800':p.hi>0?'#4CAF50':'#9C27B0';
+          const risk=p.hi>=10?'HIGH RISK':p.hi>=5?'MODERATE':p.hi>0?'LOW RISK':'GPS ONLY';
+          new maplibregl.Popup({maxWidth:'250px'})
+            .setLngLat(e.lngLat)
+            .setHTML(`<div style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;">
+              <div style="font-weight:800;color:${col};font-size:13px;margin-bottom:8px;padding-bottom:5px;border-bottom:2px solid ${col}44;">${p.location||p.district||'Survey Site'}</div>
+              <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 10px;">
+                <span style="color:#888;">District</span><span style="font-weight:600;">${p.district||'—'}</span>
+                <span style="color:#888;">Zone</span><span style="font-weight:600;">${p.zone||'—'}</span>
+                <span style="color:#888;">House Index</span><span style="font-weight:700;color:${col};">${p.hi>0?p.hi.toFixed(1)+'%':'—'}</span>
+                <span style="color:#888;">Container Index</span><span style="font-weight:700;color:${col};">${p.ci>0?p.ci.toFixed(1)+'%':'—'}</span>
+                <span style="color:#888;">Risk</span><span style="font-weight:700;color:${col};">${risk}</span>
+              </div>
+              <div style="font-size:10px;color:#666;margin-top:7px;">📍 ${e.lngLat.lat.toFixed(5)}°N, ${e.lngLat.lng.toFixed(5)}°E</div>
+            </div>`)
+            .addTo(_hsMap);
+        });
+        _hsMap.on('mouseenter',lid,()=>{_hsMap.getCanvas().style.cursor='pointer';});
+        _hsMap.on('mouseleave',lid,()=>{_hsMap.getCanvas().style.cursor='';});
+      });
+
+      // Cluster click to zoom
+      _hsMap.on('click','cl-circles',e=>{
+        const f=_hsMap.queryRenderedFeatures(e.point,{layers:['cl-circles']});
+        if(!f.length)return;
+        const cid=f[0].properties.cluster_id;
+        _hsMap.getSource('surveys-cluster').getClusterExpansionZoom(cid,(err,zoom)=>{
+          if(err)return;
+          _hsMap.easeTo({center:f[0].geometry.coordinates,zoom:zoom+1});
+        });
+      });
+      _hsMap.on('mouseenter','cl-circles',()=>{_hsMap.getCanvas().style.cursor='pointer';});
+      _hsMap.on('mouseleave','cl-circles',()=>{_hsMap.getCanvas().style.cursor='';});
     });
-    new Col3DLayer().addTo(map);
-    // Clickable invisible markers for popups
-    hotspots.forEach(h=>{
-      let col='#00bfa5';
-      if(h.hi>=10)col='#ef5350';else if(h.hi>=5)col='#2196f3';else if(!h.hi&&!h.ci)col='#9c27b0';
-      const icon=window.L.divIcon({className:'',html:'<div style="width:1px;height:1px;"></div>',iconSize:[1,1],iconAnchor:[0,0]});
-      const m=window.L.marker([h.lat,h.lng],{icon,interactive:true}).addTo(map);
-      m.bindPopup(`<div style="font-family:Plus Jakarta Sans,sans-serif;min-width:175px;font-size:12px;">
-        <div style="font-weight:800;color:${col};font-size:14px;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid ${col}33;">${h.location}</div>
-        <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 10px;">
-          <span style="color:#888;">Surveys</span><span style="font-weight:700;">${h.count}</span>
-          <span style="color:#888;">House Index</span><span style="font-weight:700;color:${col};">${h.hi>0?h.hi.toFixed(1)+'%':'—'}</span>
-          <span style="color:#888;">Container Index</span><span style="font-weight:700;color:${col};">${h.ci>0?h.ci.toFixed(1)+'%':'—'}</span>
-          <span style="color:#888;">Risk</span><span style="font-weight:700;color:${col};">${h.hi>=10?'HIGH RISK':h.hi>=5?'MODERATE':h.hi>0?'LOW RISK':'GPS SURVEYED'}</span>
-        </div>
-        <div style="font-size:10px;color:#666;margin-top:8px;">${h.lat.toFixed(4)}°N, ${h.lng.toFixed(4)}°E</div>
-      </div>`,{maxWidth:230});
-    });
-    // Fit bounds
-    if(hotspots.length>0){
-      const lats=hotspots.map(h=>h.lat),lngs=hotspots.map(h=>h.lng);
-      map.fitBounds([[Math.min(...lats)-.5,Math.min(...lngs)-.5],[Math.max(...lats)+.5,Math.max(...lngs)+.5]],{padding:[40,40]});
-    }else{map.fitBounds([[6.8,92.3],[13.8,94.1]]);}
   });
+}
+
+function hsExport(){
+  document.getElementById('hs-export-modal')?.classList.add('show');
+}
+
+function hsExportExecute(){
+  if(!_hsMap)return;
+  const dpi=document.querySelector('input[name="hs-dpi"]:checked')?.value||'300';
+  const addMeta=document.getElementById('hs-exp-legend')?.checked!==false;
+  document.getElementById('hs-export-modal')?.classList.remove('show');
+
+  const doExport=()=>{
+    const mc=_hsMap.getCanvas();
+    const scale=dpi==='600'?4:dpi==='300'?2:1;
+    const W=mc.width*scale, H=mc.height*scale;
+    const out=document.createElement('canvas');out.width=W;out.height=H;
+    const ctx=out.getContext('2d');
+    ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+    ctx.drawImage(mc,0,0,W,H);
+
+    if(addMeta){
+      const p=14*scale;
+      // Title box
+      ctx.fillStyle='rgba(10,20,35,0.82)';
+      ctx.fillRect(p,p,320*scale,76*scale);
+      ctx.fillStyle='#fff';
+      ctx.font=`bold ${13*scale}px sans-serif`;
+      ctx.fillText('EST v2.0 — Aedes Breeding Hotspot Map',p+10*scale,p+20*scale);
+      ctx.font=`${9.5*scale}px sans-serif`;
+      ctx.fillStyle='rgba(255,255,255,.7)';
+      ctx.fillText('Andaman & Nicobar Islands Entomological Surveillance',p+10*scale,p+35*scale);
+      const now=new Date();
+      ctx.fillText('Generated: '+now.toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'}),p+10*scale,p+50*scale);
+      ctx.fillText('Layer: '+_hsLayer+' | Period: '+_hsPeriod,p+10*scale,p+63*scale);
+      // North arrow
+      const nx=W-52*scale, ny=62*scale;
+      ctx.fillStyle='rgba(10,20,35,0.78)';
+      ctx.beginPath();ctx.arc(nx,ny,20*scale,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#fff';ctx.textAlign='center';
+      ctx.font=`bold ${14*scale}px sans-serif`;ctx.fillText('↑',nx,ny-2*scale);
+      ctx.font=`bold ${9*scale}px sans-serif`;ctx.fillText('N',nx,ny+13*scale);
+      ctx.textAlign='left';
+      // Attribution bar
+      ctx.fillStyle='rgba(10,20,35,0.72)';ctx.fillRect(0,H-20*scale,W,20*scale);
+      ctx.fillStyle='rgba(255,255,255,.55)';
+      ctx.font=`${7.5*scale}px sans-serif`;
+      ctx.fillText('© ESRI | © OpenStreetMap contributors | © CartoDB | EST v2.0 Entomological Surveillance Tool, A&N Islands',10*scale,H-6*scale);
+    }
+
+    const link=document.createElement('a');
+    link.href=out.toDataURL('image/png');
+    link.download='EST_BreedingHotspot_'+dpi+'dpi_'+new Date().toISOString().slice(0,10)+'.png';
+    link.click();
+  };
+
+  if(_hsMap.loaded()){doExport();}else{_hsMap.once('idle',doExport);}
+  _hsMap.triggerRepaint();
 }
 
 /* ── SIDEBAR NAVIGATION ── */
