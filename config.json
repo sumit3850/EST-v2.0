@@ -29,7 +29,13 @@
       "password": "1992",
       "role": "field",
       "active": true
+    },
+    {
+      "username": "Admin-2",
+      "password": "12345",
+      "role": "admin",
+      "active": true
     }
   ],
-  "updatedAt": "2026-06-24T06:13:52.015Z"
+  "updatedAt": "2026-06-24T06:16:07.630Z"
 }
