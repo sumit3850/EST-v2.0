@@ -218,6 +218,11 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;backgrou
 .act-type-badge.purple{background:rgba(156,39,176,.14);color:#ab47bc;}
 @media(max-width:768px){.act-card{margin:10px 16px 0;}}
 @media(max-width:600px){.act-card{margin:10px 10px 0;}.act-dist-name{min-width:90px;max-width:90px;}.act-dist-list{padding-left:28px;}}
+.act-filter-row{display:flex;align-items:center;gap:6px;padding:7px 16px;border-bottom:1px solid var(--bdr);background:var(--bg);flex-wrap:wrap;}
+.act-filter-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);white-space:nowrap;}
+.act-filter-row input[type=date]{font-size:11px;padding:3px 7px;border:1px solid var(--bdr);border-radius:6px;background:var(--sf2);color:var(--txt);font-family:inherit;cursor:pointer;}
+.act-filter-clear{font-size:10px;padding:3px 8px;border:1px solid var(--bdr);border-radius:6px;background:none;color:var(--muted);cursor:pointer;white-space:nowrap;}
+.act-filter-clear:hover{background:var(--sf2);}
 
 /* ═══ ALERT CENTER ═══ */
 #alert-section{margin:14px 20px;display:none;}
@@ -417,7 +422,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.0.69</p>
+      <p>Admin Dashboard · v2.0.70</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -449,7 +454,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>v2.0.69 · A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.0.70 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -599,6 +604,13 @@ tr:hover td{background:var(--teal-lt);}
           </div>
           <div class="act-total-chip" id="act-total-chip">0 entries</div>
         </div>
+        <div class="act-filter-row">
+          <span class="act-filter-lbl">Filter by date</span>
+          <input type="date" id="act-from-date" onchange="updateActivityCard()" title="From date">
+          <span style="color:var(--muted);font-size:10px;">to</span>
+          <input type="date" id="act-to-date" onchange="updateActivityCard()" title="To date">
+          <button class="act-filter-clear" onclick="document.getElementById('act-from-date').value='';document.getElementById('act-to-date').value='';updateActivityCard()">Clear</button>
+        </div>
         <div class="act-card-body" id="act-card-body">
           <div class="act-empty">Loading…</div>
         </div>
@@ -703,11 +715,11 @@ tr:hover td{background:var(--teal-lt);}
             <thead><tr>
               <th><input type="checkbox" class="row-cb" onchange="selectAll('adult',this.checked)"></th>
               <th>#</th><th>Survey ID</th><th>Username</th><th>Date</th><th>Location</th>
-              <th>State/UT</th><th>District</th><th>Type</th><th>Collectors</th>
+              <th>State/UT</th><th>District</th><th>Zone</th><th>Type</th><th>Collectors</th>
               <th>Man-Hrs</th><th>Nights</th><th>Officer</th><th>GPS</th><th>Map</th>
               <th>Saved</th><th>Sync</th><th>Del</th>
             </tr></thead>
-            <tbody id="tbody-adult"><tr><td colspan="18" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+            <tbody id="tbody-adult"><tr><td colspan="19" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -739,12 +751,12 @@ tr:hover td{background:var(--teal-lt);}
             <thead><tr style="background:var(--blue-dk);">
               <th><input type="checkbox" class="row-cb" onchange="selectAll('larval',this.checked)"></th>
               <th>#</th><th>Survey ID</th><th>Username</th><th>Date</th><th>Location</th>
-              <th>State/UT</th><th>District</th>
+              <th>State/UT</th><th>District</th><th>Zone</th>
               <th>Houses</th><th>+ve Houses</th><th>Containers</th><th>+ve Cont</th>
               <th>Pupae (Aedes)</th><th>Dips</th><th>Larvae</th><th>Pupae (An/Cx)</th>
               <th>Workers</th><th>Officer</th><th>GPS</th><th>Map</th><th>Saved</th><th>Sync</th><th>Del</th>
             </tr></thead>
-            <tbody id="tbody-larval"><tr><td colspan="23" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+            <tbody id="tbody-larval"><tr><td colspan="24" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -833,11 +845,11 @@ tr:hover td{background:var(--teal-lt);}
           <table id="tbl-manual-adult">
             <thead><tr>
               <th><input type="checkbox" class="row-cb" onchange="selectAllManual('adult',this.checked)"></th>
-              <th>#</th><th>Survey ID</th><th>Entered By</th><th>Date</th><th>Location</th><th>State</th><th>District</th>
+              <th>#</th><th>Survey ID</th><th>Entered By</th><th>Date</th><th>Location</th><th>State</th><th>District</th><th>Zone</th>
               <th>Type</th><th>Collectors</th><th>Man-Hrs</th><th>Houses</th><th>+ve Houses</th>
               <th>Non-Culex</th><th>Culex</th><th>Total Mosq</th><th>Officer</th><th>Saved</th><th>Sync</th><th>Edit</th><th>Del</th>
             </tr></thead>
-            <tbody id="tbody-manual-adult"><tr><td colspan="21" class="tbl-empty">No manual adult entries found</td></tr></tbody>
+            <tbody id="tbody-manual-adult"><tr><td colspan="22" class="tbl-empty">No manual adult entries found</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -867,12 +879,12 @@ tr:hover td{background:var(--teal-lt);}
           <table id="tbl-manual-larval">
             <thead><tr style="background:var(--blue-dk);">
               <th><input type="checkbox" class="row-cb" onchange="selectAllManual('larval',this.checked)"></th>
-              <th>#</th><th>Survey ID</th><th>Entered By</th><th>Date</th><th>Location</th><th>State</th><th>District</th>
+              <th>#</th><th>Survey ID</th><th>Entered By</th><th>Date</th><th>Location</th><th>State</th><th>District</th><th>Zone</th>
               <th>Houses</th><th>+ve Houses</th><th>Containers</th><th>+ve Cont</th><th>Pupal Cont</th>
               <th>Dips</th><th>Larvae (An/Cx)</th><th>Pupae (An/Cx)</th>
               <th>HI%</th><th>CI%</th><th>PI%</th><th>Officer</th><th>Saved</th><th>Sync</th><th>Edit</th><th>Del</th>
             </tr></thead>
-            <tbody id="tbody-manual-larval"><tr><td colspan="24" class="tbl-empty">No manual larval entries found</td></tr></tbody>
+            <tbody id="tbody-manual-larval"><tr><td colspan="25" class="tbl-empty">No manual larval entries found</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1354,7 +1366,7 @@ function exportRiskPDF(){
     const rows=sorted.map(([name,cnt],idx)=>`<tr style="${idx%2===0?'':'background:#f9f9f9;'}"><td>${name}</td><td style="font-weight:700;color:#00695c;">${cnt}</td><td style="padding:4px 8px;"><div style="height:10px;border-radius:5px;background:#00695c;width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%;min-width:4px;"></div></td></tr>`).join('');
     return`<h3>${dk} — Breeding Preferred Containers</h3><table><thead><tr><th>Container Type</th><th>Positive Count</th><th style="min-width:120px;">Proportion</th></tr></thead><tbody>${rows}</tbody></table>`;
   }).join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#00695c;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #00695c;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:14px;font-weight:700;color:#00695c;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:8px 12px;background:#fff8e1;border-left:3px solid #f9a825;font-size:10px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #00695c;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${range.label||'All Data'}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><div class="badge" style="margin-top:12px;">Overall Risk: ${overallR}</div><h2>Overall Stegomyia Indices</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table><h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#00695c;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.0.69 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#00695c;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #00695c;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:14px;font-weight:700;color:#00695c;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:8px 12px;background:#fff8e1;border-left:3px solid #f9a825;font-size:10px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #00695c;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${range.label||'All Data'}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><div class="badge" style="margin-top:12px;">Overall Risk: ${overallR}</div><h2>Overall Stegomyia Indices</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table><h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#00695c;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.0.70 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
   const win=window.open('','_blank','width=920,height=740');
   if(win){win.document.write(html);win.document.close();setTimeout(()=>win.print(),700);}
 }
@@ -1386,7 +1398,8 @@ function exportRiskExcel(){
     byDist3[dk].housesEx+=(s.housesExamined||0);
     byDist3[dk].posCont+=(s.totalPositive||0);
     const lk=s.location||'Unknown';
-    if(!byDist3[dk].locs[lk])byDist3[dk].locs[lk]={hi:[],ci:[],housesEx:0,posCont:0};
+    if(!byDist3[dk].locs[lk])byDist3[dk].locs[lk]={hi:[],ci:[],housesEx:0,posCont:0,zone:s.zone||''};
+    else if(!byDist3[dk].locs[lk].zone&&s.zone)byDist3[dk].locs[lk].zone=s.zone;
     if(parseFloat(s.HI)>0)byDist3[dk].locs[lk].hi.push(parseFloat(s.HI));
     if(parseFloat(s.CI)>0)byDist3[dk].locs[lk].ci.push(parseFloat(s.CI));
     byDist3[dk].locs[lk].housesEx+=(s.housesExamined||0);
@@ -1417,11 +1430,11 @@ function exportRiskExcel(){
     distRows.push([d.name,d.hi>0?parseFloat(d.hi.toFixed(2)):0,rLvl(d.hi,5,10),d.ci>0?parseFloat(d.ci.toFixed(2)):0,rLvl(d.ci,5,10),dbi!=null?parseFloat(dbi.toFixed(2)):'N/A',dbi!=null?rLvl(dbi,5,50):'<100 houses']);
   });
   // Sheet 3: Location Breakdown
-  const locRows=[[H('District'),H('Location / Area'),H('HI Value'),H('HI Risk'),H('CI Value'),H('CI Risk'),H('BI Value'),H('BI Risk')]];
+  const locRows=[[H('District'),H('Location / Area'),H('Zone'),H('HI Value'),H('HI Risk'),H('CI Value'),H('CI Risk'),H('BI Value'),H('BI Risk')]];
   distEntries3.forEach(de=>{
     Object.entries(de.locs).sort((a,b)=>avgArr(b[1].hi)-avgArr(a[1].hi)).forEach(([ln,lv])=>{
       const lhi=avgArr(lv.hi),lci=avgArr(lv.ci),lbi=calcBIx(lv.housesEx,lv.posCont);
-      locRows.push([de.name,ln,lhi>0?parseFloat(lhi.toFixed(2)):0,rLvl(lhi,5,10),lci>0?parseFloat(lci.toFixed(2)):0,rLvl(lci,5,10),lbi!=null?parseFloat(lbi.toFixed(2)):'N/A',lbi!=null?rLvl(lbi,5,50):'<100 houses']);
+      locRows.push([de.name,ln,lv.zone||'',lhi>0?parseFloat(lhi.toFixed(2)):0,rLvl(lhi,5,10),lci>0?parseFloat(lci.toFixed(2)):0,rLvl(lci,5,10),lbi!=null?parseFloat(lbi.toFixed(2)):'N/A',lbi!=null?rLvl(lbi,5,50):'<100 houses']);
     });
   });
   // Sheet 4: Breeding Containers
@@ -1432,7 +1445,7 @@ function exportRiskExcel(){
   });
   const sumCols=[48,28,20,18,18,18];
   const distCols=[28,12,20,12,20,12,20];
-  const locCols=[20,24,12,20,12,20,12,20];
+  const locCols=[20,24,12,12,20,12,20,12,20];
   const contCols=[20,28,18,12];
   dlXLSX(buildXLSX([
     {name:'Summary',rows:sumRows,cols:sumCols,headerRows:[0,6]},
@@ -1457,19 +1470,32 @@ function updateActivityCard(){
   const el=document.getElementById('act-card-body');
   const chip=document.getElementById('act-total-chip');
   if(!el)return;
-  const all=[
+  const fromVal=document.getElementById('act-from-date')?.value;
+  const toVal=document.getElementById('act-to-date')?.value;
+  const fromD=fromVal?new Date(fromVal):null;
+  const toD=toVal?new Date(toVal):null;
+  let all=[
     ...allAdult.map(s=>({...s,_t:'A'})),
     ...allLarval.map(s=>({...s,_t:'L'})),
     ...allManualAdult.map(s=>({...s,_t:'MA'})),
     ...allManualLarval.map(s=>({...s,_t:'ML'}))
   ];
+  if(fromD||toD){
+    all=all.filter(s=>{
+      const sd=_parseSDate(s.date);if(!sd)return false;
+      if(fromD&&sd<fromD)return false;
+      if(toD&&sd>toD)return false;
+      return true;
+    });
+  }
   const total=all.length;
-  if(chip)chip.textContent=total+(total===1?' entry':' entries');
-  if(!total){el.innerHTML='<div class="act-empty">No entries logged yet.</div>';return;}
+  const isFiltered=!!(fromD||toD);
+  if(chip)chip.textContent=total+(total===1?' entry':' entries')+(isFiltered?' (filtered)':'');
+  if(!total){el.innerHTML='<div class="act-empty">'+(isFiltered?'No entries in this date range.':'No entries logged yet.')+'</div>';return;}
   const byUser={};
   all.forEach(s=>{
-    const u=s.savedBy||'Unknown';
-    const d=s.district||'Unknown';
+    const u=s.savedBy||'(unattributed)';
+    const d=s.district||'—';
     if(!byUser[u])byUser[u]={total:0,dists:{}};
     byUser[u].total++;
     if(!byUser[u].dists[d])byUser[u].dists[d]={A:0,L:0,MA:0,ML:0,tot:0};
@@ -1509,7 +1535,7 @@ function updateActivityCard(){
 /* ── RENDER TABLES ── */
 function renderAdult(){
   const tb=document.getElementById('tbody-adult');
-  if(!adultF.length){tb.innerHTML='<tr><td colspan="18" class="tbl-empty">No adult surveys found</td></tr>';return;}
+  if(!adultF.length){tb.innerHTML='<tr><td colspan="19" class="tbl-empty">No adult surveys found</td></tr>';return;}
   tb.innerHTML=adultF.map((s,i)=>{
     const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
@@ -1520,7 +1546,7 @@ function renderAdult(){
       <td><input type="checkbox" class="row-cb adult-cb" data-idx="${i}"></td>
       <td>${i+1}</td><td style="font-family:monospace;font-size:11px;color:var(--teal);">${fmtSid('adult',s.id)}</td><td style="font-weight:600;">${s.savedBy||'-'}</td><td>${s.date||'-'}</td>
       <td style="font-weight:600;min-width:120px;">${s.location||'-'}</td>
-      <td>${s.state||'-'}</td><td>${s.district||'-'}</td>
+      <td>${s.state||'-'}</td><td>${s.district||'-'}</td><td>${s.zone||'—'}</td>
       <td><span class="badge ${s.collType==='resting'?'rest':'hlc'}">${typeLabel}</span></td>
       <td>${s.collectors||1}</td>
       <td>${s.totalManHours?.toFixed?s.totalManHours.toFixed(2):'-'}</td>
@@ -1535,7 +1561,7 @@ function renderAdult(){
 }
 function renderLarval(){
   const tb=document.getElementById('tbody-larval');
-  if(!larvalF.length){tb.innerHTML='<tr><td colspan="23" class="tbl-empty">No larval surveys found</td></tr>';return;}
+  if(!larvalF.length){tb.innerHTML='<tr><td colspan="24" class="tbl-empty">No larval surveys found</td></tr>';return;}
   tb.innerHTML=larvalF.map((s,i)=>{
     const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
@@ -1548,7 +1574,7 @@ function renderLarval(){
       <td><input type="checkbox" class="row-cb larval-cb" data-idx="${i}"></td>
       <td>${i+1}</td><td style="font-family:monospace;font-size:11px;color:var(--blue);">${fmtSid('larval',s.id)}</td><td style="font-weight:600;">${s.savedBy||'-'}</td><td>${s.date||'-'}</td>
       <td style="font-weight:600;min-width:120px;">${s.location||'-'}</td>
-      <td>${s.state||'-'}</td><td>${s.district||'-'}</td>
+      <td>${s.state||'-'}</td><td>${s.district||'-'}</td><td>${s.zone||'—'}</td>
       <td>${s.houses?.length||0}</td>
       <td class="idx-cell blue" style="font-weight:700;">${posH}</td>
       <td>${s.totalContainers||0}</td>
@@ -1588,7 +1614,7 @@ function addUser(){usersCfg.push({username:'',password:'',role:'field',active:tr
 function renderManualAdult(){
   const tb=document.getElementById('tbody-manual-adult');
   if(!tb)return;
-  if(!manualAdultF.length){tb.innerHTML='<tr><td colspan="21" class="tbl-empty">No manual adult entries found</td></tr>';return;}
+  if(!manualAdultF.length){tb.innerHTML='<tr><td colspan="22" class="tbl-empty">No manual adult entries found</td></tr>';return;}
   tb.innerHTML=manualAdultF.map((s,i)=>{
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
     const typeLabel=s.collType==='resting'?'Resting':s.collType==='hlc'?'HLC':s.collType==='hbr'?'HBR':'ALR';
@@ -1601,7 +1627,7 @@ function renderManualAdult(){
       <td style="font-weight:600;">${s.savedBy||'-'}</td>
       <td>${s.date||'-'}</td>
       <td style="font-weight:600;">${s.location||'-'}</td>
-      <td>${s.state||'-'}</td><td>${s.district||'-'}</td>
+      <td>${s.state||'-'}</td><td>${s.district||'-'}</td><td>${s.zone||'—'}</td>
       <td><span class="badge rest">${typeLabel}</span></td>
       <td>${s.collectors||1}</td>
       <td>${s.totalManHours?.toFixed?s.totalManHours.toFixed(2):'-'}</td>
@@ -1619,7 +1645,7 @@ function renderManualAdult(){
 function renderManualLarval(){
   const tb=document.getElementById('tbody-manual-larval');
   if(!tb)return;
-  if(!manualLarvalF.length){tb.innerHTML='<tr><td colspan="24" class="tbl-empty">No manual larval entries found</td></tr>';return;}
+  if(!manualLarvalF.length){tb.innerHTML='<tr><td colspan="25" class="tbl-empty">No manual larval entries found</td></tr>';return;}
   tb.innerHTML=manualLarvalF.map((s,i)=>{
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
     const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','larval')" title="Delete" style="padding:0 8px;height:28px;">🗑</button>`:'—';
@@ -1631,7 +1657,7 @@ function renderManualLarval(){
       <td style="font-weight:600;">${s.savedBy||'-'}</td>
       <td>${s.date||'-'}</td>
       <td style="font-weight:600;">${s.location||'-'}</td>
-      <td>${s.state||'-'}</td><td>${s.district||'-'}</td>
+      <td>${s.state||'-'}</td><td>${s.district||'-'}</td><td>${s.zone||'—'}</td>
       <td>${s.housesExamined||0}</td><td>${s.housePositive||0}</td>
       <td>${s.totalContainers||0}</td><td>${s.totalPositive||0}</td><td>${s.totalPupalContainers||0}</td>
       <td>${s.totalDips||0}</td><td>${s.totalLarvae||0}</td><td>${s.totalPupae||0}</td>
@@ -2037,7 +2063,7 @@ function buildAdultXLSX(surveys,isCompiled){
   const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
   // ── Report Status ──
   const statusRows=[
-    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.69')],
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.70')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -2053,9 +2079,12 @@ function buildAdultXLSX(surveys,isCompiled){
     [B('ALR'),'Adult Landing Rate — landings per man per hour']
   ];
   // ── Survey data header ──
-  const HDR=['Survey#','Survey ID','Date','State/UT','District','Location','Type','Indoor/Outdoor','Night Spent','Days Spent','Houses Examined','House Positive','Rooms Examined','Rooms Positive','Non-Culex Collected','Culex Collected','Total Mosquitoes','Time Spent (hrs)','Total Male','Total Female','Collectors','PMHD','TMHD','API','APH','GPS Lat','GPS Long','Surveillance Workers/Collectors','Senior Officer','Saved At'].map(H);
-  // Col letters (0-indexed, no null gap): K=Houses Examined, L=House Positive, P=Culex, Q=Total Mosq, R=Time Spent, U=Collectors
-  const adultCols=[8,15,11,13,15,22,18,14,12,12,16,14,14,14,18,16,17,14,12,16,12,12,12,12,12,12,12,22,16,20];
+  const HDR=['Survey#','Survey ID','Date','State/UT','District','Location','Zone','Type','Indoor/Outdoor','Night Spent','Days Spent','Houses Examined','House Positive','Rooms Examined','Rooms Positive','Non-Culex Collected','Culex Collected','Total Mosquitoes','Time Spent (hrs)','Total Male','Total Female','Collectors','PMHD','TMHD','API','APH','GPS Lat','GPS Long','Surveillance Workers/Collectors','Senior Officer','Saved At'].map(H);
+  // Col letters: A=Survey# B=ID C=Date D=State E=District F=Location G=Zone H=Type I=In/Out
+  //   J=Nights K=Days L=Houses M=HousePos N=Rooms O=RoomsPos P=NonCulex Q=Culex R=TotMosq
+  //   S=TimeSpent T=TotalMale U=TotalFemale V=Collectors W=PMHD X=TMHD Y=API Z=APH
+  //   AA=GPSLat AB=GPSLng AC=Workers AD=Officers AE=SavedAt
+  const adultCols=[8,15,11,13,15,22,12,18,14,12,12,16,14,14,14,18,16,17,14,12,16,12,12,12,12,12,12,12,22,16,20];
   function makeAdultSheet(label,typeLabel,inoutLabel,filter){
     const slist=surveys.filter(filter);
     if(!slist.length)return null;
@@ -2068,22 +2097,18 @@ function buildAdultXLSX(surveys,isCompiled){
       const posRooms=s.positiveRooms??_posRooms;
       const housesEx=s.housesExamined??s.houses?.length??0;
       const indOut=(s.totIndoor||0)>=(s.totOutdoor||0)?'Indoor':'Outdoor';
-      // Cols (no null gap): A=Survey# B=ID C=Date D=State E=District F=Location G=Type H=In/Out
-      //   I=Nights J=Days K=Houses L=HousePos M=Rooms N=RoomsPos O=NonCulex P=Culex Q=TotMosq
-      //   R=TimeSpent S=TotalMale T=TotalFemale U=Collectors V=PMHD W=TMHD X=API Y=APH
-      //   Z=GPSLat AA=GPSLng AB=Workers AC=Officers AD=SavedAt
       rows.push([
         C(si+1), C(fmtSid('adult',s.id)), C(s.date||''), C(s.state||''), s.district||'', s.location||'',
-        typeLabel, inoutLabel||indOut,
+        s.zone||'', typeLabel, inoutLabel||indOut,
         C(s.nights||0), C(s.days||0), C(housesEx), C(posH),
         C(s.totalRooms||0), C(posRooms),
         C(s.totNonCulex||0), C(s.totCulex||0), C(s.totalMosq||0),
         C(parseFloat((s.totalManHours||0).toFixed(2))),
         C(0), C(s.totalMosq||0), C(s.collectors||1),
-        CF('IFERROR(Q'+r+'/R'+r+',0)'),
-        CF('IFERROR(P'+r+'/R'+r+'*10,0)'),
-        CF('IFERROR(L'+r+'/K'+r+'*100,0)'),
-        CF('IFERROR(Q'+r+'/K'+r+',0)'),
+        CF('IFERROR(R'+r+'/S'+r+',0)'),
+        CF('IFERROR(Q'+r+'/S'+r+'*10,0)'),
+        CF('IFERROR(M'+r+'/L'+r+'*100,0)'),
+        CF('IFERROR(R'+r+'/L'+r+',0)'),
         s.lat||'', s.lng||'', s.workers||'', s.officers||'',
         C(s.savedAt?new Date(s.savedAt).toLocaleString('en-IN'):'')
       ]);
@@ -2111,7 +2136,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   // ── Report Status sheet ──
   const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.69')],
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.70')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -2135,7 +2160,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   //          Pupae Collected (containers)|Pupae Collected (An/Cx Data)|HI|CI|BI|PI|LD|PD|ID|
   //          Remarks|GPS Lat|GPS Long|Workers|Officer|Saved At
   const sumHDR=[
-    'Survey#','Survey ID','Date','State/UT','District','Location',
+    'Survey#','Survey ID','Date','State/UT','District','Location','Zone',
     'Houses Examined','Positive Houses','Containers','Positive Containers','Dips Taken',
     'Larvae Collected (An/Cx data)','Pupae Collected (containers)','Pupae Collected (An/Cx Data)',
     'House Index (HI)','Container Index (CI)','Breteau Index (BI)','Pupal Index (PI)',
@@ -2158,29 +2183,31 @@ function buildLarvalXLSX(surveys,isCompiled){
       :(s.totalPupae||0);
     sumRows.push([
       C(si+1), C(fmtSid('larval',s.id)), C(s.date||''), C(s.state||''), C(s.district||''), s.location||'',
+      s.zone||'',
       C(housesEx), C(posH), C(s.totalContainers||0), C(s.totalPositive||0), C(s.totalDips||0),
       C(larvaeAnCx), C(pupCont), C(pupAnCx),
+      // A-F=id/date/state/dist/loc G=Zone H=HousesEx I=PosH J=Containers K=PosCont L=Dips M=Larvae N=PupCont O=PupAnCx
       // HI = Positive Houses / Houses * 100
-      CF('IFERROR(H'+r+'/G'+r+'*100,0)'),
+      CF('IFERROR(I'+r+'/H'+r+'*100,0)'),
       // CI = Positive Containers / Total Containers * 100
-      CF('IFERROR(J'+r+'/I'+r+'*100,0)'),
+      CF('IFERROR(K'+r+'/J'+r+'*100,0)'),
       // BI = Positive Containers / Houses * 100
-      CF('IFERROR(J'+r+'/G'+r+'*100,0)'),
-      // PI = Pupae(containers) / Houses * 100  [container pupae ONLY for PI]
-      CF('IFERROR(M'+r+'/G'+r+'*100,0)'),
+      CF('IFERROR(K'+r+'/H'+r+'*100,0)'),
+      // PI = Pupae(containers) / Houses * 100
+      CF('IFERROR(N'+r+'/H'+r+'*100,0)'),
       // LD = Larvae(An/Cx) / Dips
-      CF('IFERROR(L'+r+'/K'+r+',0)'),
-      // PD = Pupae(An/Cx) / Dips  [container pupae excluded per specification]
-      CF('IFERROR(N'+r+'/K'+r+',0)'),
-      // ID = (Larvae + Pupae An/Cx) / Dips  [container pupae excluded per specification]
-      CF('IFERROR((L'+r+'+N'+r+')/K'+r+',0)'),
+      CF('IFERROR(M'+r+'/L'+r+',0)'),
+      // PD = Pupae(An/Cx) / Dips
+      CF('IFERROR(O'+r+'/L'+r+',0)'),
+      // ID = (Larvae + Pupae An/Cx) / Dips
+      CF('IFERROR((M'+r+'+O'+r+')/L'+r+',0)'),
       '', C(s.lat||''), C(s.lng||''), s.workers||'', s.officers||'',
       C(s.savedAt?new Date(s.savedAt).toLocaleString('en-IN'):'')
     ]);
   });
 
   // ── Container Inspection House wise ──
-  const ciHDR=['Survey#','Survey ID','Date','State/UT','District','Location','House No.','Start Time','End Time',
+  const ciHDR=['Survey#','Survey ID','Date','State/UT','District','Location','Zone','House No.','Start Time','End Time',
     'Containers Inspected','Positive Containers','Pupae Collected (containers)','House Positive (Aedes)',
     'GPS Latitude','GPS Longitude','Google Maps Link'].map(H);
   const ciRows=[ciHDR];
@@ -2190,7 +2217,7 @@ function buildLarvalXLSX(surveys,isCompiled){
       const maps=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
       ciRows.push([
         C(si+1),C(fmtSid('larval',s.id)),C(s.date||''),C(s.state||''),C(s.district||''),s.location||'',
-        C(h.houseNo),C(h.start||'-'),C(h.end||'-'),
+        s.zone||'',C(h.houseNo),C(h.start||'-'),C(h.end||'-'),
         C(h.containers||0),C(h.positive||0),C(h.pupal||0),
         C(h.housePositive?'Yes':'No'),C(lat),C(lng),maps
       ]);
@@ -2198,19 +2225,19 @@ function buildLarvalXLSX(surveys,isCompiled){
   });
 
   // ── Container Type Breakdown ──
-  const ctHDR=['Survey#','Survey ID','Date','State/UT','District','Location','Container Type','Examined','Positive','Positive (%)'].map(H);
+  const ctHDR=['Survey#','Survey ID','Date','State/UT','District','Location','Zone','Container Type','Examined','Positive','Positive (%)'].map(H);
   const ctRows=[ctHDR];
   surveys.forEach((s,si)=>{
     (s.containerSummary||[]).forEach(ct=>{
       if((ct.examined||0)>0||(ct.positive||0)>0){
         const pct=ct.examined>0?parseFloat(((ct.positive/ct.examined)*100).toFixed(1)):0;
-        ctRows.push([C(si+1),C(fmtSid('larval',s.id)),C(s.date||''),C(s.state||''),C(s.district||''),s.location||'',ct.name||'',C(ct.examined||0),C(ct.positive||0),C(pct)]);
+        ctRows.push([C(si+1),C(fmtSid('larval',s.id)),C(s.date||''),C(s.state||''),C(s.district||''),s.location||'',s.zone||'',ct.name||'',C(ct.examined||0),C(ct.positive||0),C(pct)]);
       }
     });
   });
 
   // ── Anopheles and Culex Larval Data ──
-  const dipHDR=['Survey#','Survey ID','Date','State/UT','District','Location','Dip Site No.','Dip Site Description',
+  const dipHDR=['Survey#','Survey ID','Date','State/UT','District','Location','Zone','Dip Site No.','Dip Site Description',
     'Dips Taken','Larvae Collected','Pupae Collected','Dip Index (Larvae/Dip)',
     'Species Collected','Observations','Latitude','Longitude','Google Maps Link'].map(H);
   const dipRows=[dipHDR];
@@ -2222,8 +2249,8 @@ function buildLarvalXLSX(surveys,isCompiled){
         const maps=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
         dipRows.push([
           C(si+1),C(fmtSid('larval',s.id)),C(s.date||''),C(s.state||''),C(s.district||''),s.location||'',
-          C(d.siteNo),d.description||'',C(d.dips||0),C(d.larvae||0),C(d.pupae||0),
-          CF('IFERROR(J'+dipRowN+'/I'+dipRowN+',0)'),
+          s.zone||'',C(d.siteNo),d.description||'',C(d.dips||0),C(d.larvae||0),C(d.pupae||0),
+          CF('IFERROR(K'+dipRowN+'/J'+dipRowN+',0)'),
           d.species||'',d.remark||'',C(lat),C(lng),maps
         ]);
         dipRowN++;
@@ -2232,10 +2259,10 @@ function buildLarvalXLSX(surveys,isCompiled){
   });
 
   // Column widths (characters) per sheet
-  const sumCols=[8,15,11,13,15,24,18,16,13,20,13,28,26,26,16,16,16,16,16,16,18,14,12,12,16,16,20];
-  const ciCols=[8,15,11,13,13,22,10,11,11,18,16,24,22,12,14,38];
-  const ctCols=[8,15,11,13,13,22,20,12,12,12];
-  const dipCols=[8,15,11,13,13,22,12,24,11,18,18,22,20,20,12,12,38];
+  const sumCols=[8,15,11,13,15,24,12,18,16,13,20,13,28,26,26,16,16,16,16,16,16,18,14,12,12,16,16,20];
+  const ciCols=[8,15,11,13,13,22,12,10,11,11,18,16,24,22,12,14,38];
+  const ctCols=[8,15,11,13,13,22,12,20,12,12,12];
+  const dipCols=[8,15,11,13,13,22,12,12,24,11,18,18,22,20,20,12,12,38];
 
   const sheets=[
     {name:'Report Status',rows:statusRows,cols:[28,55],headerRows:[0,8]},
@@ -2253,7 +2280,7 @@ function buildAdultCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.69 — Adult Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.70 — Adult Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -2305,7 +2332,7 @@ function buildAdultCSV(surveys){
     });
   });
   blank();
-  r('EST v2.0.69 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.70 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -2317,7 +2344,7 @@ function buildLarvalCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.69 — Larval Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.70 — Larval Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -2398,7 +2425,7 @@ function buildLarvalCSV(surveys){
     }
   });
   blank();
-  r('EST v2.0.69 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.70 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }

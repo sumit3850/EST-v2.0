@@ -64,6 +64,7 @@ body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-t
 .sec-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--osv);}
 .divider{height:1px;background:var(--olv);margin:18px 0;}
 .field{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;}
+.zone-other{display:none;margin-top:6px;width:100%;padding:9px 11px;border-radius:var(--r);border:1px solid var(--bdr);background:var(--sfc);color:var(--txt);font-size:13px;font-family:inherit;}
 .flabel{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--osv);}
 .field input,.field select,.field textarea{width:100%;height:var(--touch);padding:0 13px;background:var(--sfc);border:2px solid var(--olv);border-radius:var(--rmd);font-family:var(--mono);font-size:14px;color:var(--os);appearance:none;-webkit-appearance:none;transition:border-color var(--tr),box-shadow var(--tr);}
 .field textarea{height:auto;padding:11px 13px;font-family:var(--sans);font-size:14px;resize:none;}
@@ -450,7 +451,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
         </svg>
       </div>
       <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub" id="dash-sub-ver">EST v2.0.69</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.0.70</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -496,7 +497,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About <span id="dash-about-ver">EST v2.0.69</span>
+      About <span id="dash-about-ver">EST v2.0.70</span>
     </button>
     <div id="dash-bottom-ver" style="text-align:center;font-size:10px;color:rgba(255,255,255,.2);margin-top:8px;">EST v2.0 · Data stored locally — works offline</div>
   </div>
@@ -585,6 +586,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
     <div class="field"><label class="flabel">State / UT *</label><div class="sel-wrap"><select id="ma-state" onchange="populateDistricts('ma-state','ma-district')"></select></div></div>
     <div class="field"><label class="flabel">District *</label><div class="sel-wrap"><select id="ma-district"><option value="" disabled selected>Select District…</option></select></div></div>
     <div class="field"><label class="flabel">Location / Area *</label><textarea id="ma-location" rows="2" placeholder="Village, ward, landmark…"></textarea></div>
+    <div class="field"><label class="flabel">Zone</label><div class="sel-wrap"><select id="ma-zone" onchange="zoneChange('ma')"></select></div><input type="text" id="ma-zone-other" class="zone-other" placeholder="Enter zone name…"></div>
     <div class="field"><label class="flabel">Surveillance Worker(s) / Collector(s) *</label><textarea id="ma-workers" rows="2" placeholder="Names of collectors / field workers…"></textarea></div>
     <div class="field"><label class="flabel">Senior Officer</label><textarea id="ma-officers" rows="1" placeholder="Name of supervising officer…"></textarea></div>
 
@@ -657,6 +659,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
     <div class="field"><label class="flabel">State / UT *</label><div class="sel-wrap"><select id="ml-state" onchange="populateDistricts('ml-state','ml-district')"></select></div></div>
     <div class="field"><label class="flabel">District *</label><div class="sel-wrap"><select id="ml-district"><option value="" disabled selected>Select District…</option></select></div></div>
     <div class="field"><label class="flabel">Location / Area *</label><textarea id="ml-location" rows="2" placeholder="Village, ward, landmark…"></textarea></div>
+    <div class="field"><label class="flabel">Zone</label><div class="sel-wrap"><select id="ml-zone" onchange="zoneChange('ml')"></select></div><input type="text" id="ml-zone-other" class="zone-other" placeholder="Enter zone name…"></div>
     <div class="field"><label class="flabel">Surveillance Worker(s) *</label><textarea id="ml-workers" rows="2" placeholder="Names of field workers…"></textarea></div>
     <div class="field"><label class="flabel">Senior Officer</label><textarea id="ml-officers" rows="1" placeholder="Name of supervising officer…"></textarea></div>
 
@@ -847,6 +850,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
     <div class="field"><label class="flabel">State / UT *</label><div class="sel-wrap"><select id="a-state" onchange="populateDistricts('a-state','a-district')"></select></div></div>
     <div class="field"><label class="flabel">District *</label><div class="sel-wrap"><select id="a-district"><option value="" disabled selected>Select District…</option></select></div></div>
     <div class="field"><label class="flabel">Location *</label><textarea id="a-location" rows="2" placeholder="Village, landmark…"></textarea></div>
+    <div class="field"><label class="flabel">Zone</label><div class="sel-wrap"><select id="a-zone" onchange="zoneChange('a')"></select></div><input type="text" id="a-zone-other" class="zone-other" placeholder="Enter zone name…"></div>
     <div class="field"><label class="flabel">Surveillance Worker(s) / Collector(s) *</label><textarea id="a-workers" rows="2" placeholder="Names of collectors/workers…"></textarea></div>
     <div class="field"><label class="flabel">Senior Officer *</label><textarea id="a-officers" rows="2" placeholder="Name…"></textarea></div>
     <div class="field-err" id="a-err" style="margin-bottom:10px;font-size:12px;color:var(--err);"></div>
@@ -1076,6 +1080,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
     <div class="field"><label class="flabel">State / UT *</label><div class="sel-wrap"><select id="l-state" onchange="populateDistricts('l-state','l-district')"></select></div></div>
     <div class="field"><label class="flabel">District *</label><div class="sel-wrap"><select id="l-district"><option value="" disabled selected>Select District…</option></select></div></div>
     <div class="field"><label class="flabel">Location *</label><textarea id="l-location" rows="2" placeholder="Village, landmark…"></textarea></div>
+    <div class="field"><label class="flabel">Zone</label><div class="sel-wrap"><select id="l-zone" onchange="zoneChange('l')"></select></div><input type="text" id="l-zone-other" class="zone-other" placeholder="Enter zone name…"></div>
     <div class="field"><label class="flabel">Surveillance Worker(s) / Collector(s) *</label><textarea id="l-workers" rows="2" placeholder="Names of collectors/workers…"></textarea></div>
     <div class="field"><label class="flabel">Senior Officer *</label><textarea id="l-officers" rows="2" placeholder="Name…"></textarea></div>
     <div class="field-err" id="l-err" style="margin-bottom:10px;font-size:12px;color:var(--err);"></div>
@@ -2474,6 +2479,31 @@ function startModule(mod,mode){
       showScreen('larval-survey');setTimeout(()=>{getGPS('l');TrackRecorder.start();},400);}
   }
 }
+const ZONES=['Diglipur','Mayabunder','Rangat','Long Island','Kadamtala','South Andaman','Ferrergunj','Little Andaman','Swaraj dweep','Shaeed dweep','Car Nicobar','Nancowry','Katchal','Teressa','Chowra','Little Nicobar','Campbell bay','Other'];
+function buildZone(prefix){
+  const sel=document.getElementById(prefix+'-zone');if(!sel)return;
+  const last=localStorage.getItem('estLastZone')||'';
+  sel.innerHTML='<option value="">Select Zone…</option>'+ZONES.map(z=>`<option value="${z}"${z===last?' selected':''}>${z}</option>`).join('');
+  const oth=document.getElementById(prefix+'-zone-other');
+  if(oth){oth.style.display=last==='Other'?'block':'none';if(last==='Other')oth.value=localStorage.getItem('estLastZoneOther')||'';}
+}
+function zoneChange(prefix){
+  const sel=document.getElementById(prefix+'-zone');const oth=document.getElementById(prefix+'-zone-other');
+  if(!sel||!oth)return;
+  const isOther=sel.value==='Other';
+  oth.style.display=isOther?'block':'none';
+  if(!isOther)oth.value='';
+}
+function getZone(prefix){
+  const sel=document.getElementById(prefix+'-zone');if(!sel)return '';
+  if(sel.value==='Other')return(document.getElementById(prefix+'-zone-other')?.value||'').trim();
+  return sel.value;
+}
+function saveLastZone(prefix){
+  const sel=document.getElementById(prefix+'-zone');if(!sel)return;
+  localStorage.setItem('estLastZone',sel.value);
+  if(sel.value==='Other')localStorage.setItem('estLastZoneOther',(document.getElementById(prefix+'-zone-other')?.value||'').trim());
+}
 function resetStateOnly(mod){
   if(mod==='adult'){Object.assign(aS,{collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,days:0,nights:0,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curPosRooms:0,curOtherN:1,curOtherLog:[]});aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);}
   else{Object.assign(lS,{date:'',state:'',district:'',location:'',workers:'',officers:'',lat:'',lng:'',houses:[],dipSites:[],curHN:1,curSiteN:1,curRooms:0,curHousePos:0,curContainers:0,curPositive:0,curPupal:0,curDips:0,curLarvae:0,curPupae:0,curOtherN:1,curOtherLog:[],curRemarks:''});lS.curCounts=Array.from({length:LNS},()=>[0,0]);lContainers=CONTAINERS.map(c=>({...c}));}
@@ -2486,11 +2516,11 @@ function resetModule(mod){
     document.getElementById('a-district').selectedIndex=0;
     document.getElementById('a-collectors').value='1';document.getElementById('a-nights').value='0';document.getElementById('a-days').value='0';
     document.getElementById('a-collectors-disp').textContent='1';document.getElementById('a-nights-disp').textContent='0';document.getElementById('a-days-disp').textContent='0';
-    buildAdultMatrix();renderAdultHouses();updateAdultSummary();setCollType('resting');showScreen('adult-survey');
+    buildAdultMatrix();renderAdultHouses();updateAdultSummary();setCollType('resting');buildZone('a');showScreen('adult-survey');
   }else{
     ['l-date','l-location','l-workers','l-officers'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=id==='l-date'?todayStr():'';});
     document.getElementById('l-district').selectedIndex=0;
-    buildLarvalMatrix();renderLarvalHouses();updateLarvalSummary();resetLarvalCurForm();showScreen('larval-survey');
+    buildLarvalMatrix();renderLarvalHouses();updateLarvalSummary();resetLarvalCurForm();buildZone('l');showScreen('larval-survey');
   }
 }
 function _updAdultP2Labels(t){
@@ -2978,9 +3008,9 @@ function aSnap(){
   const isR=aS.collType==='resting';
   const spB=ASP.map((sp,i)=>({name:sp.n,genus:sp.g,isCulex:!!sp.cx,indoor:aS.houses.reduce((s,h)=>s+h.counts[i][0],0),outdoor:isR?aS.houses.reduce((s,h)=>s+h.counts[i][1],0):0}));
   const collPeriodSnap=aS.days>0&&aS.nights>0?'Day & Night Collection':aS.days>0?'Day Collection':aS.nights>0?'Night Collection':'';
-  return {id:Date.now(),savedAt:new Date().toISOString(),savedBy:window._estUser?.username||'',appType:'adult',v:'2.0',collType:aS.collType,date:aS.date,state:(aS.state||''),district:aS.district,location:aS.location,workers:aS.workers,officers:aS.officers,collectors:aS.collectors,days:aS.days,nights:aS.nights,collectionPeriod:collPeriodSnap,lat:aS.lat,lng:aS.lng,houses:aS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),speciesBreakdown:spB,MHD:calcMHD(),TMHD:calcTMHD(),indoorDensity:calcIndoorDensity(),outdoorDensity:calcOutdoorDensity(),roomDensity:calcRoomDensity(),HBR:calcHBR(),HBRHr:calcHBRHr(),ALR:calcALR(),ALRNight:calcALRNight(),ALRSimple:calcALRSimple(),totalMosq:aTotAll(),totIndoor:aTotIndoor(),totOutdoor:aTotOutdoor(),totNonCulex:aTotNonCulex(),totCulex:aTotCulex(),totalRooms:aTotRooms(),totalManHours:aManHours(),track:TrackRecorder.getTrack()};
+  return {id:Date.now(),savedAt:new Date().toISOString(),savedBy:window._estUser?.username||'',appType:'adult',v:'2.0',collType:aS.collType,date:aS.date,state:(aS.state||''),district:aS.district,location:aS.location,zone:getZone('a'),workers:aS.workers,officers:aS.officers,collectors:aS.collectors,days:aS.days,nights:aS.nights,collectionPeriod:collPeriodSnap,lat:aS.lat,lng:aS.lng,houses:aS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),speciesBreakdown:spB,MHD:calcMHD(),TMHD:calcTMHD(),indoorDensity:calcIndoorDensity(),outdoorDensity:calcOutdoorDensity(),roomDensity:calcRoomDensity(),HBR:calcHBR(),HBRHr:calcHBRHr(),ALR:calcALR(),ALRNight:calcALRNight(),ALRSimple:calcALRSimple(),totalMosq:aTotAll(),totIndoor:aTotIndoor(),totOutdoor:aTotOutdoor(),totNonCulex:aTotNonCulex(),totCulex:aTotCulex(),totalRooms:aTotRooms(),totalManHours:aManHours(),track:TrackRecorder.getTrack()};
 }
-function saveAdultSurvey(){TrackRecorder.stop();const s=aSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(A_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('adult');activeSavedTab='adult';lastSavedId=s.id;lastSavedType='adult';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'adult');}
+function saveAdultSurvey(){TrackRecorder.stop();saveLastZone('a');const s=aSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(A_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('adult');activeSavedTab='adult';lastSavedId=s.id;lastSavedType='adult';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'adult');}
 
 
 /* ── CONTAINER TYPES ────────────────────────────────────── */
@@ -3228,9 +3258,9 @@ function populateLarvalReview(){
 }
 function lSnap(){
   const allCont=lS.houses.reduce((acc,h)=>{(h.contDetails||[]).forEach((c,i)=>{if(!acc[i])acc[i]={name:c.name,examined:0,positive:0};acc[i].examined+=c.examined;acc[i].positive+=c.positive;});return acc;},{});
-  return {id:Date.now(),savedAt:new Date().toISOString(),savedBy:window._estUser?.username||'',appType:'larval',v:'2.0',date:lS.date,state:lS.state,district:lS.district,location:lS.location,workers:lS.workers,officers:lS.officers,lat:lS.lat,lng:lS.lng,houses:lS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),dipSites:lS.dipSites||[],containerSummary:Object.values(allCont),HI:calcHI(),CI:calcCI(),BI:calcBI(),PI:calcPI(),LD:calcLD(),PD:calcPD(),totalLarvae:lTotLarvae(),totalPupae:lTotPupae(),totalDips:lTotDips(),totalContainers:lTotContainers(),totalPositive:lTotPositive(),track:TrackRecorder.getTrack()};
+  return {id:Date.now(),savedAt:new Date().toISOString(),savedBy:window._estUser?.username||'',appType:'larval',v:'2.0',date:lS.date,state:lS.state,district:lS.district,location:lS.location,zone:getZone('l'),workers:lS.workers,officers:lS.officers,lat:lS.lat,lng:lS.lng,houses:lS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),dipSites:lS.dipSites||[],containerSummary:Object.values(allCont),HI:calcHI(),CI:calcCI(),BI:calcBI(),PI:calcPI(),LD:calcLD(),PD:calcPD(),totalLarvae:lTotLarvae(),totalPupae:lTotPupae(),totalDips:lTotDips(),totalContainers:lTotContainers(),totalPositive:lTotPositive(),track:TrackRecorder.getTrack()};
 }
-function saveLarvalSurvey(){TrackRecorder.stop();const s=lSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(L_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('larval');activeSavedTab='larval';lastSavedId=s.id;lastSavedType='larval';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'larval');}
+function saveLarvalSurvey(){TrackRecorder.stop();saveLastZone('l');const s=lSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(L_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('larval');activeSavedTab='larval';lastSavedId=s.id;lastSavedType='larval';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'larval');}
 
 /* ── CSV EXPORT ─────────────────────────────────────────── */
 function buildAdultCSV(s){
@@ -3466,7 +3496,7 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.0.69)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.0.70)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -3541,7 +3571,7 @@ function buildAdultXLSX(surveys,isCompiled){
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.0.69)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.0.70)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -4663,6 +4693,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   buildContainerMatrix();
   document.getElementById('a-date').value=todayStr();
   document.getElementById('l-date').value=todayStr();
+  buildZone('a');buildZone('l');buildZone('ma');buildZone('ml');
   const _hlcw=document.getElementById('hlc-warn');if(_hlcw)_hlcw.style.display='none';
   const _nrw=document.getElementById('a-nights-row');if(_nrw)_nrw.style.display='block';
   // Populate India states/UTs in both survey forms
@@ -5054,11 +5085,12 @@ function saveManualAdult(){
   const collectors=parseInt(document.getElementById('ma-collectors')?.value)||1;
   const totalMale=parseInt(document.getElementById('ma-male')?.value)||0;
   const totalFemale=parseInt(document.getElementById('ma-female')?.value)||0;
+  const zone=getZone('ma');
   const survey={
     id:Date.now(), savedAt:new Date().toISOString(), savedBy:window._estUser?.username||'',
     appType:'adult', entryType:'manual', v:'2.0.61',
     collType:document.getElementById('ma-colltype')?.value||'resting',
-    date, dateTo:dateTo||undefined, state, district, location, workers,
+    date, dateTo:dateTo||undefined, state, district, location, zone, workers,
     officers:(document.getElementById('ma-officers')?.value||'').trim(),
     collectors, nights:parseInt(document.getElementById('ma-nights')?.value)||0,
     days:parseInt(document.getElementById('ma-days')?.value)||0,
@@ -5079,6 +5111,7 @@ function saveManualAdult(){
     TMHD:hours>0&&collectors>0?((cx/(hours*collectors))*10).toFixed(2):'—',
     synced:false
   };
+  saveLastZone('ma');
   let saved=[];try{saved=JSON.parse(localStorage.getItem(MAN_A_SAVED)||'[]');}catch(e){}
   const screenEl=document.getElementById('screen-manual-adult');
   const editId=screenEl?.dataset.editId;
@@ -5150,10 +5183,11 @@ function saveManualLarval(){
     const _ex=containerSummary[_ci].examined,_po=containerSummary[_ci].positive;
     if(_po>_ex&&_ex>0){if(errEl){errEl.textContent='Container "'+CONT_NAMES[_ci]+'": Positive ('+_po+') > Examined ('+_ex+')';errEl.style.display='block';}return;}
   }
+  const zone=getZone('ml');
   const survey={
     id:Date.now(), savedAt:new Date().toISOString(), savedBy:window._estUser?.username||'',
     appType:'larval', entryType:'manual', v:'2.0.61',
-    date, dateTo:dateTo||undefined, state, district, location, workers,
+    date, dateTo:dateTo||undefined, state, district, location, zone, workers,
     officers:(document.getElementById('ml-officers')?.value||'').trim(),
     lat:(document.getElementById('ml-lat')?.value||'').trim(),
     lng:(document.getElementById('ml-lng')?.value||'').trim(),
@@ -5177,6 +5211,7 @@ function saveManualLarval(){
     containerSummary,
     synced:false
   };
+  saveLastZone('ml');
   let saved=[];try{saved=JSON.parse(localStorage.getItem(MAN_L_SAVED)||'[]');}catch(e){}
   const screenElL=document.getElementById('screen-manual-larval');
   const editIdL=screenElL?.dataset.editId;
