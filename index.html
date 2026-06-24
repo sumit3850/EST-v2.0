@@ -381,7 +381,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
       <label class="login-label">Username</label>
       <input class="login-inp" type="text" id="login-user" placeholder="Enter username" autocomplete="off">
       <label class="login-label">Password</label>
-      <input class="login-inp" type="password" id="login-pass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+      <input class="login-inp" type="password" id="login-pass" placeholder="Enter password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
       <div class="remember-row">
         <input type="checkbox" id="remember-me">
         <label for="remember-me">Remember credentials on this device</label>
@@ -2116,7 +2116,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.0.73';
+const APP_VER='2.0.76';
 /* Compact human-readable Survey ID: A-260531-1437 (type + YYMMDD + HHMM) */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -2407,7 +2407,19 @@ async function doRegister(){
     showToast('Account created locally. Sign in now.','check');
   }
 }
-function loadSavedCreds(){try{const c=JSON.parse(localStorage.getItem(CRED_KEY));if(c&&c.u&&c.p){document.getElementById('login-user').value=c.u;document.getElementById('login-pass').value=c.p;document.getElementById('remember-me').checked=true;}}catch(e){}}
+function loadSavedCreds(){
+  try{
+    const c=JSON.parse(localStorage.getItem(CRED_KEY));
+    if(c&&c.u&&c.p){
+      document.getElementById('login-user').value=c.u;
+      document.getElementById('login-pass').value=c.p;
+      document.getElementById('remember-me').checked=true;
+      // Show "Continue as X" hint on the sign-in button so user still clicks explicitly
+      const btn=document.getElementById('signin-btn');
+      if(btn)btn.innerHTML=`<span>CONTINUE AS ${c.u.toUpperCase()}</span>`;
+    }
+  }catch(e){}
+}
 function showScreen(id){
   document.querySelectorAll('.screen:not(#splash)').forEach(s=>s.classList.remove('active'));
   const sc=document.getElementById('screen-'+id);
