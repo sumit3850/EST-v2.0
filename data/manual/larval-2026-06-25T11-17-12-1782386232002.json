@@ -1,0 +1,131 @@
+{
+  "id": 1782386232002,
+  "savedAt": "2026-06-25T11:17:12.002Z",
+  "savedBy": "Shiva-1",
+  "appType": "larval",
+  "entryType": "manual",
+  "v": "2.0.61",
+  "date": "15-06-2026",
+  "dateTo": "20-06-2026",
+  "state": "Andaman and Nicobar Islands",
+  "district": "North and Middle Andaman",
+  "location": "Janakpur, chruch road , hawal mahal , bus stand , bjp chowk , dhalikheti , dashratpur-2&3",
+  "zone": "Rangat",
+  "workers": "Mi and team",
+  "officers": "",
+  "lat": "",
+  "lng": "",
+  "houses": [],
+  "housesExamined": 394,
+  "housePositive": 19,
+  "totalContainers": 1528,
+  "totalPositive": 55,
+  "totalPupalContainers": 0,
+  "totalDips": 0,
+  "totalLarvae": 0,
+  "totalPupae": 0,
+  "anLarvae": 0,
+  "anPupae": 0,
+  "cxLarvae": 0,
+  "cxPupae": 0,
+  "LD": "0",
+  "PD": "0",
+  "HI": "4.8",
+  "CI": "3.6",
+  "BI": "14.0",
+  "PI": "0.0",
+  "remarks": "",
+  "containerSummary": [
+    {
+      "name": "Pl. Drum",
+      "examined": 287,
+      "positive": 12
+    },
+    {
+      "name": "Mt. Drum",
+      "examined": 197,
+      "positive": 10
+    },
+    {
+      "name": "Buckets",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Wt. Tank (Over Head)",
+      "examined": 168,
+      "positive": 3
+    },
+    {
+      "name": "Wt. Tank (Ground Lvl)",
+      "examined": 107,
+      "positive": 1
+    },
+    {
+      "name": "Wt. Tank (Under Gnd)",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Cement Tank",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Drain",
+      "examined": 134,
+      "positive": 0
+    },
+    {
+      "name": "Tyres",
+      "examined": 155,
+      "positive": 12
+    },
+    {
+      "name": "Other Containers",
+      "examined": 480,
+      "positive": 17
+    },
+    {
+      "name": "Flower Pots",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Flower Trays",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Mud Pots",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Coolers / Refrig.",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Broken Utensils",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Coconut Shells",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Tree Holes",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Miscellaneous",
+      "examined": 0,
+      "positive": 0
+    }
+  ],
+  "synced": false
+}
