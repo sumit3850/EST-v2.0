@@ -554,7 +554,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.0.78</p>
+      <p>Admin Dashboard · v2.0.80</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -592,7 +592,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>v2.0.78 · A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.0.80 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -851,9 +851,9 @@ tr:hover td{background:var(--teal-lt);}
               <th>#</th><th>Survey ID</th><th>Username</th><th>Date</th><th>Location</th>
               <th>State/UT</th><th>District</th><th>Zone</th><th>Type</th><th>Collectors</th>
               <th>Man-Hrs</th><th>Nights</th><th>Officer</th><th>GPS</th><th>Map</th>
-              <th>Saved</th><th>Sync</th><th>Del</th>
+              <th>Saved</th><th>Sync</th><th>Edit</th><th>Del</th>
             </tr></thead>
-            <tbody id="tbody-adult"><tr><td colspan="19" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+            <tbody id="tbody-adult"><tr><td colspan="20" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -888,9 +888,9 @@ tr:hover td{background:var(--teal-lt);}
               <th>State/UT</th><th>District</th><th>Zone</th>
               <th>Houses</th><th>+ve Houses</th><th>Containers</th><th>+ve Cont</th>
               <th>Pupae (Aedes)</th><th>Dips</th><th>Larvae</th><th>Pupae (An/Cx)</th>
-              <th>Workers</th><th>Officer</th><th>GPS</th><th>Map</th><th>Saved</th><th>Sync</th><th>Del</th>
+              <th>Workers</th><th>Officer</th><th>GPS</th><th>Map</th><th>Saved</th><th>Sync</th><th>Edit</th><th>Del</th>
             </tr></thead>
-            <tbody id="tbody-larval"><tr><td colspan="24" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
+            <tbody id="tbody-larval"><tr><td colspan="25" class="tbl-empty">Connect to GitHub to load data</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -952,6 +952,29 @@ tr:hover td{background:var(--teal-lt);}
           <div class="act-empty">Loading…</div>
         </div>
       </div>
+
+      <!-- Officer Performance -->
+      <div style="border-top:1px solid var(--bdr);padding:20px 24px 24px;">
+        <div class="section-head" style="margin-bottom:14px;">
+          <h2 style="font-size:15px;">Field Officer Performance</h2>
+          <div class="section-head-actions">
+            <input class="pt-search" id="search-officers" style="width:190px;" placeholder="🔍 Search officer…" oninput="renderOfficerTable()">
+            <button class="tb-btn blue" onclick="exportOfficerExcel()">⬇ Export Excel</button>
+          </div>
+        </div>
+        <div class="tbl-outer">
+          <div class="tbl-wrap">
+            <table id="tbl-officers">
+              <thead><tr>
+                <th>Officer</th><th>Total</th><th>Larval</th><th>Adult</th>
+                <th>GPS Coverage</th><th>Avg HI</th><th>Avg CI</th>
+                <th>+ve Sites</th><th>Last Active</th><th>Score</th>
+              </tr></thead>
+              <tbody id="officer-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Backup & Restore Panel -->
@@ -988,7 +1011,6 @@ tr:hover td{background:var(--teal-lt);}
     <div class="panel" id="panel-analytics">
       <div class="an-tabs">
         <button class="an-tab active" id="antab-seasonal" onclick="switchAnalyticsTab('seasonal')">📈 Seasonal Trends</button>
-        <button class="an-tab" id="antab-officers" onclick="switchAnalyticsTab('officers')">👥 Officer Performance</button>
         <button class="an-tab" id="antab-intervention" onclick="switchAnalyticsTab('intervention')">🔬 Intervention Tracker</button>
       </div>
 
@@ -1010,29 +1032,6 @@ tr:hover td{background:var(--teal-lt);}
             <canvas id="seasonal-chart"></canvas>
           </div>
           <div id="seasonal-table" style="margin-top:16px;overflow-x:auto;"></div>
-        </div>
-      </div>
-
-      <!-- Tab: Officer Performance -->
-      <div id="an-officers" class="an-section" style="display:none;">
-        <div class="section-head">
-          <h2>Field Officer Performance</h2>
-          <div class="section-head-actions">
-            <input class="pt-search" id="search-officers" style="width:200px;" placeholder="🔍 Search officer…" oninput="renderOfficerTable()">
-            <button class="tb-btn blue" onclick="exportOfficerExcel()">⬇ Export Excel</button>
-          </div>
-        </div>
-        <div class="tbl-outer">
-          <div class="tbl-wrap">
-            <table id="tbl-officers">
-              <thead><tr>
-                <th>Officer</th><th>Total Surveys</th><th>Larval</th><th>Adult</th>
-                <th>GPS Coverage</th><th>Avg HI (%)</th><th>Avg CI (%)</th>
-                <th>Positive Sites</th><th>Last Active</th><th>Data Score</th>
-              </tr></thead>
-              <tbody id="officer-tbody"></tbody>
-            </table>
-          </div>
         </div>
       </div>
 
@@ -1281,10 +1280,11 @@ tr:hover td{background:var(--teal-lt);}
         <div><label class="sf-label">Date</label><input type="date" id="me-date" class="sf-input"></div>
         <div><label class="sf-label">Officer / Supervisor</label><input type="text" id="me-officers" class="sf-input" placeholder="Officer name"></div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
         <div><label class="sf-label">Location</label><input type="text" id="me-location" class="sf-input" placeholder="Location"></div>
         <div><label class="sf-label">State / UT</label><input type="text" id="me-state" class="sf-input" placeholder="State"></div>
         <div><label class="sf-label">District</label><input type="text" id="me-district" class="sf-input" placeholder="District"></div>
+        <div><label class="sf-label">Zone</label><input type="text" id="me-zone" class="sf-input" placeholder="Zone"></div>
       </div>
       <!-- Adult-specific fields -->
       <div id="me-adult-fields">
@@ -1341,6 +1341,35 @@ tr:hover td{background:var(--teal-lt);}
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:12px;border-top:1px solid var(--bdr);">
         <button onclick="document.getElementById('manual-edit-modal').style.display='none'" class="tb-btn ghost">Cancel</button>
         <button onclick="saveManualDashEdit()" class="tb-btn primary">💾 Save to GitHub</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Survey Edit Modal (GPS surveys — metadata only) -->
+<div id="survey-edit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:1001;align-items:center;justify-content:center;padding:16px;">
+  <div style="background:var(--sf);border-radius:14px;width:100%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,.7);">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--bdr);background:var(--sf2);border-radius:14px 14px 0 0;">
+      <div style="font-size:14px;font-weight:700;color:var(--txt);">✏ Edit Survey Record</div>
+      <button onclick="document.getElementById('survey-edit-modal').style.display='none'" style="background:rgba(255,255,255,.1);border:1px solid var(--bdr);color:var(--txt2);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:16px;">✕</button>
+    </div>
+    <div id="survey-edit-form" style="padding:16px 18px;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;padding:8px 10px;background:rgba(0,0,0,.12);border-radius:6px;border-left:3px solid var(--teal);">Editing metadata fields only. GPS coordinates and field count data are read-only.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+        <div><label class="sf-label">Date</label><input type="date" id="se-date" class="sf-input"></div>
+        <div><label class="sf-label">Officer / Supervisor</label><input type="text" id="se-officers" class="sf-input" placeholder="Officer name"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+        <div><label class="sf-label">Location / Place</label><input type="text" id="se-location" class="sf-input" placeholder="Location"></div>
+        <div><label class="sf-label">Zone</label><input type="text" id="se-zone" class="sf-input" placeholder="Zone"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+        <div><label class="sf-label">State / UT</label><input type="text" id="se-state" class="sf-input" placeholder="State"></div>
+        <div><label class="sf-label">District</label><input type="text" id="se-district" class="sf-input" placeholder="District"></div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;padding-top:12px;border-top:1px solid var(--bdr);">
+        <button onclick="document.getElementById('survey-edit-modal').style.display='none'" class="tb-btn ghost">Cancel</button>
+        <button onclick="saveSurveyEdit()" class="tb-btn primary">💾 Save to GitHub</button>
       </div>
     </div>
   </div>
@@ -1862,7 +1891,7 @@ function exportRiskPDF(){
     const rows=sorted.map(([name,cnt],idx)=>`<tr style="${idx%2===0?'':'background:#f9f9f9;'}"><td>${name}</td><td style="font-weight:700;color:#00695c;">${cnt}</td><td style="padding:4px 8px;"><div style="height:10px;border-radius:5px;background:#00695c;width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%;min-width:4px;"></div></td></tr>`).join('');
     return`<h3>${dk} — Breeding Preferred Containers</h3><table><thead><tr><th>Container Type</th><th>Positive Count</th><th style="min-width:120px;">Proportion</th></tr></thead><tbody>${rows}</tbody></table>`;
   }).join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#00695c;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #00695c;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:14px;font-weight:700;color:#00695c;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:8px 12px;background:#fff8e1;border-left:3px solid #f9a825;font-size:10px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #00695c;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${range.label||'All Data'}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><div class="badge" style="margin-top:12px;">Overall Risk: ${overallR}</div><h2>Overall Stegomyia Indices</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#00695c;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.0.78 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#00695c;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #00695c;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:14px;font-weight:700;color:#00695c;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:8px 12px;background:#fff8e1;border-left:3px solid #f9a825;font-size:10px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #00695c;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${range.label||'All Data'}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><div class="badge" style="margin-top:12px;">Overall Risk: ${overallR}</div><h2>Overall Stegomyia Indices</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#00695c;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.0.80 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
   const win=window.open('','_blank','width=920,height=740');
   if(win){win.document.write(html);win.document.close();setTimeout(()=>win.print(),700);}
 }
@@ -2057,11 +2086,12 @@ function updateActivityCard(){
 /* ── RENDER TABLES ── */
 function renderAdult(){
   const tb=document.getElementById('tbody-adult');
-  if(!adultF.length){tb.innerHTML='<tr><td colspan="19" class="tbl-empty">No adult surveys found</td></tr>';return;}
+  if(!adultF.length){tb.innerHTML='<tr><td colspan="20" class="tbl-empty">No adult surveys found</td></tr>';return;}
   tb.innerHTML=adultF.map((s,i)=>{
     const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
     const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','adult')" title="Delete record" style="padding:0 8px;height:28px;">🗑</button>`:'—';
+    const editBtn=`<button class="pt-btn blue" onclick="openEditSurvey(${i},'adult')" style="padding:0 8px;height:26px;font-size:11px;">✏</button>`;
     const mapBtn=(s.track&&s.track.waypoints&&s.track.waypoints.length>=2)?`<button class="pt-btn ghost" style="padding:0 7px;height:26px;font-size:11px;" onclick="showTrackMap(${i},'adult')" title="View survey map">🗺</button>`:`<span style="color:var(--muted);">—</span>`;
     const typeLabel=s.collType==='resting'?'Resting':s.collType==='hlc'?'HLC':s.collType==='hbr'?'HBR':'ALR';
     return `<tr>
@@ -2078,12 +2108,13 @@ function renderAdult(){
       <td>${mapBtn}</td>
       <td>${saved}</td>
       <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓ Synced':'Local'}</span></td>
+      <td>${editBtn}</td>
       <td>${delBtn}</td>
     </tr>`;}).join('');
 }
 function renderLarval(){
   const tb=document.getElementById('tbody-larval');
-  if(!larvalF.length){tb.innerHTML='<tr><td colspan="24" class="tbl-empty">No larval surveys found</td></tr>';return;}
+  if(!larvalF.length){tb.innerHTML='<tr><td colspan="25" class="tbl-empty">No larval surveys found</td></tr>';return;}
   tb.innerHTML=larvalF.map((s,i)=>{
     const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
@@ -2091,6 +2122,7 @@ function renderLarval(){
     const pupAedes=(s.houses||[]).reduce((t,h)=>t+(h.pupal||0),0);
     const pupAnCx=s.totalPupae||0;
     const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','larval')" title="Delete record" style="padding:0 8px;height:28px;">🗑</button>`:'—';
+    const editBtn=`<button class="pt-btn blue" onclick="openEditSurvey(${i},'larval')" style="padding:0 8px;height:26px;font-size:11px;">✏</button>`;
     const mapBtn=(s.track&&s.track.waypoints&&s.track.waypoints.length>=2)?`<button class="pt-btn ghost" style="padding:0 7px;height:26px;font-size:11px;" onclick="showTrackMap(${i},'larval')" title="View survey map">🗺</button>`:`<span style="color:var(--muted);">—</span>`;
     return `<tr>
       <td><input type="checkbox" class="row-cb larval-cb" data-idx="${i}"></td>
@@ -2111,6 +2143,7 @@ function renderLarval(){
       <td>${mapBtn}</td>
       <td>${saved}</td>
       <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓ Synced':'Local'}</span></td>
+      <td>${editBtn}</td>
       <td>${delBtn}</td>
     </tr>`;}).join('');
 }
@@ -2148,60 +2181,80 @@ function renderManualAdult(){
   const tb=document.getElementById('tbody-manual-adult');
   if(!tb)return;
   if(!manualAdultF.length){tb.innerHTML='<tr><td colspan="22" class="tbl-empty">No manual adult entries found</td></tr>';return;}
-  tb.innerHTML=manualAdultF.map((s,i)=>{
-    const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
-    const typeLabel=s.collType==='resting'?'Resting':s.collType==='hlc'?'HLC':s.collType==='hbr'?'HBR':'ALR';
-    const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','adult')" title="Delete" style="padding:0 8px;height:28px;">🗑</button>`:'—';
-    const editBtn=`<button class="pt-btn blue" onclick="openEditManualDash('${String(s.id)}','adult')" style="padding:0 8px;height:26px;font-size:11px;">✏ Edit</button>`;
-    return `<tr>
-      <td><input type="checkbox" class="row-cb man-adult-cb" data-idx="${i}"></td>
-      <td>${i+1}</td>
-      <td style="font-family:monospace;font-size:11px;color:var(--warn);">${fmtSid('adult',s.id)}</td>
-      <td style="font-weight:600;">${s.savedBy||'-'}</td>
-      <td>${s.date||'-'}</td>
-      <td style="font-weight:600;">${s.location||'-'}</td>
-      <td>${s.state||'-'}</td><td>${s.district||'-'}</td><td>${s.zone||'—'}</td>
-      <td><span class="badge rest">${typeLabel}</span></td>
-      <td>${s.collectors||1}</td>
-      <td>${s.totalManHours?.toFixed?s.totalManHours.toFixed(2):'-'}</td>
-      <td>${s.housesExamined||0}</td><td>${s.housePositive||0}</td>
-      <td>${s.totNonCulex||0}</td><td>${s.totCulex||0}</td><td>${s.totalMosq||0}</td>
-      <td>${s.officers||'-'}</td>
-      <td>${saved}</td>
-      <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓':'Pending'}</span></td>
-      <td>${editBtn}</td>
-      <td>${delBtn}</td>
-    </tr>`;
-  }).join('');
+  const REGIONS=['South Andaman','North & Middle Andaman','Nicobar'];
+  const grouped={};REGIONS.forEach(r=>grouped[r]=[]);
+  manualAdultF.forEach((s,i)=>grouped[_getRegion(s.district)].push({s,i}));
+  let html='';
+  REGIONS.forEach(region=>{
+    const entries=grouped[region];
+    if(!entries.length)return;
+    html+=`<tr><td colspan="22" style="background:linear-gradient(90deg,rgba(0,107,92,.22),transparent);padding:6px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);border-top:2px solid rgba(0,107,92,.4);">▶ ${region} <span style="font-weight:400;opacity:.65;">(${entries.length} entries)</span></td></tr>`;
+    entries.forEach(({s,i})=>{
+      const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
+      const typeLabel=s.collType==='resting'?'Resting':s.collType==='hlc'?'HLC':s.collType==='hbr'?'HBR':'ALR';
+      const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','adult')" title="Delete" style="padding:0 8px;height:28px;">🗑</button>`:'—';
+      const editBtn=`<button class="pt-btn blue" onclick="openEditManualDash('${String(s.id)}','adult')" style="padding:0 8px;height:26px;font-size:11px;">✏ Edit</button>`;
+      html+=`<tr>
+        <td><input type="checkbox" class="row-cb man-adult-cb" data-idx="${i}"></td>
+        <td>${i+1}</td>
+        <td style="font-family:monospace;font-size:11px;color:var(--warn);">${fmtSid('adult',s.id)}</td>
+        <td style="font-weight:600;">${s.savedBy||'-'}</td>
+        <td>${s.date||'-'}</td>
+        <td style="font-weight:600;">${s.location||'-'}</td>
+        <td>${s.state||'-'}</td><td>${s.district||'-'}</td><td>${s.zone||'—'}</td>
+        <td><span class="badge rest">${typeLabel}</span></td>
+        <td>${s.collectors||1}</td>
+        <td>${s.totalManHours?.toFixed?s.totalManHours.toFixed(2):'-'}</td>
+        <td>${s.housesExamined||0}</td><td>${s.housePositive||0}</td>
+        <td>${s.totNonCulex||0}</td><td>${s.totCulex||0}</td><td>${s.totalMosq||0}</td>
+        <td>${s.officers||'-'}</td>
+        <td>${saved}</td>
+        <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓':'Pending'}</span></td>
+        <td>${editBtn}</td>
+        <td>${delBtn}</td>
+      </tr>`;
+    });
+  });
+  tb.innerHTML=html;
 }
 
 function renderManualLarval(){
   const tb=document.getElementById('tbody-manual-larval');
   if(!tb)return;
   if(!manualLarvalF.length){tb.innerHTML='<tr><td colspan="25" class="tbl-empty">No manual larval entries found</td></tr>';return;}
-  tb.innerHTML=manualLarvalF.map((s,i)=>{
-    const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
-    const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','larval')" title="Delete" style="padding:0 8px;height:28px;">🗑</button>`:'—';
-    const editBtn=`<button class="pt-btn blue" onclick="openEditManualDash('${String(s.id)}','larval')" style="padding:0 8px;height:26px;font-size:11px;">✏ Edit</button>`;
-    return `<tr>
-      <td><input type="checkbox" class="row-cb man-larval-cb" data-idx="${i}"></td>
-      <td>${i+1}</td>
-      <td style="font-family:monospace;font-size:11px;color:var(--warn);">${fmtSid('larval',s.id)}</td>
-      <td style="font-weight:600;">${s.savedBy||'-'}</td>
-      <td>${s.date||'-'}</td>
-      <td style="font-weight:600;">${s.location||'-'}</td>
-      <td>${s.state||'-'}</td><td>${s.district||'-'}</td><td>${s.zone||'—'}</td>
-      <td>${s.housesExamined||0}</td><td>${s.housePositive||0}</td>
-      <td>${s.totalContainers||0}</td><td>${s.totalPositive||0}</td><td>${s.totalPupalContainers||0}</td>
-      <td>${s.totalDips||0}</td><td>${s.totalLarvae||0}</td><td>${s.totalPupae||0}</td>
-      <td>${s.HI||'0'}</td><td>${s.CI||'0'}</td><td>${s.PI||'0'}</td>
-      <td>${s.officers||'-'}</td>
-      <td>${saved}</td>
-      <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓':'Pending'}</span></td>
-      <td>${editBtn}</td>
-      <td>${delBtn}</td>
-    </tr>`;
-  }).join('');
+  const REGIONS=['South Andaman','North & Middle Andaman','Nicobar'];
+  const grouped={};REGIONS.forEach(r=>grouped[r]=[]);
+  manualLarvalF.forEach((s,i)=>grouped[_getRegion(s.district)].push({s,i}));
+  let html='';
+  REGIONS.forEach(region=>{
+    const entries=grouped[region];
+    if(!entries.length)return;
+    html+=`<tr><td colspan="25" style="background:linear-gradient(90deg,rgba(13,71,161,.22),transparent);padding:6px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);border-top:2px solid rgba(13,71,161,.4);">▶ ${region} <span style="font-weight:400;opacity:.65;">(${entries.length} entries)</span></td></tr>`;
+    entries.forEach(({s,i})=>{
+      const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
+      const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','larval')" title="Delete" style="padding:0 8px;height:28px;">🗑</button>`:'—';
+      const editBtn=`<button class="pt-btn blue" onclick="openEditManualDash('${String(s.id)}','larval')" style="padding:0 8px;height:26px;font-size:11px;">✏ Edit</button>`;
+      html+=`<tr>
+        <td><input type="checkbox" class="row-cb man-larval-cb" data-idx="${i}"></td>
+        <td>${i+1}</td>
+        <td style="font-family:monospace;font-size:11px;color:var(--warn);">${fmtSid('larval',s.id)}</td>
+        <td style="font-weight:600;">${s.savedBy||'-'}</td>
+        <td>${s.date||'-'}</td>
+        <td style="font-weight:600;">${s.location||'-'}</td>
+        <td>${s.state||'-'}</td><td>${s.district||'-'}</td><td>${s.zone||'—'}</td>
+        <td>${s.housesExamined||0}</td><td>${s.housePositive||0}</td>
+        <td>${s.totalContainers||0}</td><td>${s.totalPositive||0}</td><td>${s.totalPupalContainers||0}</td>
+        <td>${s.totalDips||0}</td><td>${s.totalLarvae||0}</td><td>${s.totalPupae||0}</td>
+        <td>${s.HI||'0'}</td><td>${s.CI||'0'}</td><td>${s.PI||'0'}</td>
+        <td>${s.officers||'-'}</td>
+        <td>${saved}</td>
+        <td><span class="badge ${s.synced?'synced':'pend'}">${s.synced?'✓':'Pending'}</span></td>
+        <td>${editBtn}</td>
+        <td>${delBtn}</td>
+      </tr>`;
+    });
+  });
+  tb.innerHTML=html;
 }
 
 function exportManual(mod){
@@ -2298,6 +2351,7 @@ function openEditManualDash(id,mod){
   document.getElementById('me-location').value=s.location||'';
   document.getElementById('me-state').value=s.state||'';
   document.getElementById('me-district').value=s.district||'';
+  document.getElementById('me-zone').value=s.zone||'';
   document.getElementById('me-officers').value=s.officers||'';
   if(mod==='adult'){
     document.getElementById('me-adult-fields').style.display='block';
@@ -2348,6 +2402,7 @@ async function saveManualDashEdit(){
   updated.location=document.getElementById('me-location').value||s.location;
   updated.state=document.getElementById('me-state').value||s.state;
   updated.district=document.getElementById('me-district').value||s.district;
+  updated.zone=document.getElementById('me-zone').value||s.zone;
   updated.officers=document.getElementById('me-officers').value;
   if(mod==='adult'){
     updated.collType=document.getElementById('me-colltype').value||s.collType;
@@ -2596,7 +2651,7 @@ function buildAdultXLSX(surveys,isCompiled){
   const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
   // ── Report Status ──
   const statusRows=[
-    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.78')],
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.80')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -2669,7 +2724,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   // ── Report Status sheet ──
   const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.78')],
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.80')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -2813,7 +2868,7 @@ function buildAdultCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.78 — Adult Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.80 — Adult Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -2865,7 +2920,7 @@ function buildAdultCSV(surveys){
     });
   });
   blank();
-  r('EST v2.0.78 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.80 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -2877,7 +2932,7 @@ function buildLarvalCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.78 — Larval Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.80 — Larval Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -2958,7 +3013,7 @@ function buildLarvalCSV(surveys){
     }
   });
   blank();
-  r('EST v2.0.78 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.80 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -3789,14 +3844,13 @@ let _anTab='seasonal', _seasonalChartInst=null;
 
 function switchAnalyticsTab(tab){
   _anTab=tab;
-  ['seasonal','officers','intervention'].forEach(t=>{
+  ['seasonal','intervention'].forEach(t=>{
     const btn=document.getElementById('antab-'+t);
     if(btn)btn.classList.toggle('active',t===tab);
     const sec=document.getElementById('an-'+t);
     if(sec)sec.style.display=t===tab?'':'none';
   });
   if(tab==='seasonal')buildSeasonalChart();
-  else if(tab==='officers')renderOfficerTable();
   else if(tab==='intervention')_populateInterventionSelects();
 }
 
@@ -3936,48 +3990,106 @@ function exportSeasonalPDF(){
   <p><b>Year:</b> ${year} &nbsp;|&nbsp; <b>District:</b> ${distLabel} &nbsp;|&nbsp; <b>Generated:</b> ${new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'})}</p>
   ${imgData?`<img src="${imgData}" alt="Seasonal chart">`:''}
   ${tblHTML}
-  <p style="margin-top:20px;font-size:10px;color:#888;">EST v2.0.78 · Entomological Surveillance Tool · A&N Islands</p>
+  <p style="margin-top:20px;font-size:10px;color:#888;">EST v2.0.80 · Entomological Surveillance Tool · A&N Islands</p>
   </body></html>`);
   w.document.close();
   setTimeout(()=>w.print(),500);
 }
 
-function renderOfficerTable(){
-  const q=(document.getElementById('search-officers')?.value||'').toLowerCase();
+function _getRegion(district){
+  const d=(district||'').toLowerCase();
+  if(d.includes('nicobar')||d.includes('car nicobar'))return 'Nicobar';
+  if(d.includes('north')||d.includes('middle'))return 'North & Middle Andaman';
+  return 'South Andaman';
+}
+
+function openEditSurvey(idx,type){
+  const src=type==='adult'?adultF:larvalF;
+  const s=src[idx];
+  if(!s){alert('Survey not found');return;}
+  const modal=document.getElementById('survey-edit-modal');
+  const form=document.getElementById('survey-edit-form');
+  if(!modal||!form)return;
+  form.dataset.editIdx=idx;
+  form.dataset.editType=type;
+  form.dataset.editPath=s._path||'';
+  form.dataset.editSha=s._sha||'';
+  document.getElementById('se-date').value=s.date||'';
+  document.getElementById('se-location').value=s.location||'';
+  document.getElementById('se-state').value=s.state||'';
+  document.getElementById('se-district').value=s.district||'';
+  document.getElementById('se-zone').value=s.zone||'';
+  document.getElementById('se-officers').value=s.officers||'';
+  modal.style.display='flex';
+}
+
+async function saveSurveyEdit(){
+  const form=document.getElementById('survey-edit-form');
+  if(!form)return;
+  const idx=parseInt(form.dataset.editIdx);
+  const type=form.dataset.editType;
+  const path=form.dataset.editPath;
+  const sha=form.dataset.editSha;
+  if(!path||!sha){alert('Cannot save — record must be synced to GitHub first.');return;}
+  if(!GH.owner||!GH.token){alert('Connect to GitHub first');return;}
+  const src=type==='adult'?adultF:larvalF;
+  const s=src[idx];
+  if(!s){alert('Survey not found');return;}
+  const updated={...s,
+    date:document.getElementById('se-date').value||s.date,
+    location:document.getElementById('se-location').value||s.location,
+    state:document.getElementById('se-state').value||s.state,
+    district:document.getElementById('se-district').value||s.district,
+    zone:document.getElementById('se-zone').value||s.zone,
+    officers:document.getElementById('se-officers').value
+  };
+  setStatus('Saving edit to GitHub…','info');
+  const ok=await ghPut(path,updated,sha);
+  if(ok){
+    setStatus('✓ Survey updated on GitHub','ok');
+    document.getElementById('survey-edit-modal').style.display='none';
+    loadAll();
+  }else{
+    setStatus('Failed to save — check token permissions','err');
+  }
+}
+
+function _buildOfficerData(){
   const all=[
     ...allAdult.map(s=>({...s,_t:'adult'})),
     ...allLarval.map(s=>({...s,_t:'larval'})),
     ...allManualAdult.map(s=>({...s,_t:'madult'})),
     ...allManualLarval.map(s=>({...s,_t:'mlarval'}))
   ];
-
   const byOfficer={};
   all.forEach(s=>{
     const name=(s.savedBy||'Unknown').trim();
-    if(!byOfficer[name])byOfficer[name]={name,total:0,larval:0,adult:0,gps:0,his:[],cis:[],positive:0,dates:[]};
+    if(!byOfficer[name])byOfficer[name]={name,total:0,larval:0,adult:0,gps:0,his:[],cis:[],positive:0,savedAts:[]};
     const o=byOfficer[name];
     o.total++;
     if(s._t==='larval'||s._t==='mlarval'){o.larval++;const hi=parseFloat(s.HI),ci=parseFloat(s.CI);if(!isNaN(hi)&&hi>0)o.his.push(hi);if(!isNaN(ci)&&ci>0)o.cis.push(ci);o.positive+=(parseInt(s.totalPositive)||0);}
     if(s._t==='adult'||s._t==='madult')o.adult++;
     if(parseFloat(s.lat)&&parseFloat(s.lng))o.gps++;
-    if(s.date)o.dates.push(s.date);
+    if(s.savedAt)o.savedAts.push(s.savedAt);
   });
+  return byOfficer;
+}
 
+function renderOfficerTable(){
+  const q=(document.getElementById('search-officers')?.value||'').toLowerCase();
+  const byOfficer=_buildOfficerData();
   const avg=arr=>arr.length?+(arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1):null;
   const officers=Object.values(byOfficer)
     .filter(o=>!q||o.name.toLowerCase().includes(q))
     .sort((a,b)=>b.total-a.total);
-
   const tbody=document.getElementById('officer-tbody');
   if(!tbody)return;
-
   if(!officers.length){tbody.innerHTML='<tr><td colspan="10" style="text-align:center;padding:24px;color:var(--muted);">No data found.</td></tr>';return;}
-
   tbody.innerHTML=officers.map(o=>{
     const gpcPct=o.total?Math.round(o.gps/o.total*100):0;
-    const hiAvg=avg(o.his), ciAvg=avg(o.cis);
-    const lastDate=o.dates.length?o.dates.sort().reverse()[0]:'—';
-    // Data score: GPS coverage 40%, has HI data 30%, survey count 30%
+    const hiAvg=avg(o.his),ciAvg=avg(o.cis);
+    const lastTs=o.savedAts.length?Math.max(...o.savedAts.map(t=>+new Date(t))):0;
+    const lastActive=lastTs?new Date(lastTs).toLocaleString('en-IN',{day:'2-digit',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit',hour12:true}):'—';
     const scoreNum=Math.round((gpcPct*0.4)+(o.his.length?30:0)+(Math.min(o.total,20)/20*30));
     const scoreLabel=scoreNum>=80?'Excellent':scoreNum>=60?'Good':scoreNum>=40?'Fair':'Poor';
     const scoreCls=scoreNum>=80?'excellent':scoreNum>=60?'good':scoreNum>=40?'fair':'poor';
@@ -3990,39 +4102,25 @@ function renderOfficerTable(){
       <td style="color:${hiAvg!==null?(hiAvg>=10?'#ef5350':hiAvg>=5?'#FF9800':'#4CAF50'):'var(--muted)'};font-weight:${hiAvg!==null?'700':'400'}">${hiAvg!==null?hiAvg+'%':'—'}</td>
       <td style="color:${ciAvg!==null?(ciAvg>=10?'#ef5350':ciAvg>=5?'#FF9800':'#4CAF50'):'var(--muted)'};font-weight:${ciAvg!==null?'700':'400'}">${ciAvg!==null?ciAvg+'%':'—'}</td>
       <td>${o.positive}</td>
-      <td style="color:var(--muted);font-size:11px;">${lastDate}</td>
+      <td style="color:var(--muted);font-size:11px;white-space:nowrap;">${lastActive}</td>
       <td><span class="officer-score ${scoreCls}">${scoreLabel} ${scoreNum}%</span></td>
     </tr>`;
   }).join('');
 }
 
 function exportOfficerExcel(){
-  const all=[
-    ...allAdult.map(s=>({...s,_t:'adult'})),
-    ...allLarval.map(s=>({...s,_t:'larval'})),
-    ...allManualAdult.map(s=>({...s,_t:'madult'})),
-    ...allManualLarval.map(s=>({...s,_t:'mlarval'}))
-  ];
-  const byOfficer={};
-  all.forEach(s=>{
-    const name=(s.savedBy||'Unknown').trim();
-    if(!byOfficer[name])byOfficer[name]={name,total:0,larval:0,adult:0,gps:0,his:[],cis:[],positive:0,dates:[]};
-    const o=byOfficer[name];
-    o.total++;if(s._t==='larval'||s._t==='mlarval'){o.larval++;const hi=parseFloat(s.HI),ci=parseFloat(s.CI);if(!isNaN(hi)&&hi>0)o.his.push(hi);if(!isNaN(ci)&&ci>0)o.cis.push(ci);o.positive+=(parseInt(s.totalPositive)||0);}
-    if(s._t==='adult'||s._t==='madult')o.adult++;
-    if(parseFloat(s.lat)&&parseFloat(s.lng))o.gps++;
-    if(s.date)o.dates.push(s.date);
-  });
+  const byOfficer=_buildOfficerData();
   const avg=arr=>arr.length?+(arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1):null;
   const H=v=>({v,s:{font:{bold:true},fill:{fgColor:{rgb:'E8F5F0'}}}});
   const cols=['Officer','Total Surveys','Larval','Adult','GPS Coverage %','Avg HI (%)','Avg CI (%)','Positive Sites','Last Active'];
   const rows=[cols.map(H)];
   Object.values(byOfficer).sort((a,b)=>b.total-a.total).forEach(o=>{
     const gp=o.total?Math.round(o.gps/o.total*100):0;
-    const last=o.dates.length?o.dates.sort().reverse()[0]:'—';
-    rows.push([o.name,o.total,o.larval,o.adult,gp+'%',avg(o.his)!==null?avg(o.his)+'%':'—',avg(o.cis)!==null?avg(o.cis)+'%':'—',o.positive,last]);
+    const lastTs=o.savedAts.length?Math.max(...o.savedAts.map(t=>+new Date(t))):0;
+    const lastActive=lastTs?new Date(lastTs).toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}):'—';
+    rows.push([o.name,o.total,o.larval,o.adult,gp+'%',avg(o.his)!==null?avg(o.his)+'%':'—',avg(o.cis)!==null?avg(o.cis)+'%':'—',o.positive,lastActive]);
   });
-  dlXLSX(buildXLSX([{name:'Officer Performance',rows,cols:[20,14,10,10,14,12,12,14,14],headerRows:[0]}]),
+  dlXLSX(buildXLSX([{name:'Officer Performance',rows,cols:[20,14,10,10,14,12,12,14,20],headerRows:[0]}]),
     'EST_OfficerPerformance_'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
 
@@ -4177,7 +4275,7 @@ function switchSection(name, btn) {
   if (panel) panel.classList.add('active');
   const labels = {overview:'Overview', adult:'Adult Surveillance', larval:'Larval Surveillance', maps:'Survey Maps', analytics:'Analytics', manual:'Manual Data', users:'Manage Users', activity:'Activity Log', backup:'Backup & Restore'};
   if(name==='maps') switchMapTab('tracks');
-  if(name==='activity') updateActivityCard();
+  if(name==='activity'){updateActivityCard();renderOfficerTable();}
   if(name==='analytics'){_populateSeasonalSelects();buildSeasonalChart();_populateInterventionSelects();}
   const bc = document.getElementById('bc-main');
   if (bc) bc.textContent = labels[name] || name;
