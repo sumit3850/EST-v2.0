@@ -1346,5 +1346,8 @@
     "durationSec": 1612,
     "startTime": "2026-05-28T03:52:47.925Z",
     "endTime": "2026-05-28T04:19:40.295Z"
-  }
+  },
+  "_path": "data/2026-05/larval-2026-05-28T04-19-40-1779941980296.json",
+  "_sha": "438fc889ccd2bfa4a7b67e4e1ad02a054b301a96",
+  "zone": "Car Nicobar"
 }
