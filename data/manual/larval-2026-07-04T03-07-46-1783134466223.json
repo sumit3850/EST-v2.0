@@ -1,0 +1,130 @@
+{
+  "id": 1783134466223,
+  "savedAt": "2026-07-04T03:07:46.223Z",
+  "savedBy": "Shivan-1",
+  "appType": "larval",
+  "entryType": "manual",
+  "v": "2.0.61",
+  "date": "03606-2026",
+  "state": "Andaman and Nicobar Islands",
+  "district": "South Andaman",
+  "location": "LAMBA LINE TAMIL BASTI TELUGU BASTI UPTO DAIRY FARM JUNCTION",
+  "zone": "South Andaman",
+  "workers": "MI AND TEAM",
+  "officers": "",
+  "lat": "",
+  "lng": "",
+  "houses": [],
+  "housesExamined": 156,
+  "housePositive": 18,
+  "totalContainers": 326,
+  "totalPositive": 18,
+  "totalPupalContainers": 0,
+  "totalDips": 0,
+  "totalLarvae": 0,
+  "totalPupae": 0,
+  "anLarvae": 0,
+  "anPupae": 0,
+  "cxLarvae": 0,
+  "cxPupae": 0,
+  "LD": "0",
+  "PD": "0",
+  "HI": "11.5",
+  "CI": "5.5",
+  "BI": "11.5",
+  "PI": "0.0",
+  "remarks": "",
+  "containerSummary": [
+    {
+      "name": "Pl. Drum",
+      "examined": 68,
+      "positive": 5
+    },
+    {
+      "name": "Mt. Drum",
+      "examined": 13,
+      "positive": 2
+    },
+    {
+      "name": "Buckets",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Wt. Tank (Over Head)",
+      "examined": 42,
+      "positive": 2
+    },
+    {
+      "name": "Wt. Tank (Ground Lvl)",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Wt. Tank (Under Gnd)",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Cement Tank",
+      "examined": 11,
+      "positive": 1
+    },
+    {
+      "name": "Drain",
+      "examined": 8,
+      "positive": 0
+    },
+    {
+      "name": "Tyres",
+      "examined": 21,
+      "positive": 0
+    },
+    {
+      "name": "Other Containers",
+      "examined": 163,
+      "positive": 8
+    },
+    {
+      "name": "Flower Pots",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Flower Trays",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Mud Pots",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Coolers / Refrig.",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Broken Utensils",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Coconut Shells",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Tree Holes",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Miscellaneous",
+      "examined": 0,
+      "positive": 0
+    }
+  ],
+  "synced": false
+}
