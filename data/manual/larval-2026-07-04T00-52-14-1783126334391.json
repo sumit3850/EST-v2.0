@@ -1,0 +1,130 @@
+{
+  "id": 1783126334391,
+  "savedAt": "2026-07-04T00:52:14.391Z",
+  "savedBy": "Shivan-1",
+  "appType": "larval",
+  "entryType": "manual",
+  "v": "2.0.61",
+  "date": "02-06-2026",
+  "state": "Andaman and Nicobar Islands",
+  "district": "South Andaman",
+  "location": "PREM NAGAR",
+  "zone": "South Andaman",
+  "workers": "MI AND TEAM",
+  "officers": "",
+  "lat": "",
+  "lng": "",
+  "houses": [],
+  "housesExamined": 95,
+  "housePositive": 10,
+  "totalContainers": 360,
+  "totalPositive": 10,
+  "totalPupalContainers": 0,
+  "totalDips": 0,
+  "totalLarvae": 0,
+  "totalPupae": 0,
+  "anLarvae": 0,
+  "anPupae": 0,
+  "cxLarvae": 0,
+  "cxPupae": 0,
+  "LD": "0",
+  "PD": "0",
+  "HI": "10.5",
+  "CI": "2.8",
+  "BI": "10.5",
+  "PI": "0.0",
+  "remarks": "",
+  "containerSummary": [
+    {
+      "name": "Pl. Drum",
+      "examined": 58,
+      "positive": 3
+    },
+    {
+      "name": "Mt. Drum",
+      "examined": 53,
+      "positive": 2
+    },
+    {
+      "name": "Buckets",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Wt. Tank (Over Head)",
+      "examined": 49,
+      "positive": 1
+    },
+    {
+      "name": "Wt. Tank (Ground Lvl)",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Wt. Tank (Under Gnd)",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Cement Tank",
+      "examined": 35,
+      "positive": 1
+    },
+    {
+      "name": "Drain",
+      "examined": 60,
+      "positive": 0
+    },
+    {
+      "name": "Tyres",
+      "examined": 25,
+      "positive": 0
+    },
+    {
+      "name": "Other Containers",
+      "examined": 80,
+      "positive": 3
+    },
+    {
+      "name": "Flower Pots",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Flower Trays",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Mud Pots",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Coolers / Refrig.",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Broken Utensils",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Coconut Shells",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Tree Holes",
+      "examined": 0,
+      "positive": 0
+    },
+    {
+      "name": "Miscellaneous",
+      "examined": 0,
+      "positive": 0
+    }
+  ],
+  "synced": false
+}
