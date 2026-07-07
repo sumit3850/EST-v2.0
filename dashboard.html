@@ -1398,6 +1398,8 @@ tr:hover td{background:var(--teal-lt);}
 const DASH_U='ANIENTO', DASH_P='2026', DASH_KEY='est_dash_creds';
 let GH={owner:'',repo:'EST-v2.0',token:''};
 function _deb(fn,ms){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);};}
+// GPS surveys store house records in houses[] and leave housesExamined null; fall back to array length
+function _hEx(s){return s.housesExamined||(s.houses&&s.houses.length)||0;}
 let allAdult=[],allLarval=[],adultF=[],larvalF=[],usersCfg=[];
 let allManualAdult=[],allManualLarval=[],manualAdultF=[],manualLarvalF=[];
 let manualDashSel={adult:new Set(),larval:new Set()};
@@ -1666,13 +1668,13 @@ function updateRiskCard(period){
     if(!byDist[dk])byDist[dk]={hi:[],ci:[],housesEx:0,posCont:0,locs:{}};
     if(parseFloat(s.HI)>0)byDist[dk].hi.push(parseFloat(s.HI));
     if(parseFloat(s.CI)>0)byDist[dk].ci.push(parseFloat(s.CI));
-    byDist[dk].housesEx+=(s.housesExamined||0);
+    byDist[dk].housesEx+=_hEx(s);
     byDist[dk].posCont+=(s.totalPositive||0);
     const lk=s.location||'Unknown';
     if(!byDist[dk].locs[lk])byDist[dk].locs[lk]={hi:[],ci:[],housesEx:0,posCont:0,zones:{}};
     if(parseFloat(s.HI)>0)byDist[dk].locs[lk].hi.push(parseFloat(s.HI));
     if(parseFloat(s.CI)>0)byDist[dk].locs[lk].ci.push(parseFloat(s.CI));
-    byDist[dk].locs[lk].housesEx+=(s.housesExamined||0);
+    byDist[dk].locs[lk].housesEx+=_hEx(s);
     byDist[dk].locs[lk].posCont+=(s.totalPositive||0);
     if(s.zone){const z=(s.zone||'').trim();byDist[dk].locs[lk].zones[z]=(byDist[dk].locs[lk].zones[z]||0)+1;}
     if(!byDistCont[dk])byDistCont[dk]={};
@@ -1751,7 +1753,7 @@ function updateRiskCard(period){
     if(!byZone[zk])byZone[zk]={hi:[],ci:[],housesEx:0,posCont:0};
     if(parseFloat(s.HI)>0)byZone[zk].hi.push(parseFloat(s.HI));
     if(parseFloat(s.CI)>0)byZone[zk].ci.push(parseFloat(s.CI));
-    byZone[zk].housesEx+=(s.housesExamined||0);
+    byZone[zk].housesEx+=_hEx(s);
     byZone[zk].posCont+=(s.totalPositive||0);
   });
   const zoneEntries=Object.entries(byZone).map(([name,v])=>({name,hi:avg(v.hi),ci:avg(v.ci),bi:calcBI(v.housesEx,v.posCont)})).filter(z=>z.hi>0||z.ci>0||z.bi!=null).sort((a,b)=>b.hi-a.hi);
@@ -1851,13 +1853,13 @@ function exportRiskPDF(){
     if(!byDist2[dk])byDist2[dk]={hi:[],ci:[],housesEx:0,posCont:0,locs:{}};
     if(parseFloat(s.HI)>0)byDist2[dk].hi.push(parseFloat(s.HI));
     if(parseFloat(s.CI)>0)byDist2[dk].ci.push(parseFloat(s.CI));
-    byDist2[dk].housesEx+=(s.housesExamined||0);
+    byDist2[dk].housesEx+=_hEx(s);
     byDist2[dk].posCont+=(s.totalPositive||0);
     const lk=s.location||'Unknown';
     if(!byDist2[dk].locs[lk])byDist2[dk].locs[lk]={hi:[],ci:[],housesEx:0,posCont:0};
     if(parseFloat(s.HI)>0)byDist2[dk].locs[lk].hi.push(parseFloat(s.HI));
     if(parseFloat(s.CI)>0)byDist2[dk].locs[lk].ci.push(parseFloat(s.CI));
-    byDist2[dk].locs[lk].housesEx+=(s.housesExamined||0);
+    byDist2[dk].locs[lk].housesEx+=_hEx(s);
     byDist2[dk].locs[lk].posCont+=(s.totalPositive||0);
     if(!byDistCont2[dk])byDistCont2[dk]={};
     (s.containerSummary||[]).forEach(ct=>{if((ct.positive||0)>0){if(!byDistCont2[dk][ct.name])byDistCont2[dk][ct.name]=0;byDistCont2[dk][ct.name]+=ct.positive||0;}});
@@ -1886,7 +1888,7 @@ function exportRiskPDF(){
     if(!byZone2[zk])byZone2[zk]={hi:[],ci:[],housesEx:0,posCont:0};
     if(parseFloat(s.HI)>0)byZone2[zk].hi.push(parseFloat(s.HI));
     if(parseFloat(s.CI)>0)byZone2[zk].ci.push(parseFloat(s.CI));
-    byZone2[zk].housesEx+=(s.housesExamined||0);
+    byZone2[zk].housesEx+=_hEx(s);
     byZone2[zk].posCont+=(s.totalPositive||0);
   });
   const zoneEntries2=Object.entries(byZone2).map(([name,v])=>({name,hi:avgArr(v.hi),ci:avgArr(v.ci),bi:calcBI2(v.housesEx,v.posCont)})).filter(z=>z.hi>0||z.ci>0||z.bi!=null).sort((a,b)=>b.hi-a.hi);
@@ -1927,14 +1929,14 @@ function exportRiskExcel(){
     if(!byDist3[dk])byDist3[dk]={hi:[],ci:[],housesEx:0,posCont:0,locs:{}};
     if(parseFloat(s.HI)>0)byDist3[dk].hi.push(parseFloat(s.HI));
     if(parseFloat(s.CI)>0)byDist3[dk].ci.push(parseFloat(s.CI));
-    byDist3[dk].housesEx+=(s.housesExamined||0);
+    byDist3[dk].housesEx+=_hEx(s);
     byDist3[dk].posCont+=(s.totalPositive||0);
     const lk=s.location||'Unknown';
     if(!byDist3[dk].locs[lk])byDist3[dk].locs[lk]={hi:[],ci:[],housesEx:0,posCont:0,zone:s.zone||''};
     else if(!byDist3[dk].locs[lk].zone&&s.zone)byDist3[dk].locs[lk].zone=s.zone;
     if(parseFloat(s.HI)>0)byDist3[dk].locs[lk].hi.push(parseFloat(s.HI));
     if(parseFloat(s.CI)>0)byDist3[dk].locs[lk].ci.push(parseFloat(s.CI));
-    byDist3[dk].locs[lk].housesEx+=(s.housesExamined||0);
+    byDist3[dk].locs[lk].housesEx+=_hEx(s);
     byDist3[dk].locs[lk].posCont+=(s.totalPositive||0);
     if(!byDistCont3[dk])byDistCont3[dk]={};
     (s.containerSummary||[]).forEach(ct=>{if((ct.positive||0)>0){if(!byDistCont3[dk][ct.name])byDistCont3[dk][ct.name]=0;byDistCont3[dk][ct.name]+=ct.positive||0;}});
@@ -1976,7 +1978,7 @@ function exportRiskExcel(){
     if(!byZone3[zk])byZone3[zk]={hi:[],ci:[],housesEx:0,posCont:0};
     if(parseFloat(s.HI)>0)byZone3[zk].hi.push(parseFloat(s.HI));
     if(parseFloat(s.CI)>0)byZone3[zk].ci.push(parseFloat(s.CI));
-    byZone3[zk].housesEx+=(s.housesExamined||0);
+    byZone3[zk].housesEx+=_hEx(s);
     byZone3[zk].posCont+=(s.totalPositive||0);
   });
   const zoneRows3=[[H('Zone'),H('HI Value'),H('HI Risk'),H('CI Value'),H('CI Risk'),H('BI Value'),H('BI Risk')]];
