@@ -10,7 +10,7 @@
   "state": "Andaman and Nicobar Islands",
   "district": "South Andaman",
   "location": "Farm tikrey, ongi tikrey , janta tikrey 11 km",
-  "zone": "Nancowry",
+  "zone": "Little Andaman",
   "workers": "Mi and team",
   "officers": "",
   "lat": "",
@@ -127,5 +127,7 @@
       "positive": 0
     }
   ],
-  "synced": false
+  "synced": false,
+  "_path": "data/manual/larval-2026-07-01T04-13-54-1782879234530.json",
+  "_sha": "32f5bf9edbf5a6155f48084f107cdcdb0de0e24f"
 }
