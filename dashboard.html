@@ -13,20 +13,20 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --sb:#061a14;--sb2:#0a2318;--sb-txt:rgba(255,255,255,.6);--sb-active:#00bfa5;--sb-hover:rgba(255,255,255,.07);
-  --bg:#0f1923;--sf:#162535;--sf2:#1c2f42;
-  --bdr:rgba(255,255,255,.08);--bdr2:rgba(255,255,255,.13);
-  --teal:#00bfa5;--teal-dk:#00897b;--teal-lt:rgba(0,191,165,.13);
-  --blue:#2196f3;--blue-dk:#1565c0;--blue-lt:rgba(33,150,243,.12);
-  --gold:#ffd600;--err:#ef5350;--warn:#ff9800;
-  --txt:#e8eaed;--txt2:#90a4ae;--muted:rgba(255,255,255,.35);
-  --shadow:0 4px 24px rgba(0,10,20,.55),0 1px 4px rgba(0,0,0,.3);--r:12px;--r-sm:8px;
+  --sb:#081410;--sb2:#0c1d15;--sb-txt:rgba(230,242,236,.55);--sb-active:#3ecf8e;--sb-hover:rgba(62,207,142,.08);
+  --bg:#0a0f0d;--sf:#101915;--sf2:#16241d;
+  --bdr:rgba(62,207,142,.1);--bdr2:rgba(62,207,142,.2);
+  --teal:#3ecf8e;--teal-dk:#2b9d6c;--teal-lt:rgba(62,207,142,.12);
+  --blue:#4a9eff;--blue-dk:#2f7fe0;--blue-lt:rgba(74,158,255,.12);
+  --gold:#fbbf24;--err:#f87171;--warn:#f59e0b;
+  --txt:#e6f2ec;--txt2:#8fa89b;--muted:rgba(230,242,236,.35);
+  --shadow:0 8px 32px rgba(0,0,0,.5),0 1px 4px rgba(0,0,0,.3);--r:14px;--r-sm:9px;
 }
 [data-theme="light"]{
-  --sb:#006b5c;--sb2:#005548;--sb-txt:rgba(255,255,255,.75);--sb-active:#fff;--sb-hover:rgba(255,255,255,.12);
+  --sb:#1a7a4a;--sb2:#136038;--sb-txt:rgba(255,255,255,.75);--sb-active:#fff;--sb-hover:rgba(255,255,255,.12);
   --bg:#f0f5f4;--sf:#fff;--sf2:#f5f9f8;
   --bdr:#dce8e5;--bdr2:#c4d8d3;
-  --teal:#006b5c;--teal-dk:#004d42;--teal-lt:#e6f7f4;
+  --teal:#1a7a4a;--teal-dk:#0f4a2e;--teal-lt:#e6f7f4;
   --blue:#1565c0;--blue-dk:#0d47a1;--blue-lt:#e3f2fd;
   --txt:#191c1d;--txt2:#546e6a;--muted:#7a9490;
   --shadow:0 2px 12px rgba(0,0,0,.1);
@@ -84,7 +84,7 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;backgrou
 
 /* ═══ SIDEBAR ═══ */
 .sb-brand{padding:20px 16px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;}
-.sb-logo{width:36px;height:36px;background:rgba(0,191,165,.18);border:1px solid rgba(0,191,165,.35);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-logo{width:36px;height:36px;background:rgba(62,207,142,.18);border:1px solid rgba(62,207,142,.35);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .sb-title{overflow:hidden;}
 .sb-title h2{font-size:13px;font-weight:700;color:#fff;white-space:nowrap;letter-spacing:-.01em;}
 .sb-title p{font-size:9px;color:var(--sb-txt);white-space:nowrap;margin-top:1px;}
@@ -95,17 +95,17 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;backgrou
 .sidebar.collapsed .nav-section{opacity:0;}
 .nav-item{width:100%;display:flex;align-items:center;gap:10px;padding:9px 10px;border:none;background:none;color:var(--sb-txt);font-size:12px;font-weight:500;cursor:pointer;border-radius:8px;text-align:left;transition:all .2s cubic-bezier(.4,0,.2,1);white-space:nowrap;margin-bottom:2px;}
 .nav-item:hover{background:var(--sb-hover);color:#fff;transform:translateX(1px);}
-.nav-item.active{background:rgba(0,191,165,.2);color:var(--sb-active);font-weight:600;box-shadow:inset 3px 0 0 var(--teal);}
+.nav-item.active{background:rgba(62,207,142,.2);color:var(--sb-active);font-weight:600;box-shadow:inset 3px 0 0 var(--teal);}
 .nav-item svg{width:16px;height:16px;flex-shrink:0;}
 .nav-item-label{overflow:hidden;}
 .sidebar.collapsed .nav-item-label{display:none;}
 
 .sb-footer{padding:12px 8px;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0;}
 #conn-pill{display:block;font-size:10px;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.07);color:var(--sb-txt);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-#conn-pill.ok{background:rgba(0,191,165,.18);color:var(--sb-active);}
+#conn-pill.ok{background:rgba(62,207,142,.18);color:var(--sb-active);}
 .sidebar.collapsed #conn-pill{font-size:0;padding:6px;}
 .sidebar.collapsed #conn-pill::after{content:'●';font-size:10px;}
-.sidebar.collapsed #conn-pill.ok::after{color:#00bfa5;}
+.sidebar.collapsed #conn-pill.ok::after{color:#3ecf8e;}
 
 /* ═══ TOPBAR ═══ */
 .topbar{background:var(--sf);border-bottom:1px solid var(--bdr);padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 1px 12px rgba(0,10,20,.25);}
@@ -123,8 +123,8 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;backgrou
 .tb-btn.ghost:hover{color:var(--txt);border-color:var(--bdr2);}
 .tb-btn.blue{background:var(--blue-lt);color:var(--blue);border:1px solid rgba(33,150,243,.3);}
 .tb-btn.blue:hover{background:rgba(33,150,243,.22);}
-.tb-btn.secondary{background:var(--teal-lt);color:var(--teal);border:1px solid rgba(0,191,165,.3);}
-.tb-btn.secondary:hover{background:rgba(0,191,165,.22);}
+.tb-btn.secondary{background:var(--teal-lt);color:var(--teal);border:1px solid rgba(62,207,142,.3);}
+.tb-btn.secondary:hover{background:rgba(62,207,142,.22);}
 .tb-btn.danger{background:rgba(239,83,80,.1);color:#ef5350;border:1px solid rgba(239,83,80,.3);}
 .tb-btn.danger:hover{background:rgba(239,83,80,.2);}
 .tb-btn.danger-ghost{background:rgba(239,83,80,.1);color:#ef5350;border:1px solid rgba(239,83,80,.25);}
@@ -170,6 +170,21 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;backgrou
 .overview-title{font-size:15px;font-weight:700;color:var(--txt);letter-spacing:-.01em;}
 .overview-sub{font-size:12px;color:var(--txt2);margin-top:2px;font-weight:400;}
 .overview-date-chip{font-size:11px;font-weight:500;color:var(--muted);background:var(--sf2);border:1px solid var(--bdr);border-radius:20px;padding:4px 12px;white-space:nowrap;align-self:flex-start;}
+
+/* ═══ PREMIUM POLISH (v2.0.95) ═══ */
+.kpi-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 0 1px var(--bdr2);}
+.nav-item.active{background:linear-gradient(90deg,rgba(62,207,142,.18),rgba(62,207,142,.06));box-shadow:inset 3px 0 0 var(--teal),0 0 18px rgba(62,207,142,.06);}
+.nav-item:focus-visible,.tb-btn:focus-visible,.pt-btn:focus-visible{outline:2px solid var(--teal);outline-offset:2px;}
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(62,207,142,.16);border-radius:99px;border:2px solid transparent;background-clip:content-box;}
+::-webkit-scrollbar-thumb:hover{background:rgba(62,207,142,.3);border:2px solid transparent;background-clip:content-box;}
+table thead th{letter-spacing:.06em;}
+.pt-btn.primary{background:linear-gradient(180deg,#46e09d,#3ecf8e);color:#04140c;box-shadow:0 2px 10px rgba(62,207,142,.22),inset 0 1px 0 rgba(255,255,255,.3);border:none;}
+.pt-btn.primary:hover{filter:brightness(1.06);}
+.section-head h2{letter-spacing:-.01em;}
+@media(prefers-reduced-motion:reduce){.kpi-card,.nav-item{transition:none;}.kpi-card:hover{transform:none;}}
 [data-theme="light"] .overview-date-chip{background:#f0f5f4;}
 .overview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px 24px 0;}
 .kpi-card{background:var(--sf);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;transition:box-shadow .2s;cursor:default;border-left:3px solid transparent;}
@@ -195,7 +210,7 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;backgrou
 .kpi-value.gold{color:var(--gold);}
 .kpi-value.red{color:var(--err);}
 .kpi-value.sm{font-size:14px;font-weight:600;margin-top:1px;letter-spacing:0;}
-.kpi-badge{display:inline-block;font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;margin-left:5px;vertical-align:middle;background:rgba(0,191,165,.14);color:var(--teal);}
+.kpi-badge{display:inline-block;font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;margin-left:5px;vertical-align:middle;background:rgba(62,207,142,.14);color:var(--teal);}
 .kpi-badge.blue{background:rgba(33,150,243,.14);color:var(--blue);}
 .kpi-sub{font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
@@ -235,7 +250,7 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;backgrou
 .act-dist-count{font-size:10px;font-weight:700;color:var(--txt);min-width:22px;text-align:right;font-variant-numeric:tabular-nums;}
 .act-dist-badges{display:flex;gap:3px;}
 .act-type-badge{font-size:9px;font-weight:700;border-radius:4px;padding:1px 5px;white-space:nowrap;letter-spacing:.02em;}
-.act-type-badge.teal{background:rgba(0,191,165,.15);color:var(--teal);}
+.act-type-badge.teal{background:rgba(62,207,142,.15);color:var(--teal);}
 .act-type-badge.blue{background:rgba(33,150,243,.15);color:var(--blue);}
 .act-type-badge.gold{background:rgba(255,214,0,.15);color:var(--gold);}
 .act-type-badge.purple{background:rgba(156,39,176,.14);color:#ab47bc;}
@@ -261,8 +276,8 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;backgrou
 .backup-bar-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);flex:1;}
 .backup-btn{font-size:11px;font-weight:600;padding:5px 12px;border-radius:6px;border:1px solid var(--bdr);background:var(--sf);color:var(--txt);cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;}
 .backup-btn:hover{background:var(--sf2);}
-.backup-btn.restore{color:var(--teal);border-color:var(--teal);background:rgba(0,191,165,.08);}
-.backup-btn.restore:hover{background:rgba(0,191,165,.15);}
+.backup-btn.restore{color:var(--teal);border-color:var(--teal);background:rgba(62,207,142,.08);}
+.backup-btn.restore:hover{background:rgba(62,207,142,.15);}
 @media(max-width:600px){.backup-bar{margin:8px 10px 0;}}
 
 /* ═══ ALERT CENTER ═══ */
@@ -274,12 +289,12 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;backgrou
 .alert-item{display:flex;align-items:flex-start;gap:9px;padding:9px 13px;border-radius:var(--r-sm);font-size:12px;border:1px solid;}
 .alert-item.warn{background:rgba(255,152,0,.07);border-color:rgba(255,152,0,.22);color:#ffa726;}
 .alert-item.info{background:rgba(33,150,243,.07);border-color:rgba(33,150,243,.2);color:#64b5f6;}
-.alert-item.ok{background:var(--teal-lt);border-color:rgba(0,191,165,.22);color:var(--teal);}
+.alert-item.ok{background:var(--teal-lt);border-color:rgba(62,207,142,.22);color:var(--teal);}
 [data-theme="light"] .alert-item.warn{background:#fff8e1;border-color:#f0c040;color:#7a5c00;}
 [data-theme="light"] .alert-item.info{background:var(--blue-lt);border-color:#90caf9;color:var(--blue);}
 [data-theme="light"] .alert-item.ok{background:var(--teal-lt);color:var(--teal-dk);}
 .alert-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:3px;}
-.alert-dot.warn{background:#ff9800;}.alert-dot.info{background:#2196f3;}.alert-dot.ok{background:#00bfa5;}
+.alert-dot.warn{background:#ff9800;}.alert-dot.info{background:#2196f3;}.alert-dot.ok{background:#3ecf8e;}
 
 /* ═══ RISK CARD ═══ */
 .risk-card{margin:16px 24px 0;background:var(--sf);border:1px solid var(--bdr);border-radius:10px;overflow:hidden;}
@@ -289,7 +304,7 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;backgrou
 .risk-lvl-badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;}
 .risk-lvl-badge.high{background:rgba(239,83,80,.18);color:#ef5350;border:1px solid rgba(239,83,80,.35);}
 .risk-lvl-badge.moderate{background:rgba(33,150,243,.15);color:#2196f3;border:1px solid rgba(33,150,243,.3);}
-.risk-lvl-badge.low{background:rgba(0,191,165,.15);color:var(--teal);border:1px solid rgba(0,191,165,.3);}
+.risk-lvl-badge.low{background:rgba(62,207,142,.15);color:var(--teal);border:1px solid rgba(62,207,142,.3);}
 .risk-lvl-badge.nodata{background:var(--sf2);color:var(--muted);border:1px solid var(--bdr);}
 .risk-period-tabs{display:flex;border-bottom:1px solid var(--bdr);}
 .risk-ptab{flex:1;padding:8px 4px;font-size:11px;font-weight:600;text-align:center;cursor:pointer;border:none;background:transparent;color:var(--muted);border-bottom:2px solid transparent;transition:all .15s;font-family:inherit;}
@@ -334,7 +349,7 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;backgrou
 .risk-loc-dist-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;text-transform:uppercase;}
 .risk-loc-dist-badge.high{background:rgba(239,83,80,.15);color:#ef5350;}
 .risk-loc-dist-badge.moderate{background:rgba(33,150,243,.15);color:#2196f3;}
-.risk-loc-dist-badge.low{background:rgba(0,191,165,.13);color:var(--teal);}
+.risk-loc-dist-badge.low{background:rgba(62,207,142,.13);color:var(--teal);}
 .risk-loc-table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:4px;}
 .risk-loc-table th{padding:5px 8px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;background:var(--sf2);border-bottom:1px solid var(--bdr);}
 .risk-loc-table td{padding:5px 8px;border-bottom:1px solid var(--bdr);color:var(--txt2);}
@@ -370,7 +385,7 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;backgrou
 .pt-select:focus{outline:none;border-color:var(--teal);}
 .pt-btn{height:34px;padding:0 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;transition:all .15s;}
 .pt-btn.primary{background:var(--teal);color:#fff;}
-.pt-btn.secondary{background:var(--teal-lt);color:var(--teal);border:1px solid rgba(0,191,165,.3);}
+.pt-btn.secondary{background:var(--teal-lt);color:var(--teal);border:1px solid rgba(62,207,142,.3);}
 .pt-btn.blue{background:var(--blue-lt);color:var(--blue);border:1px solid rgba(33,150,243,.3);}
 .pt-btn.ghost{background:var(--sf);color:var(--muted);border:1px solid var(--bdr);}
 .pt-btn.danger{background:rgba(239,83,80,.1);color:#ef5350;border:1px solid rgba(239,83,80,.3);}
@@ -610,11 +625,11 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.0.94</p>
+      <p>Admin Dashboard · v2.0.95</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
-      <input id="lf-user" class="lf-input" type="text" placeholder="ANIENTO" autocomplete="username">
+      <input id="lf-user" class="lf-input" type="text" placeholder="USER-1" autocomplete="username">
       <label class="lf-label">Password</label>
       <input id="lf-pass" class="lf-input" type="password" placeholder="••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
       <div class="lf-rem"><input type="checkbox" id="lf-rem"><label for="lf-rem">Remember me on this device</label></div>
@@ -650,7 +665,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>v2.0.94 · A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.0.95 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -819,7 +834,7 @@ tr:hover td{background:var(--teal-lt);}
             <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:nowrap;">
               <button class="risk-export-btn" onclick="exportRiskPDF()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>Export PDF</button>
               <button class="risk-export-btn" style="background:rgba(27,94,32,.15);color:#2e7d32;border-color:rgba(27,94,32,.3);" onmouseenter="this.style.background='rgba(27,94,32,.25)'" onmouseleave="this.style.background='rgba(27,94,32,.15)'" onclick="exportRiskExcel()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>Export Excel</button>
-              <button class="risk-export-btn" style="background:rgba(0,105,92,.15);color:#00695c;border-color:rgba(0,105,92,.3);" onmouseenter="this.style.background='rgba(0,105,92,.25)'" onmouseleave="this.style.background='rgba(0,105,92,.15)'" onclick="exportMonthlyLarval()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Monthly Larval Format</button>
+              <button class="risk-export-btn" style="background:rgba(0,105,92,.15);color:#1a7a4a;border-color:rgba(0,105,92,.3);" onmouseenter="this.style.background='rgba(0,105,92,.25)'" onmouseleave="this.style.background='rgba(0,105,92,.15)'" onclick="exportMonthlyLarval()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Monthly Larval Format</button>
               <button class="risk-export-btn" style="background:rgba(191,54,12,.15);color:#bf360c;border-color:rgba(191,54,12,.3);" onmouseenter="this.style.background='rgba(191,54,12,.25)'" onmouseleave="this.style.background='rgba(191,54,12,.15)'" onclick="exportMonthlyAdult()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Monthly Adult Format</button>
             </div>
           </div>
@@ -965,6 +980,7 @@ tr:hover td{background:var(--teal-lt);}
         <div class="man-subtabs" style="margin:0 0 0 0;">
           <button class="man-subtab active-adult" id="utab-admin" onclick="switchUserTab('admin')">Admin Credentials</button>
           <button class="man-subtab" id="utab-field" onclick="switchUserTab('field')">User Credentials</button>
+          <button class="man-subtab" id="utab-signup" onclick="switchUserTab('signup')">Sign-up Requests <span id="signup-badge" style="display:none;background:#f59e0b;color:#1a1200;font-size:10px;font-weight:800;border-radius:99px;padding:1px 7px;margin-left:4px;">0</span></button>
         </div>
         <div id="users-admin-section" class="users-form" style="margin-top:0;border-top:none;border-radius:0 0 var(--r) var(--r);">
           <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:10px;padding:10px 0 0;">Admin Accounts — Dashboard Login Only</div>
@@ -982,9 +998,16 @@ tr:hover td{background:var(--teal-lt);}
             <button class="pt-btn primary" onclick="saveUsers()">💾 Save to GitHub</button>
           </div>
         </div>
+        <div id="users-signup-section" class="users-form" style="display:none;margin-top:0;border-top:none;border-radius:0 0 var(--r) var(--r);">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:10px;padding:10px 0 0;">New account requests from the Operations Console — users cannot use the app until approved</div>
+          <div id="users-signup-list"><p style="color:var(--muted);font-size:12px;">Loading…</p></div>
+          <div style="display:flex;gap:8px;margin-top:12px;">
+            <button class="pt-btn secondary" onclick="loadSignups()">↻ Refresh Requests</button>
+          </div>
+        </div>
         <div class="note-box" style="margin-top:12px;">
           <strong>Access rules:</strong> Admin accounts can only log in to this dashboard. Field app users can only log in to the field app.<br>
-          Removing a user here and saving to GitHub will immediately block their next online login. The hardcoded admins (ANIENTO, Shiva-1, Shivan-1) always work offline and cannot be removed here.
+          Removing a user here and saving to GitHub will immediately block their next online login. USER-1 is the only dashboard admin; the permanent users always work offline and cannot be removed here. New sign-ups from the Operations Console appear under Sign-up Requests and cannot use the app until approved.
         </div>
       </div>
     </div>
@@ -1445,7 +1468,7 @@ tr:hover td{background:var(--teal-lt);}
     <div class="map-modal-hdr">
       <div id="map-meta">Survey track</div>
       <div style="display:flex;gap:6px;align-items:center;">
-        <button id="map-dl-btn" onclick="downloadModalMap()" style="background:rgba(0,191,165,.25);border:1px solid rgba(0,191,165,.4);color:#00bfa5;padding:0 12px;height:28px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;white-space:nowrap;">⬇ Download</button>
+        <button id="map-dl-btn" onclick="downloadModalMap()" style="background:rgba(62,207,142,.25);border:1px solid rgba(62,207,142,.4);color:#3ecf8e;padding:0 12px;height:28px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;white-space:nowrap;">⬇ Download</button>
         <button onclick="closeMapModal()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:16px;line-height:1;">✕</button>
       </div>
     </div>
@@ -1455,7 +1478,7 @@ tr:hover td{background:var(--teal-lt);}
 
 
 <script>
-const DASH_U='ANIENTO', DASH_P='2026', DASH_KEY='est_dash_creds';
+const DASH_U='USER-1', DASH_P='2026', DASH_KEY='est_dash_creds';
 let GH={owner:'',repo:'EST-v2.0',token:''};
 function _deb(fn,ms){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);};}
 // GPS surveys store house records in houses[] and leave housesExamined/housePositive/totalContainers null
@@ -1522,7 +1545,7 @@ function checkAuth(){
       document.getElementById('lf-rem').checked=true;
       // Pre-fill credentials but require explicit click — do NOT auto-login
       const btn=document.querySelector('.login-btn');
-      if(btn){btn.textContent='Continue as '+c.u;btn.style.background='linear-gradient(135deg,#00897b,#00695c)';}
+      if(btn){btn.textContent='Continue as '+c.u;btn.style.background='linear-gradient(135deg,#2b9d6c,#1a7a4a)';}
     }
   }catch(e){}
 }
@@ -1579,7 +1602,7 @@ async function loadAll(){
     adultF=[...allAdult];larvalF=[...allLarval];manualAdultF=[...allManualAdult];manualLarvalF=[...allManualLarval];
     const cfg=await ghGet('config.json').then(d=>JSON.parse(b64d(d.content))).catch(()=>null);
     if(cfg)usersCfg=cfg.credentials||[];
-    updateStats();renderAdult();renderLarval();renderManualAdult();renderManualLarval();renderUsers();renderAlerts();buildMapCarousel();
+    updateStats();renderAdult();renderLarval();renderManualAdult();renderManualLarval();renderUsers();renderAlerts();buildMapCarousel();loadSignups().catch(()=>{});
     pill.textContent='Connected ✓ ('+allAdult.length+'A + '+allLarval.length+'L'+(allManualAdult.length+allManualLarval.length?' + '+(allManualAdult.length+allManualLarval.length)+' Manual':'')+')';pill.classList.add('ok');
     document.getElementById('st-sync').textContent=new Date().toLocaleTimeString();
     const _dc=document.getElementById('ov-date-chip');if(_dc)_dc.textContent=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
@@ -1592,8 +1615,76 @@ function switchUserTab(tab){
   _userTab=tab;
   document.getElementById('utab-admin').className='man-subtab'+(tab==='admin'?' active-adult':'');
   document.getElementById('utab-field').className='man-subtab'+(tab==='field'?' active-larval':'');
+  document.getElementById('utab-signup').className='man-subtab'+(tab==='signup'?' active-adult':'');
   document.getElementById('users-admin-section').style.display=tab==='admin'?'':'none';
   document.getElementById('users-field-section').style.display=tab==='field'?'':'none';
+  document.getElementById('users-signup-section').style.display=tab==='signup'?'':'none';
+  if(tab==='signup')loadSignups();
+}
+
+/* ── SIGN-UP REQUESTS (Supabase) ─────────────────────────────
+   New accounts created on the Operations Console land in the
+   Supabase `profiles` table with status 'pending'. Until an admin
+   approves them here, they cannot sign in or use the app. */
+const SB_URL='https://fivqdckmtymtuxlhjjoj.supabase.co';
+const SB_KEY='sb_publishable_SUdRGiarUt92Tl67FzBCvw_Vsf4G_aW';
+function sbH(){return{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};}
+let _signups=[];
+async function loadSignups(){
+  const el=document.getElementById('users-signup-list');
+  if(!el)return;
+  el.innerHTML='<p style="color:var(--muted);font-size:12px;">Loading sign-up requests…</p>';
+  try{
+    const r=await fetch(SB_URL+'/rest/v1/profiles?select=id,username,full_name,role,status,created_at&order=created_at.desc',{headers:sbH()});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    _signups=await r.json();
+    renderSignups();
+  }catch(e){
+    el.innerHTML='<p style="color:var(--muted);font-size:12px;">Could not load sign-up requests ('+e.message+'). Make sure the Supabase schema (supabase-schema.sql) has been applied.</p>';
+    updateSignupBadge(0);
+  }
+}
+function updateSignupBadge(n){
+  const b=document.getElementById('signup-badge');
+  if(!b)return;
+  b.textContent=n;b.style.display=n>0?'inline-block':'none';
+}
+function renderSignups(){
+  const el=document.getElementById('users-signup-list');
+  if(!el)return;
+  const pending=_signups.filter(s=>s.status==='pending');
+  updateSignupBadge(pending.length);
+  if(!_signups.length){el.innerHTML='<p style="color:var(--muted);font-size:12px;">No sign-up requests yet. New accounts created on the Operations Console will appear here.</p>';return;}
+  const stBadge=s=>({pending:'<span style="color:#f59e0b;border:1px solid rgba(245,158,11,.4);background:rgba(245,158,11,.1);',approved:'<span style="color:#3ecf8e;border:1px solid rgba(62,207,142,.4);background:rgba(62,207,142,.1);',rejected:'<span style="color:#f87171;border:1px solid rgba(248,113,113,.4);background:rgba(248,113,113,.1);'}[s.status]+'font-size:9.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:99px;padding:2px 9px;">'+(s.status==='pending'?'ON HOLD':s.status)+'</span>');
+  el.innerHTML=_signups.map(s=>`
+    <div class="user-row" style="grid-template-columns:1fr auto;display:flex;flex-wrap:wrap;align-items:center;gap:10px;">
+      <div style="flex:1;min-width:160px;">
+        <div style="font-weight:700;font-size:13px;">${(s.username||'').replace(/</g,'&lt;')} ${stBadge(s)}</div>
+        <div style="font-size:11px;color:var(--muted);">${(s.full_name||'').replace(/</g,'&lt;')||'—'} · requested ${s.created_at?new Date(s.created_at).toLocaleDateString('en-IN'):'—'}</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        ${s.status!=='approved'?`<button class="pt-btn primary" style="height:30px;padding:0 12px;font-size:11px;" onclick="setSignupStatus('${s.id}','approved')">✓ Approve</button>`:''}
+        ${s.status!=='pending'?`<button class="pt-btn secondary" style="height:30px;padding:0 12px;font-size:11px;" onclick="setSignupStatus('${s.id}','pending')">⏸ Hold</button>`:''}
+        <button class="del-btn" style="height:30px;padding:0 12px;" onclick="deleteSignup('${s.id}','${(s.username||'').replace(/'/g,'')}')">Delete</button>
+      </div>
+    </div>`).join('');
+}
+async function setSignupStatus(id,status){
+  try{
+    const r=await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:sbH(),body:JSON.stringify({status})});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    await loadSignups();
+    setStatus(status==='approved'?'✓ User approved — they can now sign in on the console':'User put on hold','ok');
+  }catch(e){setStatus('Update failed: '+e.message,'err');}
+}
+async function deleteSignup(id,uname){
+  if(!confirm('Delete the account request for "'+uname+'"?\nThey will no longer be able to sign in.'))return;
+  try{
+    const r=await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:sbH()});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    await loadSignups();
+    setStatus('Account request deleted','ok');
+  }catch(e){setStatus('Delete failed: '+e.message,'err');}
 }
 
 /* ── BACKUP / RESTORE ── */
@@ -1770,7 +1861,7 @@ function updateRiskCard(period){
   (()=>{
     const el=document.getElementById('risk-dist-chart');if(!el)return;
     if(!distEntries.length){el.innerHTML='<div style="font-size:11px;color:var(--muted);padding:4px 0;">No data</div>';return;}
-    const rClr=r=>r==='high'?'#ef5350':r==='moderate'?'#2196f3':r==='low'?'#00bfa5':'var(--sf2)';
+    const rClr=r=>r==='high'?'#ef5350':r==='moderate'?'#2196f3':r==='low'?'#3ecf8e':'var(--sf2)';
     const rTxt=r=>r==='high'?'#ef5350':r==='moderate'?'#2196f3':r==='low'?'var(--teal)':'var(--muted)';
     const maxHI=Math.max(...distEntries.map(d=>d.hi||0),10);
     const maxCI=Math.max(...distEntries.map(d=>d.ci||0),10);
@@ -1782,7 +1873,7 @@ function updateRiskCard(period){
       <div class="rdc-legend">
         <div class="rdc-leg"><div class="rdc-leg-dot" style="background:#ef5350"></div>High risk</div>
         <div class="rdc-leg"><div class="rdc-leg-dot" style="background:#2196f3"></div>Moderate</div>
-        <div class="rdc-leg"><div class="rdc-leg-dot" style="background:#00bfa5"></div>Low risk</div>
+        <div class="rdc-leg"><div class="rdc-leg-dot" style="background:#3ecf8e"></div>Low risk</div>
         <div class="rdc-leg" style="margin-left:auto;color:var(--muted);">HI &amp; CI: High &gt;10% · BI: High &gt;50</div>
       </div>
       ${sorted.map(d=>{
@@ -1837,7 +1928,7 @@ function updateRiskCard(period){
     const maxZHI=Math.max(...zoneEntries.map(z=>z.hi||0),10);
     const maxZCI=Math.max(...zoneEntries.map(z=>z.ci||0),10);
     const maxZBI=Math.max(...zoneEntries.filter(z=>z.bi!=null).map(z=>z.bi||0),50);
-    const rClr2=r=>r==='high'?'#ef5350':r==='moderate'?'#2196f3':r==='low'?'#00bfa5':'var(--sf2)';
+    const rClr2=r=>r==='high'?'#ef5350':r==='moderate'?'#2196f3':r==='low'?'#3ecf8e':'var(--sf2)';
     const rTxt2=r=>r==='high'?'#ef5350':r==='moderate'?'#2196f3':r==='low'?'var(--teal)':'var(--muted)';
     const tick2=pct=>`<div class="rdc-tick" style="left:${pct}%"></div>`;
     zSec.innerHTML='<div class="risk-zone-hdr">Zone-wise Indices</div>'+zoneEntries.map(z=>{
@@ -1889,7 +1980,7 @@ function updateRiskCard(period){
     if(distKeys.length){
       breedSec.style.display='';
       breedSec.innerHTML='<div class="risk-breeding-sec"><div class="risk-breeding-hdr">Breeding Preferred Containers by District</div>'+
-        '<div style="display:flex;gap:14px;margin-bottom:8px;font-size:9px;"><span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#00bfa5;border-radius:2px;display:inline-block;"></span>Positive containers</span></div>'+
+        '<div style="display:flex;gap:14px;margin-bottom:8px;font-size:9px;"><span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#3ecf8e;border-radius:2px;display:inline-block;"></span>Positive containers</span></div>'+
         distKeys.map(dk=>{
           const contData=byDistCont[dk];
           const sorted=Object.entries(contData).sort((a,b)=>b[1]-a[1]).slice(0,7);
@@ -1955,7 +2046,7 @@ function exportRiskPDF(){
     const rows=Object.entries(d.locs).sort((a,b)=>(b[1].housesEx>0?b[1].housePos/b[1].housesEx:0)-(a[1].housesEx>0?a[1].housePos/a[1].housesEx:0)).map(([ln,lv])=>{
       const lhi=lv.housesEx>0?(lv.housePos/lv.housesEx*100):0,lci=lv.totalCont>0?(lv.posCont/lv.totalCont*100):0,lbi=calcBI2(lv.housesEx,lv.posCont);
       const topZ2=Object.entries(lv.zones||{}).sort((a,b)=>b[1]-a[1])[0]?.[0]||'';
-      const zTag2=topZ2?` <span style="font-size:7.5px;font-weight:700;color:#00695c;letter-spacing:.03em;">(${topZ2.toUpperCase()})</span>`:'';
+      const zTag2=topZ2?` <span style="font-size:7.5px;font-weight:700;color:#1a7a4a;letter-spacing:.03em;">(${topZ2.toUpperCase()})</span>`:'';
       return`<tr><td>${ln}${zTag2}</td><td style="color:${rClr(lhi,5,10)};font-weight:700;">${lhi>0?lhi.toFixed(1):'—'}</td><td style="color:${rClr(lci,5,10)};font-weight:700;">${lci>0?lci.toFixed(1):'—'}</td><td style="color:${rClr(lbi,5,50)};font-weight:700;">${lbi!=null?lbi.toFixed(1):'N/A'}</td></tr>`;
     }).join('');
     return`<h3>${d.name} — Location Breakdown</h3><table><thead><tr><th>Location / Area</th><th>HI</th><th>CI</th><th>BI †</th></tr></thead><tbody>${rows}</tbody></table>`;
@@ -1975,10 +2066,10 @@ function exportRiskPDF(){
   }).join('');
   const contSections2=Object.entries(byDistCont2).filter(([,cc])=>Object.keys(cc).length>0).map(([dk,cc])=>{
     const sorted=Object.entries(cc).sort((a,b)=>b[1]-a[1]).slice(0,8);const mx=sorted[0][1];
-    const rows=sorted.map(([name,cnt],idx)=>`<tr style="${idx%2===0?'':'background:#f9f9f9;'}"><td>${name}</td><td style="font-weight:700;color:#00695c;">${cnt}</td><td style="padding:4px 8px;"><div style="height:10px;border-radius:5px;background:#00695c;width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%;min-width:4px;"></div></td></tr>`).join('');
+    const rows=sorted.map(([name,cnt],idx)=>`<tr style="${idx%2===0?'':'background:#f9f9f9;'}"><td>${name}</td><td style="font-weight:700;color:#1a7a4a;">${cnt}</td><td style="padding:4px 8px;"><div style="height:10px;border-radius:5px;background:#1a7a4a;width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%;min-width:4px;"></div></td></tr>`).join('');
     return`<h3>${dk} — Breeding Preferred Containers</h3><table><thead><tr><th>Container Type</th><th>Positive Count</th><th style="min-width:120px;">Proportion</th></tr></thead><tbody>${rows}</tbody></table>`;
   }).join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#00695c;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #00695c;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:18px;font-weight:700;color:#00695c;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:10px 14px;background:#fff8e1;border-left:3px solid #f9a825;font-size:13px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #00695c;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${range.label||'All Data'}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><h2>Overall Entomological Indices — Aedes Breeding for Andaman &amp; Nicobar Islands</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#00695c;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.0.94 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#1a7a4a;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #1a7a4a;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:18px;font-weight:700;color:#1a7a4a;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:10px 14px;background:#fff8e1;border-left:3px solid #f9a825;font-size:13px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #1a7a4a;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${range.label||'All Data'}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><h2>Overall Entomological Indices — Aedes Breeding for Andaman &amp; Nicobar Islands</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#1a7a4a;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.0.95 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
   const win=window.open('','_blank','width=920,height=740');
   if(win){win.document.write(html);win.document.close();setTimeout(()=>win.print(),700);}
 }
@@ -2822,7 +2913,7 @@ function buildAdultXLSX(surveys,isCompiled){
   const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
   // ── Report Status ──
   const statusRows=[
-    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.94')],
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.95')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -2895,7 +2986,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   // ── Report Status sheet ──
   const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.94')],
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.95')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -3039,7 +3130,7 @@ function buildAdultCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.94 — Adult Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.95 — Adult Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -3091,7 +3182,7 @@ function buildAdultCSV(surveys){
     });
   });
   blank();
-  r('EST v2.0.94 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.95 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -3103,7 +3194,7 @@ function buildLarvalCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.94 — Larval Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.95 — Larval Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -3184,7 +3275,7 @@ function buildLarvalCSV(surveys){
     }
   });
   blank();
-  r('EST v2.0.94 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.95 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -4149,7 +4240,7 @@ function exportSeasonalPDF(){
   if(!w)return;
   w.document.write(`<!DOCTYPE html><html><head><title>Seasonal Trends ${year}</title>
   <style>body{font-family:Arial,sans-serif;padding:24px;color:#1a1a1a;}
-  h1{font-size:20px;color:#004d42;border-bottom:2px solid #004d42;padding-bottom:8px;}
+  h1{font-size:20px;color:#0f4a2e;border-bottom:2px solid #0f4a2e;padding-bottom:8px;}
   p{font-size:12px;color:#555;}
   img{max-width:100%;border:1px solid #ddd;border-radius:6px;margin:12px 0;}
   table{width:100%;border-collapse:collapse;font-size:11px;margin-top:12px;}
@@ -4161,7 +4252,7 @@ function exportSeasonalPDF(){
   <p><b>Year:</b> ${year} &nbsp;|&nbsp; <b>District:</b> ${distLabel} &nbsp;|&nbsp; <b>Generated:</b> ${new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'})}</p>
   ${imgData?`<img src="${imgData}" alt="Seasonal chart">`:''}
   ${tblHTML}
-  <p style="margin-top:20px;font-size:10px;color:#888;">EST v2.0.94 · Entomological Surveillance Tool · A&N Islands</p>
+  <p style="margin-top:20px;font-size:10px;color:#888;">EST v2.0.95 · Entomological Surveillance Tool · A&N Islands</p>
   </body></html>`);
   w.document.close();
   setTimeout(()=>w.print(),500);
@@ -4465,8 +4556,8 @@ function showDashUpdateBanner(ver){
   if(document.getElementById('dash-update-banner'))return;
   const b=document.createElement('div');
   b.id='dash-update-banner';
-  b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#004d42,#006b5c);color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 2px 16px rgba(0,0,0,.3);font-family:inherit;';
-  b.innerHTML=`<div><div style="font-weight:700;font-size:13px;">EST Update Available${ver?' ('+ver+')':''}</div><div style="font-size:11px;opacity:.8;">A newer version is ready. Reload to apply. All data is safe.</div></div><div style="display:flex;gap:8px;flex-shrink:0;"><button onclick="document.getElementById('dash-update-banner').remove()" style="height:32px;padding:0 12px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:7px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;">Later</button><button onclick="window.location.reload(true)" style="height:32px;padding:0 14px;background:#68fadd;border:none;border-radius:7px;color:#00201a;font-size:12px;font-weight:700;cursor:pointer;">Reload Now</button></div>`;
+  b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#0f4a2e,#1a7a4a);color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 2px 16px rgba(0,0,0,.3);font-family:inherit;';
+  b.innerHTML=`<div><div style="font-weight:700;font-size:13px;">EST Update Available${ver?' ('+ver+')':''}</div><div style="font-size:11px;opacity:.8;">A newer version is ready. Reload to apply. All data is safe.</div></div><div style="display:flex;gap:8px;flex-shrink:0;"><button onclick="document.getElementById('dash-update-banner').remove()" style="height:32px;padding:0 12px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:7px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;">Later</button><button onclick="window.location.reload(true)" style="height:32px;padding:0 14px;background:#85f0be;border:none;border-radius:7px;color:#00201a;font-size:12px;font-weight:700;cursor:pointer;">Reload Now</button></div>`;
   document.body.prepend(b);
 }
 

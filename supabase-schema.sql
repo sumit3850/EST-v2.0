@@ -274,9 +274,33 @@ from auth.users
 on conflict (id) do nothing;
 
 -- ─────────────────────────────────────────────
--- PROMOTE ADMINS (matches case-insensitively, fixes display casing)
--- Safe to re-run; does nothing if the auth users don't exist yet.
+-- CONSOLE / DASHBOARD MANAGEMENT via publishable key
+-- The EST dashboard manages sign-up requests (approve / hold / delete)
+-- using the public publishable key, so the anon role needs access.
+-- NOTE: acceptable for this deployment's threat model (the app already
+-- ships credentials in a public config.json); tighten later if needed.
 -- ─────────────────────────────────────────────
-update public.profiles set username='ANIENTO',  role='admin', status='approved' where lower(username)='aniento';
-update public.profiles set username='Shiva-1',  role='admin', status='approved' where lower(username)='shiva-1';
-update public.profiles set username='Shivan-1', role='admin', status='approved' where lower(username)='shivan-1';
+drop policy if exists "profiles: anon read"   on public.profiles;
+drop policy if exists "profiles: anon update" on public.profiles;
+drop policy if exists "profiles: anon delete" on public.profiles;
+create policy "profiles: anon read" on public.profiles
+  for select to anon using (true);
+create policy "profiles: anon update" on public.profiles
+  for update to anon using (true) with check (true);
+create policy "profiles: anon delete" on public.profiles
+  for delete to anon using (true);
+
+-- ─────────────────────────────────────────────
+-- IMPORTANT — AUTH SETTINGS (do this in the Supabase dashboard):
+-- Authentication > Sign In / Providers > Email:
+--   • Enable the Email provider
+--   • DISABLE "Confirm email" — EST usernames map to internal
+--     @est-andaman.in addresses that cannot receive mail, so email
+--     confirmation would permanently block every sign-up.
+-- ─────────────────────────────────────────────
+
+-- ─────────────────────────────────────────────
+-- PROMOTE ADMIN (USER-1 is the only dashboard admin)
+-- Safe to re-run; does nothing if the auth user doesn't exist yet.
+-- ─────────────────────────────────────────────
+update public.profiles set username='USER-1', role='admin', status='approved' where lower(username)='user-1';

@@ -395,7 +395,7 @@ body{
 </main>
 
 <footer class="statusbar">
-  <span>console v2.0.94</span><span class="sep">│</span>
+  <span>console v2.0.95</span><span class="sep">│</span>
   <span class="status-pill"><span id="fb-dot" class="status-dot checking"></span><span id="fb-state">supabase: checking…</span></span>
   <span class="sep">│</span><span id="fb-net">network: —</span>
 </footer>
@@ -472,13 +472,13 @@ function validUsername(u){return /^[A-Za-z0-9_-]{3,32}$/.test(u);}
 /* ══ Legacy EST credentials (config.json + built-in admins) ══ */
 async function legacyCheck(u,p){
   const users=[
-    {username:'ANIENTO', password:'2026',   role:'admin'},
-    {username:'USER-1',  password:'2026',   role:'field'},
+    {username:'ANIENTO', password:'2026',   role:'field'},
+    {username:'USER-1',  password:'2026',   role:'admin'},
     {username:'USER-2',  password:'2020',   role:'field'},
     {username:'shiva',   password:'2510',   role:'field'},
     {username:'Shivan',  password:'886748', role:'field'},
-    {username:'Shiva-1', password:'2004',   role:'admin'},
-    {username:'Shivan-1',password:'1992',   role:'admin'}
+    {username:'Shiva-1', password:'2004',   role:'field'},
+    {username:'Shivan-1',password:'1992',   role:'field'}
   ];
   try{
     const r=await fetch('config.json',{cache:'no-store'});
@@ -504,7 +504,7 @@ async function doSignIn(ev){
     const legacy=await legacyCheck(u,p);
     if(legacy){
       localStorage.setItem('est_console_rem',$('si-rem').checked?'1':'0');
-      storeSSO(legacy.username,p,legacy.role);
+      storeSSO(legacy.username,p,legacy.role,'legacy');
       showAcct(legacy,null);
       return;
     }
@@ -533,7 +533,7 @@ async function doSignIn(ev){
       return;
     }
     localStorage.setItem('est_console_rem',$('si-rem').checked?'1':'0');
-    storeSSO(profile.username||u,p,profile.role||'field');
+    storeSSO(profile.username||u,p,profile.role||'field','supabase');
     showAcct(profile,data.user);
   }catch(e){
     showMsg('si-msg','err','Connection failed — check your internet and try again.');
@@ -577,9 +577,9 @@ async function doSignUp(ev){
 /* ══ Sign out ══ */
 /* Single sign-on: store the validated credentials + session marker so the
    field app and dashboard enter directly without asking again. */
-function storeSSO(u,p,role){
+function storeSSO(u,p,role,src){
   try{
-    localStorage.setItem('est_console_session',JSON.stringify({u,role,ts:new Date().getTime()}));
+    localStorage.setItem('est_console_session',JSON.stringify({u,role,src:src||'legacy',ts:new Date().getTime()}));
     localStorage.setItem('est_creds',JSON.stringify({u,p}));
     if(role==='admin')localStorage.setItem('est_dash_creds',JSON.stringify({u,p}));
   }catch(e){}
