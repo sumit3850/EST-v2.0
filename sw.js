@@ -1,8 +1,10 @@
 /* EST v2.0 Service Worker — Offline-First */
-const CACHE_NAME = 'est-v2.0.89';
+const CACHE_NAME = 'est-v2.0.90';
 const STATIC_ASSETS = [
   './',
   './index.html',
+  './app.html',
+  './signin.html',
   './dashboard.html',
   './manifest.json',
   './dashboard-manifest.json',

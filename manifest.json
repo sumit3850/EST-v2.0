@@ -1,8 +1,8 @@
 {
-  "name": "EST v2.0 \u2014 Entomological Surveillance Tool",
+  "name": "EST v2.0 — Entomological Surveillance Tool",
   "short_name": "EST",
   "description": "Offline-capable WHO-standard mosquito surveillance tool with GPS, data analysis, and PDF/CSV export. Works completely offline.",
-  "start_url": "./",
+  "start_url": "./app.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -32,14 +32,14 @@
       "name": "Adult Surveillance",
       "short_name": "Adult",
       "description": "Start adult mosquito surveillance",
-      "url": "./",
+      "url": "./app.html",
       "icons": []
     },
     {
       "name": "Larval Surveillance",
       "short_name": "Larval",
       "description": "Start larval mosquito surveillance",
-      "url": "./",
+      "url": "./app.html",
       "icons": []
     }
   ],
