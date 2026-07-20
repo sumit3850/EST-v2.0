@@ -340,7 +340,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 #focus-shield svg{opacity:.5;}
 #focus-shield p{color:rgba(255,255,255,.5);font-size:14px;font-weight:600;letter-spacing:.05em;}
 
-/* ═══ PREMIUM POLISH (v2.0.98) ═══ */
+/* ═══ PREMIUM POLISH (v2.0.99) ═══ */
 .launch-btn{background:linear-gradient(180deg,#46e09d,#3ecf8e) !important;color:#04140c !important;box-shadow:0 6px 22px rgba(62,207,142,.32),inset 0 1px 0 rgba(255,255,255,.35) !important;}
 .launch-btn:hover{filter:brightness(1.05);}
 .launch-btn:active{transform:scale(.985);}
@@ -353,6 +353,17 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);}
 ::-webkit-scrollbar-thumb{background:rgba(26,122,74,.25);border-radius:99px;}
 ::-webkit-scrollbar-thumb:hover{background:rgba(26,122,74,.45);}
 #app-header{border-bottom:1px solid rgba(26,122,74,.14);box-shadow:0 1px 12px rgba(10,40,25,.06);}
+/* — premium spacing rhythm (v2.0.99) — */
+.scroll-area{padding-left:16px;padding-right:16px;}
+@media(min-width:900px){.scroll-area{max-width:900px;margin:0 auto;width:100%;}}
+.saved-item{padding:15px 16px 13px;margin-bottom:12px;border-radius:var(--rlg);border:1px solid rgba(26,122,74,.14);box-shadow:0 2px 12px rgba(10,40,25,.05);transition:border-color var(--tr),box-shadow var(--tr);}
+.saved-item:hover{border-color:rgba(26,122,74,.3);box-shadow:0 4px 18px rgba(10,40,25,.09);}
+.sit-acts{gap:7px;margin-top:4px;}
+.sit-act{min-height:34px;padding:6px 12px;border-radius:9px;border-width:1px;transition:background var(--tr),border-color var(--tr);}
+.sit-act:active{transform:scale(.96);}
+.sit-sync{margin:9px 0 7px;}
+.sit-meta{line-height:1.55;}
+.saved-tabs{gap:6px;}
 .hsub{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ol);}
 input[type=text],input[type=number],input[type=date],input[type=time],input[type=password],select,textarea{border-radius:var(--rmd);transition:border-color .16s ease,box-shadow .16s ease;}
 input[type=text]:focus,input[type=number]:focus,input[type=date]:focus,input[type=time]:focus,input[type=password]:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(62,207,142,.13);}
@@ -471,7 +482,7 @@ input[type=text]:focus,input[type=number]:focus,input[type=date]:focus,input[typ
         </svg>
       </div>
       <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub" id="dash-sub-ver">EST v2.0.98</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.0.99</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -517,7 +528,7 @@ input[type=text]:focus,input[type=number]:focus,input[type=date]:focus,input[typ
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About <span id="dash-about-ver">EST v2.0.98</span>
+      About <span id="dash-about-ver">EST v2.0.99</span>
     </button>
     <button onclick="installApp()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;background:rgba(255,255,255,.12);border:1.5px solid rgba(133,240,190,.5);border-radius:var(--rxl);color:#fff;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:12px;">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
@@ -2218,7 +2229,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.0.98';
+const APP_VER='2.0.99';
 /* Compact human-readable Survey ID: A-260531-1437 (type + YYMMDD + HHMM) */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -3647,7 +3658,7 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.0.98)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.0.99)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -3722,7 +3733,7 @@ function buildAdultXLSX(surveys,isCompiled){
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.0.98)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.0.99)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -4387,7 +4398,7 @@ function renderSavedMod(mod){
       const meta=(s.state||'')+(s.state&&s.district?' · ':'')+( s.district||'')+(s.date?' · '+s.date:'')+( savedTime?' · '+savedTime:'');
       const typeTag=s._manType==='adult'?'<span style="font-size:9px;background:rgba(62,207,142,.15);color:var(--primary);padding:1px 5px;border-radius:8px;font-weight:700;">ADULT</span>':'<span style="font-size:9px;background:rgba(33,150,243,.13);color:var(--larval);padding:1px 5px;border-radius:8px;font-weight:700;">LARVAL</span>';
       const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');div.dataset.sid=String(s.id);
-      div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="manualSel[this.checked?'add':'delete']('${s.id}');renderSavedMod('manual');"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${idx+1}</span>${typeTag}<div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?'Synced to GitHub':'Not synced'}</div><div class="sit-acts"><button class="sit-act" onclick="editManualEntry(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('csv',13,'#ff9800')} Edit</button><button class="sit-act" onclick="exportManualOne(${s.id},'${s._manType}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act" onclick="exportManualOnePDF(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('pdf',13,'#ff9800')} PDF</button><button class="sit-act" onclick="syncManualOne(${s.id},'${s._manType}')" style="${s.synced?'color:var(--osv);':'color:var(--primary);font-weight:700;'}">${mkSvg('check',13)} ${s.synced?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteManualSaved(${s.id},'${s._manType}')">${mkSvg('del',13)} Del</button></div>`;
+      div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="manualSel[this.checked?'add':'delete']('${s.id}');renderSavedMod('manual');"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${idx+1}</span>${typeTag}<div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?'Synced to cloud':'Not synced'}</div><div class="sit-acts"><button class="sit-act" onclick="editManualEntry(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('csv',13,'#ff9800')} Edit</button><button class="sit-act" onclick="exportManualOne(${s.id},'${s._manType}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act" onclick="exportManualOnePDF(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('pdf',13,'#ff9800')} PDF</button><button class="sit-act" onclick="syncManualOne(${s.id},'${s._manType}')" style="${s.synced?'color:var(--osv);':'color:var(--primary);font-weight:700;'}">${mkSvg('check',13)} ${s.synced?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteManualSaved(${s.id},'${s._manType}')">${mkSvg('del',13)} Del</button></div>`;
       list.appendChild(div);
     });
     return;
@@ -4408,7 +4419,7 @@ function renderSavedMod(mod){
     const meta=(s.state||'')+(s.state&&s.district?' · ':'')+( s.district||'')+(s.date?' · '+s.date:'')+( savedTime?' · '+savedTime:'');
     const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');div.dataset.sid=String(s.id);
     const serialNo=surveyIdx+1;
-    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?('Synced '+new Date(s.syncedAt||'').toLocaleDateString('en-IN')):'Not synced to GitHub'}</div><div class="sit-views"><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','survey')">Survey</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','collect')">Collect</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','review')">Review</button></div><div class="sit-acts"><button class="sit-act" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act" onclick="showSavedMap('${mod}','${s.id}')" style="${mod==='adult'?'':'border-color:rgba(21,101,192,.3);color:var(--larval);'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="${mod==='adult'?'var(--primary)':'var(--larval)'}"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg> Map</button><button class="sit-act" onclick="resaveSurvey('${mod}','${s.id}')" ${s.resaved?'disabled':''} style="border-color:rgba(100,100,100,.3);color:#555;${s.resaved?'opacity:.4;cursor:not-allowed;':''}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg> Resave</button><button class="sit-sync-btn sit-act" onclick="syncOneSurvey('${mod}','${s.id}')" style="${s.synced?'border-color:rgba(0,107,92,.25);color:var(--osv);':'border-color:rgba(0,107,92,.6);color:var(--primary);font-weight:700;'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg> ${s.synced?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
+    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?('Synced '+new Date(s.syncedAt||'').toLocaleDateString('en-IN')):'Not synced'}</div><div class="sit-views"><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','survey')">Survey</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','collect')">Collect</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','review')">Review</button></div><div class="sit-acts"><button class="sit-act" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act" onclick="showSavedMap('${mod}','${s.id}')" style="${mod==='adult'?'':'border-color:rgba(21,101,192,.3);color:var(--larval);'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="${mod==='adult'?'var(--primary)':'var(--larval)'}"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg> Map</button><button class="sit-act" onclick="resaveSurvey('${mod}','${s.id}')" ${s.resaved?'disabled':''} style="border-color:rgba(100,100,100,.3);color:#555;${s.resaved?'opacity:.4;cursor:not-allowed;':''}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg> Resave</button><button class="sit-sync-btn sit-act" onclick="syncOneSurvey('${mod}','${s.id}')" style="${s.synced?'border-color:rgba(0,107,92,.25);color:var(--osv);':'border-color:rgba(0,107,92,.6);color:var(--primary);font-weight:700;'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg> ${s.synced?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
     list.appendChild(div);
   });
 }
@@ -5577,11 +5588,15 @@ async function syncManualOne(id,type){
   let saved=[];try{saved=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}
   const s=saved.find(x=>String(x.id)===String(id));if(!s)return;
   showToast('Syncing…','check');
-  const ok=await ghPushManualSurvey(s,type);
-  if(ok){
+  const sbOk=await sbPushSurvey(s,type);
+  if(sbOk)_markSbSynced(type,id,s);
+  let ghOk=false;
+  if(GH_CONFIG.owner&&GH_CONFIG.token)ghOk=await ghPushManualSurvey(s,type);
+  if(sbOk||ghOk){
+    saved=JSON.parse(localStorage.getItem(key)||'[]');
     saved=saved.map(x=>String(x.id)===String(id)?{...x,synced:true}:x);
     try{localStorage.setItem(key,JSON.stringify(saved));}catch(e){}
-    showToast('Synced ✓','check');
+    showToast('Synced to cloud ✓','check');
   }else{showToast('Sync failed — check connection','warn');}
   renderSavedMod('manual');
 }
