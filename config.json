@@ -7,7 +7,7 @@
       "active": true
     },
     {
-      "username": "USER-1",
+      "username": "ANIENTO",
       "password": "2026",
       "role": "admin",
       "active": true
@@ -25,5 +25,5 @@
       "active": true
     }
   ],
-  "updatedAt": "2026-07-20T20:23:18.638Z"
+  "updatedAt": "2026-07-20T20:23:28.325Z"
 }
