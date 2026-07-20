@@ -410,7 +410,7 @@ body{
 </main>
 
 <footer class="statusbar">
-  <span>console v2.0.99</span><span class="sep">│</span>
+  <span>console v2.1.0</span><span class="sep">│</span>
   <span class="status-pill"><span id="fb-dot" class="status-dot checking"></span><span id="fb-state">supabase: checking…</span></span>
   <span class="sep">│</span><span id="fb-net">network: —</span>
 </footer>
@@ -532,9 +532,11 @@ async function doSignIn(ev){
     }catch(e){}
     const {data,error}=await _sb.auth.signInWithPassword({email,password:p});
     if(error){
-      showMsg('si-msg','err',error.message==='Invalid login credentials'
-        ?'Invalid username or password.'
-        :error.message);
+      let m=error.message;
+      if(m==='Invalid login credentials')m='Invalid username or password.';
+      else if(/not confirmed/i.test(m))m='This account is stuck waiting for email confirmation. Ask the EST admin to disable "Confirm email" in Supabase and confirm your account under Authentication → Users.';
+      else if(/rate limit/i.test(m))m='The authentication service hit its email limit — try again in an hour, or ask the admin to disable "Confirm email" in Supabase.';
+      showMsg('si-msg','err',m);
       return;
     }
     const {data:profile,error:pErr}=await _sb.from('profiles').select('*').eq('id',data.user.id).single();
@@ -588,9 +590,10 @@ async function doSignUp(ev){
       options:{data:{username:u,full_name:(fn+' '+ln).trim(),first_name:fn,last_name:ln,contact_email:em,phone:ph}}
     });
     if(error){
-      showMsg('su-msg','err',/already registered/i.test(error.message)
-        ?'An account with that email already exists — try signing in instead.'
-        :error.message);
+      let m=error.message;
+      if(/already registered/i.test(m))m='An account with that email already exists — try signing in instead.';
+      else if(/rate limit/i.test(m))m='Sign-up is temporarily blocked: the project still has "Confirm email" enabled, which sends a confirmation mail on every request and hits Supabase\'s email limit. Ask the EST admin to turn OFF "Confirm email" under Supabase → Authentication → Sign In / Providers → Email, then try again.';
+      showMsg('su-msg','err',m);
       return;
     }
     // Profile row is created by the on_auth_user_created trigger (status=pending)
