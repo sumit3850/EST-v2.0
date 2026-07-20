@@ -7,6 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E %3Crect width='100' height='100' rx='18' fill='%230d2018'/%3E %3Cg stroke='rgba(130,200,165,.4)' fill='none' stroke-linecap='round'%3E %3Cpolyline points='50,47 26,18' stroke-width='0.85'/%3E %3Cpolyline points='57,49 82,22 92,16' stroke-width='0.8'/%3E %3Cpolyline points='62,54 88,36 96,44' stroke-width='0.8'/%3E %3C/g%3E %3Cpath d='M50,44 Q44,22 64,13 Q78,7 87,18 Q91,27 85,35 Q76,41 63,44 Q57,44 51,44Z' fill='rgba(180,240,218,.11)' stroke='rgba(200,240,225,.8)' stroke-width='0.7'/%3E %3Cellipse cx='54' cy='46' rx='10' ry='9.5' fill='%236dbd9e' stroke='%239ed0b8' stroke-width='0.75'/%3E %3Ccircle cx='42' cy='50' r='6.2' fill='%236dbd9e' stroke='%239ed0b8' stroke-width='0.75'/%3E %3Cellipse cx='76' cy='63' rx='18' ry='6.5' transform='rotate(26 76 63)' fill='%236dbd9e' stroke='%239ed0b8' stroke-width='0.65'/%3E %3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <link rel="manifest" href="./dashboard-manifest.json">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -554,11 +555,11 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.0.89</p>
+      <p>Admin Dashboard · v3.0.0</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
-      <input id="lf-user" class="lf-input" type="text" placeholder="ANIENTO" autocomplete="username">
+      <input id="lf-user" class="lf-input" type="text" placeholder="your-username" autocomplete="username">
       <label class="lf-label">Password</label>
       <input id="lf-pass" class="lf-input" type="password" placeholder="••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
       <div class="lf-rem"><input type="checkbox" id="lf-rem"><label for="lf-rem">Remember me on this device</label></div>
@@ -1397,128 +1398,167 @@ tr:hover td{background:var(--teal-lt);}
 
 
 <script>
-const DASH_U='ANIENTO', DASH_P='2026', DASH_KEY='est_dash_creds';
-let GH={owner:'',repo:'EST-v2.0',token:''};
+/* ═══ Supabase backend ═══ */
+const SUPABASE_URL='https://fivqdckmtymtuxlhjjoj.supabase.co';
+const SUPABASE_KEY='sb_publishable_SUdRGiarUt92Tl67FzBCvw_Vsf4G_aW';
+const _sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let _sbUser=null,_sbProfile=null;
+const DASH_KEY='est_dash_creds';
+let GH={owner:'sumit3850',repo:'EST-v2.0',token:''};
+
 function _deb(fn,ms){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);};}
-// GPS surveys store house records in houses[] and leave housesExamined/housePositive/totalContainers null
 function _hEx(s){return s.housesExamined||(s.houses&&s.houses.length)||0;}
 function _hPos(s){return s.housePositive||(s.houses?(s.houses.filter(h=>h.housePositive).length):0)||0;}
 function _tCont(s){return s.totalContainers||(s.houses?(s.houses.reduce((a,h)=>a+(h.containers||0),0)):0)||0;}
 let allAdult=[],allLarval=[],adultF=[],larvalF=[],usersCfg=[];
 let allManualAdult=[],allManualLarval=[],manualAdultF=[],manualLarvalF=[];
 let manualDashSel={adult:new Set(),larval:new Set()};
-/* Compact human-readable Survey ID: A-260531-1437 */
 function fmtSid(type,id){
   const d=new Date(Number(id));
   if(isNaN(d.getTime()))return(type==='adult'?'A-':'L-')+id;
   const yy=String(d.getFullYear()).slice(2),mm=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0'),hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');
   return(type==='adult'?'A-':'L-')+yy+mm+dd+'-'+hh+mi;
 }
+function b64d(s){return decodeURIComponent(escape(atob(s)));}
+function b64e(s){return btoa(unescape(encodeURIComponent(s)));}
 
 /* ── AUTH ── */
-function validateDashLogin(u,p){
-  if(!u||!p) return false;
-  if(u.trim()===DASH_U && p===DASH_P) return true;
-  // Also allow GitHub-configured credentials (cached)
-  try{
-    const raw=localStorage.getItem('est_gh_config')||localStorage.getItem('est_dash_cfg_creds');
-    if(raw){
-      const cfg=JSON.parse(raw);
-      const creds=cfg.credentials||[];
-      return creds.some(c=>c.username&&c.username.trim()===u.trim()&&c.password===p&&c.active!==false&&(c.role==='admin'||!c.role));
-    }
-  }catch(e){}
-  return false;
-}
-function doLogin(){
+async function doLogin(){
   const u=document.getElementById('lf-user').value.trim();
   const p=document.getElementById('lf-pass').value;
   const rem=document.getElementById('lf-rem').checked;
   const errEl=document.getElementById('lf-err');
-  if(!validateDashLogin(u,p)){
-    errEl.textContent='Invalid credentials. Use ANIENTO / 2026 or configured GitHub credentials.';
-    errEl.style.display='block';
-    document.getElementById('lf-pass').value='';
-    return;
-  }
+  const btn=document.querySelector('.login-btn');
   errEl.style.display='none';
-  if(rem)localStorage.setItem(DASH_KEY,JSON.stringify({u,p}));else localStorage.removeItem(DASH_KEY);
-  document.getElementById('login-screen').classList.add('gone');
-  document.getElementById('app').classList.add('show');
-  loadSetup();loadAll();
-}
-function checkAuth(){
+  if(!u||!p){errEl.textContent='Enter username and password.';errEl.style.display='block';return;}
+  const origTxt=btn?btn.textContent:'';
+  if(btn){btn.disabled=true;btn.textContent='Signing in…';}
   try{
-    const c=JSON.parse(localStorage.getItem(DASH_KEY));
-    if(c&&c.u&&c.p&&validateDashLogin(c.u,c.p)){
-      document.getElementById('lf-user').value=c.u;
-      document.getElementById('lf-pass').value=c.p;
-      document.getElementById('lf-rem').checked=true;
-      // Pre-fill credentials but require explicit click — do NOT auto-login
-      const btn=document.querySelector('.login-btn');
-      if(btn){btn.textContent='Continue as '+c.u;btn.style.background='linear-gradient(135deg,#00897b,#00695c)';}
+    const email=u+'@est-andaman.in';
+    const {data,error}=await _sb.auth.signInWithPassword({email,password:p});
+    if(error){errEl.textContent='Invalid credentials.';errEl.style.display='block';if(btn){btn.disabled=false;btn.textContent=origTxt;}return;}
+    const {data:profile}=await _sb.from('profiles').select('*').eq('id',data.user.id).single();
+    if(!profile||profile.role!=='admin'){
+      errEl.textContent='Access denied — admin account required.';errEl.style.display='block';
+      await _sb.auth.signOut();if(btn){btn.disabled=false;btn.textContent=origTxt;}return;
+    }
+    if(profile.status!=='approved'){
+      errEl.textContent='Account pending approval.';errEl.style.display='block';
+      await _sb.auth.signOut();if(btn){btn.disabled=false;btn.textContent=origTxt;}return;
+    }
+    _sbUser=data.user;_sbProfile=profile;
+    if(rem)localStorage.setItem(DASH_KEY,JSON.stringify({u,p}));else localStorage.removeItem(DASH_KEY);
+    document.getElementById('login-screen').classList.add('gone');
+    document.getElementById('app').classList.add('show');
+    loadAll();
+  }catch(e){
+    errEl.textContent='Connection error — check internet.';errEl.style.display='block';
+    if(btn){btn.disabled=false;btn.textContent=origTxt;}
+  }
+}
+async function checkAuth(){
+  // Try to restore Supabase session
+  try{
+    const {data:{session}}=await _sb.auth.getSession();
+    if(session&&session.user){
+      const {data:profile}=await _sb.from('profiles').select('*').eq('id',session.user.id).single();
+      if(profile&&profile.role==='admin'&&profile.status==='approved'){
+        _sbUser=session.user;_sbProfile=profile;
+        document.getElementById('login-screen').classList.add('gone');
+        document.getElementById('app').classList.add('show');
+        loadAll();return;
+      }
     }
   }catch(e){}
+  // Fallback: prefill from localStorage
+  try{
+    const c=JSON.parse(localStorage.getItem(DASH_KEY));
+    if(c&&c.u){document.getElementById('lf-user').value=c.u;const btn=document.querySelector('.login-btn');if(btn)btn.textContent='Continue as '+c.u;}
+  }catch(e){}
 }
-function doLogout(){localStorage.removeItem(DASH_KEY);document.getElementById('login-screen').classList.remove('gone');document.getElementById('app').classList.remove('show');}
+async function doLogout(){
+  await _sb.auth.signOut();_sbUser=null;_sbProfile=null;
+  localStorage.removeItem(DASH_KEY);
+  document.getElementById('login-screen').classList.remove('gone');
+  document.getElementById('app').classList.remove('show');
+}
 
-/* ── SETUP ── */
+/* ── SETUP (kept for GitHub data import compatibility) ── */
 function toggleSetup(){const b=document.getElementById('setup-banner');b.classList.toggle('hidden');}
 function saveSetup(){
-  GH.owner=document.getElementById('sf-owner').value.trim();
-  GH.repo=document.getElementById('sf-repo').value.trim()||'EST-v2.0';
-  GH.token=document.getElementById('sf-token').value.trim();
+  GH.owner=document.getElementById('sf-owner')?.value.trim()||GH.owner;
+  GH.repo=document.getElementById('sf-repo')?.value.trim()||'EST-v2.0';
+  GH.token=document.getElementById('sf-token')?.value.trim()||'';
   localStorage.setItem('est_dash_cfg',JSON.stringify(GH));
-  document.getElementById('setup-banner').classList.add('hidden');
+  document.getElementById('setup-banner')?.classList.add('hidden');
   loadAll();
 }
 function loadSetup(){
-  try{const c=JSON.parse(localStorage.getItem('est_dash_cfg'));if(c){GH=c;document.getElementById('sf-owner').value=c.owner||'';document.getElementById('sf-repo').value=c.repo||'EST-v2.0';document.getElementById('sf-token').value=c.token||'';}}catch(e){}
+  try{const c=JSON.parse(localStorage.getItem('est_dash_cfg'));if(c){GH=c;if(document.getElementById('sf-owner'))document.getElementById('sf-owner').value=c.owner||'';if(document.getElementById('sf-repo'))document.getElementById('sf-repo').value=c.repo||'EST-v2.0';if(document.getElementById('sf-token'))document.getElementById('sf-token').value=c.token||'';}}catch(e){}
 }
-
-/* ── GITHUB API ── */
 function ghH(){const h={'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};if(GH.token)h['Authorization']='token '+GH.token;return h;}
-function b64d(s){return decodeURIComponent(escape(atob(s)));}
-function b64e(s){return btoa(unescape(encodeURIComponent(s)));}
 async function ghGet(path){const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{headers:ghH(),cache:'no-store'});if(!r.ok)return null;return r.json();}
 async function ghPut(path,content,sha){const body={message:'[EST Dashboard] Update '+path,content:b64e(JSON.stringify(content,null,2)),branch:'main'};if(sha)body.sha=sha;const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{method:'PUT',headers:{...ghH(),'Content-Type':'application/json'},body:JSON.stringify(body)});return r.ok;}
 
 /* ── LOAD ALL ── */
 function setStatus(msg,type){const el=document.getElementById('status-bar');el.textContent=msg;el.className='status-bar '+(type||'info');el.style.display=msg?'block':'none';}
 async function loadAll(){
-  if(!GH.owner||!GH.token){setStatus('Enter GitHub credentials above to load data','info');document.getElementById('setup-banner').classList.remove('hidden');return;}
-  setStatus('Loading from GitHub…','info');
+  setStatus('Loading from Supabase…','info');
   const pill=document.getElementById('conn-pill');pill.textContent='Connecting…';pill.classList.remove('ok');
+  loadSetup();
   try{
-    const root=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/data`,{headers:ghH(),cache:'no-store'});
-    if(!root.ok){setStatus('Cannot reach GitHub — check username/repo/token','err');pill.textContent='Connection failed';return;}
-    const dirs=await root.json();
-    let aFiles=[],lFiles=[];
-    for(const d of dirs){
-      if(d.type==='dir'){
-        const files=await(await fetch(d.url,{headers:ghH()})).json().catch(()=>[]);
-        files.forEach(f=>{if(f.name.startsWith('adult-'))aFiles.push(f.path);else if(f.name.startsWith('larval-'))lFiles.push(f.path);});
-      }
+    /* ── Load from Supabase ─────────────────────────────── */
+    const [aRes,lRes,maRes,mlRes,profRes]= await Promise.all([
+      _sb.from('adult_surveys').select('data,username,user_id,created_at').order('created_at',{ascending:false}),
+      _sb.from('larval_surveys').select('data,username,user_id,created_at').order('created_at',{ascending:false}),
+      _sb.from('manual_adult_surveys').select('data,username,user_id,created_at').order('created_at',{ascending:false}),
+      _sb.from('manual_larval_surveys').select('data,username,user_id,created_at').order('created_at',{ascending:false}),
+      _sb.from('profiles').select('*').order('created_at',{ascending:false})
+    ]);
+    const toSurvey=rows=>rows.map(r=>({...r.data,_sbUsername:r.username,_sbUserId:r.user_id}));
+    allAdult     = aRes.data  ? toSurvey(aRes.data)  : [];
+    allLarval    = lRes.data  ? toSurvey(lRes.data)  : [];
+    allManualAdult  = maRes.data ? toSurvey(maRes.data) : [];
+    allManualLarval = mlRes.data ? toSurvey(mlRes.data) : [];
+    usersCfg     = profRes.data || [];
+
+    /* ── Also merge GitHub data for backward compatibility ─ */
+    if(GH.token&&GH.owner&&navigator.onLine){
+      try{
+        const root=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/data`,{headers:ghH(),cache:'no-store'});
+        if(root.ok){
+          const dirs=await root.json();
+          let aFiles=[],lFiles=[];
+          for(const d of dirs){
+            if(d.type==='dir'){
+              const files=await(await fetch(d.url,{headers:ghH()})).json().catch(()=>[]);
+              files.forEach(f=>{if(f.name.startsWith('adult-'))aFiles.push(f.path);else if(f.name.startsWith('larval-'))lFiles.push(f.path);});
+            }
+          }
+          const ghAdult=(await Promise.all(aFiles.map(f=>ghGet(f).then(d=>{const s=JSON.parse(b64d(d.content));s._path=f;s._sha=d.sha;return s;}).catch(()=>null)))).filter(Boolean);
+          const ghLarval=(await Promise.all(lFiles.map(f=>ghGet(f).then(d=>{const s=JSON.parse(b64d(d.content));s._path=f;s._sha=d.sha;return s;}).catch(()=>null)))).filter(Boolean);
+          const existingIds=new Set(allAdult.map(s=>String(s.id)));
+          ghAdult.filter(s=>s.entryType!=='manual'&&!existingIds.has(String(s.id))).forEach(s=>allAdult.push(s));
+          ghAdult.filter(s=>s.entryType==='manual').forEach(s=>allManualAdult.push(s));
+          const existingLIds=new Set(allLarval.map(s=>String(s.id)));
+          ghLarval.filter(s=>s.entryType!=='manual'&&!existingLIds.has(String(s.id))).forEach(s=>allLarval.push(s));
+          ghLarval.filter(s=>s.entryType==='manual').forEach(s=>allManualLarval.push(s));
+        }
+      }catch(e){}
     }
-    const loadedAdult=(await Promise.all(aFiles.map(f=>ghGet(f).then(d=>{const s=JSON.parse(b64d(d.content));s._path=f;s._sha=d.sha;return s;}).catch(()=>null)))).filter(Boolean);
-    const loadedLarval=(await Promise.all(lFiles.map(f=>ghGet(f).then(d=>{const s=JSON.parse(b64d(d.content));s._path=f;s._sha=d.sha;return s;}).catch(()=>null)))).filter(Boolean);
-    allManualAdult=loadedAdult.filter(s=>s.entryType==='manual');
-    allManualLarval=loadedLarval.filter(s=>s.entryType==='manual');
-    allAdult=loadedAdult.filter(s=>s.entryType!=='manual');
-    allLarval=loadedLarval.filter(s=>s.entryType!=='manual');
+
     allAdult.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
     allLarval.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
     allManualAdult.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
     allManualLarval.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
     adultF=[...allAdult];larvalF=[...allLarval];manualAdultF=[...allManualAdult];manualLarvalF=[...allManualLarval];
-    const cfg=await ghGet('config.json').then(d=>JSON.parse(b64d(d.content))).catch(()=>null);
-    if(cfg)usersCfg=cfg.credentials||[];
     updateStats();renderAdult();renderLarval();renderManualAdult();renderManualLarval();renderUsers();renderAlerts();buildMapCarousel();
-    pill.textContent='Connected ✓ ('+allAdult.length+'A + '+allLarval.length+'L'+(allManualAdult.length+allManualLarval.length?' + '+(allManualAdult.length+allManualLarval.length)+' Manual':'')+')';pill.classList.add('ok');
+    const total=allAdult.length+allLarval.length;
+    pill.textContent='Supabase ✓ ('+allAdult.length+'A + '+allLarval.length+'L'+(allManualAdult.length+allManualLarval.length?' + '+(allManualAdult.length+allManualLarval.length)+' Manual':'')+')';pill.classList.add('ok');
     document.getElementById('st-sync').textContent=new Date().toLocaleTimeString();
     const _dc=document.getElementById('ov-date-chip');if(_dc)_dc.textContent=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
     setStatus('');
-  }catch(e){setStatus('Error: '+e.message,'err');pill.textContent='Error';}
+  }catch(e){setStatus('Error loading data: '+e.message,'err');pill.textContent='Error';}
 }
 /* ── MANAGE USERS SUBTABS ── */
 let _userTab='admin';
@@ -2257,30 +2297,56 @@ function renderUsers(){
   const fieldEl=document.getElementById('users-field-list');
   if(!adminEl||!fieldEl)return;
   if(!usersCfg.length){
-    adminEl.innerHTML='<p style="color:var(--muted);font-size:12px;margin-bottom:8px;">No users loaded. Connect to GitHub first.</p>';
+    adminEl.innerHTML='<p style="color:var(--muted);font-size:12px;margin-bottom:8px;">No users found in Supabase.</p>';
     fieldEl.innerHTML=adminEl.innerHTML;return;
   }
-  function rowHTML(u,i){
-    return`<div class="user-row">
-      <input value="${u.username||''}" placeholder="Username" onchange="usersCfg[${i}].username=this.value">
-      <input value="${u.password||''}" placeholder="Password" type="password" onchange="usersCfg[${i}].password=this.value">
-      <label style="display:flex;align-items:center;gap:5px;font-size:12px;">
-        <input type="checkbox" ${u.active!==false?'checked':''} onchange="usersCfg[${i}].active=this.checked" style="accent-color:var(--teal);width:16px;height:16px;">Active
-      </label>
-      <button class="del-btn" onclick="usersCfg.splice(${i},1);renderUsers()">Remove</button>
+  function statusBadge(s){
+    const col=s==='approved'?'#3ecf8e':s==='pending'?'#ff9800':'#ef5350';
+    return`<span style="padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;background:${col}22;color:${col};text-transform:uppercase;">${s||'unknown'}</span>`;
+  }
+  function approveBtn(id,role){
+    return`<button class="pt-btn" style="padding:0 10px;height:26px;font-size:11px;background:rgba(62,207,142,.2);color:#3ecf8e;border:1px solid rgba(62,207,142,.4);" onclick="approveUser('${id}','${role}')">Approve</button>`;
+  }
+  function rejectBtn(id){
+    return`<button class="pt-btn" style="padding:0 10px;height:26px;font-size:11px;background:rgba(239,83,80,.15);color:#ef5350;border:1px solid rgba(239,83,80,.3);" onclick="rejectUser('${id}')">Reject</button>`;
+  }
+  function makeAdminBtn(id){
+    return`<button class="pt-btn blue" style="padding:0 10px;height:26px;font-size:11px;" onclick="setUserRole('${id}','admin')">Make Admin</button>`;
+  }
+  function rowHTML(u){
+    const created=u.created_at?new Date(u.created_at).toLocaleDateString('en-IN'):'—';
+    return`<div class="user-row" style="align-items:center;padding:8px 0;border-bottom:1px solid var(--bdr);gap:8px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:120px;">
+        <div style="font-weight:700;font-size:13px;color:var(--txt);">${u.username||'—'}</div>
+        <div style="font-size:10px;color:var(--muted);">Joined ${created}</div>
+      </div>
+      ${statusBadge(u.status)}
+      <span style="font-size:11px;color:var(--txt2);padding:2px 8px;border-radius:10px;background:var(--sf2);">${u.role||'field'}</span>
+      ${u.status==='pending'?approveBtn(u.id,u.role)+rejectBtn(u.id):''}
+      ${u.status==='approved'&&u.role==='field'?makeAdminBtn(u.id):''}
     </div>`;
   }
-  const admins=usersCfg.map((u,i)=>({u,i})).filter(({u})=>u.role==='admin');
-  const fields=usersCfg.map((u,i)=>({u,i})).filter(({u})=>u.role!=='admin');
-  adminEl.innerHTML=admins.length?admins.map(({u,i})=>rowHTML(u,i)).join(''):'<p style="color:var(--muted);font-size:12px;margin-bottom:8px;">No admin accounts configured.</p>';
-  fieldEl.innerHTML=fields.length?fields.map(({u,i})=>rowHTML(u,i)).join(''):'<p style="color:var(--muted);font-size:12px;margin-bottom:8px;">No field users configured.</p>';
+  const pending=usersCfg.filter(u=>u.status==='pending');
+  const admins=usersCfg.filter(u=>u.role==='admin'&&u.status!=='pending');
+  const fields=usersCfg.filter(u=>u.role!=='admin'&&u.status!=='pending');
+  adminEl.innerHTML=(pending.length?`<div style="margin-bottom:10px;padding:10px;background:rgba(255,152,0,.1);border:1px solid rgba(255,152,0,.3);border-radius:8px;"><div style="font-size:11px;font-weight:700;color:#ff9800;margin-bottom:8px;">⏳ PENDING APPROVAL (${pending.length})</div>${pending.map(u=>rowHTML(u)).join('')}</div>`:'')+(admins.length?admins.map(u=>rowHTML(u)).join(''):'<p style="color:var(--muted);font-size:12px;margin-bottom:8px;">No admin accounts.</p>');
+  fieldEl.innerHTML=fields.length?fields.map(u=>rowHTML(u)).join(''):'<p style="color:var(--muted);font-size:12px;margin-bottom:8px;">No field users yet.</p>';
 }
-function addUser(role){
-  role=role||'field';
-  usersCfg.push({username:'',password:'',role,active:true});
-  if(role==='admin')switchUserTab('admin');else switchUserTab('field');
-  renderUsers();
+
+async function approveUser(id,role){
+  const {error}=await _sb.from('profiles').update({status:'approved',role:role||'field'}).eq('id',id);
+  if(!error){showToast('User approved ✓','check');await loadAll();}else showToast('Error: '+error.message,'warn');
 }
+async function rejectUser(id){
+  const {error}=await _sb.from('profiles').update({status:'rejected'}).eq('id',id);
+  if(!error){showToast('User rejected','check');await loadAll();}else showToast('Error: '+error.message,'warn');
+}
+async function setUserRole(id,role){
+  const {error}=await _sb.from('profiles').update({role}).eq('id',id);
+  if(!error){showToast('Role updated ✓','check');await loadAll();}else showToast('Error: '+error.message,'warn');
+}
+function addUser(role){showToast('Users register via the field app — approve them here','check');}
+function saveUsers(){showToast('User management is now via Supabase — use Approve/Reject buttons','check');}
 
 function renderManualAdult(){
   const tb=document.getElementById('tbody-manual-adult');
@@ -2548,14 +2614,6 @@ async function saveManualDashEdit(){
   }
 }
 
-async function saveUsers(){
-  if(!GH.owner||!GH.token){alert('Connect to GitHub first');return;}
-  setStatus('Saving to GitHub…','info');
-  const existing=await ghGet('config.json').catch(()=>null);
-  const sha=existing?.sha;
-  const ok=await ghPut('config.json',{credentials:usersCfg,updatedAt:new Date().toISOString()},sha);
-  setStatus(ok?'✓ Credentials saved — apps will use new creds on next online login':'Failed to save — check token permissions',ok?'ok':'err');
-}
 async function deleteSurvey(path,sha,type){
   if(!GH.owner||!GH.token){alert('Connect to GitHub first');return;}
   if(!confirm(`Delete this ${type} survey record from GitHub?\nThis action cannot be undone.`))return;
