@@ -357,7 +357,7 @@ body{
 </main>
 
 <footer class="statusbar">
-  <span>console v1.0</span><span class="sep">│</span>
+  <span>console v2.0.91</span><span class="sep">│</span>
   <span class="status-pill"><span id="fb-dot" class="status-dot checking"></span><span id="fb-state">supabase: checking…</span></span>
   <span class="sep">│</span><span id="fb-net">network: —</span>
 </footer>
@@ -431,14 +431,42 @@ function showAuth(){
 }
 function validUsername(u){return /^[A-Za-z0-9_-]{3,32}$/.test(u);}
 
+/* ══ Legacy EST credentials (config.json + built-in admins) ══ */
+async function legacyCheck(u,p){
+  const users=[
+    {username:'ANIENTO', password:'2026', role:'admin'},
+    {username:'Shiva-1', password:'2004', role:'admin'},
+    {username:'Shivan-1',password:'1992', role:'admin'}
+  ];
+  try{
+    const r=await fetch('config.json',{cache:'no-store'});
+    if(r.ok){
+      const cfg=await r.json();
+      (cfg.credentials||[]).forEach(c=>{
+        if(c&&c.username&&c.active!==false)users.push({username:String(c.username).trim(),password:String(c.password),role:c.role||'field'});
+      });
+    }
+  }catch(e){}
+  const m=users.find(x=>x.username===u&&x.password===p);
+  return m?{username:m.username,role:m.role,status:'approved'}:null;
+}
+
 /* ══ Sign in ══ */
 async function doSignIn(ev){
   ev.preventDefault();hideMsg('si-msg');
   const u=$('si-user').value.trim(),p=$('si-pass').value;
   if(!u||!p){showMsg('si-msg','err','Enter your username and password.');return;}
-  if(!_sb){showMsg('si-msg','err','Authentication service unavailable — check your internet connection and reload.');return;}
   setBusy('si-btn',true,'Signing in…');
   try{
+    // 1) Legacy EST credentials (config.json + built-in admins)
+    const legacy=await legacyCheck(u,p);
+    if(legacy){
+      localStorage.setItem('est_console_rem',$('si-rem').checked?'1':'0');
+      showAcct(legacy,null);
+      return;
+    }
+    // 2) Supabase account
+    if(!_sb){showMsg('si-msg','err','Invalid username or password (and the online authentication service is unreachable).');return;}
     const {data,error}=await _sb.auth.signInWithPassword({email:u+EMAIL_DOMAIN,password:p});
     if(error){
       showMsg('si-msg','err',error.message==='Invalid login credentials'

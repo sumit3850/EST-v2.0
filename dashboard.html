@@ -34,26 +34,30 @@
 body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--txt);transition:background .25s,color .25s;-webkit-font-smoothing:antialiased;}
 
 /* ═══ LOGIN ═══ */
-#login-screen{position:fixed;inset:0;background:radial-gradient(ellipse 120% 90% at 60% 0%,#003d30 0%,#001e18 50%,#000f0c 100%);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;}
-#login-screen::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 80% 110%,rgba(0,191,165,.12) 0%,transparent 70%);pointer-events:none;}
+#login-screen{position:fixed;inset:0;background:#070c0a;background-image:radial-gradient(ellipse 80% 50% at 20% -10%,rgba(62,207,142,.07),transparent),radial-gradient(ellipse 60% 40% at 90% 110%,rgba(62,207,142,.05),transparent);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;}
+#login-screen::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(62,207,142,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(62,207,142,.03) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 30%,#000 30%,transparent 75%);mask-image:radial-gradient(ellipse 90% 80% at 50% 30%,#000 30%,transparent 75%);pointer-events:none;}
 #login-screen.gone{display:none;}
-.lw{width:100%;max-width:380px;}
-.ll{text-align:center;margin-bottom:28px;}
-.ll-icon{width:76px;height:76px;background:rgba(0,30,22,.8);border:1px solid rgba(0,191,165,.5);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 0 0 6px rgba(0,191,165,.07),0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.07);}
-.ll h1{font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;letter-spacing:-.02em;}
-.ll p{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.12em;text-transform:uppercase;}
-.lc{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-top-color:rgba(255,255,255,.18);border-radius:18px;padding:26px 24px 22px;backdrop-filter:blur(20px);box-shadow:0 24px 64px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.09);}
-.lf-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.45);display:block;margin-bottom:6px;}
-.lf-input{width:100%;height:46px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.14);border-radius:10px;padding:0 14px;font-size:14px;color:#fff;outline:none;margin-bottom:14px;font-family:inherit;transition:border-color .2s cubic-bezier(.4,0,.2,1),background .2s cubic-bezier(.4,0,.2,1);}
-.lf-input:focus{border-color:rgba(0,191,165,.7);background:rgba(0,191,165,.06);}
-.lf-input::placeholder{color:rgba(255,255,255,.25);}
+.lw{width:100%;max-width:400px;position:relative;}
+.ll{text-align:center;margin-bottom:26px;}
+.ll-icon{width:64px;height:64px;background:linear-gradient(145deg,#0f241a,#0a1710);border:1px solid #2a4636;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 0 34px rgba(62,207,142,.14),inset 0 1px 0 rgba(255,255,255,.05);}
+.ll-icon svg{fill:#3ecf8e !important;}
+.ll-icon svg line{stroke:#3ecf8e !important;}
+.ll h1{font-size:23px;font-weight:800;color:#e6f2ec;margin-bottom:4px;letter-spacing:-.02em;}
+.ll p{font-size:10px;color:#5d7368;letter-spacing:.14em;text-transform:uppercase;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;}
+.lc{background:linear-gradient(180deg,#101d16,#0d1712);border:1px solid #1c2f25;border-radius:16px;padding:28px 26px 24px;box-shadow:0 24px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.04);}
+.lf-label{font-size:12px;font-weight:600;color:#8fa89b;display:block;margin-bottom:7px;letter-spacing:.02em;}
+.lf-input{width:100%;height:46px;background:#0a120e;border:1px solid #1c2f25;border-radius:10px;padding:0 14px;font-size:14.5px;color:#e6f2ec;outline:none;margin-bottom:15px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;transition:border-color .18s ease,box-shadow .18s ease;}
+.lf-input:hover{border-color:#2a4636;}
+.lf-input:focus{border-color:#2b9d6c;box-shadow:0 0 0 3px rgba(62,207,142,.14);}
+.lf-input::placeholder{color:#5d7368;}
 .lf-rem{display:flex;align-items:center;gap:9px;margin-bottom:20px;}
-.lf-rem input{width:17px;height:17px;accent-color:#00bfa5;cursor:pointer;}
-.lf-rem label{font-size:12px;color:rgba(255,255,255,.55);cursor:pointer;}
-.login-btn{width:100%;height:48px;background:#00bfa5;color:#002d26;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.03em;transition:all .22s cubic-bezier(.4,0,.2,1);box-shadow:0 4px 20px rgba(0,191,165,.28);}
-.login-btn:hover{background:#00d4b8;box-shadow:0 6px 28px rgba(0,191,165,.4);transform:translateY(-1px);}
-.login-btn:active{transform:scale(.97) translateY(0);box-shadow:0 2px 10px rgba(0,191,165,.2);}
-.login-err{color:#ff8a80;font-size:12px;text-align:center;margin-top:10px;display:none;padding:8px 12px;background:rgba(186,26,26,.2);border:1px solid rgba(239,83,80,.25);border-radius:8px;}
+.lf-rem input{width:17px;height:17px;accent-color:#3ecf8e;cursor:pointer;}
+.lf-rem label{font-size:13px;color:#8fa89b;cursor:pointer;}
+.login-btn{width:100%;height:47px;background:linear-gradient(180deg,#46e09d,#3ecf8e);color:#04140c;border:none;border-radius:10px;font-size:14.5px;font-weight:700;cursor:pointer;letter-spacing:.01em;transition:filter .18s ease,transform .12s ease;box-shadow:0 4px 18px rgba(62,207,142,.28),inset 0 1px 0 rgba(255,255,255,.35);}
+.login-btn:hover{filter:brightness(1.06);}
+.login-btn:active{transform:scale(.985);}
+.login-btn:focus-visible{outline:2px solid #3ecf8e;outline-offset:3px;}
+.login-err{color:#fca5a5;font-size:13px;text-align:center;margin-top:14px;display:none;padding:11px 13px;background:rgba(248,113,113,.09);border:1px solid rgba(248,113,113,.25);border-radius:10px;}
 
 /* ═══ APP LAYOUT ═══ */
 #app{display:none;}
@@ -554,7 +558,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.0.90</p>
+      <p>Admin Dashboard · v2.0.91</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -593,7 +597,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>v2.0.90 · A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.0.91 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -1913,7 +1917,7 @@ function exportRiskPDF(){
     const rows=sorted.map(([name,cnt],idx)=>`<tr style="${idx%2===0?'':'background:#f9f9f9;'}"><td>${name}</td><td style="font-weight:700;color:#00695c;">${cnt}</td><td style="padding:4px 8px;"><div style="height:10px;border-radius:5px;background:#00695c;width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%;min-width:4px;"></div></td></tr>`).join('');
     return`<h3>${dk} — Breeding Preferred Containers</h3><table><thead><tr><th>Container Type</th><th>Positive Count</th><th style="min-width:120px;">Proportion</th></tr></thead><tbody>${rows}</tbody></table>`;
   }).join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#00695c;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #00695c;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:18px;font-weight:700;color:#00695c;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:10px 14px;background:#fff8e1;border-left:3px solid #f9a825;font-size:13px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #00695c;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${range.label||'All Data'}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><h2>Overall Entomological Indices — Aedes Breeding for Andaman &amp; Nicobar Islands</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#00695c;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.0.90 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#00695c;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #00695c;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:18px;font-weight:700;color:#00695c;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:10px 14px;background:#fff8e1;border-left:3px solid #f9a825;font-size:13px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #00695c;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${range.label||'All Data'}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><h2>Overall Entomological Indices — Aedes Breeding for Andaman &amp; Nicobar Islands</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#00695c;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.0.91 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
   const win=window.open('','_blank','width=920,height=740');
   if(win){win.document.write(html);win.document.close();setTimeout(()=>win.print(),700);}
 }
@@ -2757,7 +2761,7 @@ function buildAdultXLSX(surveys,isCompiled){
   const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
   // ── Report Status ──
   const statusRows=[
-    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.90')],
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.0.91')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -2830,7 +2834,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   // ── Report Status sheet ──
   const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.90')],
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.0.91')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -2974,7 +2978,7 @@ function buildAdultCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.90 — Adult Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.91 — Adult Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -3026,7 +3030,7 @@ function buildAdultCSV(surveys){
     });
   });
   blank();
-  r('EST v2.0.90 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.91 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -3038,7 +3042,7 @@ function buildLarvalCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.0.90 — Larval Mosquito Surveillance Report (Database Export)');
+  r('EST v2.0.91 — Larval Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -3119,7 +3123,7 @@ function buildLarvalCSV(surveys){
     }
   });
   blank();
-  r('EST v2.0.90 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.0.91 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -4096,7 +4100,7 @@ function exportSeasonalPDF(){
   <p><b>Year:</b> ${year} &nbsp;|&nbsp; <b>District:</b> ${distLabel} &nbsp;|&nbsp; <b>Generated:</b> ${new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'})}</p>
   ${imgData?`<img src="${imgData}" alt="Seasonal chart">`:''}
   ${tblHTML}
-  <p style="margin-top:20px;font-size:10px;color:#888;">EST v2.0.90 · Entomological Surveillance Tool · A&N Islands</p>
+  <p style="margin-top:20px;font-size:10px;color:#888;">EST v2.0.91 · Entomological Surveillance Tool · A&N Islands</p>
   </body></html>`);
   w.document.close();
   setTimeout(()=>w.print(),500);
