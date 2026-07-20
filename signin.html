@@ -202,7 +202,16 @@ body{
 .badge.stat-approved{color:#6ee7b7;border-color:rgba(62,207,142,.35);background:var(--ok-bg);}
 .badge.stat-pending{color:var(--warn);border-color:rgba(251,191,36,.35);background:var(--warn-bg);}
 .badge.stat-rejected{color:var(--err);border-color:rgba(248,113,113,.35);background:var(--err-bg);}
-.acct .btn{margin-bottom:10px;}
+.acct .btn{margin-bottom:0;}
+.dest{border:1px solid var(--border);border-radius:12px;background:var(--bg2);padding:16px 16px 14px;margin-bottom:12px;}
+.dest-head{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;margin-bottom:7px;}
+.dest-desc{font-size:12.5px;color:var(--txt2);line-height:1.55;margin-bottom:13px;}
+.modules{max-width:460px;margin-top:18px;display:grid;gap:12px;}
+.mod{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.015);padding:14px 16px;}
+.mod-icon{width:38px;height:38px;flex-shrink:0;border-radius:10px;display:flex;align-items:center;justify-content:center;background:var(--ok-bg);border:1px solid rgba(62,207,142,.2);}
+.mod h3{font-size:14px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:8px;}
+.mod-tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);border:1px solid var(--border);border-radius:99px;padding:2px 8px;}
+.mod p{font-size:12.5px;color:var(--txt2);line-height:1.5;}
 .link-out{background:none;border:0;color:var(--txt3);font-size:12.5px;cursor:pointer;display:block;margin:14px auto 0;font-family:var(--mono);min-height:44px;}
 .link-out:hover{color:var(--err);}
 .hidden{display:none !important;}
@@ -243,6 +252,27 @@ body{
         <div class="crow"><span class="k">region</span><span class="v">A&amp;N Islands · NVBDCP-SHS</span></div>
         <div class="crow"><span class="k">auth</span><span class="v hl">username + password</span></div>
         <div class="crow"><span class="k">access</span><span class="v">admin-approved accounts</span></div>
+      </div>
+    </div>
+
+    <div class="modules">
+      <div class="mod">
+        <div class="mod-icon">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#3ecf8e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div>
+          <h3>Field App <span class="mod-tag">all users</span></h3>
+          <p>GPS-tagged adult &amp; larval surveys, offline-first collection, WHO indices computed live, PDF &amp; Excel reports on-device.</p>
+        </div>
+      </div>
+      <div class="mod">
+        <div class="mod-icon">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#3ecf8e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        </div>
+        <div>
+          <h3>Admin Dashboard <span class="mod-tag">admins</span></h3>
+          <p>Central survey database, district &amp; zone analytics, risk maps, monthly formats, bulk exports and user management.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -339,14 +369,22 @@ body{
           <span class="badge role" id="ac-role">FIELD</span>
           <span class="badge stat-approved" id="ac-status">APPROVED</span>
         </div>
-        <a class="btn btn-primary" href="app.html" style="text-decoration:none;">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-          Open Field App
-        </a>
-        <a class="btn btn-ghost hidden" href="dashboard.html" id="ac-dash-btn" style="text-decoration:none;">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-          Open Admin Dashboard
-        </a>
+        <div class="dest">
+          <div class="dest-head">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3ecf8e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Field App</span>
+          </div>
+          <p class="dest-desc">Run adult &amp; larval surveys with GPS tracking, offline-first data storage, live WHO indices (HI · CI · BI) and instant PDF / Excel reports from the field.</p>
+          <a class="btn btn-primary" href="app.html" style="text-decoration:none;">Open Field App</a>
+        </div>
+        <div class="dest hidden" id="ac-dash-btn">
+          <div class="dest-head">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3ecf8e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+            <span>Admin Dashboard</span>
+          </div>
+          <p class="dest-desc">The central EST database — every synced survey, district &amp; zone analytics, risk maps, monthly report formats, bulk exports and user management.</p>
+          <a class="btn btn-ghost" href="dashboard.html" style="text-decoration:none;">Open Admin Dashboard</a>
+        </div>
         <div class="msg" id="ac-msg" role="alert" aria-live="polite"></div>
         <button class="link-out" onclick="doSignOut()">sign out of console →</button>
       </div>
@@ -357,7 +395,7 @@ body{
 </main>
 
 <footer class="statusbar">
-  <span>console v2.0.92</span><span class="sep">│</span>
+  <span>console v2.0.93</span><span class="sep">│</span>
   <span class="status-pill"><span id="fb-dot" class="status-dot checking"></span><span id="fb-state">supabase: checking…</span></span>
   <span class="sep">│</span><span id="fb-net">network: —</span>
 </footer>
@@ -466,6 +504,7 @@ async function doSignIn(ev){
     const legacy=await legacyCheck(u,p);
     if(legacy){
       localStorage.setItem('est_console_rem',$('si-rem').checked?'1':'0');
+      storeSSO(legacy.username,p,legacy.role);
       showAcct(legacy,null);
       return;
     }
@@ -494,6 +533,7 @@ async function doSignIn(ev){
       return;
     }
     localStorage.setItem('est_console_rem',$('si-rem').checked?'1':'0');
+    storeSSO(profile.username||u,p,profile.role||'field');
     showAcct(profile,data.user);
   }catch(e){
     showMsg('si-msg','err','Connection failed — check your internet and try again.');
@@ -535,8 +575,22 @@ async function doSignUp(ev){
 }
 
 /* ══ Sign out ══ */
+/* Single sign-on: store the validated credentials + session marker so the
+   field app and dashboard enter directly without asking again. */
+function storeSSO(u,p,role){
+  try{
+    localStorage.setItem('est_console_session',JSON.stringify({u,role,ts:new Date().getTime()}));
+    localStorage.setItem('est_creds',JSON.stringify({u,p}));
+    if(role==='admin')localStorage.setItem('est_dash_creds',JSON.stringify({u,p}));
+  }catch(e){}
+}
 async function doSignOut(){
   if(_sb)await _sb.auth.signOut().catch(()=>{});
+  try{
+    localStorage.removeItem('est_console_session');
+    localStorage.removeItem('est_creds');
+    localStorage.removeItem('est_dash_creds');
+  }catch(e){}
   showAuth();
 }
 

@@ -452,7 +452,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
         </svg>
       </div>
       <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub" id="dash-sub-ver">EST v2.0.92</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.0.93</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -498,7 +498,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About <span id="dash-about-ver">EST v2.0.92</span>
+      About <span id="dash-about-ver">EST v2.0.93</span>
     </button>
     <div id="dash-bottom-ver" style="text-align:center;font-size:10px;color:rgba(255,255,255,.2);margin-top:8px;">EST v2.0 · Data stored locally — works offline</div>
   </div>
@@ -2424,6 +2424,28 @@ function loadSavedCreds(){
     }
   }catch(e){}
 }
+/* Single sign-on from the Operations Console (signin.html):
+   the console validates credentials, stores them + a session marker,
+   and the app enters directly without asking again. */
+function tryConsoleAutoLogin(){
+  try{
+    const s=JSON.parse(localStorage.getItem('est_console_session')||'null');
+    const c=JSON.parse(localStorage.getItem(CRED_KEY)||'null');
+    if(!s||!s.u||!c||!c.u||!c.p||c.u!==s.u)return false;
+    const r=validateCredentials(c.u,c.p);
+    if(!r.valid)return false;
+    window._estLoggedIn=true;
+    window._estUser={username:c.u,role:r.role};
+    if(typeof checkPremiumStatus==='function')try{checkPremiumStatus();}catch(e){}
+    const sp=document.getElementById('splash');
+    if(sp){sp.classList.remove('active');sp.style.display='none';sp.style.visibility='hidden';}
+    const hdr=document.getElementById('app-header');if(hdr)hdr.style.display='flex';
+    const nav=document.getElementById('app-nav');if(nav)nav.style.display='flex';
+    showScreen('dash');
+    if(typeof checkDrafts==='function')try{checkDrafts();}catch(e){}
+    return true;
+  }catch(e){return false;}
+}
 function showScreen(id){
   document.querySelectorAll('.screen:not(#splash)').forEach(s=>s.classList.remove('active'));
   const sc=document.getElementById('screen-'+id);
@@ -3523,7 +3545,7 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.0.92)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.0.93)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -3598,7 +3620,7 @@ function buildAdultXLSX(surveys,isCompiled){
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.0.92)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.0.93)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -4712,7 +4734,7 @@ window.addEventListener('beforeunload',(e)=>{
 document.addEventListener('DOMContentLoaded',()=>{
   // Sync VALID_USERS from cached config.json before auth so all users work offline
   loadLocalUsers();
-  syncValidUsersFromCache().then(()=>loadSavedCreds());
+  syncValidUsersFromCache().then(()=>{if(!tryConsoleAutoLogin())loadSavedCreds();});
   loadGhSettings();
   typeof updateGhButtonStatus==='function'&&updateGhButtonStatus();
   buildAdultMatrix();
