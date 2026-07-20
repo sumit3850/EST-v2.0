@@ -555,7 +555,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v3.0.0</p>
+      <p>Admin Dashboard · v3.0.1</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -1436,7 +1436,7 @@ async function doLogin(){
   try{
     const email=u+'@est-andaman.in';
     const {data,error}=await _sb.auth.signInWithPassword({email,password:p});
-    if(error){errEl.textContent='Invalid credentials.';errEl.style.display='block';if(btn){btn.disabled=false;btn.textContent=origTxt;}return;}
+    if(error){errEl.textContent=error.message||'Invalid credentials.';errEl.style.display='block';if(btn){btn.disabled=false;btn.textContent=origTxt;}return;}
     const {data:profile}=await _sb.from('profiles').select('*').eq('id',data.user.id).single();
     if(!profile||profile.role!=='admin'){
       errEl.textContent='Access denied — admin account required.';errEl.style.display='block';
