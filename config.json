@@ -1,15 +1,15 @@
 {
   "credentials": [
     {
-      "username": "ANIENTO",
+      "username": "User=1",
       "password": "2026",
-      "role": "admin",
+      "role": "field",
       "active": true
     },
     {
       "username": "USER-1",
       "password": "2026",
-      "role": "field",
+      "role": "admin",
       "active": true
     },
     {
@@ -25,5 +25,5 @@
       "active": true
     }
   ],
-  "updatedAt": "2026-07-20T20:08:38.312Z"
+  "updatedAt": "2026-07-20T20:23:18.638Z"
 }
