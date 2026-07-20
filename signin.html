@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#070c0a">
+<title>EST Console — Sign in</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230d2018'/%3E%3Cellipse cx='50' cy='56' rx='7' ry='19' fill='%233ecf8e'/%3E%3Ccircle cx='50' cy='33' r='7' fill='%233ecf8e'/%3E%3Cellipse cx='28' cy='46' rx='19' ry='7' transform='rotate(-18 28 46)' fill='%233ecf8e' opacity='.6'/%3E%3Cellipse cx='72' cy='46' rx='19' ry='7' transform='rotate(18 72 46)' fill='%233ecf8e' opacity='.6'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+:root{
+  --bg:#070c0a;
+  --bg2:#0a120e;
+  --surface:#0d1712;
+  --surface2:#101d16;
+  --border:#1c2f25;
+  --border-hi:#2a4636;
+  --accent:#3ecf8e;
+  --accent-dim:#2b9d6c;
+  --accent-glow:rgba(62,207,142,.14);
+  --txt:#e6f2ec;
+  --txt2:#8fa89b;
+  --txt3:#5d7368;
+  --err:#f87171;
+  --err-bg:rgba(248,113,113,.09);
+  --warn:#fbbf24;
+  --warn-bg:rgba(251,191,36,.09);
+  --ok-bg:rgba(62,207,142,.09);
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100dvh;}
+body{
+  font-family:var(--sans);background:var(--bg);color:var(--txt);
+  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% -10%,rgba(62,207,142,.07),transparent),
+    radial-gradient(ellipse 60% 40% at 90% 110%,rgba(62,207,142,.05),transparent);
+}
+.grid-bg{
+  position:fixed;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(62,207,142,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(62,207,142,.03) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:radial-gradient(ellipse 90% 80% at 50% 30%,#000 30%,transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 30%,#000 30%,transparent 75%);
+}
+.shell{position:relative;min-height:100dvh;display:flex;flex-direction:column;}
+.wrap{flex:1;display:grid;grid-template-columns:1fr;max-width:1200px;width:100%;margin:0 auto;padding:24px 20px;gap:40px;align-items:center;}
+@media(min-width:1024px){.wrap{grid-template-columns:1.1fr .9fr;padding:40px 48px;gap:64px;}}
+
+/* ── Left brand / status panel ── */
+.brand{display:none;}
+@media(min-width:1024px){.brand{display:block;}}
+.logo-tile{
+  width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,#0f241a,#0a1710);border:1px solid var(--border-hi);
+  box-shadow:0 0 34px var(--accent-glow),inset 0 1px 0 rgba(255,255,255,.05);margin-bottom:26px;
+}
+.brand h1{font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-bottom:10px;}
+.brand h1 em{font-style:normal;color:var(--accent);}
+.brand .sub{font-size:15.5px;color:var(--txt2);max-width:44ch;margin-bottom:36px;}
+.console-card{
+  border:1px solid var(--border);border-radius:14px;background:linear-gradient(180deg,var(--surface),var(--bg2));
+  overflow:hidden;max-width:460px;box-shadow:0 20px 50px rgba(0,0,0,.45);
+}
+.console-head{
+  display:flex;align-items:center;gap:8px;padding:11px 16px;border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.015);
+}
+.dot{width:10px;height:10px;border-radius:50%;}
+.dot.r{background:#3d5a4b;}.dot.y{background:#3d5a4b;}.dot.g{background:#3d5a4b;}
+.console-head .title{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--txt3);letter-spacing:.08em;}
+.console-body{padding:18px 20px;font-family:var(--mono);font-size:12.5px;line-height:2.15;}
+.crow{display:flex;justify-content:space-between;gap:16px;}
+.crow .k{color:var(--txt3);}
+.crow .v{color:var(--txt2);text-align:right;}
+.crow .v.hl{color:var(--accent);}
+.status-pill{display:inline-flex;align-items:center;gap:7px;}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--txt3);flex-shrink:0;}
+.status-dot.on{background:var(--accent);box-shadow:0 0 8px var(--accent);}
+.status-dot.off{background:var(--err);box-shadow:0 0 8px var(--err);}
+@media(prefers-reduced-motion:no-preference){
+  .status-dot.checking{animation:pulse 1.2s ease-in-out infinite;}
+  @keyframes pulse{50%{opacity:.35;}}
+}
+
+/* ── Mobile compact brand header ── */
+.brand-mobile{display:flex;align-items:center;gap:13px;margin-bottom:26px;}
+@media(min-width:1024px){.brand-mobile{display:none;}}
+.brand-mobile .logo-tile{width:46px;height:46px;border-radius:12px;margin:0;}
+.brand-mobile .t1{font-size:18px;font-weight:800;letter-spacing:-.01em;}
+.brand-mobile .t2{font-family:var(--mono);font-size:10px;color:var(--txt3);letter-spacing:.14em;text-transform:uppercase;}
+
+/* ── Auth card ── */
+.auth-col{width:100%;max-width:440px;margin:0 auto;}
+.card{
+  background:linear-gradient(180deg,var(--surface2),var(--surface));
+  border:1px solid var(--border);border-radius:16px;padding:28px 26px 26px;
+  box-shadow:0 24px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.04);
+}
+@media(min-width:480px){.card{padding:32px 32px 30px;}}
+.tabs{
+  display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:11px;
+  background:var(--bg2);border:1px solid var(--border);margin-bottom:26px;
+}
+.tab{
+  height:40px;border:0;border-radius:8px;background:transparent;color:var(--txt2);
+  font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;
+  transition:background .18s ease,color .18s ease;
+}
+.tab:hover{color:var(--txt);}
+.tab[aria-selected="true"]{background:var(--surface2);color:var(--txt);box-shadow:0 1px 6px rgba(0,0,0,.35);}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.card h2{font-size:21px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px;}
+.card .lead{font-size:13.5px;color:var(--txt2);margin-bottom:22px;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:12.5px;font-weight:600;color:var(--txt2);margin-bottom:7px;letter-spacing:.02em;}
+.field .req{color:var(--accent);}
+.in-wrap{position:relative;}
+.in{
+  width:100%;height:46px;padding:0 14px;border-radius:10px;
+  background:var(--bg2);border:1px solid var(--border);color:var(--txt);
+  font-family:var(--sans);font-size:15px;
+  transition:border-color .18s ease,box-shadow .18s ease;touch-action:manipulation;
+}
+.in::placeholder{color:var(--txt3);}
+.in:hover{border-color:var(--border-hi);}
+.in:focus{outline:none;border-color:var(--accent-dim);box-shadow:0 0 0 3px var(--accent-glow);}
+.in.mono{font-family:var(--mono);font-size:14px;letter-spacing:.02em;}
+.in.pw{padding-right:48px;}
+.eye{
+  position:absolute;top:0;right:0;width:46px;height:46px;display:flex;align-items:center;justify-content:center;
+  background:none;border:0;color:var(--txt3);cursor:pointer;border-radius:0 10px 10px 0;
+  transition:color .15s ease;
+}
+.eye:hover{color:var(--txt2);}
+.eye:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;}
+.hint{font-size:11.5px;color:var(--txt3);margin-top:6px;font-family:var(--mono);}
+.row-between{display:flex;align-items:center;justify-content:space-between;margin:4px 0 20px;}
+.chk{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:13px;color:var(--txt2);min-height:44px;}
+.chk input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;}
+.btn{
+  width:100%;height:47px;border:0;border-radius:10px;cursor:pointer;
+  font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:.01em;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  transition:filter .18s ease,transform .12s ease,box-shadow .18s ease;touch-action:manipulation;
+}
+.btn:active{transform:scale(.985);}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+.btn-primary{
+  background:linear-gradient(180deg,#46e09d,var(--accent));color:#04140c;
+  box-shadow:0 4px 18px rgba(62,207,142,.28),inset 0 1px 0 rgba(255,255,255,.35);
+}
+.btn-primary:hover{filter:brightness(1.06);}
+.btn-primary:disabled{filter:saturate(.4) brightness(.75);cursor:not-allowed;transform:none;}
+.btn-ghost{
+  background:var(--bg2);border:1px solid var(--border);color:var(--txt);
+}
+.btn-ghost:hover{border-color:var(--border-hi);background:var(--surface2);}
+.spinner{width:17px;height:17px;flex-shrink:0;}
+@media(prefers-reduced-motion:no-preference){.spinner{animation:spin .9s linear infinite;}@keyframes spin{to{transform:rotate(360deg);}}}
+.msg{
+  display:none;margin-top:16px;padding:12px 14px;border-radius:10px;
+  font-size:13.5px;line-height:1.55;border:1px solid transparent;
+}
+.msg.show{display:flex;gap:10px;align-items:flex-start;}
+.msg svg{flex-shrink:0;margin-top:1px;}
+.msg.err{background:var(--err-bg);border-color:rgba(248,113,113,.25);color:#fca5a5;}
+.msg.warn{background:var(--warn-bg);border-color:rgba(251,191,36,.25);color:#fcd34d;}
+.msg.ok{background:var(--ok-bg);border-color:rgba(62,207,142,.3);color:#6ee7b7;}
+.foot{
+  margin-top:22px;padding-top:18px;border-top:1px solid var(--border);
+  font-size:12px;color:var(--txt3);text-align:center;font-family:var(--mono);letter-spacing:.03em;
+}
+.foot a{color:var(--txt2);text-decoration:none;border-bottom:1px dotted var(--txt3);}
+.foot a:hover{color:var(--accent);}
+.statusbar{
+  display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap;
+  padding:14px 20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:11px;color:var(--txt3);letter-spacing:.05em;
+}
+.statusbar .sep{opacity:.4;}
+
+/* ── Signed-in account panel ── */
+.acct{display:none;}
+.avatar{
+  width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,#12291d,#0c1c13);border:1px solid var(--border-hi);
+  font-size:23px;font-weight:800;color:var(--accent);margin:0 auto 14px;
+}
+.acct .uname{text-align:center;font-size:19px;font-weight:700;}
+.badges{display:flex;justify-content:center;gap:8px;margin:10px 0 24px;}
+.badge{
+  font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 11px;border-radius:99px;border:1px solid;
+}
+.badge.role{color:var(--accent);border-color:rgba(62,207,142,.35);background:var(--ok-bg);}
+.badge.stat-approved{color:#6ee7b7;border-color:rgba(62,207,142,.35);background:var(--ok-bg);}
+.badge.stat-pending{color:var(--warn);border-color:rgba(251,191,36,.35);background:var(--warn-bg);}
+.badge.stat-rejected{color:var(--err);border-color:rgba(248,113,113,.35);background:var(--err-bg);}
+.acct .btn{margin-bottom:10px;}
+.link-out{background:none;border:0;color:var(--txt3);font-size:12.5px;cursor:pointer;display:block;margin:14px auto 0;font-family:var(--mono);min-height:44px;}
+.link-out:hover{color:var(--err);}
+.hidden{display:none !important;}
+</style>
+</head>
+<body>
+<div class="grid-bg" aria-hidden="true"></div>
+<div class="shell">
+<main class="wrap">
+
+  <!-- ══ Left: brand + console status (desktop) ══ -->
+  <section class="brand" aria-label="About EST Console">
+    <div class="logo-tile">
+      <svg width="36" height="36" viewBox="0 0 100 100" fill="#3ecf8e" aria-hidden="true">
+        <ellipse cx="50" cy="56" rx="7" ry="19"/>
+        <circle cx="50" cy="33" r="7"/>
+        <line x1="50" y1="40" x2="50" y2="88" stroke="#3ecf8e" stroke-width="2.5"/>
+        <ellipse cx="28" cy="46" rx="19" ry="7" transform="rotate(-18 28 46)" opacity=".7"/>
+        <ellipse cx="72" cy="46" rx="19" ry="7" transform="rotate(18 72 46)" opacity=".7"/>
+        <line x1="43" y1="60" x2="18" y2="74" stroke="#3ecf8e" stroke-width="1.8"/>
+        <line x1="57" y1="60" x2="82" y2="74" stroke="#3ecf8e" stroke-width="1.8"/>
+        <line x1="45" y1="27" x2="34" y2="14" stroke="#3ecf8e" stroke-width="1.8"/>
+        <line x1="55" y1="27" x2="66" y2="14" stroke="#3ecf8e" stroke-width="1.8"/>
+      </svg>
+    </div>
+    <h1>EST <em>Operations Console</em></h1>
+    <p class="sub">Unified access for the Entomological Surveillance Tool — field data collection, vector indices, and the A&amp;N Islands surveillance database.</p>
+
+    <div class="console-card" role="status" aria-label="System status">
+      <div class="console-head">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="title">est-andaman · status</span>
+      </div>
+      <div class="console-body">
+        <div class="crow"><span class="k">backend</span>
+          <span class="v status-pill"><span id="sb-dot" class="status-dot checking"></span><span id="sb-state">checking…</span></span></div>
+        <div class="crow"><span class="k">project</span><span class="v">fivqdckmtymtuxlhjjoj</span></div>
+        <div class="crow"><span class="k">region</span><span class="v">A&amp;N Islands · NVBDCP-SHS</span></div>
+        <div class="crow"><span class="k">auth</span><span class="v hl">username + password</span></div>
+        <div class="crow"><span class="k">access</span><span class="v">admin-approved accounts</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Right: auth card ══ -->
+  <div class="auth-col">
+    <div class="brand-mobile">
+      <div class="logo-tile">
+        <svg width="27" height="27" viewBox="0 0 100 100" fill="#3ecf8e" aria-hidden="true">
+          <ellipse cx="50" cy="56" rx="7" ry="19"/><circle cx="50" cy="33" r="7"/>
+          <line x1="50" y1="40" x2="50" y2="88" stroke="#3ecf8e" stroke-width="2.5"/>
+          <ellipse cx="28" cy="46" rx="19" ry="7" transform="rotate(-18 28 46)" opacity=".7"/>
+          <ellipse cx="72" cy="46" rx="19" ry="7" transform="rotate(18 72 46)" opacity=".7"/>
+        </svg>
+      </div>
+      <div><div class="t1">EST Operations Console</div><div class="t2">Entomological Surveillance</div></div>
+    </div>
+
+    <div class="card">
+
+      <!-- Tabs -->
+      <div class="tabs" role="tablist" aria-label="Authentication" id="auth-tabs">
+        <button class="tab" id="tab-signin" role="tab" aria-selected="true" aria-controls="panel-signin" onclick="switchTab('signin')">Sign in</button>
+        <button class="tab" id="tab-signup" role="tab" aria-selected="false" aria-controls="panel-signup" onclick="switchTab('signup')">Create account</button>
+      </div>
+
+      <!-- ── Sign in panel ── -->
+      <form id="panel-signin" role="tabpanel" aria-labelledby="tab-signin" onsubmit="doSignIn(event)">
+        <h2>Welcome back</h2>
+        <p class="lead">Sign in with your EST field or admin credentials.</p>
+
+        <div class="field">
+          <label for="si-user">Username <span class="req">*</span></label>
+          <input class="in mono" id="si-user" type="text" placeholder="your-username" autocomplete="username" autocapitalize="off" spellcheck="false" required>
+        </div>
+        <div class="field">
+          <label for="si-pass">Password <span class="req">*</span></label>
+          <div class="in-wrap">
+            <input class="in pw" id="si-pass" type="password" placeholder="••••••••" autocomplete="current-password" required>
+            <button type="button" class="eye" onclick="togglePw('si-pass',this)" aria-label="Show password">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="row-between">
+          <label class="chk"><input type="checkbox" id="si-rem" checked>Remember this device</label>
+        </div>
+        <button class="btn btn-primary" id="si-btn" type="submit">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Sign in to console
+        </button>
+        <div class="msg" id="si-msg" role="alert" aria-live="polite"></div>
+      </form>
+
+      <!-- ── Sign up panel ── -->
+      <form id="panel-signup" role="tabpanel" aria-labelledby="tab-signup" class="hidden" onsubmit="doSignUp(event)">
+        <h2>Request access</h2>
+        <p class="lead">New accounts require approval by an EST administrator before first sign-in.</p>
+
+        <div class="field">
+          <label for="su-user">Username <span class="req">*</span></label>
+          <input class="in mono" id="su-user" type="text" placeholder="e.g. field-worker-1" autocomplete="username" autocapitalize="off" spellcheck="false" minlength="3" required>
+          <div class="hint">min 3 chars · letters, numbers, - and _ only</div>
+        </div>
+        <div class="field">
+          <label for="su-name">Full name</label>
+          <input class="in" id="su-name" type="text" placeholder="Optional" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="su-pass">Password <span class="req">*</span></label>
+          <div class="in-wrap">
+            <input class="in pw" id="su-pass" type="password" placeholder="Min 6 characters" autocomplete="new-password" minlength="6" required>
+            <button type="button" class="eye" onclick="togglePw('su-pass',this)" aria-label="Show password">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="su-pass2">Confirm password <span class="req">*</span></label>
+          <input class="in" id="su-pass2" type="password" placeholder="Repeat password" autocomplete="new-password" minlength="6" required>
+        </div>
+        <button class="btn btn-primary" id="su-btn" type="submit" style="margin-top:6px;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          Submit access request
+        </button>
+        <div class="msg" id="su-msg" role="alert" aria-live="polite"></div>
+      </form>
+
+      <!-- ── Signed-in account panel ── -->
+      <div class="acct" id="panel-acct">
+        <div class="avatar" id="ac-avatar">?</div>
+        <div class="uname" id="ac-name">—</div>
+        <div class="badges">
+          <span class="badge role" id="ac-role">FIELD</span>
+          <span class="badge stat-approved" id="ac-status">APPROVED</span>
+        </div>
+        <a class="btn btn-primary" href="index.html" style="text-decoration:none;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          Open Field App
+        </a>
+        <a class="btn btn-ghost hidden" href="dashboard.html" id="ac-dash-btn" style="text-decoration:none;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          Open Admin Dashboard
+        </a>
+        <div class="msg" id="ac-msg" role="alert" aria-live="polite"></div>
+        <button class="link-out" onclick="doSignOut()">sign out of console →</button>
+      </div>
+
+      <div class="foot">EST · Entomological Surveillance Tool<br>NVBDCP-SHS, Andaman &amp; Nicobar Islands</div>
+    </div>
+  </div>
+</main>
+
+<footer class="statusbar">
+  <span>console v1.0</span><span class="sep">│</span>
+  <span class="status-pill"><span id="fb-dot" class="status-dot checking"></span><span id="fb-state">supabase: checking…</span></span>
+  <span class="sep">│</span><span id="fb-net">network: —</span>
+</footer>
+</div>
+
+<script>
+/* ══ Supabase connection ══ */
+const SUPABASE_URL='https://fivqdckmtymtuxlhjjoj.supabase.co';
+const SUPABASE_KEY='sb_publishable_SUdRGiarUt92Tl67FzBCvw_Vsf4G_aW';
+const EMAIL_DOMAIN='@est-andaman.in';
+const _sb=window.supabase?supabase.createClient(SUPABASE_URL,SUPABASE_KEY):null;
+
+/* ══ UI helpers ══ */
+const $=id=>document.getElementById(id);
+const ICONS={
+  err:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+  warn:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  ok:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
+};
+function showMsg(id,type,text){const el=$(id);el.className='msg show '+type;el.innerHTML=ICONS[type]+'<span>'+text+'</span>';}
+function hideMsg(id){const el=$(id);el.className='msg';el.innerHTML='';}
+function setBusy(btnId,busy,busyLabel){
+  const btn=$(btnId);
+  if(busy){
+    btn.dataset.orig=btn.innerHTML;btn.disabled=true;
+    btn.innerHTML='<svg class="spinner" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8Z"/></svg> '+busyLabel;
+  }else{
+    btn.disabled=false;if(btn.dataset.orig)btn.innerHTML=btn.dataset.orig;
+  }
+}
+function togglePw(inputId,btn){
+  const inp=$(inputId);const show=inp.type==='password';
+  inp.type=show?'text':'password';
+  btn.setAttribute('aria-label',show?'Hide password':'Show password');
+  btn.innerHTML=show
+    ?'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+    :'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+}
+function switchTab(which){
+  const signin=which==='signin';
+  $('tab-signin').setAttribute('aria-selected',signin);
+  $('tab-signup').setAttribute('aria-selected',!signin);
+  $('panel-signin').classList.toggle('hidden',!signin);
+  $('panel-signup').classList.toggle('hidden',signin);
+  $('panel-acct').style.display='none';
+  hideMsg('si-msg');hideMsg('su-msg');
+  ($(signin?'si-user':'su-user')).focus();
+}
+function showAcct(profile,user){
+  $('panel-signin').classList.add('hidden');
+  $('panel-signup').classList.add('hidden');
+  $('auth-tabs').classList.add('hidden');
+  $('panel-acct').style.display='block';
+  const uname=profile?.username||(user?.email||'').split('@')[0];
+  $('ac-avatar').textContent=(uname[0]||'?').toUpperCase();
+  $('ac-name').textContent=uname;
+  $('ac-role').textContent=(profile?.role||'field').toUpperCase();
+  const st=profile?.status||'approved';
+  const stEl=$('ac-status');
+  stEl.textContent=st.toUpperCase();
+  stEl.className='badge stat-'+st;
+  $('ac-dash-btn').classList.toggle('hidden',profile?.role!=='admin');
+  if(st==='pending')showMsg('ac-msg','warn','Your access request is awaiting admin approval. The apps will unlock once an administrator approves your account.');
+  else if(st==='rejected')showMsg('ac-msg','err','This account request was rejected. Contact your EST administrator.');
+  else hideMsg('ac-msg');
+}
+function showAuth(){
+  $('panel-acct').style.display='none';
+  $('auth-tabs').classList.remove('hidden');
+  switchTab('signin');
+}
+function validUsername(u){return /^[A-Za-z0-9_-]{3,32}$/.test(u);}
+
+/* ══ Sign in ══ */
+async function doSignIn(ev){
+  ev.preventDefault();hideMsg('si-msg');
+  const u=$('si-user').value.trim(),p=$('si-pass').value;
+  if(!u||!p){showMsg('si-msg','err','Enter your username and password.');return;}
+  if(!_sb){showMsg('si-msg','err','Authentication service unavailable — check your internet connection and reload.');return;}
+  setBusy('si-btn',true,'Signing in…');
+  try{
+    const {data,error}=await _sb.auth.signInWithPassword({email:u+EMAIL_DOMAIN,password:p});
+    if(error){
+      showMsg('si-msg','err',error.message==='Invalid login credentials'
+        ?'Invalid username or password.'
+        :error.message);
+      return;
+    }
+    const {data:profile,error:pErr}=await _sb.from('profiles').select('*').eq('id',data.user.id).single();
+    if(pErr||!profile){
+      showMsg('si-msg','err','Signed in, but no profile record found ('+(pErr?.message||'missing')+'). Ask an admin to run the EST schema script.');
+      return;
+    }
+    if(profile.status==='pending'){
+      await _sb.auth.signOut();
+      showMsg('si-msg','warn','Your account is still awaiting admin approval.');
+      return;
+    }
+    if(profile.status==='rejected'){
+      await _sb.auth.signOut();
+      showMsg('si-msg','err','This account was rejected by an administrator.');
+      return;
+    }
+    localStorage.setItem('est_console_rem',$('si-rem').checked?'1':'0');
+    showAcct(profile,data.user);
+  }catch(e){
+    showMsg('si-msg','err','Connection failed — check your internet and try again.');
+  }finally{
+    setBusy('si-btn',false);
+  }
+}
+
+/* ══ Sign up ══ */
+async function doSignUp(ev){
+  ev.preventDefault();hideMsg('su-msg');
+  const u=$('su-user').value.trim(),name=$('su-name').value.trim(),
+        p=$('su-pass').value,p2=$('su-pass2').value;
+  if(!validUsername(u)){showMsg('su-msg','err','Username must be 3–32 characters — letters, numbers, - and _ only.');return;}
+  if(p.length<6){showMsg('su-msg','err','Password must be at least 6 characters.');return;}
+  if(p!==p2){showMsg('su-msg','err','Passwords do not match.');return;}
+  if(!_sb){showMsg('su-msg','err','Authentication service unavailable — check your internet connection and reload.');return;}
+  setBusy('su-btn',true,'Submitting…');
+  try{
+    const {data,error}=await _sb.auth.signUp({
+      email:u.toLowerCase()+EMAIL_DOMAIN,password:p,
+      options:{data:{username:u,full_name:name}}
+    });
+    if(error){
+      showMsg('su-msg','err',/already registered/i.test(error.message)
+        ?'That username is already taken — try signing in instead.'
+        :error.message);
+      return;
+    }
+    // Profile row is created by the on_auth_user_created trigger (status=pending)
+    await _sb.auth.signOut().catch(()=>{});
+    showMsg('su-msg','ok','Access request submitted. An EST administrator must approve your account before you can sign in.');
+    $('panel-signup').reset();
+  }catch(e){
+    showMsg('su-msg','err','Connection failed — check your internet and try again.');
+  }finally{
+    setBusy('su-btn',false);
+  }
+}
+
+/* ══ Sign out ══ */
+async function doSignOut(){
+  if(_sb)await _sb.auth.signOut().catch(()=>{});
+  showAuth();
+}
+
+/* ══ Backend status probe ══ */
+async function probeBackend(){
+  const set=(on,label)=>{
+    ['sb-dot','fb-dot'].forEach(id=>{const d=$(id);if(d)d.className='status-dot '+(on?'on':'off');});
+    const s1=$('sb-state');if(s1)s1.textContent=label;
+    const s2=$('fb-state');if(s2)s2.textContent='supabase: '+label;
+  };
+  try{
+    const r=await fetch(SUPABASE_URL+'/auth/v1/health',{headers:{apikey:SUPABASE_KEY}});
+    set(r.ok,r.ok?'online':'error '+r.status);
+  }catch(e){set(false,'unreachable');}
+  const net=$('fb-net');if(net)net.textContent='network: '+(navigator.onLine?'online':'offline');
+}
+
+/* ══ Init: restore existing session ══ */
+document.addEventListener('DOMContentLoaded',async()=>{
+  probeBackend();
+  window.addEventListener('online',probeBackend);
+  window.addEventListener('offline',probeBackend);
+  if(!_sb){$('si-user').focus();return;}
+  try{
+    const {data:{session}}=await _sb.auth.getSession();
+    if(session&&session.user){
+      if(localStorage.getItem('est_console_rem')==='0'){
+        await _sb.auth.signOut().catch(()=>{});
+      }else{
+        const {data:profile}=await _sb.from('profiles').select('*').eq('id',session.user.id).single();
+        showAcct(profile,session.user);
+        return;
+      }
+    }
+  }catch(e){}
+  $('si-user').focus();
+});
+</script>
+</body>
+</html>
