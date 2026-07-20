@@ -340,7 +340,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 #focus-shield svg{opacity:.5;}
 #focus-shield p{color:rgba(255,255,255,.5);font-size:14px;font-weight:600;letter-spacing:.05em;}
 
-/* ═══ PREMIUM POLISH (v2.0.97) ═══ */
+/* ═══ PREMIUM POLISH (v2.0.98) ═══ */
 .launch-btn{background:linear-gradient(180deg,#46e09d,#3ecf8e) !important;color:#04140c !important;box-shadow:0 6px 22px rgba(62,207,142,.32),inset 0 1px 0 rgba(255,255,255,.35) !important;}
 .launch-btn:hover{filter:brightness(1.05);}
 .launch-btn:active{transform:scale(.985);}
@@ -352,6 +352,11 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);}
 ::-webkit-scrollbar{width:8px;height:8px;}
 ::-webkit-scrollbar-thumb{background:rgba(26,122,74,.25);border-radius:99px;}
 ::-webkit-scrollbar-thumb:hover{background:rgba(26,122,74,.45);}
+#app-header{border-bottom:1px solid rgba(26,122,74,.14);box-shadow:0 1px 12px rgba(10,40,25,.06);}
+.hsub{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ol);}
+input[type=text],input[type=number],input[type=date],input[type=time],input[type=password],select,textarea{border-radius:var(--rmd);transition:border-color .16s ease,box-shadow .16s ease;}
+input[type=text]:focus,input[type=number]:focus,input[type=date]:focus,input[type=time]:focus,input[type=password]:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(62,207,142,.13);}
+.matrix th{letter-spacing:.05em;}
 @media(prefers-reduced-motion:reduce){.nav-btn,.launch-btn{transition:none;}}
 </style>
 </head>
@@ -466,7 +471,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);}
         </svg>
       </div>
       <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub" id="dash-sub-ver">EST v2.0.97</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.0.98</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -512,7 +517,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);}
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About <span id="dash-about-ver">EST v2.0.97</span>
+      About <span id="dash-about-ver">EST v2.0.98</span>
     </button>
     <button onclick="installApp()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;background:rgba(255,255,255,.12);border:1.5px solid rgba(133,240,190,.5);border-radius:var(--rxl);color:#fff;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:12px;">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
@@ -1963,7 +1968,7 @@ async function syncOneSurvey(mod, id){
 async function ghSyncAll(){
   sbSyncAll();
   if(!GH_CONFIG.owner||!GH_CONFIG.token){
-    showToast('Syncing to cloud database…','check');
+    showToast(navigator.onLine?'Syncing to cloud database…':'Offline — will sync when connected','check');
     return;
   }
   if(!navigator.onLine){ showToast('Offline — sync when connected','warn'); return; }
@@ -2213,7 +2218,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.0.78';
+const APP_VER='2.0.98';
 /* Compact human-readable Survey ID: A-260531-1437 (type + YYMMDD + HHMM) */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -3642,7 +3647,7 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.0.97)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.0.98)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -3717,7 +3722,7 @@ function buildAdultXLSX(surveys,isCompiled){
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.0.97)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.0.98)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -4852,6 +4857,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const _dav=document.getElementById('dash-about-ver');if(_dav)_dav.textContent=_vStr;
   const _dbv=document.getElementById('dash-bottom-ver');if(_dbv)_dbv.textContent=_vStr+' · Data stored locally — works offline';
   const _dsv=document.getElementById('dash-sub-ver');if(_dsv)_dsv.textContent=_vStr;
+  const _hs=document.querySelector('.hsub');if(_hs)_hs.textContent='Entomological Surveillance · v'+APP_VER;
 });
 </script>
 <script>

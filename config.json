@@ -1,7 +1,7 @@
 {
   "credentials": [
     {
-      "username": "User=1",
+      "username": "USER-1",
       "password": "2026",
       "role": "field",
       "active": true

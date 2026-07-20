@@ -6,8 +6,10 @@
 -- AUTH SETTINGS (do once in the Supabase dashboard):
 --   Authentication > Sign In / Providers > Email:
 --     • Enable the Email provider
---     • DISABLE "Confirm email" — EST usernames map to internal
---       @est-andaman.in addresses that cannot receive mail.
+--     • DISABLE "Confirm email" — sign-ups use the person's real email
+--       for auth, but EST approves accounts via the dashboard instead of
+--       email confirmation; leaving it on blocks sign-in until the link
+--       in the mail is clicked.
 --
 -- After this file: open the EST dashboard as admin, click ⚙ Setup, and
 -- press "⇪ Migrate GitHub → Supabase" to import the historical survey
