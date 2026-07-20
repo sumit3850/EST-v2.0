@@ -3,13 +3,13 @@
     {
       "username": "ANIENTO",
       "password": "2026",
-      "role": "field",
+      "role": "admin",
       "active": true
     },
     {
       "username": "USER-1",
       "password": "2026",
-      "role": "admin",
+      "role": "field",
       "active": true
     },
     {

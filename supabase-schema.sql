@@ -1,17 +1,20 @@
--- EST v3.0 Supabase Schema — CORRECTED (safe to re-run)
--- Run this entire file in the Supabase SQL Editor
+-- ═══════════════════════════════════════════════════════════════
+-- EST — Supabase Schema v3  (safe to re-run)
+-- Run this ENTIRE file in the Supabase SQL Editor.
 -- Project: fivqdckmtymtuxlhjjoj
 --
--- ORDER OF SETUP:
---   1. Create the 3 admin users in Auth > Users > Add user (auto-confirm ON):
---        aniento@est-andaman.in  / 2026
---        shiva-1@est-andaman.in  / 2004
---        shivan-1@est-andaman.in / 1992
---   2. Run this whole file. It creates tables, policies, triggers,
---      backfills profiles for existing auth users, and promotes the admins.
+-- AUTH SETTINGS (do once in the Supabase dashboard):
+--   Authentication > Sign In / Providers > Email:
+--     • Enable the Email provider
+--     • DISABLE "Confirm email" — EST usernames map to internal
+--       @est-andaman.in addresses that cannot receive mail.
+--
+-- After this file, run supabase-data-migration.sql to import the
+-- historical GitHub survey data.
+-- ═══════════════════════════════════════════════════════════════
 
 -- ─────────────────────────────────────────────
--- PROFILES TABLE
+-- PROFILES (sign-up requests + user registry)
 -- ─────────────────────────────────────────────
 create table if not exists public.profiles (
   id uuid references auth.users(id) on delete cascade primary key,
@@ -21,32 +24,30 @@ create table if not exists public.profiles (
   status text not null default 'pending' check (status in ('pending','approved','rejected')),
   created_at timestamptz default now()
 );
+alter table public.profiles add column if not exists first_name text default '';
+alter table public.profiles add column if not exists last_name  text default '';
+alter table public.profiles add column if not exists email      text default '';
+alter table public.profiles add column if not exists phone      text default '';
 
 alter table public.profiles enable row level security;
 
--- ─────────────────────────────────────────────
--- is_admin() — SECURITY DEFINER so policies can check the caller's
--- role without triggering RLS recursion on profiles
--- ─────────────────────────────────────────────
 create or replace function public.is_admin()
-returns boolean
-language sql security definer stable
-set search_path = public
-as $$
+returns boolean language sql security definer stable
+set search_path = public as $$
   select exists(
     select 1 from public.profiles
     where id = auth.uid() and role = 'admin' and status = 'approved'
   );
 $$;
 
--- ─────────────────────────────────────────────
--- PROFILES POLICIES
--- ─────────────────────────────────────────────
 drop policy if exists "profiles: own read"     on public.profiles;
 drop policy if exists "profiles: own update"   on public.profiles;
 drop policy if exists "profiles: admin read"   on public.profiles;
 drop policy if exists "profiles: admin update" on public.profiles;
 drop policy if exists "profiles: insert own"   on public.profiles;
+drop policy if exists "profiles: anon read"    on public.profiles;
+drop policy if exists "profiles: anon update"  on public.profiles;
+drop policy if exists "profiles: anon delete"  on public.profiles;
 
 create policy "profiles: own read" on public.profiles
   for select using (auth.uid() = id);
@@ -58,9 +59,17 @@ create policy "profiles: admin update" on public.profiles
   for update using (public.is_admin());
 create policy "profiles: insert own" on public.profiles
   for insert with check (auth.uid() = id);
+-- Dashboard manages sign-up requests with the public publishable key.
+-- Acceptable for this deployment's threat model (credentials already ship
+-- in a public config.json); tighten later if needed.
+create policy "profiles: anon read" on public.profiles
+  for select to anon using (true);
+create policy "profiles: anon update" on public.profiles
+  for update to anon using (true) with check (true);
+create policy "profiles: anon delete" on public.profiles
+  for delete to anon using (true);
 
--- Prevent non-admins from changing their own role/status
--- (auth.uid() is null when run from the SQL editor / service role — allowed)
+-- Non-admins cannot change their own role/status
 create or replace function public.protect_profile_fields()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
@@ -72,184 +81,24 @@ begin
   return new;
 end;
 $$;
-
 drop trigger if exists protect_profile_fields on public.profiles;
 create trigger protect_profile_fields
   before update on public.profiles
   for each row execute procedure public.protect_profile_fields();
 
-
--- ─────────────────────────────────────────────
--- ADULT SURVEYS TABLE (GPS surveys)
--- ─────────────────────────────────────────────
-create table if not exists public.adult_surveys (
-  id bigserial primary key,
-  user_id uuid references auth.users(id) on delete cascade not null,
-  username text not null default '',
-  local_id text not null default '',
-  data jsonb not null default '{}',
-  survey_date text default '',
-  location text default '',
-  zone text default '',
-  district text default '',
-  created_at timestamptz default now(),
-  unique(local_id, user_id)
-);
-
-alter table public.adult_surveys enable row level security;
-
-drop policy if exists "adult_surveys: own read"     on public.adult_surveys;
-drop policy if exists "adult_surveys: own insert"   on public.adult_surveys;
-drop policy if exists "adult_surveys: own update"   on public.adult_surveys;
-drop policy if exists "adult_surveys: own delete"   on public.adult_surveys;
-drop policy if exists "adult_surveys: admin read"   on public.adult_surveys;
-drop policy if exists "adult_surveys: admin delete" on public.adult_surveys;
-
-create policy "adult_surveys: own read" on public.adult_surveys
-  for select using (auth.uid() = user_id);
-create policy "adult_surveys: own insert" on public.adult_surveys
-  for insert with check (auth.uid() = user_id);
-create policy "adult_surveys: own update" on public.adult_surveys
-  for update using (auth.uid() = user_id);
-create policy "adult_surveys: own delete" on public.adult_surveys
-  for delete using (auth.uid() = user_id);
-create policy "adult_surveys: admin read" on public.adult_surveys
-  for select using (public.is_admin());
-create policy "adult_surveys: admin delete" on public.adult_surveys
-  for delete using (public.is_admin());
-
-
--- ─────────────────────────────────────────────
--- LARVAL SURVEYS TABLE (GPS surveys)
--- ─────────────────────────────────────────────
-create table if not exists public.larval_surveys (
-  id bigserial primary key,
-  user_id uuid references auth.users(id) on delete cascade not null,
-  username text not null default '',
-  local_id text not null default '',
-  data jsonb not null default '{}',
-  survey_date text default '',
-  location text default '',
-  zone text default '',
-  district text default '',
-  created_at timestamptz default now(),
-  unique(local_id, user_id)
-);
-
-alter table public.larval_surveys enable row level security;
-
-drop policy if exists "larval_surveys: own read"     on public.larval_surveys;
-drop policy if exists "larval_surveys: own insert"   on public.larval_surveys;
-drop policy if exists "larval_surveys: own update"   on public.larval_surveys;
-drop policy if exists "larval_surveys: own delete"   on public.larval_surveys;
-drop policy if exists "larval_surveys: admin read"   on public.larval_surveys;
-drop policy if exists "larval_surveys: admin delete" on public.larval_surveys;
-
-create policy "larval_surveys: own read" on public.larval_surveys
-  for select using (auth.uid() = user_id);
-create policy "larval_surveys: own insert" on public.larval_surveys
-  for insert with check (auth.uid() = user_id);
-create policy "larval_surveys: own update" on public.larval_surveys
-  for update using (auth.uid() = user_id);
-create policy "larval_surveys: own delete" on public.larval_surveys
-  for delete using (auth.uid() = user_id);
-create policy "larval_surveys: admin read" on public.larval_surveys
-  for select using (public.is_admin());
-create policy "larval_surveys: admin delete" on public.larval_surveys
-  for delete using (public.is_admin());
-
-
--- ─────────────────────────────────────────────
--- MANUAL ADULT SURVEYS TABLE
--- ─────────────────────────────────────────────
-create table if not exists public.manual_adult_surveys (
-  id bigserial primary key,
-  user_id uuid references auth.users(id) on delete cascade not null,
-  username text not null default '',
-  local_id text not null default '',
-  data jsonb not null default '{}',
-  survey_date text default '',
-  location text default '',
-  zone text default '',
-  district text default '',
-  created_at timestamptz default now(),
-  unique(local_id, user_id)
-);
-
-alter table public.manual_adult_surveys enable row level security;
-
-drop policy if exists "manual_adult_surveys: own read"     on public.manual_adult_surveys;
-drop policy if exists "manual_adult_surveys: own insert"   on public.manual_adult_surveys;
-drop policy if exists "manual_adult_surveys: own update"   on public.manual_adult_surveys;
-drop policy if exists "manual_adult_surveys: own delete"   on public.manual_adult_surveys;
-drop policy if exists "manual_adult_surveys: admin read"   on public.manual_adult_surveys;
-drop policy if exists "manual_adult_surveys: admin delete" on public.manual_adult_surveys;
-
-create policy "manual_adult_surveys: own read" on public.manual_adult_surveys
-  for select using (auth.uid() = user_id);
-create policy "manual_adult_surveys: own insert" on public.manual_adult_surveys
-  for insert with check (auth.uid() = user_id);
-create policy "manual_adult_surveys: own update" on public.manual_adult_surveys
-  for update using (auth.uid() = user_id);
-create policy "manual_adult_surveys: own delete" on public.manual_adult_surveys
-  for delete using (auth.uid() = user_id);
-create policy "manual_adult_surveys: admin read" on public.manual_adult_surveys
-  for select using (public.is_admin());
-create policy "manual_adult_surveys: admin delete" on public.manual_adult_surveys
-  for delete using (public.is_admin());
-
-
--- ─────────────────────────────────────────────
--- MANUAL LARVAL SURVEYS TABLE
--- ─────────────────────────────────────────────
-create table if not exists public.manual_larval_surveys (
-  id bigserial primary key,
-  user_id uuid references auth.users(id) on delete cascade not null,
-  username text not null default '',
-  local_id text not null default '',
-  data jsonb not null default '{}',
-  survey_date text default '',
-  location text default '',
-  zone text default '',
-  district text default '',
-  created_at timestamptz default now(),
-  unique(local_id, user_id)
-);
-
-alter table public.manual_larval_surveys enable row level security;
-
-drop policy if exists "manual_larval_surveys: own read"     on public.manual_larval_surveys;
-drop policy if exists "manual_larval_surveys: own insert"   on public.manual_larval_surveys;
-drop policy if exists "manual_larval_surveys: own update"   on public.manual_larval_surveys;
-drop policy if exists "manual_larval_surveys: own delete"   on public.manual_larval_surveys;
-drop policy if exists "manual_larval_surveys: admin read"   on public.manual_larval_surveys;
-drop policy if exists "manual_larval_surveys: admin delete" on public.manual_larval_surveys;
-
-create policy "manual_larval_surveys: own read" on public.manual_larval_surveys
-  for select using (auth.uid() = user_id);
-create policy "manual_larval_surveys: own insert" on public.manual_larval_surveys
-  for insert with check (auth.uid() = user_id);
-create policy "manual_larval_surveys: own update" on public.manual_larval_surveys
-  for update using (auth.uid() = user_id);
-create policy "manual_larval_surveys: own delete" on public.manual_larval_surveys
-  for delete using (auth.uid() = user_id);
-create policy "manual_larval_surveys: admin read" on public.manual_larval_surveys
-  for select using (public.is_admin());
-create policy "manual_larval_surveys: admin delete" on public.manual_larval_surveys
-  for delete using (public.is_admin());
-
-
--- ─────────────────────────────────────────────
--- TRIGGER: auto-create profile on signup
--- ─────────────────────────────────────────────
+-- Auto-create a pending profile on signup, carrying the sign-up form fields
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
-  insert into public.profiles (id, username, full_name, role, status)
+  insert into public.profiles (id, username, full_name, first_name, last_name, email, phone, role, status)
   values (
     new.id,
     coalesce(new.raw_user_meta_data->>'username', split_part(new.email,'@',1)),
-    coalesce(new.raw_user_meta_data->>'full_name',''),
+    trim(coalesce(new.raw_user_meta_data->>'first_name','') || ' ' || coalesce(new.raw_user_meta_data->>'last_name','')),
+    coalesce(new.raw_user_meta_data->>'first_name',''),
+    coalesce(new.raw_user_meta_data->>'last_name',''),
+    coalesce(new.raw_user_meta_data->>'contact_email',''),
+    coalesce(new.raw_user_meta_data->>'phone',''),
     'field',
     'pending'
   )
@@ -257,7 +106,6 @@ begin
   return new;
 end;
 $$;
-
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
@@ -265,8 +113,48 @@ create trigger on_auth_user_created
 
 
 -- ─────────────────────────────────────────────
--- BACKFILL: create profiles for auth users that existed
--- before this schema was installed
+-- SURVEY TABLES — keyed by EST username so legacy (non-Supabase-auth)
+-- accounts own their data across devices. user_id is optional and only
+-- set for Supabase-auth accounts.
+-- ─────────────────────────────────────────────
+do $$
+declare t text;
+begin
+  foreach t in array array['adult_surveys','larval_surveys','manual_adult_surveys','manual_larval_surveys'] loop
+    execute format($f$
+      create table if not exists public.%I (
+        id bigserial primary key,
+        user_id uuid references auth.users(id) on delete set null,
+        username text not null default '',
+        local_id text not null,
+        data jsonb not null default '{}',
+        survey_date text default '',
+        location text default '',
+        zone text default '',
+        district text default '',
+        created_at timestamptz default now()
+      )$f$, t);
+    -- If the table pre-exists from schema v1/v2, relax user_id and re-key by local_id
+    execute format('alter table public.%I alter column user_id drop not null', t);
+    execute format('create unique index if not exists %I on public.%I(local_id)', t||'_local_id_key', t);
+    execute format('create index if not exists %I on public.%I(username)', t||'_username_idx', t);
+    execute format('alter table public.%I enable row level security', t);
+    -- The apps read/write with the publishable key (legacy users have no
+    -- Supabase auth session) — allow anon + authenticated full access.
+    execute format('drop policy if exists "%s: open read"   on public.%I', t, t);
+    execute format('drop policy if exists "%s: open insert" on public.%I', t, t);
+    execute format('drop policy if exists "%s: open update" on public.%I', t, t);
+    execute format('drop policy if exists "%s: open delete" on public.%I', t, t);
+    execute format('create policy "%s: open read"   on public.%I for select using (true)', t, t);
+    execute format('create policy "%s: open insert" on public.%I for insert with check (true)', t, t);
+    execute format('create policy "%s: open update" on public.%I for update using (true) with check (true)', t, t);
+    execute format('create policy "%s: open delete" on public.%I for delete using (true)', t, t);
+  end loop;
+end $$;
+
+
+-- ─────────────────────────────────────────────
+-- BACKFILL profiles for auth users created before this schema
 -- ─────────────────────────────────────────────
 insert into public.profiles (id, username, full_name, role, status)
 select id, split_part(email,'@',1), '', 'field', 'pending'
@@ -274,33 +162,9 @@ from auth.users
 on conflict (id) do nothing;
 
 -- ─────────────────────────────────────────────
--- CONSOLE / DASHBOARD MANAGEMENT via publishable key
--- The EST dashboard manages sign-up requests (approve / hold / delete)
--- using the public publishable key, so the anon role needs access.
--- NOTE: acceptable for this deployment's threat model (the app already
--- ships credentials in a public config.json); tighten later if needed.
--- ─────────────────────────────────────────────
-drop policy if exists "profiles: anon read"   on public.profiles;
-drop policy if exists "profiles: anon update" on public.profiles;
-drop policy if exists "profiles: anon delete" on public.profiles;
-create policy "profiles: anon read" on public.profiles
-  for select to anon using (true);
-create policy "profiles: anon update" on public.profiles
-  for update to anon using (true) with check (true);
-create policy "profiles: anon delete" on public.profiles
-  for delete to anon using (true);
-
--- ─────────────────────────────────────────────
--- IMPORTANT — AUTH SETTINGS (do this in the Supabase dashboard):
--- Authentication > Sign In / Providers > Email:
---   • Enable the Email provider
---   • DISABLE "Confirm email" — EST usernames map to internal
---     @est-andaman.in addresses that cannot receive mail, so email
---     confirmation would permanently block every sign-up.
--- ─────────────────────────────────────────────
-
--- ─────────────────────────────────────────────
--- PROMOTE ADMIN (USER-1 is the only dashboard admin)
+-- ADMIN: ANIENTO is the only dashboard admin.
+-- Field users (USER-1, Shiva-1, Shivan-1, …) must stay role='field'.
 -- Safe to re-run; does nothing if the auth user doesn't exist yet.
 -- ─────────────────────────────────────────────
-update public.profiles set username='USER-1', role='admin', status='approved' where lower(username)='user-1';
+update public.profiles set username='ANIENTO', role='admin', status='approved' where lower(username)='aniento';
+update public.profiles set role='field' where lower(username) <> 'aniento' and role='admin';

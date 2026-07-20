@@ -340,7 +340,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 #focus-shield svg{opacity:.5;}
 #focus-shield p{color:rgba(255,255,255,.5);font-size:14px;font-weight:600;letter-spacing:.05em;}
 
-/* ═══ PREMIUM POLISH (v2.0.95) ═══ */
+/* ═══ PREMIUM POLISH (v2.0.96) ═══ */
 .launch-btn{background:linear-gradient(180deg,#46e09d,#3ecf8e) !important;color:#04140c !important;box-shadow:0 6px 22px rgba(62,207,142,.32),inset 0 1px 0 rgba(255,255,255,.35) !important;}
 .launch-btn:hover{filter:brightness(1.05);}
 .launch-btn:active{transform:scale(.985);}
@@ -466,7 +466,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);}
         </svg>
       </div>
       <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub" id="dash-sub-ver">EST v2.0.95</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.0.96</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -512,7 +512,11 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);}
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About <span id="dash-about-ver">EST v2.0.95</span>
+      About <span id="dash-about-ver">EST v2.0.96</span>
+    </button>
+    <button onclick="installApp()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;background:rgba(255,255,255,.12);border:1.5px solid rgba(133,240,190,.5);border-radius:var(--rxl);color:#fff;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:12px;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+      Install EST App
     </button>
     <div id="dash-bottom-ver" style="text-align:center;font-size:10px;color:rgba(255,255,255,.2);margin-top:8px;">EST v2.0 · Data stored locally — works offline</div>
   </div>
@@ -1863,7 +1867,80 @@ function markSynced(mod, id){
 }
 
 /* ── SYNC ONE SURVEY ─────────────────────────────────────── */
+/* ── SUPABASE CLOUD SYNC ─────────────────────────────────────
+   Every survey is mirrored to the Supabase database keyed by the
+   user's EST username, so their data follows them across devices. */
+const SB_URL='https://fivqdckmtymtuxlhjjoj.supabase.co';
+const SB_KEY='sb_publishable_SUdRGiarUt92Tl67FzBCvw_Vsf4G_aW';
+function _sbH(){return{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'};}
+function _sbTable(s,mod){return (s.entryType==='manual'?'manual_':'')+(mod==='adult'?'adult':'larval')+'_surveys';}
+async function sbPushSurvey(s,mod){
+  if(!navigator.onLine)return false;
+  try{
+    const uname=(window._estUser&&window._estUser.username)||s.savedBy||'';
+    const row={username:uname,local_id:String(s.id),data:s,survey_date:s.date||'',location:s.location||'',zone:s.zone||'',district:s.district||''};
+    const r=await fetch(SB_URL+'/rest/v1/'+_sbTable(s,mod)+'?on_conflict=local_id',{method:'POST',headers:_sbH(),body:JSON.stringify([row])});
+    return r.ok;
+  }catch(e){return false;}
+}
+function _sbStoreKey(s,mod){
+  if(s&&s.entryType==='manual')return mod==='adult'?MAN_A_SAVED:MAN_L_SAVED;
+  return mod==='adult'?A_SAVED:L_SAVED;
+}
+function _markSbSynced(mod,id,sample){
+  const key=_sbStoreKey(sample,mod);
+  try{
+    const arr=JSON.parse(localStorage.getItem(key)||'[]');
+    const i=arr.findIndex(x=>String(x.id)===String(id));
+    if(i>-1){arr[i].sbSynced=true;localStorage.setItem(key,JSON.stringify(arr));}
+  }catch(e){}
+}
+let _sbSyncing=false;
+async function sbSyncAll(){
+  if(!navigator.onLine||_sbSyncing)return;
+  _sbSyncing=true;
+  try{
+    const sets=[[A_SAVED,'adult'],[L_SAVED,'larval'],[MAN_A_SAVED,'adult'],[MAN_L_SAVED,'larval']];
+    for(const [key,mod] of sets){
+      let surveys=[];try{surveys=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}
+      for(const s of surveys){
+        if(!s.sbSynced){const ok=await sbPushSurvey(s,mod);if(ok)_markSbSynced(mod,s.id,s);}
+      }
+    }
+  }finally{_sbSyncing=false;}
+}
+async function sbPullMine(){
+  if(!navigator.onLine||!window._estUser||!window._estUser.username)return;
+  const uname=window._estUser.username;
+  const keyFor={adult_surveys:A_SAVED,larval_surveys:L_SAVED,manual_adult_surveys:MAN_A_SAVED,manual_larval_surveys:MAN_L_SAVED};
+  let addedTotal=0;
+  for(const t of Object.keys(keyFor)){
+    try{
+      const r=await fetch(SB_URL+'/rest/v1/'+t+'?select=data&username=eq.'+encodeURIComponent(uname),{headers:_sbH()});
+      if(!r.ok)continue;
+      const rows=await r.json();
+      const key=keyFor[t];
+      let arr=[];try{arr=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}
+      const have=new Set(arr.map(x=>String(x.id)));
+      rows.forEach(row=>{
+        if(row.data&&row.data.id&&!have.has(String(row.data.id))){
+          arr.push({...row.data,sbSynced:true,synced:true});
+          have.add(String(row.data.id));addedTotal++;
+        }
+      });
+      arr.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
+      try{localStorage.setItem(key,JSON.stringify(arr));}catch(e){}
+    }catch(e){}
+  }
+  if(addedTotal){
+    if(typeof renderSaved==='function')try{renderSaved();}catch(e){}
+    showToast(addedTotal+' survey'+(addedTotal>1?'s':'')+' restored from your cloud account ✓','check');
+  }
+}
+
 async function syncOneSurvey(mod, id){
+  const _s=getSavedById(mod,id);
+  if(_s)sbPushSurvey(_s,mod).then(ok=>{if(ok)_markSbSynced(mod,id);});
   if(!GH_CONFIG.owner||!GH_CONFIG.token){
     showToast('GitHub not configured — add token in settings','warn'); return;
   }
@@ -1884,8 +1961,9 @@ async function syncOneSurvey(mod, id){
 
 /* ── SYNC ALL UNSYNCED ───────────────────────────────────── */
 async function ghSyncAll(){
+  sbSyncAll();
   if(!GH_CONFIG.owner||!GH_CONFIG.token){
-    showToast('GitHub not configured — add token in settings','warn');
+    showToast('Syncing to cloud database…','check');
     return;
   }
   if(!navigator.onLine){ showToast('Offline — sync when connected','warn'); return; }
@@ -1915,6 +1993,7 @@ async function ghSyncAll(){
 
 /* ── AUTO-SYNC AFTER SAVE ────────────────────────────────── */
 async function ghAutoSync(surveyData, mod){
+  sbPushSurvey(surveyData,mod).then(ok=>{if(ok)_markSbSynced(mod,surveyData.id);});
   if(!GH_CONFIG.owner||!GH_CONFIG.token||!navigator.onLine) return;
   const ok=await ghPushSurvey(surveyData,mod);
   if(ok){
@@ -2090,8 +2169,8 @@ async function startRazorpayPayment(){
 /* Permanent offline credentials — baseline, always works with no network */
 /* Only permanent users are hardcoded. All other users must exist in GitHub config.json. */
 const VALID_USERS=[
-  {username:'ANIENTO', password:'2026', role:'field', active:true},
-  {username:'USER-1',  password:'2026', role:'admin', active:true},
+  {username:'ANIENTO', password:'2026', role:'admin', active:true},
+  {username:'USER-1',  password:'2026', role:'field', active:true},
   {username:'USER-2',  password:'2020', role:'field', active:true},
   {username:'shiva',   password:'2510',   role:'field', active:true},
   {username:'Shivan',  password:'886748', role:'field', active:true},
@@ -2305,6 +2384,7 @@ async function doLogin(){
   window._estLoggedIn=true;
   window._estUser={username:u, role:result.role};
   checkPremiumStatus();
+  setTimeout(()=>{try{sbPullMine();sbSyncAll();}catch(e){}},1200);
   // Sync local users to GitHub in background after login
   if(GH_CONFIG.owner&&GH_CONFIG.token&&navigator.onLine){
     syncLocalUsersToGitHub().catch(()=>{});
@@ -2453,6 +2533,7 @@ function tryConsoleAutoLogin(){
     window._estLoggedIn=true;
     window._estUser={username:c.u,role:(r.valid?r.role:(s.role||'field'))};
     if(typeof checkPremiumStatus==='function')try{checkPremiumStatus();}catch(e){}
+    setTimeout(()=>{try{sbPullMine();sbSyncAll();}catch(e){}},1200);
     const sp=document.getElementById('splash');
     if(sp){sp.classList.remove('active');sp.style.display='none';sp.style.visibility='hidden';}
     const hdr=document.getElementById('app-header');if(hdr)hdr.style.display='flex';
@@ -3561,7 +3642,7 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.0.95)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.0.96)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -3636,7 +3717,7 @@ function buildAdultXLSX(surveys,isCompiled){
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.0.95)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.0.96)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -5183,6 +5264,7 @@ function saveManualAdult(){
   if(editId){saved=saved.filter(s=>String(s.id)!==editId);if(screenEl)delete screenEl.dataset.editId;}
   saved.unshift(survey);
   try{localStorage.setItem(MAN_A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}
+  sbPushSurvey(survey,'adult').then(ok=>{if(ok)_markSbSynced('adult',survey.id,survey);});
   ghPushManualSurvey(survey,'adult').then(ok=>{
     if(ok){saved=saved.map(s=>s.id===survey.id?{...s,synced:true}:s);try{localStorage.setItem(MAN_A_SAVED,JSON.stringify(saved));}catch(e){}}
   });
@@ -5283,6 +5365,7 @@ function saveManualLarval(){
   if(editIdL){saved=saved.filter(s=>String(s.id)!==editIdL);if(screenElL)delete screenElL.dataset.editId;}
   saved.unshift(survey);
   try{localStorage.setItem(MAN_L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}
+  sbPushSurvey(survey,'larval').then(ok=>{if(ok)_markSbSynced('larval',survey.id,survey);});
   ghPushManualSurvey(survey,'larval').then(ok=>{
     if(ok){saved=saved.map(s=>s.id===survey.id?{...s,synced:true}:s);try{localStorage.setItem(MAN_L_SAVED,JSON.stringify(saved));}catch(e){}}
   });
