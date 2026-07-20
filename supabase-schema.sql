@@ -9,8 +9,9 @@
 --     • DISABLE "Confirm email" — EST usernames map to internal
 --       @est-andaman.in addresses that cannot receive mail.
 --
--- After this file, run supabase-data-migration.sql to import the
--- historical GitHub survey data.
+-- After this file: open the EST dashboard as admin, click ⚙ Setup, and
+-- press "⇪ Migrate GitHub → Supabase" to import the historical survey
+-- data (the SQL editor cannot handle the full data payload).
 -- ═══════════════════════════════════════════════════════════════
 
 -- ─────────────────────────────────────────────

@@ -340,7 +340,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 #focus-shield svg{opacity:.5;}
 #focus-shield p{color:rgba(255,255,255,.5);font-size:14px;font-weight:600;letter-spacing:.05em;}
 
-/* ═══ PREMIUM POLISH (v2.0.96) ═══ */
+/* ═══ PREMIUM POLISH (v2.0.97) ═══ */
 .launch-btn{background:linear-gradient(180deg,#46e09d,#3ecf8e) !important;color:#04140c !important;box-shadow:0 6px 22px rgba(62,207,142,.32),inset 0 1px 0 rgba(255,255,255,.35) !important;}
 .launch-btn:hover{filter:brightness(1.05);}
 .launch-btn:active{transform:scale(.985);}
@@ -466,7 +466,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);}
         </svg>
       </div>
       <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub" id="dash-sub-ver">EST v2.0.96</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.0.97</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -512,7 +512,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);}
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About <span id="dash-about-ver">EST v2.0.96</span>
+      About <span id="dash-about-ver">EST v2.0.97</span>
     </button>
     <button onclick="installApp()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;background:rgba(255,255,255,.12);border:1.5px solid rgba(133,240,190,.5);border-radius:var(--rxl);color:#fff;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:12px;">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
@@ -3642,7 +3642,7 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.0.96)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.0.97)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -3717,7 +3717,7 @@ function buildAdultXLSX(surveys,isCompiled){
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.0.96)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.0.97)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
