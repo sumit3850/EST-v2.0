@@ -13,12 +13,6 @@
       "active": true
     },
     {
-      "username": "USER-2",
-      "password": "EST2021@",
-      "role": "field",
-      "active": true
-    },
-    {
       "username": "Shiva-1",
       "password": "2004",
       "role": "field",
@@ -29,13 +23,7 @@
       "password": "1992",
       "role": "field",
       "active": true
-    },
-    {
-      "username": "Admin-2",
-      "password": "12345",
-      "role": "field",
-      "active": true
     }
   ],
-  "updatedAt": "2026-06-24T06:16:07.630Z"
+  "updatedAt": "2026-07-20T20:08:38.312Z"
 }
