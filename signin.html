@@ -454,7 +454,7 @@ body{
 </main>
 
 <footer class="statusbar">
-  <span>console v2.1.6</span><span class="sep">│</span>
+  <span>console v2.1.7</span><span class="sep">│</span>
   <a href="https://estweb-git-main-explorer3850.vercel.app/" target="_blank" rel="noopener" style="color:var(--txt2);text-decoration:none;border-bottom:1px dotted var(--txt3);">website ↗</a><span class="sep">│</span>
   <span class="status-pill"><span id="fb-dot" class="status-dot checking"></span><span id="fb-state">supabase: checking…</span></span>
   <span class="sep">│</span><span id="fb-net">network: —</span>
@@ -818,6 +818,13 @@ document.addEventListener('DOMContentLoaded',async()=>{
   probeBackend();
   window.addEventListener('online',probeBackend);
   window.addEventListener('offline',probeBackend);
+  // Arriving from a failed/expired reset link: explain and offer a new one
+  if(/error_code=otp_expired|error=access_denied/.test(location.hash)){
+    history.replaceState(null,'',location.pathname);
+    showForgot('password');
+    showMsg('fg-msg','warn','That reset link is invalid or has already expired — reset links work only once and for a short time. Enter your username or email below to get a fresh one.');
+    return;
+  }
   if(!_sb){$('si-user').focus();return;}
   // Arriving from a password-reset email: let the recovery panel take over
   if(/type=recovery/.test(location.hash))return;
