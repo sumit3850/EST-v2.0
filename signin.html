@@ -454,7 +454,7 @@ body{
 </main>
 
 <footer class="statusbar">
-  <span>console v2.1.7</span><span class="sep">│</span>
+  <span>console v2.1.8</span><span class="sep">│</span>
   <a href="https://estweb-git-main-explorer3850.vercel.app/" target="_blank" rel="noopener" style="color:var(--txt2);text-decoration:none;border-bottom:1px dotted var(--txt3);">website ↗</a><span class="sep">│</span>
   <span class="status-pill"><span id="fb-dot" class="status-dot checking"></span><span id="fb-state">supabase: checking…</span></span>
   <span class="sep">│</span><span id="fb-net">network: —</span>
@@ -572,7 +572,7 @@ async function doForgot(ev){
       }
     }catch(e){}
     // Record the request so it appears in the admin dashboard
-    let logged=false;
+    let logged=false,logMissingTable=false;
     try{
       const r=await fetch(SUPABASE_URL+'/rest/v1/reset_requests',{
         method:'POST',
@@ -580,24 +580,36 @@ async function doForgot(ev){
         body:JSON.stringify([{req_type:_fgMode,username:uname,email:email,status:'open'}])
       });
       logged=r.ok;
+      if(r.status===404)logMissingTable=true;
     }catch(e){}
     if(_fgMode==='username'){
       if(uname)showMsg('fg-msg','ok','Your username is “'+uname+'”. The EST admin has also been notified.');
       else if(logged)showMsg('fg-msg','warn','No account found for that email — the EST admin has been notified and will contact you.');
+      else if(logMissingTable)showMsg('fg-msg','err','The reset-request system is not set up yet — ask the EST admin to apply the latest database schema.');
       else showMsg('fg-msg','err','Could not reach the server — check your connection and try again.');
       return;
     }
     // Password mode: try to send a Supabase reset link to the registered email
-    let mailed=false;
+    let mailed=false,mailErr='';
     if(_sb&&email){
       try{
         const {error}=await _sb.auth.resetPasswordForEmail(email,{redirectTo:location.href.split('#')[0].split('?')[0]});
-        mailed=!error;
-      }catch(e){}
+        if(error)mailErr=error.message||'';else mailed=true;
+      }catch(e){mailErr=String(e&&e.message||e);}
     }
-    if(mailed)showMsg('fg-msg','ok','Password reset link sent to '+email+' — check your inbox and spam folder. The EST admin has also been notified.');
-    else if(logged)showMsg('fg-msg','warn','Request recorded — the EST admin has been notified and will reset your password and contact you.'+(email?'':' (No email is on file for this account, so a reset link could not be sent.)'));
-    else showMsg('fg-msg','err','Could not reach the server — check your connection and try again.');
+    if(mailed){
+      showMsg('fg-msg','ok','Password reset link sent to '+email+' — check your inbox and spam folder. In Gmail, click the “···” button if the message looks empty. The EST admin has also been notified.');
+    }else if(/security purposes|rate limit/i.test(mailErr)){
+      showMsg('fg-msg','warn','A reset link was requested very recently — wait a minute before requesting another. ('+mailErr+')');
+    }else if(mailErr){
+      showMsg('fg-msg','err','Could not send the reset email: '+mailErr+(logged?' — the EST admin has been notified instead.':''));
+    }else if(logged){
+      showMsg('fg-msg','warn','Request recorded — the EST admin has been notified and will reset your password and contact you.'+(email?'':' (No email is on file for this account, so a reset link could not be sent.)'));
+    }else if(logMissingTable){
+      showMsg('fg-msg','err','The reset-request system is not set up yet — ask the EST admin to apply the latest database schema.');
+    }else{
+      showMsg('fg-msg','err','Could not reach the server — check your connection and try again.');
+    }
   }finally{setBusy('fg-btn',false);}
 }
 
