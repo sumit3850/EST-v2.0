@@ -91,8 +91,16 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .sidebar.collapsed .sb-title{display:none;}
 
 .sb-nav{flex:1;padding:10px 8px;overflow-y:auto;}
-.nav-section{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.25);padding:12px 8px 4px;white-space:nowrap;overflow:hidden;}
+.nav-section{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:rgba(62,207,142,.45);padding:16px 10px 6px;white-space:nowrap;overflow:hidden;}
+.nav-section:not(:first-child){border-top:1px solid rgba(62,207,142,.07);margin-top:8px;}
 .sidebar.collapsed .nav-section{opacity:0;}
+.nav-subs{margin:0 0 4px;}
+.nav-sub{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px 7px 36px;font-size:11.5px;font-weight:500;color:var(--sb-txt);background:none;border:0;cursor:pointer;border-radius:8px;margin-bottom:1px;text-align:left;position:relative;transition:color .16s ease,background .16s ease;font-family:inherit;white-space:nowrap;overflow:hidden;}
+.nav-sub::before{content:'';position:absolute;left:22px;width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.4;}
+.nav-sub:hover{color:#fff;background:var(--sb-hover);}
+.nav-sub.on{color:var(--sb-active);background:rgba(62,207,142,.1);font-weight:700;}
+.nav-sub.on::before{opacity:1;box-shadow:0 0 6px currentColor;}
+.sidebar.collapsed .nav-subs{display:none;}
 .nav-item{width:100%;display:flex;align-items:center;gap:10px;padding:9px 10px;border:none;background:none;color:var(--sb-txt);font-size:12px;font-weight:500;cursor:pointer;border-radius:8px;text-align:left;transition:all .2s cubic-bezier(.4,0,.2,1);white-space:nowrap;margin-bottom:2px;}
 .nav-item:hover{background:var(--sb-hover);color:#fff;transform:translateX(1px);}
 .nav-item.active{background:rgba(62,207,142,.2);color:var(--sb-active);font-weight:600;box-shadow:inset 3px 0 0 var(--teal);}
@@ -171,10 +179,13 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .overview-sub{font-size:12px;color:var(--txt2);margin-top:2px;font-weight:400;}
 .overview-date-chip{font-size:11px;font-weight:500;color:var(--muted);background:var(--sf2);border:1px solid var(--bdr);border-radius:20px;padding:4px 12px;white-space:nowrap;align-self:flex-start;}
 
-/* ═══ PREMIUM POLISH (v2.1.9) ═══ */
+/* ═══ PREMIUM POLISH (v2.2.0) ═══ */
 .kpi-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
 .kpi-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 0 1px var(--bdr2);}
 .nav-item.active{background:linear-gradient(90deg,rgba(62,207,142,.18),rgba(62,207,142,.06));box-shadow:inset 3px 0 0 var(--teal),0 0 18px rgba(62,207,142,.06);}
+.nav-item{padding:10px 11px;font-size:12.5px;border-radius:10px;}
+.nav-item svg{width:17px;height:17px;opacity:.85;}
+.nav-item.active svg{opacity:1;filter:drop-shadow(0 0 4px rgba(62,207,142,.5));}
 .nav-item:focus-visible,.tb-btn:focus-visible,.pt-btn:focus-visible{outline:2px solid var(--teal);outline-offset:2px;}
 ::-webkit-scrollbar{width:10px;height:10px;}
 ::-webkit-scrollbar-track{background:transparent;}
@@ -197,7 +208,7 @@ table tbody tr:hover td{background:rgba(62,207,142,.045);}
 .status-bar{border-radius:0;font-weight:600;}
 .note-box{border-radius:12px;}
 select,input[type="date"]{border-radius:9px;}
-/* — premium mobile spacing (v2.1.9) — */
+/* — premium mobile spacing (v2.2.0) — */
 @media(max-width:680px){
   .topbar{padding:8px 12px;gap:8px;}
   .tb-btn{height:36px;padding:0 11px;font-size:11.5px;}
@@ -661,7 +672,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.1.9</p>
+      <p>Admin Dashboard · v2.2.0</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -702,7 +713,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>v2.1.9 · A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.2.0 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -724,19 +735,29 @@ tr:hover td{background:var(--teal-lt);}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
       <span class="nav-item-label">Survey Maps</span>
     </button>
-      <button class="nav-item" onclick="switchSection('analytics',this)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        <span>Analytics</span>
-      </button>
     <button class="nav-item" id="nav-manual" onclick="switchSection('manual',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       <span class="nav-item-label">Manual Data</span>
     </button>
-    <div class="nav-section">Admin</div>
+    <div class="nav-section">Insights</div>
+    <button class="nav-item" id="nav-analytics" onclick="switchSection('analytics',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span class="nav-item-label">Analytics</span>
+    </button>
+    <div class="nav-subs">
+      <button class="nav-sub" id="nsub-seasonal" onclick="_goAnalytics('seasonal',this)">Seasonal Trends</button>
+      <button class="nav-sub" id="nsub-risk" onclick="_goAnalytics('risk',this)">Aedes Risk Assessment</button>
+      <button class="nav-sub" id="nsub-intervention" onclick="_goAnalytics('intervention',this)">Intervention Tracker</button>
+    </div>
+    <div class="nav-section">Administration</div>
     <button class="nav-item" id="nav-users" onclick="switchSection('users',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M3 20c0-3.3 2.7-6 6-6h1"/><circle cx="17" cy="17" r="3"/><path d="M17 14v2l1.5 1.5"/></svg>
       <span class="nav-item-label">Manage Users</span>
     </button>
+    <div class="nav-subs">
+      <button class="nav-sub" id="nsub-cred" onclick="_goUsers('admin',this)">Credentials</button>
+      <button class="nav-sub" id="nsub-signup" onclick="_goUsers('signup',this)">Sign-up Requests <span id="nav-signup-dot" style="display:none;width:7px;height:7px;border-radius:50%;background:#f59e0b;margin-left:auto;flex-shrink:0;"></span></button>
+    </div>
     <button class="nav-item" id="nav-activity" onclick="switchSection('activity',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="21" x2="23" y2="19"/><line x1="19" y1="21" x2="19" y2="15"/><line x1="15" y1="21" x2="15" y2="17"/></svg>
       <span class="nav-item-label">Activity Log</span>
@@ -760,7 +781,7 @@ tr:hover td{background:var(--teal-lt);}
       <div class="breadcrumb"><span id="bc-main">Overview</span></div>
     </div>
     <div class="topbar-right">
-      <span id="tb-ver" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--txt2);background:var(--teal-lt);border:1px solid var(--bdr2);border-radius:99px;padding:4px 11px;white-space:nowrap;">v2.1.9</span>
+      <span id="tb-ver" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--txt2);background:var(--teal-lt);border:1px solid var(--bdr2);border-radius:99px;padding:4px 11px;white-space:nowrap;">v2.2.0</span>
       <button class="tb-icon-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">☀</button>
       <button class="install-btn" id="install-btn" onclick="installDashApp()" title="Install EST Dashboard as app">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -861,74 +882,7 @@ tr:hover td{background:var(--teal-lt);}
         </div>
       </div>
 
-      <!-- Aedes Risk Assessment Card -->
-      <div class="risk-card" id="risk-card" style="display:none;">
-        <div class="risk-card-hdr">
-          <div>
-            <div class="risk-card-title">Aedes Breeding Risk Assessment</div>
-            <div class="risk-card-sub">District &amp; Location Entomological Indices — Aedes Breeding</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-            <div class="risk-lvl-badge nodata" id="risk-overall-badge">No Data</div>
-            <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:nowrap;">
-              <button class="risk-export-btn" onclick="exportRiskPDF()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>Export PDF</button>
-              <button class="risk-export-btn" style="background:rgba(27,94,32,.15);color:#2e7d32;border-color:rgba(27,94,32,.3);" onmouseenter="this.style.background='rgba(27,94,32,.25)'" onmouseleave="this.style.background='rgba(27,94,32,.15)'" onclick="exportRiskExcel()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>Export Excel</button>
-              <button class="risk-export-btn" style="background:rgba(0,105,92,.15);color:#1a7a4a;border-color:rgba(0,105,92,.3);" onmouseenter="this.style.background='rgba(0,105,92,.25)'" onmouseleave="this.style.background='rgba(0,105,92,.15)'" onclick="exportMonthlyLarval()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Monthly Larval Format</button>
-              <button class="risk-export-btn" style="background:rgba(191,54,12,.15);color:#bf360c;border-color:rgba(191,54,12,.3);" onmouseenter="this.style.background='rgba(191,54,12,.25)'" onmouseleave="this.style.background='rgba(191,54,12,.15)'" onclick="exportMonthlyAdult()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Monthly Adult Format</button>
-            </div>
-          </div>
-        </div>
-        <div class="risk-period-tabs">
-          <button class="risk-ptab active" id="rtab-week" onclick="switchRiskPeriod('week')">This Week</button>
-          <button class="risk-ptab" id="rtab-month" onclick="switchRiskPeriod('month')">This Month</button>
-          <button class="risk-ptab" id="rtab-year" onclick="switchRiskPeriod('year')">This Year</button>
-          <button class="risk-ptab" id="rtab-custom" onclick="switchRiskPeriod('custom')">Custom</button>
-          <select id="risk-mod-sel" class="pt-select" style="margin-left:auto;width:180px;height:30px;font-size:11.5px;" onchange="updateRiskCard(_riskPeriod)" title="Choose which module's data feeds the assessment">
-            <option value="all">All Modules</option>
-            <option value="adult">Adult Surveillance</option>
-            <option value="larval">Larval Surveillance</option>
-            <option value="manual">Manual Entries</option>
-          </select>
-        </div>
-        <div id="risk-period-label" style="padding:5px 16px;font-size:11px;color:var(--teal);font-weight:600;background:var(--sf2);border-bottom:1px solid var(--bdr);"></div>
-        <div class="risk-custom-row" id="risk-custom-row" style="display:none;">
-          <label>From</label>
-          <input type="date" class="risk-date-inp" id="risk-from">
-          <label>To</label>
-          <input type="date" class="risk-date-inp" id="risk-to">
-          <button class="risk-apply-btn" onclick="updateRiskCard('custom')">Apply</button>
-        </div>
-        <div class="risk-idx-grid">
-          <div class="risk-idx-cell">
-            <div class="risk-idx-name">House Index (HI)</div>
-            <div class="risk-idx-val low" id="risk-hi-val">—</div>
-            <div class="risk-idx-lbl low" id="risk-hi-lbl">—</div>
-          </div>
-          <div class="risk-idx-cell">
-            <div class="risk-idx-name">Container Index (CI)</div>
-            <div class="risk-idx-val low" id="risk-ci-val">—</div>
-            <div class="risk-idx-lbl low" id="risk-ci-lbl">—</div>
-          </div>
-          <div class="risk-idx-cell">
-            <div class="risk-idx-name">Breteau Index (BI)</div>
-            <div class="risk-idx-val low" id="risk-bi-val">—</div>
-            <div class="risk-idx-lbl low" id="risk-bi-lbl">—</div>
-          </div>
-        </div>
-        <div class="risk-districts">
-          <div id="risk-dist-chart"></div>
-        </div>
-        <div class="risk-zone-section" id="risk-zone-section" style="display:none;"></div>
-        <div class="risk-loc-section" id="risk-loc-section"></div>
-        <div id="risk-breeding-sec" style="display:none;"></div>
-        <div class="risk-ref">
-          <b>Risk Thresholds:</b>
-          HI: Low &lt;1 · Moderate 5–10 · High &gt;10 &nbsp;|&nbsp;
-          CI: Low &lt;1 · Moderate 5–10 · High &gt;10 &nbsp;|&nbsp;
-          BI: Low &lt;1 · Moderate 5–50 · High &gt;50 &nbsp;|&nbsp;
-          BI shown as N/A when &lt;100 houses inspected
-        </div>
-      </div>
+
 
       <div style="height:16px;"></div>
       <div id="alert-section">
@@ -1144,6 +1098,79 @@ tr:hover td{background:var(--teal-lt);}
       <div class="an-tabs">
         <button class="an-tab active" id="antab-seasonal" onclick="switchAnalyticsTab('seasonal')">📈 Seasonal Trends</button>
         <button class="an-tab" id="antab-intervention" onclick="switchAnalyticsTab('intervention')">🔬 Intervention Tracker</button>
+        <button class="an-tab" id="antab-risk" onclick="switchAnalyticsTab('risk')">🦟 Aedes Risk Assessment</button>
+      </div>
+
+      <!-- Tab: Aedes Risk Assessment -->
+      <div id="an-risk" class="an-section" style="display:none;">
+      <!-- Aedes Risk Assessment Card -->
+      <div class="risk-card" id="risk-card" style="display:none;">
+        <div class="risk-card-hdr">
+          <div>
+            <div class="risk-card-title">Aedes Breeding Risk Assessment</div>
+            <div class="risk-card-sub">District &amp; Location Entomological Indices — Aedes Breeding</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <div class="risk-lvl-badge nodata" id="risk-overall-badge">No Data</div>
+            <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:nowrap;">
+              <button class="risk-export-btn" onclick="exportRiskPDF()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>Export PDF</button>
+              <button class="risk-export-btn" style="background:rgba(27,94,32,.15);color:#2e7d32;border-color:rgba(27,94,32,.3);" onmouseenter="this.style.background='rgba(27,94,32,.25)'" onmouseleave="this.style.background='rgba(27,94,32,.15)'" onclick="exportRiskExcel()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>Export Excel</button>
+              <button class="risk-export-btn" style="background:rgba(0,105,92,.15);color:#1a7a4a;border-color:rgba(0,105,92,.3);" onmouseenter="this.style.background='rgba(0,105,92,.25)'" onmouseleave="this.style.background='rgba(0,105,92,.15)'" onclick="exportMonthlyLarval()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Monthly Larval Format</button>
+              <button class="risk-export-btn" style="background:rgba(191,54,12,.15);color:#bf360c;border-color:rgba(191,54,12,.3);" onmouseenter="this.style.background='rgba(191,54,12,.25)'" onmouseleave="this.style.background='rgba(191,54,12,.15)'" onclick="exportMonthlyAdult()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Monthly Adult Format</button>
+            </div>
+          </div>
+        </div>
+        <div class="risk-period-tabs">
+          <button class="risk-ptab active" id="rtab-week" onclick="switchRiskPeriod('week')">This Week</button>
+          <button class="risk-ptab" id="rtab-month" onclick="switchRiskPeriod('month')">This Month</button>
+          <button class="risk-ptab" id="rtab-year" onclick="switchRiskPeriod('year')">This Year</button>
+          <button class="risk-ptab" id="rtab-custom" onclick="switchRiskPeriod('custom')">Custom</button>
+          <select id="risk-mod-sel" class="pt-select" style="margin-left:auto;width:180px;height:30px;font-size:11.5px;" onchange="updateRiskCard(_riskPeriod)" title="Choose which module's data feeds the assessment">
+            <option value="all">All Modules</option>
+            <option value="adult">Adult Surveillance</option>
+            <option value="larval">Larval Surveillance</option>
+            <option value="manual">Manual Entries</option>
+          </select>
+        </div>
+        <div id="risk-period-label" style="padding:5px 16px;font-size:11px;color:var(--teal);font-weight:600;background:var(--sf2);border-bottom:1px solid var(--bdr);"></div>
+        <div class="risk-custom-row" id="risk-custom-row" style="display:none;">
+          <label>From</label>
+          <input type="date" class="risk-date-inp" id="risk-from">
+          <label>To</label>
+          <input type="date" class="risk-date-inp" id="risk-to">
+          <button class="risk-apply-btn" onclick="updateRiskCard('custom')">Apply</button>
+        </div>
+        <div class="risk-idx-grid">
+          <div class="risk-idx-cell">
+            <div class="risk-idx-name">House Index (HI)</div>
+            <div class="risk-idx-val low" id="risk-hi-val">—</div>
+            <div class="risk-idx-lbl low" id="risk-hi-lbl">—</div>
+          </div>
+          <div class="risk-idx-cell">
+            <div class="risk-idx-name">Container Index (CI)</div>
+            <div class="risk-idx-val low" id="risk-ci-val">—</div>
+            <div class="risk-idx-lbl low" id="risk-ci-lbl">—</div>
+          </div>
+          <div class="risk-idx-cell">
+            <div class="risk-idx-name">Breteau Index (BI)</div>
+            <div class="risk-idx-val low" id="risk-bi-val">—</div>
+            <div class="risk-idx-lbl low" id="risk-bi-lbl">—</div>
+          </div>
+        </div>
+        <div class="risk-districts">
+          <div id="risk-dist-chart"></div>
+        </div>
+        <div class="risk-zone-section" id="risk-zone-section" style="display:none;"></div>
+        <div class="risk-loc-section" id="risk-loc-section"></div>
+        <div id="risk-breeding-sec" style="display:none;"></div>
+        <div class="risk-ref">
+          <b>Risk Thresholds:</b>
+          HI: Low &lt;1 · Moderate 5–10 · High &gt;10 &nbsp;|&nbsp;
+          CI: Low &lt;1 · Moderate 5–10 · High &gt;10 &nbsp;|&nbsp;
+          BI: Low &lt;1 · Moderate 5–50 · High &gt;50 &nbsp;|&nbsp;
+          BI shown as N/A when &lt;100 houses inspected
+        </div>
+      </div>
       </div>
 
       <!-- Tab: Seasonal Trends -->
@@ -1739,8 +1766,9 @@ async function loadSignups(){
 }
 function updateSignupBadge(n){
   const b=document.getElementById('signup-badge');
-  if(!b)return;
-  b.textContent=n;b.style.display=n>0?'inline-block':'none';
+  if(b){b.textContent=n;b.style.display=n>0?'inline-block':'none';}
+  const dot=document.getElementById('nav-signup-dot');
+  if(dot)dot.style.display=n>0?'inline-block':'none';
 }
 function renderSignups(){
   const el=document.getElementById('users-signup-list');
@@ -2251,7 +2279,7 @@ function exportRiskPDF(){
     const rows=sorted.map(([name,cnt],idx)=>`<tr style="${idx%2===0?'':'background:#f9f9f9;'}"><td>${name}</td><td style="font-weight:700;color:#1a7a4a;">${cnt}</td><td style="padding:4px 8px;"><div style="height:10px;border-radius:5px;background:#1a7a4a;width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%;min-width:4px;"></div></td></tr>`).join('');
     return`<h3>${dk} — Breeding Preferred Containers</h3><table><thead><tr><th>Container Type</th><th>Positive Count</th><th style="min-width:120px;">Proportion</th></tr></thead><tbody>${rows}</tbody></table>`;
   }).join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#1a7a4a;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #1a7a4a;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:18px;font-weight:700;color:#1a7a4a;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:10px 14px;background:#fff8e1;border-left:3px solid #f9a825;font-size:13px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #1a7a4a;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${(range.label||'All Data')+' · '+_riskModuleLabel()}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><h2>Overall Entomological Indices — Aedes Breeding for Andaman &amp; Nicobar Islands</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#1a7a4a;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.1.9 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#1a7a4a;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #1a7a4a;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:18px;font-weight:700;color:#1a7a4a;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:10px 14px;background:#fff8e1;border-left:3px solid #f9a825;font-size:13px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #1a7a4a;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${(range.label||'All Data')+' · '+_riskModuleLabel()}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><h2>Overall Entomological Indices — Aedes Breeding for Andaman &amp; Nicobar Islands</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#1a7a4a;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.2.0 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
   const win=window.open('','_blank','width=920,height=740');
   if(win){win.document.write(html);win.document.close();setTimeout(()=>win.print(),700);}
 }
@@ -3095,7 +3123,7 @@ function buildAdultXLSX(surveys,isCompiled){
   const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
   // ── Report Status ──
   const statusRows=[
-    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.1.9')],
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.2.0')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -3168,7 +3196,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   // ── Report Status sheet ──
   const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.1.9')],
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.2.0')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -3312,7 +3340,7 @@ function buildAdultCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.1.9 — Adult Mosquito Surveillance Report (Database Export)');
+  r('EST v2.2.0 — Adult Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -3364,7 +3392,7 @@ function buildAdultCSV(surveys){
     });
   });
   blank();
-  r('EST v2.1.9 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.2.0 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -3376,7 +3404,7 @@ function buildLarvalCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.1.9 — Larval Mosquito Surveillance Report (Database Export)');
+  r('EST v2.2.0 — Larval Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -3457,7 +3485,7 @@ function buildLarvalCSV(surveys){
     }
   });
   blank();
-  r('EST v2.1.9 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.2.0 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -4292,7 +4320,7 @@ let _anTab='seasonal', _seasonalChartInst=null, _densityChartInst=null;
 
 function switchAnalyticsTab(tab){
   _anTab=tab;
-  ['seasonal','intervention'].forEach(t=>{
+  ['seasonal','intervention','risk'].forEach(t=>{
     const btn=document.getElementById('antab-'+t);
     if(btn)btn.classList.toggle('active',t===tab);
     const sec=document.getElementById('an-'+t);
@@ -4300,6 +4328,7 @@ function switchAnalyticsTab(tab){
   });
   if(tab==='seasonal')buildSeasonalChart();
   else if(tab==='intervention')_populateInterventionSelects();
+  else if(tab==='risk')try{updateRiskCard(_riskPeriod||'week');}catch(e){}
 }
 
 function _anGetYears(){
@@ -4761,8 +4790,21 @@ function exportKML(){
 }
 
 /* ── SIDEBAR NAVIGATION ── */
+function _goAnalytics(tab,sub){
+  switchSection('analytics',document.getElementById('nav-analytics'));
+  switchAnalyticsTab(tab);
+  document.querySelectorAll('.nav-sub').forEach(n=>n.classList.remove('on'));
+  if(sub)sub.classList.add('on');
+}
+function _goUsers(tab,sub){
+  switchSection('users',document.getElementById('nav-users'));
+  switchUserTab(tab);
+  document.querySelectorAll('.nav-sub').forEach(n=>n.classList.remove('on'));
+  if(sub)sub.classList.add('on');
+}
 function switchSection(name, btn) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.nav-sub').forEach(n => n.classList.remove('on'));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   const panel = document.getElementById('panel-' + name);
