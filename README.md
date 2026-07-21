@@ -1,19 +1,24 @@
-# EST v2.0 — Entomological Surveillance Tool
+# EST — Entomological Surveillance Tool
 
-> **Online / Offline · Mobile-First · Progressive Web App**
+> **Online / Offline · Mobile-First · Cloud-Synced · Progressive Web App**
 > Purpose-built for field entomologists, public health workers, and vector control personnel across India.
 
-[![Live App](https://img.shields.io/badge/Live%20App-sumit3850.github.io%2FEST--v2.0-006b5c?style=flat-square)](https://sumit3850.github.io/EST-v2.0/)
+[![Operations Console](https://img.shields.io/badge/Sign%20In-Operations%20Console-3ecf8e?style=flat-square)](https://sumit3850.github.io/EST-v2.0/signin.html)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg?style=flat-square)](LICENSE)
 [![PWA](https://img.shields.io/badge/PWA-Offline--Capable-5a67d8?style=flat-square)](https://sumit3850.github.io/EST-v2.0/)
 
 ---
 
-## Live App
+## Access
 
-**[https://sumit3850.github.io/EST-v2.0/](https://sumit3850.github.io/EST-v2.0/)**
+| Surface | URL | Who |
+|---|---|---|
+| **Operations Console** (sign in / sign up) | [sumit3850.github.io/EST-v2.0](https://sumit3850.github.io/EST-v2.0/) | Everyone — single sign-on entry |
+| **Field App** | `/app.html` (via console) | All approved users |
+| **Admin Dashboard** | `/dashboard.html` (via console) | Administrators only |
+| **Website** | [estweb](https://estweb-git-main-explorer3850.vercel.app/) | Public |
 
-Install directly to your home screen (Android / iOS / Desktop) — no app store required.
+Sign in once at the console — the Field App and Dashboard open directly with no second login. Install to your home screen from the **Install EST App** button on the console (Android / iOS / Desktop, no app store required).
 
 ---
 
@@ -21,7 +26,18 @@ Install directly to your home screen (Android / iOS / Desktop) — no app store 
 
 **Entomological Surveillance Tool (EST)** is a comprehensive digital platform for systematic mosquito vector surveillance in public health and vector control operations.
 
-Built as a **Progressive Web App (PWA)**, it operates seamlessly on smartphones, tablets, and desktops — entirely without requiring continuous internet connectivity. All survey data is stored locally on the device and can be synced to a GitHub-backed cloud database whenever connectivity is available.
+Built as a **Progressive Web App (PWA)**, it operates on smartphones, tablets, and desktops — entirely without requiring continuous internet connectivity. Survey data is stored locally on the device and mirrored to a **Supabase cloud database keyed to each user's account**, so a surveyor's data follows them across devices and lands automatically in the central admin dashboard.
+
+---
+
+## How It Works
+
+1. **Sign up** on the Operations Console (name, email, phone, username) → the request appears in the admin dashboard → an **administrator approves** it before first sign-in.
+2. **Collect** surveys in the Field App — fully offline if needed, with GPS tracks, per-house tagging, and live WHO indices.
+3. **Sync** happens automatically whenever online: every survey is upserted to its module's table in the cloud database. Signing in on a new device restores that user's surveys.
+4. **Analyse** in the Admin Dashboard: central database of all synced surveys, Aedes risk assessment, seasonal trend charts, exports, and user management.
+
+Forgot your password or username? The console has self-service recovery — reset links go to your registered email, and every request is also logged for the admin.
 
 ---
 
@@ -47,25 +63,17 @@ Built as a **Progressive Web App (PWA)**, it operates seamlessly on smartphones,
 | **Aedes** | 18 container-type matrix; container inspection | House Index (HI), Container Index (CI), Breteau Index (BI), Pupal Index |
 | **Anopheles / Culex** | Independent dip-site logging (DS-001…) | Larval Density (LD), Pupal Density (PD), Immature Density (IMD/100 dips) |
 
-- Genus-level identification: *Aedes sp., Culex sp., Anopheles sp.* + UN-ID log
-- Per-house and per-site GPS auto-tagged; positive houses on satellite map
-- **KML export** for Google Earth / Google Maps overlay
+### Manual Entry
+
+Paper registers and legacy records entered directly — indices computed automatically, synced to the cloud like any survey.
 
 ---
 
 ## WHO-Standard Indices Computed
 
-**Adult Mosquito Density (Resting):** PMHD, TMHD (×10), Indoor/Outdoor Resting Density, Room Density
+**Adult:** PMHD, TMHD (×10), Indoor/Outdoor Resting Density, Room Density, HBR, HBR/hr, ALR, ALR/night
 
-**Adult Mosquito Density (HLC):** PMHD, TMHD, HBR, HBR/hr
-
-**Human Biting Rate (HBR):** HBR (mosq/night/volunteer), HBR/hr, PMHD, TMHD
-
-**Adult Biting/Landing Rate (ALR):** ALR (adults/bait/hr), ALR/night, ALR Simple
-
-**Larval Aedes:** HI, CI, BI, Pupal Index
-
-**Larval An./Cx.:** Larval Density, Pupal Density, Immature Density
+**Larval Aedes:** HI, CI, BI, Pupal Index · **Larval An./Cx.:** Larval Density, Pupal Density, Immature Density
 
 ```
 PMHD  = Total Mosquitoes ÷ (Collectors × Total Time hrs)
@@ -79,25 +87,28 @@ BI    = (Positive Containers ÷ Houses Inspected) × 100
 
 ---
 
+## Admin Dashboard
+
+- **Central survey database** — every synced survey from every user, filterable and exportable
+- **Analytics** — Seasonal Trends (monthly HI/CI/BI line chart + PMHD/TMHD bar chart), **Aedes Breeding Risk Assessment** with module and period selectors, Intervention Tracker — each with one-click printable report generation
+- **Survey Maps** — GPS tracks and positive houses on satellite tiles
+- **User management** — approve/hold/delete sign-up requests, manage credentials, see password/username reset requests
+- **Monthly NVBDCP formats**, bulk PDF / Excel / CSV export, backup & restore
+
+---
+
 ## Key Features
 
-- **Fully offline** — single HTML file; works on any device with a browser
-- **GPS auto-detect** with 4-API network fallback
-- **Survey path recording** — live GPS track with distance and elapsed time timer
-- **GPS outlier filtering** — speed-based rejection (>35 km/h) and accuracy threshold (<40 m) to eliminate jumps
-- **Per-house GPS logging** — each house auto-captures GPS coordinates on log
-- **Satellite map preview** — survey path + house/site markers on Google Satellite tiles
-- **Leader-line map labels** — house and site numbers use collision-avoidance placement with connector lines
+- **Offline-first** — works with zero connectivity; syncs when back online
+- **Cloud database (Supabase)** — per-account survey storage; cross-device access
+- **Single sign-on** — one console login unlocks app and dashboard by role
+- **Admin-approved accounts** — new users cannot operate until approved
+- **GPS auto-detect** with fallback, outlier filtering, per-house tagging, path recording
+- **Satellite map previews** with collision-avoiding labels; **KML export**
 - **All-India coverage** — all States/UTs and districts
-- **Draft auto-save** — never lose in-progress data (localStorage)
-- **Export formats:**
-  - **PDF** — printable A4 report with maps, indices, species tables, signature blocks
-  - **CSV/Excel** — full detail with GPS coordinates + Google Maps links
-  - **KML** — for Google Earth / Google Maps import
-  - **WhatsApp / Email** — quick share of summary
-- **GitHub cloud sync** — optional; survey data pushed to your own repository
-- **Two modules** — Adult & Larval in a single app
-- **Progressive Web App** — installable, offline-capable, no app store needed
+- **Draft auto-save**; duplicate-safe re-save and edit (records update, never fork)
+- **Exports:** PDF (A4 report with maps and signature blocks), Excel/CSV with GPS links, KML, WhatsApp/Email share
+- **Installable PWA** on Android, iOS, and desktop
 
 ---
 
@@ -105,38 +116,29 @@ BI    = (Positive Containers ÷ Houses Inspected) × 100
 
 | File | Purpose |
 |---|---|
-| `index.html` | Main EST application (single-file PWA) |
-| `sw.js` | Service Worker — offline-first caching strategy |
-| `manifest.json` | PWA manifest (icons, theme, display mode) |
-| `config.json` | User credentials and GitHub database configuration |
-| `offline-helper.js` | Offline status helper utilities |
-| `offline-styles.css` | Offline indicator styling |
-| `data/` | Synced survey data directory (GitHub database mode) |
+| `index.html` | Root router → Operations Console |
+| `signin.html` | Operations Console — sign in, sign up, password/username recovery, install |
+| `app.html` | Field App (single-file PWA) |
+| `dashboard.html` | Admin Dashboard |
+| `sw.js` | Service Worker — offline-first caching |
+| `manifest.json` | PWA manifest |
+| `supabase-schema.sql` | Cloud database schema — tables, policies, triggers |
+| `config.json` | Legacy credential configuration |
+| `data/` | Legacy GitHub-synced survey archive (migrated to Supabase) |
 
 ---
 
-## GitHub Database Setup
+## Cloud Database
 
-The app can optionally sync all survey data to a GitHub repository acting as a cloud database. To configure:
-
-1. Open the app → tap **ⓘ** (About) → **Configure GitHub Database**
-2. Enter your GitHub username and repository name
-3. Paste a **Personal Access Token** (PAT) with `repo` scope
-
-Once configured, every saved survey is automatically pushed as a JSON file under `data/`.
+Survey data lives in a **Supabase** PostgreSQL project: `profiles` (users, roles, approval status), `adult_surveys`, `larval_surveys`, `manual_adult_surveys`, `manual_larval_surveys` (all keyed by username), and `reset_requests`. Run `supabase-schema.sql` in the project's SQL editor to provision or update; the dashboard's **Setup → Migrate GitHub → Supabase** button imports the legacy `data/` archive. GitHub sync remains available as an optional legacy mirror.
 
 ---
 
 ## Privacy
 
-EST is designed with privacy-first principles:
-
-- All data stored **locally on-device** (browser `localStorage`)
+- Survey data is stored **on-device** and synced to the programme's own cloud database, visible only to the owning account and administrators
 - No analytics, no telemetry, no third-party trackers
-- GitHub sync is **opt-in** and pushes only to your own repository
-- GPS data is never transmitted to any external server
-
-See [PRIVACY.md](PRIVACY.md) for the full privacy policy.
+- See [PRIVACY.md](PRIVACY.md) for the full privacy policy
 
 ---
 
@@ -160,4 +162,4 @@ State Health Society, Andaman & Nicobar Islands Administration
 |---|---|
 | Email | [explorer3850@gmail.com](mailto:explorer3850@gmail.com) |
 | WhatsApp | [+91 95318 06405](https://wa.me/919531806405) |
-| Live App | [sumit3850.github.io/EST-v2.0](https://sumit3850.github.io/EST-v2.0/) |
+| Console | [sumit3850.github.io/EST-v2.0](https://sumit3850.github.io/EST-v2.0/) |
