@@ -157,6 +157,29 @@ end $$;
 
 
 -- ─────────────────────────────────────────────
+-- RESET REQUESTS — "forgot password / username" clicks from the console
+-- land here so admins see them in the dashboard
+-- ─────────────────────────────────────────────
+create table if not exists public.reset_requests (
+  id bigserial primary key,
+  req_type text not null default 'password' check (req_type in ('password','username')),
+  username text default '',
+  email text default '',
+  phone text default '',
+  status text not null default 'open' check (status in ('open','resolved')),
+  created_at timestamptz default now()
+);
+alter table public.reset_requests enable row level security;
+drop policy if exists "reset_requests: open read"   on public.reset_requests;
+drop policy if exists "reset_requests: open insert" on public.reset_requests;
+drop policy if exists "reset_requests: open update" on public.reset_requests;
+drop policy if exists "reset_requests: open delete" on public.reset_requests;
+create policy "reset_requests: open read"   on public.reset_requests for select using (true);
+create policy "reset_requests: open insert" on public.reset_requests for insert with check (true);
+create policy "reset_requests: open update" on public.reset_requests for update using (true) with check (true);
+create policy "reset_requests: open delete" on public.reset_requests for delete using (true);
+
+-- ─────────────────────────────────────────────
 -- BACKFILL profiles for auth users created before this schema
 -- ─────────────────────────────────────────────
 insert into public.profiles (id, username, full_name, role, status)

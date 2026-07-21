@@ -142,6 +142,8 @@ body{
 .eye:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;}
 .hint{font-size:11.5px;color:var(--txt3);margin-top:6px;font-family:var(--mono);}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fg-link{background:none;border:0;color:var(--txt3);font-size:12.5px;cursor:pointer;text-decoration:underline;min-height:40px;font-family:var(--sans);}
+.fg-link:hover{color:var(--accent);}
 .row-between{display:flex;align-items:center;justify-content:space-between;margin:4px 0 20px;}
 .chk{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:13px;color:var(--txt2);min-height:44px;}
 .chk input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;}
@@ -326,7 +328,40 @@ body{
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
           Sign in to console
         </button>
+        <div style="display:flex;justify-content:center;gap:20px;margin-top:12px;">
+          <button type="button" class="fg-link" onclick="showForgot('password')">Forgot password?</button>
+          <button type="button" class="fg-link" onclick="showForgot('username')">Forgot username?</button>
+        </div>
         <div class="msg" id="si-msg" role="alert" aria-live="polite"></div>
+      </form>
+
+      <!-- ── Forgot username / password panel ── -->
+      <form id="panel-forgot" class="hidden" onsubmit="doForgot(event)">
+        <h2 id="fg-title">Reset password</h2>
+        <p class="lead" id="fg-lead">Enter your username or registered email.</p>
+        <div class="field">
+          <label for="fg-id" id="fg-label">Username or email <span class="req">*</span></label>
+          <input class="in mono" id="fg-id" type="text" autocapitalize="off" spellcheck="false" required>
+        </div>
+        <button class="btn btn-primary" id="fg-btn" type="submit">Send reset request</button>
+        <div class="msg" id="fg-msg" role="alert" aria-live="polite"></div>
+        <button type="button" class="link-out" style="margin:14px auto 0;color:var(--txt3);" onclick="showAuth()">← back to sign in</button>
+      </form>
+
+      <!-- ── Set new password (from email reset link) ── -->
+      <form id="panel-recover" class="hidden" onsubmit="doRecover(event)">
+        <h2>Set a new password</h2>
+        <p class="lead">You followed a reset link — choose a new password for your account.</p>
+        <div class="field">
+          <label for="rc-pass">New password <span class="req">*</span></label>
+          <input class="in" id="rc-pass" type="password" minlength="6" autocomplete="new-password" required>
+        </div>
+        <div class="field">
+          <label for="rc-pass2">Confirm password <span class="req">*</span></label>
+          <input class="in" id="rc-pass2" type="password" minlength="6" autocomplete="new-password" required>
+        </div>
+        <button class="btn btn-primary" id="rc-btn" type="submit">Update password</button>
+        <div class="msg" id="rc-msg" role="alert" aria-live="polite"></div>
       </form>
 
       <!-- ── Sign up panel ── -->
@@ -419,7 +454,7 @@ body{
 </main>
 
 <footer class="statusbar">
-  <span>console v2.1.5</span><span class="sep">│</span>
+  <span>console v2.1.6</span><span class="sep">│</span>
   <a href="https://estweb-git-main-explorer3850.vercel.app/" target="_blank" rel="noopener" style="color:var(--txt2);text-decoration:none;border-bottom:1px dotted var(--txt3);">website ↗</a><span class="sep">│</span>
   <span class="status-pill"><span id="fb-dot" class="status-dot checking"></span><span id="fb-state">supabase: checking…</span></span>
   <span class="sep">│</span><span id="fb-net">network: —</span>
@@ -491,8 +526,108 @@ function showAcct(profile,user){
 }
 function showAuth(){
   $('panel-acct').style.display='none';
+  $('panel-forgot').classList.add('hidden');
+  $('panel-recover').classList.add('hidden');
   $('auth-tabs').classList.remove('hidden');
   switchTab('signin');
+}
+
+/* ══ Forgot username / password ══ */
+let _fgMode='password';
+function showForgot(mode){
+  _fgMode=mode;
+  $('auth-tabs').classList.add('hidden');
+  $('panel-signin').classList.add('hidden');
+  $('panel-signup').classList.add('hidden');
+  $('panel-recover').classList.add('hidden');
+  $('panel-acct').style.display='none';
+  $('panel-forgot').classList.remove('hidden');
+  hideMsg('fg-msg');
+  $('fg-title').textContent=mode==='password'?'Reset password':'Recover username';
+  $('fg-lead').textContent=mode==='password'
+    ?'Enter your username or registered email. If your account has an email on file you will receive a reset link; the EST admin is also notified.'
+    :'Enter the email you registered with — we will look up your username, and the EST admin is also notified.';
+  $('fg-label').innerHTML=(mode==='password'?'Username or email':'Registered email')+' <span class="req">*</span>';
+  $('fg-btn').textContent=mode==='password'?'Send reset request':'Recover username';
+  $('fg-id').value='';$('fg-id').focus();
+}
+async function doForgot(ev){
+  ev.preventDefault();hideMsg('fg-msg');
+  const v=$('fg-id').value.trim();
+  if(!v)return;
+  setBusy('fg-btn',true,'Sending…');
+  try{
+    let uname='',email='';
+    if(v.indexOf('@')>0)email=v.toLowerCase();else uname=v;
+    // Resolve the other half from the profiles registry
+    try{
+      if(_sb){
+        if(uname){
+          const {data}=await _sb.from('profiles').select('username,email').ilike('username',uname).maybeSingle();
+          if(data){email=(data.email||email);uname=data.username||uname;}
+        }else{
+          const {data}=await _sb.from('profiles').select('username,email').ilike('email',email).maybeSingle();
+          if(data)uname=data.username||'';
+        }
+      }
+    }catch(e){}
+    // Record the request so it appears in the admin dashboard
+    let logged=false;
+    try{
+      const r=await fetch(SUPABASE_URL+'/rest/v1/reset_requests',{
+        method:'POST',
+        headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
+        body:JSON.stringify([{req_type:_fgMode,username:uname,email:email,status:'open'}])
+      });
+      logged=r.ok;
+    }catch(e){}
+    if(_fgMode==='username'){
+      if(uname)showMsg('fg-msg','ok','Your username is “'+uname+'”. The EST admin has also been notified.');
+      else if(logged)showMsg('fg-msg','warn','No account found for that email — the EST admin has been notified and will contact you.');
+      else showMsg('fg-msg','err','Could not reach the server — check your connection and try again.');
+      return;
+    }
+    // Password mode: try to send a Supabase reset link to the registered email
+    let mailed=false;
+    if(_sb&&email){
+      try{
+        const {error}=await _sb.auth.resetPasswordForEmail(email,{redirectTo:location.href.split('#')[0].split('?')[0]});
+        mailed=!error;
+      }catch(e){}
+    }
+    if(mailed)showMsg('fg-msg','ok','Password reset link sent to '+email+' — check your inbox and spam folder. The EST admin has also been notified.');
+    else if(logged)showMsg('fg-msg','warn','Request recorded — the EST admin has been notified and will reset your password and contact you.'+(email?'':' (No email is on file for this account, so a reset link could not be sent.)'));
+    else showMsg('fg-msg','err','Could not reach the server — check your connection and try again.');
+  }finally{setBusy('fg-btn',false);}
+}
+
+/* ══ Set new password after following the email reset link ══ */
+async function doRecover(ev){
+  ev.preventDefault();hideMsg('rc-msg');
+  const p=$('rc-pass').value,p2=$('rc-pass2').value;
+  if(p.length<6){showMsg('rc-msg','err','Password must be at least 6 characters.');return;}
+  if(p!==p2){showMsg('rc-msg','err','Passwords do not match.');return;}
+  if(!_sb){showMsg('rc-msg','err','Service unavailable — check your connection.');return;}
+  setBusy('rc-btn',true,'Updating…');
+  try{
+    const {error}=await _sb.auth.updateUser({password:p});
+    if(error){showMsg('rc-msg','err',error.message);return;}
+    await _sb.auth.signOut().catch(()=>{});
+    showAuth();
+    showMsg('si-msg','ok','Password updated ✓ — sign in with your new password.');
+  }finally{setBusy('rc-btn',false);}
+}
+if(_sb){
+  _sb.auth.onAuthStateChange(event=>{
+    if(event==='PASSWORD_RECOVERY'){
+      $('auth-tabs').classList.add('hidden');
+      $('panel-signin').classList.add('hidden');
+      $('panel-signup').classList.add('hidden');
+      $('panel-forgot').classList.add('hidden');
+      $('panel-acct').style.display='none';
+      $('panel-recover').classList.remove('hidden');
+    }
+  });
 }
 function validUsername(u){return /^[A-Za-z0-9_-]{3,32}$/.test(u);}
 
@@ -684,6 +819,8 @@ document.addEventListener('DOMContentLoaded',async()=>{
   window.addEventListener('online',probeBackend);
   window.addEventListener('offline',probeBackend);
   if(!_sb){$('si-user').focus();return;}
+  // Arriving from a password-reset email: let the recovery panel take over
+  if(/type=recovery/.test(location.hash))return;
   try{
     const {data:{session}}=await _sb.auth.getSession();
     if(session&&session.user){
