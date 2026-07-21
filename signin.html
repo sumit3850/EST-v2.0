@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#070c0a">
 <title>EST Console — Sign in</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230d2018'/%3E%3Cellipse cx='50' cy='56' rx='7' ry='19' fill='%233ecf8e'/%3E%3Ccircle cx='50' cy='33' r='7' fill='%233ecf8e'/%3E%3Cellipse cx='28' cy='46' rx='19' ry='7' transform='rotate(-18 28 46)' fill='%233ecf8e' opacity='.6'/%3E%3Cellipse cx='72' cy='46' rx='19' ry='7' transform='rotate(18 72 46)' fill='%233ecf8e' opacity='.6'/%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -406,11 +407,15 @@ body{
 
       <div class="foot">EST · Entomological Surveillance Tool<br>NVBDCP-SHS, Andaman &amp; Nicobar Islands<br><a href="https://estweb-git-main-explorer3850.vercel.app/" target="_blank" rel="noopener">EST Website ↗</a></div>
     </div>
+    <button class="btn btn-ghost" id="install-console-btn" onclick="installConsole()" style="margin-top:14px;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+      Install EST App
+    </button>
   </div>
 </main>
 
 <footer class="statusbar">
-  <span>console v2.1.2</span><span class="sep">│</span>
+  <span>console v2.1.3</span><span class="sep">│</span>
   <a href="https://estweb-git-main-explorer3850.vercel.app/" target="_blank" rel="noopener" style="color:var(--txt2);text-decoration:none;border-bottom:1px dotted var(--txt3);">website ↗</a><span class="sep">│</span>
   <span class="status-pill"><span id="fb-dot" class="status-dot checking"></span><span id="fb-state">supabase: checking…</span></span>
   <span class="sep">│</span><span id="fb-net">network: —</span>
@@ -626,6 +631,31 @@ async function doSignOut(){
     localStorage.removeItem('est_dash_creds');
   }catch(e){}
   showAuth();
+}
+
+/* ══ PWA install ══ */
+let _instEvt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();_instEvt=e;});
+window.addEventListener('appinstalled',()=>{
+  _instEvt=null;
+  const btn=$('install-console-btn');if(btn)btn.style.display='none';
+});
+function installConsole(){
+  if(_instEvt){
+    _instEvt.prompt();
+    _instEvt.userChoice.then(()=>{_instEvt=null;});
+    return;
+  }
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  alert(isIOS
+    ?'To install EST: tap the Share button, then "Add to Home Screen".'
+    :'To install EST: open your browser menu and choose "Install app" / "Add to Home Screen".');
+}
+if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true){
+  document.addEventListener('DOMContentLoaded',()=>{const b=$('install-console-btn');if(b)b.style.display='none';});
+}
+if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
 
 /* ══ Backend status probe ══ */

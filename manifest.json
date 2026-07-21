@@ -2,7 +2,7 @@
   "name": "EST v2.0 — Entomological Surveillance Tool",
   "short_name": "EST",
   "description": "Offline-capable WHO-standard mosquito surveillance tool with GPS, data analysis, and PDF/CSV export. Works completely offline.",
-  "start_url": "./app.html",
+  "start_url": "./signin.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
