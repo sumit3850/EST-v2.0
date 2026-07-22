@@ -340,7 +340,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 #focus-shield svg{opacity:.5;}
 #focus-shield p{color:rgba(255,255,255,.5);font-size:14px;font-weight:600;letter-spacing:.05em;}
 
-/* ═══ PREMIUM POLISH (v2.5.1) ═══ */
+/* ═══ PREMIUM POLISH (v2.5.2) ═══ */
 .launch-btn{background:linear-gradient(180deg,#46e09d,#3ecf8e) !important;color:#04140c !important;box-shadow:0 6px 22px rgba(62,207,142,.32),inset 0 1px 0 rgba(255,255,255,.35) !important;}
 .launch-btn:hover{filter:brightness(1.05);}
 .launch-btn:active{transform:scale(.985);}
@@ -353,7 +353,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);}
 ::-webkit-scrollbar-thumb{background:rgba(26,122,74,.25);border-radius:99px;}
 ::-webkit-scrollbar-thumb:hover{background:rgba(26,122,74,.45);}
 #app-header{border-bottom:1px solid rgba(26,122,74,.14);box-shadow:0 1px 12px rgba(10,40,25,.06);}
-/* — premium spacing rhythm (v2.5.1) — */
+/* — premium spacing rhythm (v2.5.2) — */
 .scroll-area{padding-left:16px;padding-right:16px;overflow-y:scroll;overflow-x:hidden;min-height:0;overscroll-behavior:contain;padding-bottom:calc(var(--nh) + 48px);scrollbar-gutter:stable;}
 .scroll-area > *{max-width:100%;}
 @media(min-width:900px){.scroll-area{max-width:900px;margin:0 auto;width:100%;}}
@@ -500,7 +500,7 @@ input[type=text]:focus,input[type=number]:focus,input[type=date]:focus,input[typ
         </svg>
       </div>
       <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub" id="dash-sub-ver">EST v2.5.1</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.5.2</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -546,7 +546,7 @@ input[type=text]:focus,input[type=number]:focus,input[type=date]:focus,input[typ
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About <span id="dash-about-ver">EST v2.5.1</span>
+      About <span id="dash-about-ver">EST v2.5.2</span>
     </button>
     <button onclick="estSignOut()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;background:rgba(248,113,113,.1);border:1.5px solid rgba(248,113,113,.35);border-radius:var(--rxl);color:#fca5a5;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -1947,28 +1947,49 @@ async function sbPullMine(){
   if(!navigator.onLine||!window._estUser||!window._estUser.username)return;
   const uname=window._estUser.username;
   const keyFor={adult_surveys:A_SAVED,larval_surveys:L_SAVED,manual_adult_surveys:MAN_A_SAVED,manual_larval_surveys:MAN_L_SAVED};
-  let addedTotal=0;
+  let addedTotal=0, changedTotal=0, removedTotal=0;
   for(const t of Object.keys(keyFor)){
     try{
-      const r=await fetch(SB_URL+'/rest/v1/'+t+'?select=data&username=eq.'+encodeURIComponent(uname),{headers:_sbH()});
+      const r=await fetch(SB_URL+'/rest/v1/'+t+'?select=data,local_id&username=eq.'+encodeURIComponent(uname),{headers:_sbH()});
       if(!r.ok)continue;
       const rows=await r.json();
       const key=keyFor[t];
       let arr=[];try{arr=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}
-      const have=new Set(arr.map(x=>String(x.id)));
-      rows.forEach(row=>{
-        if(row.data&&row.data.id&&!have.has(String(row.data.id))){
-          arr.push({...row.data,sbSynced:true,synced:true});
-          have.add(String(row.data.id));addedTotal++;
+      // Map cloud rows by id (JSONB data.id, fall back to local_id column)
+      const cloud=new Map();
+      rows.forEach(row=>{const d=row.data||{};const id=String(d.id||row.local_id||'');if(id)cloud.set(id,d);});
+      const localIds=new Set(arr.map(x=>String(x.id)));
+      // 1) add new + update changed cloud records
+      cloud.forEach((d,id)=>{
+        if(!d.id)return;
+        const idx=arr.findIndex(x=>String(x.id)===id);
+        if(idx<0){arr.push({...d,sbSynced:true,synced:true});addedTotal++;}
+        else{
+          const cur=arr[idx];
+          // Only overwrite records that came from the cloud (synced), so
+          // unsynced local edits aren't clobbered
+          if(cur.sbSynced&&JSON.stringify({...cur,sbSynced:0,synced:0})!==JSON.stringify({...d,sbSynced:0,synced:0})){
+            arr[idx]={...d,sbSynced:true,synced:true};changedTotal++;
+          }
         }
+      });
+      // 2) remove records that were deleted in the cloud (only previously-synced ones)
+      arr=arr.filter(x=>{
+        const wasSynced=x.sbSynced||x.synced;
+        if(wasSynced&&!cloud.has(String(x.id))){removedTotal++;return false;}
+        return true;
       });
       arr.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
       try{localStorage.setItem(key,JSON.stringify(arr));}catch(e){}
     }catch(e){}
   }
-  if(addedTotal){
+  if(addedTotal||changedTotal||removedTotal){
     if(typeof renderSaved==='function')try{renderSaved();}catch(e){}
-    showToast(addedTotal+' survey'+(addedTotal>1?'s':'')+' restored from your cloud account ✓','check');
+    const parts=[];
+    if(addedTotal)parts.push(addedTotal+' restored');
+    if(changedTotal)parts.push(changedTotal+' updated');
+    if(removedTotal)parts.push(removedTotal+' removed');
+    showToast('Cloud sync: '+parts.join(', ')+' ✓','check');
   }
 }
 
@@ -2247,7 +2268,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.5.1';
+const APP_VER='2.5.2';
 /* Compact human-readable Survey ID: A-260531-1437 (type + YYMMDD + HHMM) */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -3696,7 +3717,7 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.5.1)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.5.2)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -3771,7 +3792,7 @@ function buildAdultXLSX(surveys,isCompiled){
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.5.1)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.5.2)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],

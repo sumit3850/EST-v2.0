@@ -303,7 +303,7 @@ table thead th{background:rgba(62,207,142,.05);}
 [data-theme="light"] .tb-btn.primary{box-shadow:0 2px 8px rgba(23,160,94,.35),inset 0 1px 0 rgba(255,255,255,.4);}
 [data-theme="light"] .sidebar{background:linear-gradient(180deg,#0d1712,#0a120c);}
 
-/* ═══ PREMIUM POLISH (v2.5.1) ═══ */
+/* ═══ PREMIUM POLISH (v2.5.2) ═══ */
 .kpi-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
 .kpi-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 0 1px var(--bdr2);}
 .nav-item.active{background:linear-gradient(90deg,rgba(62,207,142,.18),rgba(62,207,142,.06));box-shadow:inset 3px 0 0 var(--teal),0 0 18px rgba(62,207,142,.06);}
@@ -334,7 +334,7 @@ table tbody tr:hover td{background:rgba(62,207,142,.045);}
 .status-bar{border-radius:0;font-weight:600;}
 .note-box{border-radius:12px;}
 select,input[type="date"]{border-radius:9px;}
-/* — premium mobile spacing (v2.5.1) — */
+/* — premium mobile spacing (v2.5.2) — */
 @media(max-width:680px){
   .topbar{padding:8px 12px;gap:8px;}
   .tb-btn{height:36px;padding:0 11px;font-size:11.5px;}
@@ -809,7 +809,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.5.1</p>
+      <p>Admin Dashboard · v2.5.2</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -850,7 +850,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>v2.5.1 · A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.5.2 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -917,7 +917,7 @@ tr:hover td{background:var(--teal-lt);}
       <div class="breadcrumb"><span id="bc-main">Overview</span></div>
     </div>
     <div class="topbar-right">
-      <span id="tb-ver" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--txt2);background:var(--teal-lt);border:1px solid var(--bdr2);border-radius:99px;padding:4px 11px;white-space:nowrap;">v2.5.1</span>
+      <span id="tb-ver" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--txt2);background:var(--teal-lt);border:1px solid var(--bdr2);border-radius:99px;padding:4px 11px;white-space:nowrap;">v2.5.2</span>
       <button class="tb-icon-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">☀</button>
       <button class="install-btn" id="install-btn" onclick="installDashApp()" title="Install EST Dashboard as app">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -1892,6 +1892,18 @@ function switchUserTab(tab){
 const SB_URL='https://fivqdckmtymtuxlhjjoj.supabase.co';
 const SB_KEY='sb_publishable_SUdRGiarUt92Tl67FzBCvw_Vsf4G_aW';
 function sbH(){return{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};}
+function _sbTableFor(mod,manual){return (manual?'manual_':'')+(mod==='adult'?'adult':'larval')+'_surveys';}
+async function sbDeleteRow(mod,manual,localId){
+  try{const r=await fetch(SB_URL+'/rest/v1/'+_sbTableFor(mod,manual)+'?local_id=eq.'+encodeURIComponent(String(localId)),{method:'DELETE',headers:sbH()});return r.ok;}catch(e){return false;}
+}
+async function sbUpsertRow(mod,manual,row){
+  try{
+    const body=[{username:row.savedBy||row._sbUsername||'',local_id:String(row.id),data:(function(){const c={...row};delete c._path;delete c._sha;delete c._sbUsername;return c;})(),survey_date:row.date||'',location:row.location||'',zone:row.zone||'',district:row.district||''}];
+    const r=await fetch(SB_URL+'/rest/v1/'+_sbTableFor(mod,manual)+'?on_conflict=local_id',{method:'POST',headers:{...sbH(),'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(body)});
+    return r.ok;
+  }catch(e){return false;}
+}
+
 let _signups=[],_resets=[];
 async function loadSignups(){
   const el=document.getElementById('users-signup-list');
@@ -2427,7 +2439,7 @@ function exportRiskPDF(){
     const rows=sorted.map(([name,cnt],idx)=>`<tr style="${idx%2===0?'':'background:#f9f9f9;'}"><td>${name}</td><td style="font-weight:700;color:#1a7a4a;">${cnt}</td><td style="padding:4px 8px;"><div style="height:10px;border-radius:5px;background:#1a7a4a;width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%;min-width:4px;"></div></td></tr>`).join('');
     return`<h3>${dk} — Breeding Preferred Containers</h3><table><thead><tr><th>Container Type</th><th>Positive Count</th><th style="min-width:120px;">Proportion</th></tr></thead><tbody>${rows}</tbody></table>`;
   }).join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#1a7a4a;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #1a7a4a;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:18px;font-weight:700;color:#1a7a4a;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:10px 14px;background:#fff8e1;border-left:3px solid #f9a825;font-size:13px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #1a7a4a;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${(range.label||'All Data')+' · '+_riskModuleLabel()}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><h2>Overall Entomological Indices — Aedes Breeding for Andaman &amp; Nicobar Islands</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#1a7a4a;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.5.1 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#1a7a4a;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #1a7a4a;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:18px;font-weight:700;color:#1a7a4a;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:10px 14px;background:#fff8e1;border-left:3px solid #f9a825;font-size:13px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #1a7a4a;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${(range.label||'All Data')+' · '+_riskModuleLabel()}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><h2>Overall Entomological Indices — Aedes Breeding for Andaman &amp; Nicobar Islands</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#1a7a4a;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.5.2 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
   const win=window.open('','_blank','width=920,height=740');
   if(win){win.document.write(html);win.document.close();setTimeout(()=>win.print(),700);}
 }
@@ -2710,7 +2722,7 @@ function renderAdult(){
   tb.innerHTML=adultF.map((s,i)=>{
     const gps=s.lat?parseFloat(s.lat).toFixed(4)+'N,'+parseFloat(s.lng).toFixed(4)+'E':'-';
     const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
-    const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','adult')" title="Delete record" style="padding:0 8px;height:28px;">🗑</button>`:'—';
+    const delBtn=`<button class="del-btn" onclick="delOneSurvey('adult',false,'${String(s.id)}')" title="Delete record" style="padding:0 8px;height:28px;">🗑</button>`;
     const editBtn=`<button class="pt-btn blue" onclick="openEditSurvey(${i},'adult')" style="padding:0 8px;height:26px;font-size:11px;">✏</button>`;
     const mapBtn=(s.track&&s.track.waypoints&&s.track.waypoints.length>=2)?`<button class="pt-btn ghost" style="padding:0 7px;height:26px;font-size:11px;" onclick="showTrackMap(${i},'adult')" title="View survey map">🗺</button>`:`<span style="color:var(--muted);">—</span>`;
     const typeLabel=s.collType==='resting'?'Resting':s.collType==='hlc'?'HLC':s.collType==='hbr'?'HBR':'ALR';
@@ -2741,7 +2753,7 @@ function renderLarval(){
     const posH=(s.houses||[]).filter(h=>h.housePositive).length;
     const pupAedes=(s.houses||[]).reduce((t,h)=>t+(h.pupal||0),0);
     const pupAnCx=s.totalPupae||0;
-    const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','larval')" title="Delete record" style="padding:0 8px;height:28px;">🗑</button>`:'—';
+    const delBtn=`<button class="del-btn" onclick="delOneSurvey('larval',false,'${String(s.id)}')" title="Delete record" style="padding:0 8px;height:28px;">🗑</button>`;
     const editBtn=`<button class="pt-btn blue" onclick="openEditSurvey(${i},'larval')" style="padding:0 8px;height:26px;font-size:11px;">✏</button>`;
     const mapBtn=(s.track&&s.track.waypoints&&s.track.waypoints.length>=2)?`<button class="pt-btn ghost" style="padding:0 7px;height:26px;font-size:11px;" onclick="showTrackMap(${i},'larval')" title="View survey map">🗺</button>`:`<span style="color:var(--muted);">—</span>`;
     return `<tr>
@@ -2812,7 +2824,7 @@ function renderManualAdult(){
     entries.forEach(({s,i})=>{
       const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
       const typeLabel=s.collType==='resting'?'Resting':s.collType==='hlc'?'HLC':s.collType==='hbr'?'HBR':'ALR';
-      const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','adult')" title="Delete" style="padding:0 8px;height:28px;">🗑</button>`:'—';
+      const delBtn=`<button class="del-btn" onclick="delOneSurvey('adult',true,'${String(s.id)}')" title="Delete" style="padding:0 8px;height:28px;">🗑</button>`;
       const editBtn=`<button class="pt-btn blue" onclick="openEditManualDash('${String(s.id)}','adult')" style="padding:0 8px;height:26px;font-size:11px;">✏ Edit</button>`;
       html+=`<tr>
         <td><input type="checkbox" class="row-cb man-adult-cb" data-idx="${i}"></td>
@@ -2852,7 +2864,7 @@ function renderManualLarval(){
     html+=`<tr><td colspan="25" style="background:linear-gradient(90deg,rgba(13,71,161,.22),transparent);padding:6px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);border-top:2px solid rgba(13,71,161,.4);">▶ ${region} <span style="font-weight:400;opacity:.65;">(${entries.length} entries)</span></td></tr>`;
     entries.forEach(({s,i})=>{
       const saved=s.savedAt?new Date(s.savedAt).toLocaleDateString('en-IN'):'-';
-      const delBtn=s._path?`<button class="del-btn" onclick="deleteSurvey('${s._path.replace(/'/g,"\\'")}','${s._sha}','larval')" title="Delete" style="padding:0 8px;height:28px;">🗑</button>`:'—';
+      const delBtn=`<button class="del-btn" onclick="delOneSurvey('larval',true,'${String(s.id)}')" title="Delete" style="padding:0 8px;height:28px;">🗑</button>`;
       const editBtn=`<button class="pt-btn blue" onclick="openEditManualDash('${String(s.id)}','larval')" style="padding:0 8px;height:26px;font-size:11px;">✏ Edit</button>`;
       html+=`<tr>
         <td><input type="checkbox" class="row-cb man-larval-cb" data-idx="${i}"></td>
@@ -2935,24 +2947,14 @@ function exportFilteredManual(mod){
   dlXLSX(mod==='adult'?buildAdultXLSX(src,src.length>1):buildLarvalXLSX(src,src.length>1),'EST_Manual_'+mod+'_filtered_'+dn+'.xlsx');
 }
 async function deleteSelectedManual(mod){
-  if(!GH.owner||!GH.token){alert('Connect to GitHub first');return;}
   const checked=document.querySelectorAll('.man-'+mod+'-cb:checked');
   if(!checked.length){alert('Tick rows to select records first');return;}
   const src=mod==='adult'?manualAdultF:manualLarvalF;
-  const toDelete=Array.from(checked).map(c=>src[parseInt(c.dataset.idx)]).filter(s=>s&&s._path&&s._sha);
-  if(!toDelete.length){alert('No deletable records selected (records must be synced to GitHub)');return;}
-  if(!confirm(`Delete ${toDelete.length} selected manual ${mod} record(s) from GitHub?\nThis cannot be undone.`))return;
+  const toDelete=Array.from(checked).map(c=>src[parseInt(c.dataset.idx)]).filter(Boolean);
+  if(!toDelete.length){alert('No records selected');return;}
+  if(!confirm(`Delete ${toDelete.length} selected manual ${mod} record(s) from the database?\nThis also removes them from the surveyor's account on their devices. This cannot be undone.`))return;
   setStatus('Deleting '+toDelete.length+' record(s)…','info');
-  let ok=0,fail=0;
-  for(const s of toDelete){
-    try{
-      const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${s._path}`,{
-        method:'DELETE',headers:{...ghH(),'Content-Type':'application/json'},
-        body:JSON.stringify({message:`[EST Dashboard] Delete manual ${mod} survey`,sha:s._sha,branch:'main'})
-      });
-      if(r.ok)ok++;else fail++;
-    }catch(e){fail++;}
-  }
+  const {ok,fail}=await _delRows(toDelete,mod,true);
   setStatus(`✓ Deleted ${ok} record(s)${fail?' — '+fail+' failed':''}`,fail?'err':'ok');
   loadAll();
 }
@@ -3012,8 +3014,6 @@ async function saveManualDashEdit(){
   const mod=form.dataset.editMod;
   const path=form.dataset.editPath;
   const sha=form.dataset.editSha;
-  if(!path||!sha){alert('Cannot save — record must be synced to GitHub first.');return;}
-  if(!GH.owner||!GH.token){alert('Connect to GitHub first');return;}
   const src=mod==='adult'?allManualAdult:allManualLarval;
   const s=src.find(x=>String(x.id)===String(id));
   if(!s){alert('Survey not found');return;}
@@ -3052,14 +3052,15 @@ async function saveManualDashEdit(){
     const newContSummary=CONT_NAMES_SV.map((name,i)=>({name,examined:parseInt(document.getElementById('me-ce-'+i)?.value)||0,positive:parseInt(document.getElementById('me-cp-'+i)?.value)||0}));
     if(newContSummary.some(ct=>ct.examined>0||ct.positive>0))updated.containerSummary=newContSummary;
   }
-  setStatus('Saving edit to GitHub…','info');
-  const ok=await ghPut(path,updated,sha);
-  if(ok){
-    setStatus('✓ Survey updated on GitHub','ok');
+  setStatus('Saving edit to the database…','info');
+  const sbOk=await sbUpsertRow(mod,true,updated);
+  if(path&&sha&&GH.owner&&GH.token){try{await ghPut(path,updated,sha);}catch(e){}}
+  if(sbOk||path){
+    setStatus('✓ Survey updated — change will sync to the surveyor\'s account','ok');
     document.getElementById('manual-edit-modal').style.display='none';
     loadAll();
   }else{
-    setStatus('Failed to save — check token permissions','err');
+    setStatus('Failed to save the edit','err');
   }
 }
 
@@ -3125,26 +3126,37 @@ function resetDateFilter(mod){
   if(t)t.value='';
   filterTable(mod);
 }
+async function _delRows(list,mod,manual){
+  let ok=0,fail=0;
+  for(const s of list){
+    const sbOk=await sbDeleteRow(mod,manual,s.id);
+    if(s._path&&s._sha&&GH.owner&&GH.token){
+      try{await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${s._path}`,{method:'DELETE',headers:{...ghH(),'Content-Type':'application/json'},body:JSON.stringify({message:'[EST Dashboard] Delete survey',sha:s._sha,branch:'main'})});}catch(e){}
+    }
+    if(sbOk||s._path)ok++;else fail++;
+  }
+  return {ok,fail};
+}
 async function deleteSelected(mod){
-  if(!GH.owner||!GH.token){alert('Connect to GitHub first');return;}
   const checked=document.querySelectorAll('.'+mod+'-cb:checked');
   if(!checked.length){alert('Tick rows to select records first');return;}
   const src=mod==='adult'?adultF:larvalF;
-  const toDelete=Array.from(checked).map(c=>src[parseInt(c.dataset.idx)]).filter(s=>s&&s._path&&s._sha);
-  if(!toDelete.length){alert('No deletable records selected (records must be synced to GitHub)');return;}
-  if(!confirm(`Delete ${toDelete.length} selected ${mod} survey record(s) from GitHub?\nThis cannot be undone.`))return;
+  const toDelete=Array.from(checked).map(c=>src[parseInt(c.dataset.idx)]).filter(Boolean);
+  if(!toDelete.length){alert('No records selected');return;}
+  if(!confirm(`Delete ${toDelete.length} selected ${mod} survey record(s) from the database?\nThis also removes them from the surveyor's account on their devices. This cannot be undone.`))return;
   setStatus('Deleting '+toDelete.length+' record(s)…','info');
-  let ok=0,fail=0;
-  for(const s of toDelete){
-    try{
-      const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${s._path}`,{
-        method:'DELETE',headers:{...ghH(),'Content-Type':'application/json'},
-        body:JSON.stringify({message:`[EST Dashboard] Delete ${mod} survey`,sha:s._sha,branch:'main'})
-      });
-      if(r.ok)ok++;else fail++;
-    }catch(e){fail++;}
-  }
+  const {ok,fail}=await _delRows(toDelete,mod,false);
   setStatus(`✓ Deleted ${ok} record(s)${fail?' — '+fail+' failed':''}`,fail?'err':'ok');
+  loadAll();
+}
+async function delOneSurvey(mod,manual,id){
+  const src=manual?(mod==='adult'?allManualAdult:allManualLarval):(mod==='adult'?allAdult:allLarval);
+  const s=src.find(x=>String(x.id)===String(id));
+  if(!s){alert('Record not found');return;}
+  if(!confirm(`Delete this ${manual?'manual ':''}${mod} record from the database?\nIt will also disappear from the surveyor's account on their devices. This cannot be undone.`))return;
+  setStatus('Deleting record…','info');
+  const {ok,fail}=await _delRows([s],mod,manual);
+  setStatus(ok?'✓ Record deleted':'Delete failed','ok');
   loadAll();
 }
 function switchTab(tab,btn){
@@ -3271,7 +3283,7 @@ function buildAdultXLSX(surveys,isCompiled){
   const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
   // ── Report Status ──
   const statusRows=[
-    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.5.1')],
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.5.2')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -3344,7 +3356,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   // ── Report Status sheet ──
   const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.5.1')],
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.5.2')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -3488,7 +3500,7 @@ function buildAdultCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.5.1 — Adult Mosquito Surveillance Report (Database Export)');
+  r('EST v2.5.2 — Adult Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -3540,7 +3552,7 @@ function buildAdultCSV(surveys){
     });
   });
   blank();
-  r('EST v2.5.1 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.5.2 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -3552,7 +3564,7 @@ function buildLarvalCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.5.1 — Larval Mosquito Surveillance Report (Database Export)');
+  r('EST v2.5.2 — Larval Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -3633,7 +3645,7 @@ function buildLarvalCSV(surveys){
     }
   });
   blank();
-  r('EST v2.5.1 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.5.2 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -4864,8 +4876,6 @@ async function saveSurveyEdit(){
   const type=form.dataset.editType;
   const path=form.dataset.editPath;
   const sha=form.dataset.editSha;
-  if(!path||!sha){alert('Cannot save — record must be synced to GitHub first.');return;}
-  if(!GH.owner||!GH.token){alert('Connect to GitHub first');return;}
   const src=type==='adult'?adultF:larvalF;
   const s=src[idx];
   if(!s){alert('Survey not found');return;}
@@ -4877,14 +4887,15 @@ async function saveSurveyEdit(){
     zone:document.getElementById('se-zone').value||s.zone,
     officers:document.getElementById('se-officers').value
   };
-  setStatus('Saving edit to GitHub…','info');
-  const ok=await ghPut(path,updated,sha);
-  if(ok){
-    setStatus('✓ Survey updated on GitHub','ok');
+  setStatus('Saving edit to the database…','info');
+  const sbOk=await sbUpsertRow(type,false,updated);
+  if(path&&sha&&GH.owner&&GH.token){try{await ghPut(path,updated,sha);}catch(e){}}
+  if(sbOk||path){
+    setStatus('✓ Survey updated — change will sync to the surveyor\'s account','ok');
     document.getElementById('survey-edit-modal').style.display='none';
     loadAll();
   }else{
-    setStatus('Failed to save — check token permissions','err');
+    setStatus('Failed to save the edit','err');
   }
 }
 
