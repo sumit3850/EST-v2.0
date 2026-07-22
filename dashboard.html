@@ -191,8 +191,24 @@ body{font-family:'Manrope',system-ui,-apple-system,sans-serif;background:var(--b
 .mth-ic.adult{background:rgba(62,207,142,.14);color:var(--teal);}
 .mth-ic.larval{background:rgba(74,158,255,.16);color:var(--blue);}
 .mth-t{font-size:11.5px;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mth-body{min-width:0;}
+.mth-dist{margin-top:2px;}
+#map-thumbs:not(.list-mode) .mth-dist{display:block;}
+#map-thumbs.list-mode .mth-body{display:flex;flex-direction:column;}
+#map-thumbs.list-mode .mth{grid-template-columns:34px 1fr auto;}
 .mth-d{font-size:10px;color:var(--txt2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 #map-thumbs::-webkit-scrollbar{height:8px;}
+.mapview-tg{width:34px;height:30px;border:none;background:var(--sf);color:var(--txt2);cursor:pointer;font-size:14px;transition:all .15s;}
+.mapview-tg.on{background:var(--teal);color:#04140c;}
+.mapview-tg:not(.on):hover{background:var(--sf2);color:var(--txt);}
+/* list mode */
+#map-thumbs.list-mode{flex-direction:column;overflow-x:hidden;overflow-y:auto;max-height:340px;gap:6px;}
+#map-thumbs.list-mode .mth{width:100%;display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:12px;padding:9px 14px;}
+#map-thumbs.list-mode .mth-ic{margin-bottom:0;}
+#map-thumbs.list-mode .mth-t{font-size:12.5px;}
+#map-thumbs.list-mode .mth-d{display:inline;margin:0;font-size:10.5px;}
+#map-thumbs.list-mode .mth-d + .mth-d::before{content:' · ';color:var(--muted);}
+#map-thumbs.list-mode .mth > div:nth-child(3),#map-thumbs.list-mode .mth > div:nth-child(4){grid-column:3;text-align:right;}
 @media(max-width:680px){#map-carousel-wrap{height:300px !important;border-radius:14px !important;}#map-carousel-info{max-width:86% !important;left:10px !important;bottom:10px !important;padding:10px 12px !important;}.mth{width:120px;}}
 
 /* ═══ PREMIUM REDESIGN v2.3 — Sora display type + Dark Elevated / Light SaaS ═══ */
@@ -222,7 +238,7 @@ table thead th{background:rgba(62,207,142,.05);}
 [data-theme="light"] .tb-btn.primary{box-shadow:0 2px 8px rgba(23,160,94,.35),inset 0 1px 0 rgba(255,255,255,.4);}
 [data-theme="light"] .sidebar{background:linear-gradient(180deg,#0d1712,#0a120c);}
 
-/* ═══ PREMIUM POLISH (v2.3.1) ═══ */
+/* ═══ PREMIUM POLISH (v2.4.0) ═══ */
 .kpi-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
 .kpi-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 0 1px var(--bdr2);}
 .nav-item.active{background:linear-gradient(90deg,rgba(62,207,142,.18),rgba(62,207,142,.06));box-shadow:inset 3px 0 0 var(--teal),0 0 18px rgba(62,207,142,.06);}
@@ -253,7 +269,7 @@ table tbody tr:hover td{background:rgba(62,207,142,.045);}
 .status-bar{border-radius:0;font-weight:600;}
 .note-box{border-radius:12px;}
 select,input[type="date"]{border-radius:9px;}
-/* — premium mobile spacing (v2.3.1) — */
+/* — premium mobile spacing (v2.4.0) — */
 @media(max-width:680px){
   .topbar{padding:8px 12px;gap:8px;}
   .tb-btn{height:36px;padding:0 11px;font-size:11.5px;}
@@ -728,7 +744,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.3.1</p>
+      <p>Admin Dashboard · v2.4.0</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -769,7 +785,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>v2.3.1 · A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.4.0 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -836,7 +852,7 @@ tr:hover td{background:var(--teal-lt);}
       <div class="breadcrumb"><span id="bc-main">Overview</span></div>
     </div>
     <div class="topbar-right">
-      <span id="tb-ver" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--txt2);background:var(--teal-lt);border:1px solid var(--bdr2);border-radius:99px;padding:4px 11px;white-space:nowrap;">v2.3.1</span>
+      <span id="tb-ver" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--txt2);background:var(--teal-lt);border:1px solid var(--bdr2);border-radius:99px;padding:4px 11px;white-space:nowrap;">v2.4.0</span>
       <button class="tb-icon-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">☀</button>
       <button class="install-btn" id="install-btn" onclick="installDashApp()" title="Install EST Dashboard as app">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -1289,6 +1305,10 @@ tr:hover td{background:var(--teal-lt);}
             <option value="adult">Adult Only</option>
             <option value="larval">Larval Only</option>
           </select>
+          <div style="margin-left:auto;display:inline-flex;border:1px solid var(--bdr);border-radius:9px;overflow:hidden;">
+            <button id="mapview-grid" class="mapview-tg on" onclick="setMapView('grid')" title="Grid view">▦</button>
+            <button id="mapview-list" class="mapview-tg" onclick="setMapView('list')" title="List view">☰</button>
+          </div>
           <span id="map-no-data" style="color:var(--muted);font-size:13px;display:none;">No surveys with GPS tracks found.</span>
         </div>
         <div style="padding:0 20px 18px;">
@@ -1307,10 +1327,26 @@ tr:hover td{background:var(--teal-lt);}
       <div id="map-hotspot-section" style="display:none;">
         <!-- Toolbar -->
         <div class="hs-toolbar">
+          <span class="hs-toolbar-label">Module:</span>
+          <select class="hs-basemap-sel" id="hs-module-sel" onchange="hsSetModule(this.value)" style="width:130px;">
+            <option value="all">All Modules</option>
+            <option value="adult">Adult Surveillance</option>
+            <option value="larval">Larval Surveillance</option>
+            <option value="manual">Manual Entries</option>
+          </select>
+          <span class="hs-toolbar-label">Metric:</span>
+          <select class="hs-basemap-sel" id="hs-metric-sel" onchange="hsSetMetric(this.value)" style="width:180px;">
+            <option value="aedes">Aedes Larval Breeding (HI)</option>
+            <option value="anopheles">Anopheles / Culex Larval (Density)</option>
+            <option value="pmhd">Adult Density — PMHD</option>
+            <option value="tmhd">Adult Density — TMHD</option>
+            <option value="species">Species Distribution</option>
+          </select>
+          <div class="hs-toolbar-sep"></div>
           <span class="hs-toolbar-label">Layer:</span>
           <div class="hs-layer-btns">
             <button class="hs-tool-btn active" id="hslayer-heatmap" onclick="hsSetLayer('heatmap')">🌡 Heatmap</button>
-            <button class="hs-tool-btn" id="hslayer-points" onclick="hsSetLayer('points')">● Risk Points</button>
+            <button class="hs-tool-btn" id="hslayer-points" onclick="hsSetLayer('points')">● Points</button>
             <button class="hs-tool-btn" id="hslayer-clusters" onclick="hsSetLayer('clusters')">⬡ Clusters</button>
           </div>
           <div class="hs-toolbar-sep"></div>
@@ -2310,7 +2346,7 @@ function exportRiskPDF(){
     const rows=sorted.map(([name,cnt],idx)=>`<tr style="${idx%2===0?'':'background:#f9f9f9;'}"><td>${name}</td><td style="font-weight:700;color:#1a7a4a;">${cnt}</td><td style="padding:4px 8px;"><div style="height:10px;border-radius:5px;background:#1a7a4a;width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%;min-width:4px;"></div></td></tr>`).join('');
     return`<h3>${dk} — Breeding Preferred Containers</h3><table><thead><tr><th>Container Type</th><th>Positive Count</th><th style="min-width:120px;">Proportion</th></tr></thead><tbody>${rows}</tbody></table>`;
   }).join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#1a7a4a;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #1a7a4a;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:18px;font-weight:700;color:#1a7a4a;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:10px 14px;background:#fff8e1;border-left:3px solid #f9a825;font-size:13px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #1a7a4a;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${(range.label||'All Data')+' · '+_riskModuleLabel()}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><h2>Overall Entomological Indices — Aedes Breeding for Andaman &amp; Nicobar Islands</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#1a7a4a;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.3.1 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#1a7a4a;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #1a7a4a;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:18px;font-weight:700;color:#1a7a4a;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:10px 14px;background:#fff8e1;border-left:3px solid #f9a825;font-size:13px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #1a7a4a;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${(range.label||'All Data')+' · '+_riskModuleLabel()}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><h2>Overall Entomological Indices — Aedes Breeding for Andaman &amp; Nicobar Islands</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#1a7a4a;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.4.0 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
   const win=window.open('','_blank','width=920,height=740');
   if(win){win.document.write(html);win.document.close();setTimeout(()=>win.print(),700);}
 }
@@ -3154,7 +3190,7 @@ function buildAdultXLSX(surveys,isCompiled){
   const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
   // ── Report Status ──
   const statusRows=[
-    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.3.1')],
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.4.0')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -3227,7 +3263,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   // ── Report Status sheet ──
   const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.3.1')],
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.4.0')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -3371,7 +3407,7 @@ function buildAdultCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.3.1 — Adult Mosquito Surveillance Report (Database Export)');
+  r('EST v2.4.0 — Adult Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -3423,7 +3459,7 @@ function buildAdultCSV(surveys){
     });
   });
   blank();
-  r('EST v2.3.1 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.4.0 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -3435,7 +3471,7 @@ function buildLarvalCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.3.1 — Larval Mosquito Surveillance Report (Database Export)');
+  r('EST v2.4.0 — Larval Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -3516,7 +3552,7 @@ function buildLarvalCSV(surveys){
     }
   });
   blank();
-  r('EST v2.3.1 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.4.0 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -3663,6 +3699,8 @@ function renderAlerts(){
 }
 
 /* ── MAP CAROUSEL ── */
+let _mapView='grid';
+function setMapView(v){_mapView=v;const g=document.getElementById('mapview-grid'),l=document.getElementById('mapview-list');if(g)g.classList.toggle('on',v==='grid');if(l)l.classList.toggle('on',v==='list');renderCarouselThumbs();}
 let _mapSurveys=[], _mapIdx=0;
 
 function buildMapCarousel(){
@@ -3692,12 +3730,15 @@ function renderCarouselThumbs(){
   if(!wrap)return;
   const icoAdult='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
   const icoLarval='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7S6 9.5 6 14a6 6 0 0 0 12 0c0-4.5-6-11.3-6-11.3Z"/></svg>';
+  wrap.className=_mapView==='list'?'list-mode':'';
   wrap.innerHTML=_mapSurveys.map((s,i)=>`
     <div class="mth ${i===_mapIdx?'on':''}" onclick="showCarouselMap(${i})" id="mthumb-${i}">
       <div class="mth-ic ${s._type==='adult'?'adult':'larval'}">${s._type==='adult'?icoAdult:icoLarval}</div>
-      <div class="mth-t">${(s.location||s.district||'Unknown').replace(/</g,'&lt;')}</div>
-      <div class="mth-d">${s._type==='adult'?'Adult':'Larval'} · ${s.date||'—'}</div>
-      <div class="mth-d" style="color:var(--muted);">${s.track&&s.track.distanceKm!=null?s.track.distanceKm.toFixed(2)+' km':''}</div>
+      <div class="mth-body">
+        <div class="mth-t">${(s.location||s.district||'Unknown').replace(/</g,'&lt;')}</div>
+        <div class="mth-meta"><span class="mth-d">${s._type==='adult'?'Adult':'Larval'} · ${s.date||'—'}</span></div>
+      </div>
+      <div class="mth-dist mth-d" style="color:var(--muted);">${s.track&&s.track.distanceKm!=null?s.track.distanceKm.toFixed(2)+' km':''}</div>
     </div>`).join('');
 }
 
@@ -3862,7 +3903,7 @@ function switchMapTab(tab){
 }
 
 /* ── BREEDING HOTSPOT MAP (MapLibre GL) ── */
-let _hsMap=null, _hsLayer='heatmap', _hsPeriod='all', _hsRegions=null, _hsSelDistricts=null;
+let _hsMap=null, _hsLayer='heatmap', _hsPeriod='all', _hsRegions=null, _hsSelDistricts=null, _hsModule='all', _hsMetric='aedes', _hsScaleCtl=null;
 
 const _HS_TILES={
   topo:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
@@ -3903,6 +3944,11 @@ function _hsGetSurveys(){
     if(isNaN(la)||isNaN(lo)||la===0||lo===0)return false;
     if(fromD||toD){const sd=_hsParseDateStr(s.date);if(!sd)return false;if(fromD&&sd<fromD)return false;if(toD&&sd>toD)return false;}
     if(_hsSelDistricts&&_hsSelDistricts.size>0&&!_hsSelDistricts.has(s.district||''))return false;
+    if(_hsModule==='adult'&&!(s._st==='adult'))return false;
+    if(_hsModule==='larval'&&!(s._st==='larval'))return false;
+    if(_hsModule==='manual'&&!(s._st==='madult'||s._st==='mlarval'))return false;
+    // Only keep surveys that produce a value for the active metric
+    if(!_hsMetricOf(s))return false;
     return true;
   });
 }
@@ -3911,13 +3957,15 @@ function _hsBuildGeoJSON(surveys){
   return {type:'FeatureCollection',features:surveys.map(s=>({
     type:'Feature',
     geometry:{type:'Point',coordinates:[parseFloat(s.lng),parseFloat(s.lat)]},
-    properties:{
+    properties:(()=>{const m=_hsMetricOf(s)||{v:0,risk:0,genus:'Other',label:''};
+      return {
       hi:parseFloat(s.HI)||0, ci:parseFloat(s.CI)||0, bi:parseFloat(s.BI)||0,
+      mval:m.v, risk:m.risk, genus:m.genus, mlabel:m.label,
       positive:parseInt(s.totalPositive)||0,
       district:s.district||'', zone:s.zone||'',
       date:s.date||'', type:s._st,
       location:s.location||s.district||s.zone||'Survey site'
-    }
+    };})()
   }))};
 }
 
@@ -3937,6 +3985,12 @@ function _hsUpdateStats(surveys){
 
 function _hsUpdateLegend(){
   const el=document.getElementById('hs-legend');if(!el)return;
+  if(_hsMetric==='species'){
+    el.innerHTML=`<div class="hs-legend-title">Species / Group</div>`+
+      [['#ef5350','Aedes (container breeding)'],['#2196F3','Anopheles / Culex (dip sites)'],['#FF9800','Adult collection'],['#9C27B0','Other']]
+      .map(([c,l])=>`<div style="display:flex;align-items:center;gap:7px;margin-top:5px;"><span style="width:11px;height:11px;border-radius:50%;background:${c};box-shadow:0 0 0 1px rgba(255,255,255,.3);"></span><span style="font-size:10px;color:rgba(255,255,255,.7);">${l}</span></div>`).join('');
+    return;
+  }
   if(_hsLayer==='heatmap'){
     el.innerHTML=`<div class="hs-legend-title">Breeding Intensity</div>
       <div style="width:120px;height:8px;border-radius:4px;background:linear-gradient(to right,rgba(0,0,0,0),rgba(0,100,200,.6),rgba(0,200,100,.8),rgba(255,200,0,.9),rgba(255,80,0,1),rgba(200,0,0,1));margin-bottom:4px;"></div>
@@ -4036,6 +4090,54 @@ function hsFilterRegions(){
   _hsRenderRegionTree(document.getElementById('hs-region-search')?.value||'');
 }
 
+/* ── Module + metric selection for the hotspot map ── */
+function hsSetModule(v){_hsModule=v;hsRefreshMap();}
+function hsSetMetric(v){
+  _hsMetric=v;
+  // Species distribution recolors points categorically; auto-switch to Points layer
+  if(v==='species'&&_hsLayer!=='points')hsSetLayer('points');else hsRefreshMap();
+}
+/* Returns {v, risk, genus, label} for one survey under the active metric.
+   risk: 0 low, 1 moderate, 2 high, -1 no data. genus for species mode. */
+function _hsMetricOf(s){
+  const t=s._st; // adult|larval|madult|mlarval
+  const isLarval=(t==='larval'||t==='mlarval');
+  const isAdult=(t==='adult'||t==='madult');
+  const num=x=>{const n=parseFloat(x);return isNaN(n)?null:n;};
+  if(_hsMetric==='aedes'){
+    if(!isLarval)return null;
+    const hi=num(s.HI);if(hi===null)return null;
+    return {v:hi,risk:hi>=10?2:hi>=5?1:hi>0?0:0,genus:'Aedes',label:'HI '+hi.toFixed(1)+'%'};
+  }
+  if(_hsMetric==='anopheles'){
+    if(!isLarval)return null;
+    const ld=num(s.LD)!==null?num(s.LD):num(s.IMD);
+    if(ld===null||ld<=0)return null;
+    return {v:ld,risk:ld>=5?2:ld>=1?1:0,genus:'Anopheles / Culex',label:'Density '+ld.toFixed(1)};
+  }
+  if(_hsMetric==='pmhd'){
+    if(!isAdult)return null;
+    const p=num(s.MHD);if(p===null||p<=0)return null;
+    return {v:p,risk:p>=2?2:p>=1?1:0,genus:'Adult',label:'PMHD '+p.toFixed(2)};
+  }
+  if(_hsMetric==='tmhd'){
+    if(!isAdult)return null;
+    const tm=num(s.TMHD);if(tm===null||tm<=0)return null;
+    return {v:tm,risk:tm>=2?2:tm>=1?1:0,genus:'Adult',label:'TMHD '+tm.toFixed(2)};
+  }
+  if(_hsMetric==='species'){
+    let genus='Other';
+    if(isAdult)genus='Adult (Mixed)';
+    else if(isLarval){
+      const hasDip=(s.dipSites&&s.dipSites.length)||num(s.LD)>0||num(s.totalDips)>0;
+      genus=hasDip?'Anopheles / Culex':'Aedes';
+    }
+    const hi=num(s.HI)||0;
+    return {v:hi||1,risk:hi>=10?2:hi>=5?1:0,genus:genus,label:genus};
+  }
+  return null;
+}
+
 function hsSetLayer(layer){
   _hsLayer=layer;
   ['heatmap','points','clusters'].forEach(l=>{
@@ -4083,6 +4185,24 @@ function _hsSetData(gj){
   if(f)f.setData(gj);if(c)c.setData(gj);
 }
 
+function _hsApplyMetricPaint(){
+  if(!_hsMap||!_hsMap.getLayer)return;
+  const genusExpr=['case',
+    ['==',['get','genus'],'Aedes'],'#ef5350',
+    ['==',['get','genus'],'Anopheles / Culex'],'#2196F3',
+    ['==',['get','genus'],'Adult (Mixed)'],'#FF9800',
+    ['==',['get','genus'],'Adult'],'#FF9800',
+    '#9C27B0'];
+  const riskExpr=['case',
+    ['==',['get','risk'],2],'#ef5350',
+    ['==',['get','risk'],1],'#FF9800',
+    '#4CAF50'];
+  const expr=_hsMetric==='species'?genusExpr:riskExpr;
+  try{
+    if(_hsMap.getLayer('pt-layer'))_hsMap.setPaintProperty('pt-layer','circle-color',expr);
+    if(_hsMap.getLayer('pt-stroke'))_hsMap.setPaintProperty('pt-stroke','circle-stroke-color',expr);
+  }catch(e){}
+}
 function hsRefreshMap(){
   if(!_hsMap){buildHotspotMap();return;}
   const surveys=_hsGetSurveys();
@@ -4090,8 +4210,8 @@ function hsRefreshMap(){
   _hsBuildRegionTree();
   _hsRenderRegionTree(document.getElementById('hs-region-search')?.value||'');
   const gj=_hsBuildGeoJSON(surveys);
-  if(_hsMap.loaded()){_hsSetData(gj);}
-  else{_hsMap.once('load',()=>_hsSetData(gj));}
+  if(_hsMap.loaded()){_hsSetData(gj);_hsApplyMetricPaint();_hsUpdateLegend();}
+  else{_hsMap.once('load',()=>{_hsSetData(gj);_hsApplyMetricPaint();_hsUpdateLegend();});}
   if(surveys.length>0){
     const lats=surveys.map(s=>parseFloat(s.lat)),lngs=surveys.map(s=>parseFloat(s.lng));
     _hsMap.fitBounds([[Math.min(...lngs)-.3,Math.min(...lats)-.3],[Math.max(...lngs)+.3,Math.max(...lats)+.3]],{padding:40,maxZoom:13,duration:600});
@@ -4154,7 +4274,8 @@ function buildHotspotMap(){
     _hsMap.addControl(new maplibregl.ScaleControl({maxWidth:100,unit:'metric'}),'bottom-left');
     _hsMap.addControl(new maplibregl.NavigationControl({showCompass:true}),'top-right');
 
-    _hsMap.on('load',()=>{
+    _hsScaleCtl=new maplibregl.ScaleControl({maxWidth:120,unit:'metric'});_hsMap.addControl(_hsScaleCtl,'bottom-right');
+      _hsMap.on('load',()=>{
       _hsMap.addSource('surveys-flat',{type:'geojson',data:gj});
       _hsMap.addSource('surveys-cluster',{
         type:'geojson',data:gj,
@@ -4165,7 +4286,7 @@ function buildHotspotMap(){
       _hsMap.addLayer({
         id:'hm-layer',type:'heatmap',source:'surveys-flat',
         paint:{
-          'heatmap-weight':['interpolate',['linear'],['get','hi'],0,0.05,5,0.5,10,0.85,30,1],
+          'heatmap-weight':['interpolate',['linear'],['get','risk'],0,0.35,1,0.7,2,1],
           'heatmap-intensity':['interpolate',['linear'],['zoom'],5,1,13,3],
           'heatmap-color':['interpolate',['linear'],['heatmap-density'],
             0,'rgba(0,0,0,0)',
@@ -4190,10 +4311,9 @@ function buildHotspotMap(){
           'circle-stroke-width':2,
           'circle-stroke-opacity':0.4,
           'circle-stroke-color':['case',
-            ['>=',['get','hi'],10],'#ef5350',
-            ['>=',['get','hi'],5],'#FF9800',
-            ['>',['get','hi'],0],'#4CAF50',
-            '#9C27B0'
+            ['==',['get','risk'],2],'#ef5350',
+            ['==',['get','risk'],1],'#FF9800',
+            '#4CAF50'
           ]
         }
       });
@@ -4204,10 +4324,9 @@ function buildHotspotMap(){
         paint:{
           'circle-radius':['interpolate',['linear'],['zoom'],6,7,14,20],
           'circle-color':['case',
-            ['>=',['get','hi'],10],'#ef5350',
-            ['>=',['get','hi'],5],'#FF9800',
-            ['>',['get','hi'],0],'#4CAF50',
-            '#9C27B0'
+            ['==',['get','risk'],2],'#ef5350',
+            ['==',['get','risk'],1],'#FF9800',
+            '#4CAF50'
           ],
           'circle-opacity':0.88,
           'circle-stroke-width':1.2,
@@ -4320,7 +4439,8 @@ function hsExportExecute(){
       ctx.fillText('Andaman & Nicobar Islands Entomological Surveillance',p+10*scale,p+35*scale);
       const now=new Date();
       ctx.fillText('Generated: '+now.toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'}),p+10*scale,p+50*scale);
-      ctx.fillText('Layer: '+_hsLayer+' | Period: '+_hsPeriod,p+10*scale,p+63*scale);
+      const metL={aedes:'Aedes Larval (HI)',anopheles:'An./Cx. Larval',pmhd:'Adult PMHD',tmhd:'Adult TMHD',species:'Species Distribution'}[_hsMetric]||_hsMetric;
+      ctx.fillText('Metric: '+metL+' | Layer: '+_hsLayer+' | Period: '+_hsPeriod,p+10*scale,p+63*scale);
       // North arrow
       const nx=W-52*scale, ny=62*scale;
       ctx.fillStyle='rgba(10,20,35,0.78)';
@@ -4329,6 +4449,30 @@ function hsExportExecute(){
       ctx.font=`bold ${14*scale}px sans-serif`;ctx.fillText('↑',nx,ny-2*scale);
       ctx.font=`bold ${9*scale}px sans-serif`;ctx.fillText('N',nx,ny+13*scale);
       ctx.textAlign='left';
+      // Scale bar (bottom-right, publication style) — derived from map metres-per-pixel
+      try{
+        const c=_hsMap.getCenter();
+        const mppScreen=40075016.686*Math.abs(Math.cos(c.lat*Math.PI/180))/Math.pow(2,_hsMap.getZoom()+8);
+        const mpp=mppScreen/scale; // canvas is upscaled
+        const targetPx=140*scale;
+        let metres=mpp*targetPx*scale; // metres represented by targetPx of canvas
+        // round to a nice number
+        const pow=Math.pow(10,Math.floor(Math.log10(metres)));
+        const nice=[1,2,5,10].map(m=>m*pow).reduce((a,b)=>Math.abs(b-metres)<Math.abs(a-metres)?b:a);
+        const barPx=(nice/(mpp*scale))*scale;
+        const label=nice>=1000?(nice/1000)+' km':nice+' m';
+        const bx=W-barPx-24*scale, by=H-40*scale;
+        ctx.fillStyle='rgba(255,255,255,0.92)';ctx.fillRect(bx-8*scale,by-16*scale,barPx+16*scale,30*scale);
+        ctx.strokeStyle='#111';ctx.lineWidth=2*scale;
+        ctx.strokeRect(bx-8*scale,by-16*scale,barPx+16*scale,30*scale);
+        ctx.fillStyle='#111';ctx.fillRect(bx,by,barPx,4*scale);
+        ctx.fillRect(bx,by-4*scale,2*scale,12*scale);
+        ctx.fillRect(bx+barPx-2*scale,by-4*scale,2*scale,12*scale);
+        ctx.fillRect(bx+barPx/2-1*scale,by-2*scale,2*scale,8*scale);
+        ctx.font=`bold ${9*scale}px sans-serif`;ctx.textAlign='center';
+        ctx.fillText('0',bx,by-6*scale);ctx.fillText(label,bx+barPx,by-6*scale);
+        ctx.textAlign='left';
+      }catch(e){}
       // Attribution bar
       ctx.fillStyle='rgba(10,20,35,0.72)';ctx.fillRect(0,H-20*scale,W,20*scale);
       ctx.fillStyle='rgba(255,255,255,.55)';
