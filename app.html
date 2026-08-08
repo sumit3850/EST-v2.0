@@ -340,7 +340,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 #focus-shield svg{opacity:.5;}
 #focus-shield p{color:rgba(255,255,255,.5);font-size:14px;font-weight:600;letter-spacing:.05em;}
 
-/* ═══ PREMIUM POLISH (v2.5.7) ═══ */
+/* ═══ PREMIUM POLISH (v2.5.8) ═══ */
 .launch-btn{background:linear-gradient(180deg,#46e09d,#3ecf8e) !important;color:#04140c !important;box-shadow:0 6px 22px rgba(62,207,142,.32),inset 0 1px 0 rgba(255,255,255,.35) !important;}
 .launch-btn:hover{filter:brightness(1.05);}
 .launch-btn:active{transform:scale(.985);}
@@ -353,7 +353,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);}
 ::-webkit-scrollbar-thumb{background:rgba(26,122,74,.25);border-radius:99px;}
 ::-webkit-scrollbar-thumb:hover{background:rgba(26,122,74,.45);}
 #app-header{border-bottom:1px solid rgba(26,122,74,.14);box-shadow:0 1px 12px rgba(10,40,25,.06);}
-/* — premium spacing rhythm (v2.5.7) — */
+/* — premium spacing rhythm (v2.5.8) — */
 .scroll-area{padding-left:16px;padding-right:16px;overflow-y:scroll;overflow-x:hidden;min-height:0;overscroll-behavior:contain;padding-bottom:calc(var(--nh) + 48px);scrollbar-gutter:stable;}
 .scroll-area > *{max-width:100%;}
 @media(min-width:900px){.scroll-area{max-width:900px;margin:0 auto;width:100%;}}
@@ -494,7 +494,7 @@ input[type=text]:focus,input[type=number]:focus,input[type=date]:focus,input[typ
         </svg>
       </div>
       <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub" id="dash-sub-ver">EST v2.5.7</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.5.8</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -540,7 +540,7 @@ input[type=text]:focus,input[type=number]:focus,input[type=date]:focus,input[typ
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About <span id="dash-about-ver">EST v2.5.7</span>
+      About <span id="dash-about-ver">EST v2.5.8</span>
     </button>
     <button onclick="estSignOut()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;background:rgba(248,113,113,.1);border:1.5px solid rgba(248,113,113,.35);border-radius:var(--rxl);color:#fca5a5;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -2221,7 +2221,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.5.7';
+const APP_VER='2.5.8';
 /* Compact human-readable Survey ID: A-260531-1437 (type + YYMMDD + HHMM) */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -3670,7 +3670,7 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.5.7)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.5.8)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -3682,7 +3682,7 @@ function buildAdultXLSX(surveys,isCompiled){
     ['API','Adult Premise Index'],
     ['APH','Adult Per House']
   ];
-  const HDR=['Survey#','Survey ID','Date','State/UT','District','Location','Type','Indoor/Outdoor',null,'Night Spent','Days Spent','Houses Examined','House Positive','Rooms Examined','Rooms Positive','Non-Culex Collected','Culex Collected','Total Mosquitoes','Time Spent (hrs)','Total Male','Total Female','Collectors','PMHD','TMHD','API','APH','GPS Lat','GPS Long','Surveillance Workers/Collectors','Senior Officer','Saved At'];
+  const HDR=['Survey#','Survey ID','Date','State/UT','District','Zone','Location','Type','Indoor/Outdoor',null,'Night Spent','Days Spent','Houses Examined','House Positive','Rooms Examined','Rooms Positive','Non-Culex Collected','Culex Collected','Total Mosquitoes','Time Spent (hrs)','Total Male','Total Female','Collectors','PMHD','TMHD','API','APH','GPS Lat','GPS Long','Surveillance Workers/Collectors','Senior Officer','Saved At'];
   function makeAdultSheet(label,typeLabel,inoutLabel,filter){
     const slist=surveys.filter(filter);
     if(!slist.length)return null;
@@ -3701,6 +3701,7 @@ function buildAdultXLSX(surveys,isCompiled){
         s.date||'',
         s.state||'',
         s.district||'',
+        s.zone||'',
         s.location||'',
         typeLabel,
         inoutLabel||indOut,
@@ -3718,10 +3719,10 @@ function buildAdultXLSX(surveys,isCompiled){
         s.totalMale||0,
         s.totalFemale||0,
         s.collectors||1,
-        {f:'IFERROR(R'+r+'/S'+r+',0)'},
-        {f:'IFERROR(Q'+r+'/S'+r+'*10,0)'},
-        {f:'IFERROR(M'+r+'/L'+r+'*100,0)'},
-        {f:'IFERROR(R'+r+'/L'+r+',0)'},
+        {f:'IFERROR(S'+r+'/T'+r+',0)'},
+        {f:'IFERROR(R'+r+'/T'+r+'*10,0)'},
+        {f:'IFERROR(N'+r+'/M'+r+'*100,0)'},
+        {f:'IFERROR(S'+r+'/M'+r+',0)'},
         s.lat||'',
         s.lng||'',
         s.workers||'',
@@ -3745,7 +3746,7 @@ function buildAdultXLSX(surveys,isCompiled){
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.5.7)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.5.8)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -3758,7 +3759,7 @@ function buildLarvalXLSX(surveys,isCompiled){
     ['APH','Adult Per House']
   ];
   // Summary sheet
-  const sumHDR=['Survey#','Survey ID','Date','State/UT','District','Location','Houses Examined','Positive Houses','Containers','Positive Containers','Dips Taken','Larvae Collected','Pupae Collected (containers)','Pupae Collected (An/Cx Data)','House Index (HI)','Container Index (CI)','Breteau Index (BI)','Pupal Index (PI)','Larval Density (LD)','Pupal Density (PD)','Immature Density (ID)','Remarks','GPS Lat','GPS Long','Workers','Officer','Saved At'];
+  const sumHDR=['Survey#','Survey ID','Date','State/UT','District','Zone','Location','Houses Examined','Positive Houses','Containers','Positive Containers','Dips Taken','Larvae Collected','Pupae Collected (containers)','Pupae Collected (An/Cx Data)','House Index (HI)','Container Index (CI)','Breteau Index (BI)','Pupal Index (PI)','Larval Density (LD)','Pupal Density (PD)','Immature Density (ID)','Remarks','GPS Lat','GPS Long','Workers','Officer','Saved At'];
   const sumRows=[sumHDR];
   surveys.forEach((s,si)=>{
     const r=si+2;
@@ -3770,43 +3771,43 @@ function buildLarvalXLSX(surveys,isCompiled){
     const pupAnCx=s.totalPupae??_pupAnCx;
     const housesEx=s.housesExamined??s.houses?.length??0;
     sumRows.push([
-      si+1,fmtSid('larval',s.id),s.date||'',s.state||'',s.district||'',s.location||'',
+      si+1,fmtSid('larval',s.id),s.date||'',s.state||'',s.district||'',s.zone||'',s.location||'',
       housesEx,posH,s.totalContainers||0,s.totalPositive||0,s.totalDips||0,
       s.totalLarvae||0,pupCont,pupAnCx,
-      {f:'IFERROR(H'+r+'/G'+r+'*100,0)'},
-      {f:'IFERROR(J'+r+'/I'+r+'*100,0)'},
-      {f:'IFERROR(J'+r+'/G'+r+'*100,0)'},
-      {f:'IFERROR(M'+r+'/G'+r+'*100,0)'},
-      {f:'IFERROR(L'+r+'/K'+r+',0)'},
-      {f:'IFERROR(SUM(M'+r+':N'+r+')/K'+r+',0)'},
+      {f:'IFERROR(I'+r+'/H'+r+'*100,0)'},
+      {f:'IFERROR(K'+r+'/J'+r+'*100,0)'},
+      {f:'IFERROR(K'+r+'/H'+r+'*100,0)'},
+      {f:'IFERROR(N'+r+'/H'+r+'*100,0)'},
+      {f:'IFERROR(M'+r+'/L'+r+',0)'},
+      {f:'IFERROR(SUM(N'+r+':O'+r+')/L'+r+',0)'},
       {f:'IFERROR(SUM(L'+r+':N'+r+')/K'+r+',0)'},
       '',s.lat||'',s.lng||'',s.workers||'',s.officers||'',
       new Date(s.savedAt).toLocaleString('en-IN')
     ]);
   });
   // Container Inspection House wise
-  const ciHDR=['Survey#','Survey ID','Date','State/UT','District','Location','House No.','Start Time','End Time','Containers Inspected','Positive Containers','Pupae Collected','House Positive (Aedes)','GPS Latitude','GPS Longitude','Google Maps Link'];
+  const ciHDR=['Survey#','Survey ID','Date','State/UT','District','Zone','Location','House No.','Start Time','End Time','Containers Inspected','Positive Containers','Pupae Collected','House Positive (Aedes)','GPS Latitude','GPS Longitude','Google Maps Link'];
   const ciRows=[ciHDR];
   surveys.forEach((s,si)=>{
     (s.houses||[]).forEach(h=>{
       const lat=h.lat||'';const lng=h.lng||'';
       const maps=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
-      ciRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.state||'',s.district||'',s.location||'',h.houseNo,h.start||'-',h.end||'-',h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No',lat,lng,maps]);
+      ciRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.state||'',s.district||'',s.zone||'',s.location||'',h.houseNo,h.start||'-',h.end||'-',h.containers||0,h.positive||0,h.pupal||0,h.housePositive?'Yes':'No',lat,lng,maps]);
     });
   });
   // Container Type Breakdown
-  const ctHDR=['Survey#','Survey ID','Date','State/UT','District','Location','Container Type','Examined','Positive','Positive (%)'];
+  const ctHDR=['Survey#','Survey ID','Date','State/UT','District','Zone','Location','Container Type','Examined','Positive','Positive (%)'];
   const ctRows=[ctHDR];
   surveys.forEach((s,si)=>{
     (s.containerSummary||[]).forEach(ct=>{
       if((ct.examined||0)>0||(ct.positive||0)>0){
         const pct=ct.examined>0?parseFloat(((ct.positive/ct.examined)*100).toFixed(1)):0;
-        ctRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.state||'',s.district||'',s.location||'',ct.name||'',ct.examined||0,ct.positive||0,pct]);
+        ctRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.state||'',s.district||'',s.zone||'',s.location||'',ct.name||'',ct.examined||0,ct.positive||0,pct]);
       }
     });
   });
   // Anopheles and Culex Larval Data
-  const dipHDR=['Survey#','Survey ID','Date','State/UT','District','Location','Dip Site No.','Dip Site Description','Dips Taken','Larvae Collected','Pupae Collected','Dip Index (Larval)','Species Collected','Observations','Latitude','Longitude','Google Maps Link'];
+  const dipHDR=['Survey#','Survey ID','Date','State/UT','District','Zone','Location','Dip Site No.','Dip Site Description','Dips Taken','Larvae Collected','Pupae Collected','Dip Index (Larval)','Species Collected','Observations','Latitude','Longitude','Google Maps Link'];
   const dipRows=[dipHDR];
   let dipRowN=2;
   surveys.forEach((s,si)=>{
@@ -3814,7 +3815,7 @@ function buildLarvalXLSX(surveys,isCompiled){
       s.dipSites.forEach(d=>{
         const lat=d.lat||'';const lng=d.lng||'';
         const maps=lat&&lng?'https://maps.google.com/?q='+lat+','+lng:'';
-        dipRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.state||'',s.district||'',s.location||'',d.siteNo,d.description||'',d.dips||0,d.larvae||0,d.pupae||0,{f:'IFERROR(J'+dipRowN+'/I'+dipRowN+',0)'},d.species||'',d.remark||'',lat,lng,maps]);
+        dipRows.push([si+1,fmtSid('larval',s.id),s.date||'',s.state||'',s.district||'',s.zone||'',s.location||'',d.siteNo,d.description||'',d.dips||0,d.larvae||0,d.pupae||0,{f:'IFERROR(K'+dipRowN+'/J'+dipRowN+',0)'},d.species||'',d.remark||'',lat,lng,maps]);
         dipRowN++;
       });
     }
