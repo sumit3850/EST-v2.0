@@ -180,6 +180,26 @@ create policy "reset_requests: open update" on public.reset_requests for update 
 create policy "reset_requests: open delete" on public.reset_requests for delete using (true);
 
 -- ─────────────────────────────────────────────
+-- USER FEATURE PERMISSIONS — admin toggles which app features each user
+-- can see (xlsx, pdf, email, wa, map). Keyed by EST username. Missing
+-- row or missing key = feature enabled by default.
+-- ─────────────────────────────────────────────
+create table if not exists public.user_permissions (
+  username text primary key,
+  perms jsonb not null default '{}',
+  updated_at timestamptz default now()
+);
+alter table public.user_permissions enable row level security;
+drop policy if exists "user_permissions: open read"   on public.user_permissions;
+drop policy if exists "user_permissions: open insert" on public.user_permissions;
+drop policy if exists "user_permissions: open update" on public.user_permissions;
+drop policy if exists "user_permissions: open delete" on public.user_permissions;
+create policy "user_permissions: open read"   on public.user_permissions for select using (true);
+create policy "user_permissions: open insert" on public.user_permissions for insert with check (true);
+create policy "user_permissions: open update" on public.user_permissions for update using (true) with check (true);
+create policy "user_permissions: open delete" on public.user_permissions for delete using (true);
+
+-- ─────────────────────────────────────────────
 -- BACKFILL profiles for auth users created before this schema
 -- ─────────────────────────────────────────────
 insert into public.profiles (id, username, full_name, role, status)
