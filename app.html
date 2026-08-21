@@ -340,7 +340,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 #focus-shield svg{opacity:.5;}
 #focus-shield p{color:rgba(255,255,255,.5);font-size:14px;font-weight:600;letter-spacing:.05em;}
 
-/* ═══ PREMIUM POLISH (v2.6.5) ═══ */
+/* ═══ PREMIUM POLISH (v2.6.6) ═══ */
 .launch-btn{background:linear-gradient(180deg,#46e09d,#3ecf8e) !important;color:#04140c !important;box-shadow:0 6px 22px rgba(62,207,142,.32),inset 0 1px 0 rgba(255,255,255,.35) !important;}
 .launch-btn:hover{filter:brightness(1.05);}
 .launch-btn:active{transform:scale(.985);}
@@ -353,7 +353,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);}
 ::-webkit-scrollbar-thumb{background:rgba(26,122,74,.25);border-radius:99px;}
 ::-webkit-scrollbar-thumb:hover{background:rgba(26,122,74,.45);}
 #app-header{border-bottom:1px solid rgba(26,122,74,.14);box-shadow:0 1px 12px rgba(10,40,25,.06);}
-/* — premium spacing rhythm (v2.6.5) — */
+/* — premium spacing rhythm (v2.6.6) — */
 .scroll-area{padding-left:16px;padding-right:16px;overflow-y:scroll;overflow-x:hidden;min-height:0;overscroll-behavior:contain;padding-bottom:calc(var(--nh) + 48px);scrollbar-gutter:stable;}
 .scroll-area > *{max-width:100%;}
 @media(min-width:900px){.scroll-area{max-width:900px;margin:0 auto;width:100%;}}
@@ -497,7 +497,7 @@ body.pmoff-xlsx .pm-xlsx,body.pmoff-pdf .pm-pdf,body.pmoff-email .pm-email,body.
         </svg>
       </div>
       <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub" id="dash-sub-ver">EST v2.6.5</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.6.6</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -543,7 +543,7 @@ body.pmoff-xlsx .pm-xlsx,body.pmoff-pdf .pm-pdf,body.pmoff-email .pm-email,body.
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About <span id="dash-about-ver">EST v2.6.5</span>
+      About <span id="dash-about-ver">EST v2.6.6</span>
     </button>
     <button onclick="estSignOut()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;background:rgba(248,113,113,.1);border:1.5px solid rgba(248,113,113,.35);border-radius:var(--rxl);color:#fca5a5;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -1863,6 +1863,17 @@ function markSynced(mod, id){
   surveys=surveys.map(s=>s.id===id?{...s,synced:true,syncedAt:new Date().toISOString()}:s);
   try{ localStorage.setItem(key,JSON.stringify(surveys)); }catch(e){}
 }
+// A record counts as synced if it reached the cloud DB (Supabase, sbSynced) or,
+// for legacy records, the old GitHub flag (synced).
+function _isSynced(s){ return !!(s && (s.sbSynced || s.synced)); }
+// Safe sync-date label — returns '' for a missing/invalid timestamp so the badge
+// never shows "Invalid Date".
+function _fmtSyncDate(v){ if(!v)return ''; const d=new Date(v); return isNaN(d.getTime())?'':d.toLocaleDateString('en-IN'); }
+// Set the local "synced" timestamp flag in whichever store a record lives in,
+// so the badge shows a real date after a cloud sync.
+function _stampSynced(key,id){
+  try{ let a=JSON.parse(localStorage.getItem(key)||'[]'); a=a.map(x=>String(x.id)===String(id)?{...x,synced:true,syncedAt:new Date().toISOString()}:x); localStorage.setItem(key,JSON.stringify(a)); }catch(e){}
+}
 
 /* ── SYNC ONE SURVEY ─────────────────────────────────────── */
 /* ── SUPABASE CLOUD SYNC ─────────────────────────────────────
@@ -1992,56 +2003,54 @@ async function sbPullMine(){
 }
 
 async function syncOneSurvey(mod, id){
-  const _s=getSavedById(mod,id);
-  if(_s)sbPushSurvey(_s,mod).then(ok=>{if(ok)_markSbSynced(mod,id);});
-  if(!GH_CONFIG.owner||!GH_CONFIG.token){
-    showToast('GitHub not configured — add token in settings','warn'); return;
-  }
   if(!navigator.onLine){ showToast('Offline — connect to sync','warn'); return; }
   const s=getSavedById(mod,id);
   if(!s){ showToast('Survey not found','warn'); return; }
   const btn=document.querySelector(`.saved-item[data-sid="${id}"] .sit-sync-btn`);
   if(btn){ btn.disabled=true; btn.textContent='Syncing…'; }
-  const ok=await ghPushSurvey(s,mod);
-  if(ok){
+  // Cloud backend is Supabase; only fall back to GitHub if it's still configured.
+  const sbOk=await sbPushSurvey(s,mod);
+  if(sbOk)_markSbSynced(mod,id,s);
+  let ghOk=false;
+  if(GH_CONFIG.owner&&GH_CONFIG.token)ghOk=await ghPushSurvey(s,mod);
+  if(sbOk||ghOk){
     markSynced(mod,s.id);
-    showToast('Survey synced to GitHub ✓','check');
+    showToast('Survey synced to cloud ✓','check');
   } else {
-    showToast('Sync failed — check token / connection','warn');
+    showToast('Sync failed — check connection','warn');
   }
   renderSaved();
 }
 
-/* ── SYNC ALL UNSYNCED ───────────────────────────────────── */
+/* ── SYNC ALL UNSYNCED (to Supabase cloud DB) ────────────── */
 async function ghSyncAll(){
-  sbSyncAll();
-  if(!GH_CONFIG.owner||!GH_CONFIG.token){
-    showToast(navigator.onLine?'Syncing to cloud database…':'Offline — will sync when connected','check');
-    return;
-  }
-  if(!navigator.onLine){ showToast('Offline — sync when connected','warn'); return; }
+  if(!navigator.onLine){ showToast('Offline — will sync when connected','warn'); return; }
   if(_ghSyncing){ showToast('Sync already in progress…','check'); return; }
   _ghSyncing=true;
   const icon=document.getElementById('sync-icon');
   if(icon)icon.classList.add('spin');
-  showToast('Syncing to GitHub…','check');
+  showToast('Syncing to cloud…','check');
   let pushed=0, failed=0;
-  for(const mod of ['adult','larval']){
-    const key=mod==='adult'?A_SAVED:L_SAVED;
+  // Cover both the regular field-app stores and the manual-entry stores.
+  const sets=[[A_SAVED,'adult'],[L_SAVED,'larval'],[MAN_A_SAVED,'adult'],[MAN_L_SAVED,'larval']];
+  for(const [key,mod] of sets){
     let surveys=[];
     try{ surveys=JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){}
-    for(const s of surveys.filter(s=>!s.synced)){
-      const ok=await ghPushSurvey(s,mod);
-      if(ok){ markSynced(mod,s.id); pushed++; }
+    for(const s of surveys){
+      if(s.sbSynced||s.synced)continue;
+      const ok=await sbPushSurvey(s,mod);
+      if(GH_CONFIG.owner&&GH_CONFIG.token&&!ok){/* optional legacy fallback */}
+      if(ok){ _markSbSynced(mod,s.id,s); _stampSynced(key,s.id); pushed++; }
       else failed++;
     }
   }
   _ghSyncing=false;
   if(icon)icon.classList.remove('spin');
   renderSaved();
-  if(failed>0) showToast(`Synced ${pushed}, ${failed} failed — check token`,'warn');
-  else if(pushed>0) showToast(`${pushed} survey${pushed>1?'s':''} synced to GitHub ✓`,'check');
-  else showToast('All surveys already synced ✓','check');
+  if(typeof renderSavedMod==='function'){try{renderSavedMod('manual');}catch(e){}}
+  if(failed>0) showToast(`Synced ${pushed}, ${failed} failed — check connection`,'warn');
+  else if(pushed>0) showToast(`${pushed} record${pushed>1?'s':''} synced to cloud ✓`,'check');
+  else showToast('All records already synced ✓','check');
 }
 
 /* ── AUTO-SYNC AFTER SAVE ────────────────────────────────── */
@@ -2244,7 +2253,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.6.5';
+const APP_VER='2.6.6';
 /* Compact human-readable Survey ID: A-260531-1437 (type + YYMMDD + HHMM) */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -3717,7 +3726,7 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.6.5)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.6.6)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -3793,7 +3802,7 @@ function buildAdultXLSX(surveys,isCompiled){
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.6.5)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.6.6)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -4458,7 +4467,7 @@ function renderSavedMod(mod){
       const meta=(s.state||'')+(s.state&&s.district?' · ':'')+( s.district||'')+(s.date?' · '+s.date:'')+( savedTime?' · '+savedTime:'');
       const typeTag=s._manType==='adult'?'<span style="font-size:9px;background:rgba(62,207,142,.15);color:var(--primary);padding:1px 5px;border-radius:8px;font-weight:700;">ADULT</span>':'<span style="font-size:9px;background:rgba(33,150,243,.13);color:var(--larval);padding:1px 5px;border-radius:8px;font-weight:700;">LARVAL</span>';
       const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');div.dataset.sid=String(s.id);
-      div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="manualSel[this.checked?'add':'delete']('${s.id}');renderSavedMod('manual');"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${idx+1}</span>${typeTag}<div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?'Synced to cloud':'Not synced'}</div><div class="sit-acts"><button class="sit-act" onclick="editManualEntry(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('csv',13,'#ff9800')} Edit</button><button class="sit-act pm-xlsx" onclick="exportManualOne(${s.id},'${s._manType}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act pm-pdf" onclick="exportManualOnePDF(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('pdf',13,'#ff9800')} PDF</button><button class="sit-act" onclick="syncManualOne(${s.id},'${s._manType}')" style="${s.synced?'color:var(--osv);':'color:var(--primary);font-weight:700;'}">${mkSvg('check',13)} ${s.synced?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteManualSaved(${s.id},'${s._manType}')">${mkSvg('del',13)} Del</button></div>`;
+      div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="manualSel[this.checked?'add':'delete']('${s.id}');renderSavedMod('manual');"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${idx+1}</span>${typeTag}<div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${_isSynced(s)?'ok':'pend'}">${mkSvg(_isSynced(s)?'check':'warn',13)} ${_isSynced(s)?'Synced to cloud':'Not synced'}</div><div class="sit-acts"><button class="sit-act" onclick="editManualEntry(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('csv',13,'#ff9800')} Edit</button><button class="sit-act pm-xlsx" onclick="exportManualOne(${s.id},'${s._manType}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act pm-pdf" onclick="exportManualOnePDF(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('pdf',13,'#ff9800')} PDF</button><button class="sit-act" onclick="syncManualOne(${s.id},'${s._manType}')" style="${_isSynced(s)?'color:var(--osv);':'color:var(--primary);font-weight:700;'}">${mkSvg('check',13)} ${_isSynced(s)?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteManualSaved(${s.id},'${s._manType}')">${mkSvg('del',13)} Del</button></div>`;
       list.appendChild(div);
     });
     return;
@@ -4479,7 +4488,7 @@ function renderSavedMod(mod){
     const meta=(s.state||'')+(s.state&&s.district?' · ':'')+( s.district||'')+(s.date?' · '+s.date:'')+( savedTime?' · '+savedTime:'');
     const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');div.dataset.sid=String(s.id);
     const serialNo=surveyIdx+1;
-    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${s.synced?'ok':'pend'}">${mkSvg(s.synced?'check':'warn',13)} ${s.synced?('Synced '+new Date(s.syncedAt||'').toLocaleDateString('en-IN')):'Not synced'}</div><div class="sit-views"><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','survey')">Survey</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','collect')">Collect</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','review')">Review</button></div><div class="sit-acts"><button class="sit-act pm-xlsx" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act pm-pdf" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act pm-email" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act pm-wa" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act pm-map" onclick="showSavedMap('${mod}','${s.id}')" style="${mod==='adult'?'':'border-color:rgba(21,101,192,.3);color:var(--larval);'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="${mod==='adult'?'var(--primary)':'var(--larval)'}"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg> Map</button><button class="sit-act" onclick="resaveSurvey('${mod}','${s.id}')" style="border-color:rgba(100,100,100,.3);color:#555;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg> Resave</button><button class="sit-sync-btn sit-act" onclick="syncOneSurvey('${mod}','${s.id}')" style="${s.synced?'border-color:rgba(0,107,92,.25);color:var(--osv);':'border-color:rgba(0,107,92,.6);color:var(--primary);font-weight:700;'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg> ${s.synced?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
+    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${_isSynced(s)?'ok':'pend'}">${mkSvg(_isSynced(s)?'check':'warn',13)} ${_isSynced(s)?('Synced'+(_fmtSyncDate(s.syncedAt)?' '+_fmtSyncDate(s.syncedAt):' to cloud')):'Not synced'}</div><div class="sit-views"><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','survey')">Survey</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','collect')">Collect</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','review')">Review</button></div><div class="sit-acts"><button class="sit-act pm-xlsx" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act pm-pdf" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act pm-email" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act pm-wa" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act pm-map" onclick="showSavedMap('${mod}','${s.id}')" style="${mod==='adult'?'':'border-color:rgba(21,101,192,.3);color:var(--larval);'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="${mod==='adult'?'var(--primary)':'var(--larval)'}"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg> Map</button><button class="sit-act" onclick="resaveSurvey('${mod}','${s.id}')" style="border-color:rgba(100,100,100,.3);color:#555;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg> Resave</button><button class="sit-sync-btn sit-act" onclick="syncOneSurvey('${mod}','${s.id}')" style="${_isSynced(s)?'border-color:rgba(0,107,92,.25);color:var(--osv);':'border-color:rgba(0,107,92,.6);color:var(--primary);font-weight:700;'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg> ${_isSynced(s)?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
     list.appendChild(div);
   });
 }
