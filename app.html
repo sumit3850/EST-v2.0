@@ -340,7 +340,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 #focus-shield svg{opacity:.5;}
 #focus-shield p{color:rgba(255,255,255,.5);font-size:14px;font-weight:600;letter-spacing:.05em;}
 
-/* ═══ PREMIUM POLISH (v2.6.7) ═══ */
+/* ═══ PREMIUM POLISH (v2.6.8) ═══ */
 .launch-btn{background:linear-gradient(180deg,#46e09d,#3ecf8e) !important;color:#04140c !important;box-shadow:0 6px 22px rgba(62,207,142,.32),inset 0 1px 0 rgba(255,255,255,.35) !important;}
 .launch-btn:hover{filter:brightness(1.05);}
 .launch-btn:active{transform:scale(.985);}
@@ -353,7 +353,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);}
 ::-webkit-scrollbar-thumb{background:rgba(26,122,74,.25);border-radius:99px;}
 ::-webkit-scrollbar-thumb:hover{background:rgba(26,122,74,.45);}
 #app-header{border-bottom:1px solid rgba(26,122,74,.14);box-shadow:0 1px 12px rgba(10,40,25,.06);}
-/* — premium spacing rhythm (v2.6.7) — */
+/* — premium spacing rhythm (v2.6.8) — */
 .scroll-area{padding-left:16px;padding-right:16px;overflow-y:scroll;overflow-x:hidden;min-height:0;overscroll-behavior:contain;padding-bottom:calc(var(--nh) + 48px);scrollbar-gutter:stable;}
 .scroll-area > *{max-width:100%;}
 @media(min-width:900px){.scroll-area{max-width:900px;margin:0 auto;width:100%;}}
@@ -497,7 +497,7 @@ body.pmoff-xlsx .pm-xlsx,body.pmoff-pdf .pm-pdf,body.pmoff-email .pm-email,body.
         </svg>
       </div>
       <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub" id="dash-sub-ver">EST v2.6.7</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.6.8</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -543,7 +543,7 @@ body.pmoff-xlsx .pm-xlsx,body.pmoff-pdf .pm-pdf,body.pmoff-email .pm-email,body.
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About <span id="dash-about-ver">EST v2.6.7</span>
+      About <span id="dash-about-ver">EST v2.6.8</span>
     </button>
     <button onclick="estSignOut()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;background:rgba(248,113,113,.1);border:1.5px solid rgba(248,113,113,.35);border-radius:var(--rxl);color:#fca5a5;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -1912,6 +1912,29 @@ function _sbStoreKey(s,mod){
   if(s&&s.entryType==='manual')return mod==='adult'?MAN_A_SAVED:MAN_L_SAVED;
   return mod==='adult'?A_SAVED:L_SAVED;
 }
+/* ── DELETE TOMBSTONES ────────────────────────────────────────
+   A record deleted locally must also be removed from the cloud, or the next
+   pull re-adds it. We record the deleted (id, table) as a tombstone, delete
+   the cloud row when online, and keep the tombstone until that DELETE
+   succeeds. sbPullMine honours tombstones so a not-yet-flushed delete never
+   resurrects. */
+const TOMB_KEY='est_tombstones';
+function _addTomb(id,table){
+  try{let a=JSON.parse(localStorage.getItem(TOMB_KEY)||'[]');if(!a.some(x=>x.id===String(id)&&x.table===table)){a.push({id:String(id),table});localStorage.setItem(TOMB_KEY,JSON.stringify(a));}}catch(e){}
+}
+function _tombIds(){ try{return new Set(JSON.parse(localStorage.getItem(TOMB_KEY)||'[]').map(x=>String(x.id)));}catch(e){return new Set();} }
+async function _flushTombstones(){
+  if(!navigator.onLine)return;
+  let a=[];try{a=JSON.parse(localStorage.getItem(TOMB_KEY)||'[]');}catch(e){}
+  if(!a.length)return;
+  const keep=[];
+  for(const t of a){
+    let ok=false;
+    try{const r=await fetch(SB_URL+'/rest/v1/'+t.table+'?local_id=eq.'+encodeURIComponent(t.id),{method:'DELETE',headers:_sbH()});ok=r.ok;}catch(e){ok=false;}
+    if(!ok)keep.push(t);
+  }
+  try{localStorage.setItem(TOMB_KEY,JSON.stringify(keep));}catch(e){}
+}
 function _markSbSynced(mod,id,sample){
   const key=_sbStoreKey(sample,mod);
   try{
@@ -1957,25 +1980,32 @@ async function applyUserPerms(){
 async function sbPullMine(){
   if(!navigator.onLine||!window._estUser||!window._estUser.username)return;
   const uname=window._estUser.username;
+  // Push any pending local deletes to the cloud first so they don't come back.
+  await _flushTombstones();
+  const tomb=_tombIds();
   const keyFor={adult_surveys:A_SAVED,larval_surveys:L_SAVED,manual_adult_surveys:MAN_A_SAVED,manual_larval_surveys:MAN_L_SAVED};
+  const PAGE=2000; // high cap; if a table ever returns exactly this, treat as truncated
   let addedTotal=0, changedTotal=0, removedTotal=0;
   for(const t of Object.keys(keyFor)){
     try{
-      const r=await fetch(SB_URL+'/rest/v1/'+t+'?select=data,local_id&username=eq.'+encodeURIComponent(uname),{headers:_sbH()});
+      const r=await fetch(SB_URL+'/rest/v1/'+t+'?select=data,local_id&username=eq.'+encodeURIComponent(uname)+'&limit='+PAGE,{headers:_sbH()});
       if(!r.ok)continue;
       const rows=await r.json();
+      // If the fetch might be truncated, skip the removal step for this table so
+      // we never delete local records just because they fell off a partial page.
+      const complete=Array.isArray(rows)&&rows.length<PAGE;
       const key=keyFor[t];
       let arr=[];try{arr=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}
       // Map cloud rows by id (JSONB data.id, fall back to local_id column)
       const cloud=new Map();
       rows.forEach(row=>{const d=row.data||{};const id=String(d.id||row.local_id||'');if(id)cloud.set(id,d);});
-      const localIds=new Set(arr.map(x=>String(x.id)));
       // 1) add new + update changed cloud records
       // Compare ignoring local-only sync bookkeeping so identical records
       // don't register as "changed" every pull.
       const _norm=o=>{const c={...o};delete c.sbSynced;delete c.synced;delete c.syncedAt;return JSON.stringify(c);};
       cloud.forEach((d,id)=>{
         if(!d.id)return;
+        if(tomb.has(id))return; // locally deleted, awaiting cloud delete — don't re-add
         const idx=arr.findIndex(x=>String(x.id)===id);
         if(idx<0){arr.push({...d,sbSynced:true,synced:true});addedTotal++;}
         else{
@@ -1987,12 +2017,16 @@ async function sbPullMine(){
           }
         }
       });
-      // 2) remove records that were deleted in the cloud (only previously-synced ones)
-      arr=arr.filter(x=>{
-        const wasSynced=x.sbSynced||x.synced;
-        if(wasSynced&&!cloud.has(String(x.id))){removedTotal++;return false;}
-        return true;
-      });
+      // 2) remove records that were deleted in the cloud — only when we have the
+      // full cloud set, and only for records actually present in Supabase
+      // (sbSynced). Legacy GitHub-only records (synced) were never pushed, so
+      // their absence from the cloud must NOT delete them.
+      if(complete){
+        arr=arr.filter(x=>{
+          if(x.sbSynced&&!cloud.has(String(x.id))){removedTotal++;return false;}
+          return true;
+        });
+      }
       arr.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
       try{localStorage.setItem(key,JSON.stringify(arr));}catch(e){}
     }catch(e){}
@@ -2258,7 +2292,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.6.7';
+const APP_VER='2.6.8';
 /* Compact human-readable Survey ID: A-260531-1437 (type + YYMMDD + HHMM) */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -2731,6 +2765,19 @@ function saveLastZone(prefix){
   const sel=document.getElementById(prefix+'-zone');if(!sel)return;
   localStorage.setItem('estLastZone',sel.value);
   if(sel.value==='Other')localStorage.setItem('estLastZoneOther',(document.getElementById(prefix+'-zone-other')?.value||'').trim());
+}
+// After a successful save the record lives in Saved, so the working form must
+// stop counting as "in progress" — otherwise reload warns falsely and the
+// still-filled inputs get re-persisted into the shared draft blob. Clear the
+// in-memory houses and the free-text fields (leave state/district defaults).
+function _resetFormAfterSave(mod){
+  try{resetStateOnly(mod);}catch(e){}
+  const p=mod==='adult'?'a':'l';
+  [p+'-location',p+'-workers',p+'-officers',p+'-zone-other'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const dEl=document.getElementById(p+'-date');if(dEl)dEl.value=todayStr();
+  const zo=document.getElementById(p+'-zone-other');if(zo)zo.style.display='none';
+  if(mod==='adult'){try{renderAdultHouses();updateAdultSummary();}catch(e){}}
+  else{try{renderLarvalHouses();updateLarvalSummary();}catch(e){}}
 }
 function resetStateOnly(mod){
   if(mod==='adult'){Object.assign(aS,{collType:'resting',date:'',state:'',district:'',location:'',workers:'',officers:'',collectors:1,days:0,nights:0,lat:'',lng:'',houses:[],curHN:1,curRooms:0,curPosRooms:0,curOtherN:1,curOtherLog:[]});aS.curCounts=Array.from({length:ANS},()=>[0,0,0]);}
@@ -3245,7 +3292,7 @@ function aSnap(){
   const collPeriodSnap=aS.days>0&&aS.nights>0?'Day & Night Collection':aS.days>0?'Day Collection':aS.nights>0?'Night Collection':'';
   return {id:Date.now(),savedAt:new Date().toISOString(),savedBy:window._estUser?.username||'',appType:'adult',v:'2.0',collType:aS.collType,date:aS.date,state:(aS.state||''),district:aS.district,location:aS.location,zone:getZone('a'),workers:aS.workers,officers:aS.officers,collectors:aS.collectors,days:aS.days,nights:aS.nights,collectionPeriod:collPeriodSnap,lat:aS.lat,lng:aS.lng,houses:aS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),speciesBreakdown:spB,MHD:calcMHD(),TMHD:calcTMHD(),indoorDensity:calcIndoorDensity(),outdoorDensity:calcOutdoorDensity(),roomDensity:calcRoomDensity(),HBR:calcHBR(),HBRHr:calcHBRHr(),ALR:calcALR(),ALRNight:calcALRNight(),ALRSimple:calcALRSimple(),totalMosq:aTotAll(),totIndoor:aTotIndoor(),totOutdoor:aTotOutdoor(),totNonCulex:aTotNonCulex(),totCulex:aTotCulex(),totalRooms:aTotRooms(),totalManHours:aManHours(),track:TrackRecorder.getTrack()};
 }
-function saveAdultSurvey(){TrackRecorder.stop();saveLastZone('a');const s=aSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(A_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('adult');_clearFormFields('a');activeSavedTab='adult';lastSavedId=s.id;lastSavedType='adult';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'adult');}
+function saveAdultSurvey(){TrackRecorder.stop();saveLastZone('a');const s=aSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(A_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('adult');_clearFormFields('a');activeSavedTab='adult';lastSavedId=s.id;lastSavedType='adult';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'adult');_resetFormAfterSave('adult');}
 
 
 /* ── CONTAINER TYPES ────────────────────────────────────── */
@@ -3495,7 +3542,7 @@ function lSnap(){
   const allCont=lS.houses.reduce((acc,h)=>{(h.contDetails||[]).forEach((c,i)=>{if(!acc[i])acc[i]={name:c.name,examined:0,positive:0};acc[i].examined+=c.examined;acc[i].positive+=c.positive;});return acc;},{});
   return {id:Date.now(),savedAt:new Date().toISOString(),savedBy:window._estUser?.username||'',appType:'larval',v:'2.0',date:lS.date,state:lS.state,district:lS.district,location:lS.location,zone:getZone('l'),workers:lS.workers,officers:lS.officers,lat:lS.lat,lng:lS.lng,houses:lS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),dipSites:lS.dipSites||[],containerSummary:Object.values(allCont),HI:calcHI(),CI:calcCI(),BI:calcBI(),PI:calcPI(),LD:calcLD(),PD:calcPD(),totalLarvae:lTotLarvae(),totalPupae:lTotPupae(),totalDips:lTotDips(),totalContainers:lTotContainers(),totalPositive:lTotPositive(),track:TrackRecorder.getTrack()};
 }
-function saveLarvalSurvey(){TrackRecorder.stop();saveLastZone('l');const s=lSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(L_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('larval');_clearFormFields('l');activeSavedTab='larval';lastSavedId=s.id;lastSavedType='larval';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'larval');}
+function saveLarvalSurvey(){TrackRecorder.stop();saveLastZone('l');const s=lSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(L_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('larval');_clearFormFields('l');activeSavedTab='larval';lastSavedId=s.id;lastSavedType='larval';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'larval');_resetFormAfterSave('larval');}
 
 /* ── CSV EXPORT ─────────────────────────────────────────── */
 function buildAdultCSV(s){
@@ -3731,7 +3778,7 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.6.7)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.6.8)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -3807,7 +3854,7 @@ function buildAdultXLSX(surveys,isCompiled){
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.6.7)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.6.8)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -4716,16 +4763,18 @@ function buildAdultKML(s){
   const hFld=allH.length?fld('Houses',false,allH.map(h=>pm(h.houseNo,(h.total||0)>0?'s-hpos':'s-hneg',`${h.houseNo}<br>Total: ${h.total||0}`,h.lat,h.lng)).join('\n')):'';
   return `<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n<name>EST Adult — ${escX(s.district||'Survey')} — ${s.date||''}</name>\n<description><![CDATA[EST v2.0 Adult Surveillance<br>Type: ${s.collType||''}<br>Houses: ${(s.houses||[]).length}<br>Total: ${s.totalMosq||0}]]></description>\n${styles}\n${pathFld}\n${startFld}\n${endFld}\n${hFld}\n</Document>\n</kml>`;
 }
-function deleteSaved(mod,id){if(!confirm('Delete this survey? Cannot be undone.'))return;const key=mod==='adult'?A_SAVED:L_SAVED;let surveys=[];try{surveys=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}surveys=surveys.filter(s=>String(s.id)!==String(id));try{localStorage.setItem(key,JSON.stringify(surveys));}catch(e){}(mod==='adult'?aSel:lSel).delete(String(id));renderSaved();showToast('Survey deleted','del');}
+function deleteSaved(mod,id){if(!confirm('Delete this survey? Cannot be undone.'))return;const key=mod==='adult'?A_SAVED:L_SAVED;let surveys=[];try{surveys=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}const rec=surveys.find(s=>String(s.id)===String(id));surveys=surveys.filter(s=>String(s.id)!==String(id));try{localStorage.setItem(key,JSON.stringify(surveys));}catch(e){}if(rec){_addTomb(id,_sbTable(rec,mod));_flushTombstones();}(mod==='adult'?aSel:lSel).delete(String(id));renderSaved();showToast('Survey deleted','del');}
 function resaveSurvey(mod,id){
   // Re-save updates the SAME record (no duplicate) and re-pushes it to the cloud
   const key=mod==='adult'?A_SAVED:L_SAVED;
   let saved=[];try{saved=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}
   const idx=saved.findIndex(s=>String(s.id)===String(id));
   if(idx<0)return;
-  saved[idx]={...saved[idx],savedAt:new Date().toISOString(),resaved:true,sbSynced:false};
+  // Clear ALL synced flags (incl. legacy `synced`/`syncedAt`) so the badge
+  // shows "Not synced" until the re-push actually lands in the cloud.
+  saved[idx]={...saved[idx],savedAt:new Date().toISOString(),resaved:true,sbSynced:false,synced:false,syncedAt:''};
   try{localStorage.setItem(key,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}
-  sbPushSurvey(saved[idx],mod).then(ok=>{if(ok)_markSbSynced(mod,id,saved[idx]);});
+  sbPushSurvey(saved[idx],mod).then(ok=>{if(ok){_markSbSynced(mod,id,saved[idx]);renderSaved();}});
   renderSaved();showToast('Survey re-saved ✓','check');
 }
 function exportSelCSV(mod){
@@ -5713,8 +5762,10 @@ function deleteManualSaved(id,type){
   if(!confirm('Delete this manual entry? Cannot be undone.'))return;
   const key=type==='adult'?MAN_A_SAVED:MAN_L_SAVED;
   let saved=[];try{saved=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}
+  const rec=saved.find(s=>String(s.id)===String(id));
   saved=saved.filter(s=>String(s.id)!==String(id));
   try{localStorage.setItem(key,JSON.stringify(saved));}catch(e){}
+  if(rec){_addTomb(id,_sbTable(rec,type));_flushTombstones();}
   manualSel.delete(String(id));
   renderSavedMod('manual');
   showToast('Entry deleted','del');
