@@ -28,7 +28,7 @@
   --touch:48px;--hh:60px;--nh:66px;--tr:.22s cubic-bezier(.4,0,.2,1);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;height:-webkit-fill-available;width:100%;overflow:hidden;}
+html,body{height:100%;height:-webkit-fill-available;width:100%;overflow:hidden;overscroll-behavior:none;}
 body{font-family:var(--sans);background:var(--primary);color:var(--os);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;touch-action:manipulation;}
 @supports(padding-bottom:env(safe-area-inset-bottom)){
   #app-nav{padding-bottom:calc(8px + env(safe-area-inset-bottom));}
@@ -340,7 +340,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 #focus-shield svg{opacity:.5;}
 #focus-shield p{color:rgba(255,255,255,.5);font-size:14px;font-weight:600;letter-spacing:.05em;}
 
-/* ═══ PREMIUM POLISH (v2.6.6) ═══ */
+/* ═══ PREMIUM POLISH (v2.6.7) ═══ */
 .launch-btn{background:linear-gradient(180deg,#46e09d,#3ecf8e) !important;color:#04140c !important;box-shadow:0 6px 22px rgba(62,207,142,.32),inset 0 1px 0 rgba(255,255,255,.35) !important;}
 .launch-btn:hover{filter:brightness(1.05);}
 .launch-btn:active{transform:scale(.985);}
@@ -353,7 +353,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);}
 ::-webkit-scrollbar-thumb{background:rgba(26,122,74,.25);border-radius:99px;}
 ::-webkit-scrollbar-thumb:hover{background:rgba(26,122,74,.45);}
 #app-header{border-bottom:1px solid rgba(26,122,74,.14);box-shadow:0 1px 12px rgba(10,40,25,.06);}
-/* — premium spacing rhythm (v2.6.6) — */
+/* — premium spacing rhythm (v2.6.7) — */
 .scroll-area{padding-left:16px;padding-right:16px;overflow-y:scroll;overflow-x:hidden;min-height:0;overscroll-behavior:contain;padding-bottom:calc(var(--nh) + 48px);scrollbar-gutter:stable;}
 .scroll-area > *{max-width:100%;}
 @media(min-width:900px){.scroll-area{max-width:900px;margin:0 auto;width:100%;}}
@@ -497,7 +497,7 @@ body.pmoff-xlsx .pm-xlsx,body.pmoff-pdf .pm-pdf,body.pmoff-email .pm-email,body.
         </svg>
       </div>
       <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub" id="dash-sub-ver">EST v2.6.6</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.6.7</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -543,7 +543,7 @@ body.pmoff-xlsx .pm-xlsx,body.pmoff-pdf .pm-pdf,body.pmoff-email .pm-email,body.
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About <span id="dash-about-ver">EST v2.6.6</span>
+      About <span id="dash-about-ver">EST v2.6.7</span>
     </button>
     <button onclick="estSignOut()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;background:rgba(248,113,113,.1);border:1.5px solid rgba(248,113,113,.35);border-radius:var(--rxl);color:#fca5a5;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -1869,6 +1869,8 @@ function _isSynced(s){ return !!(s && (s.sbSynced || s.synced)); }
 // Safe sync-date label — returns '' for a missing/invalid timestamp so the badge
 // never shows "Invalid Date".
 function _fmtSyncDate(v){ if(!v)return ''; const d=new Date(v); return isNaN(d.getTime())?'':d.toLocaleDateString('en-IN'); }
+// Sync date + time, e.g. "21/08/2026, 11:17 am" — blank if missing/invalid.
+function _fmtSyncDT(v){ if(!v)return ''; const d=new Date(v); if(isNaN(d.getTime()))return ''; return d.toLocaleDateString('en-IN')+', '+d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}); }
 // Set the local "synced" timestamp flag in whichever store a record lives in,
 // so the badge shows a real date after a cloud sync.
 function _stampSynced(key,id){
@@ -1915,7 +1917,7 @@ function _markSbSynced(mod,id,sample){
   try{
     const arr=JSON.parse(localStorage.getItem(key)||'[]');
     const i=arr.findIndex(x=>String(x.id)===String(id));
-    if(i>-1){arr[i].sbSynced=true;localStorage.setItem(key,JSON.stringify(arr));}
+    if(i>-1){arr[i].sbSynced=true;arr[i].syncedAt=new Date().toISOString();localStorage.setItem(key,JSON.stringify(arr));}
   }catch(e){}
 }
 let _sbSyncing=false;
@@ -1969,6 +1971,9 @@ async function sbPullMine(){
       rows.forEach(row=>{const d=row.data||{};const id=String(d.id||row.local_id||'');if(id)cloud.set(id,d);});
       const localIds=new Set(arr.map(x=>String(x.id)));
       // 1) add new + update changed cloud records
+      // Compare ignoring local-only sync bookkeeping so identical records
+      // don't register as "changed" every pull.
+      const _norm=o=>{const c={...o};delete c.sbSynced;delete c.synced;delete c.syncedAt;return JSON.stringify(c);};
       cloud.forEach((d,id)=>{
         if(!d.id)return;
         const idx=arr.findIndex(x=>String(x.id)===id);
@@ -1976,9 +1981,9 @@ async function sbPullMine(){
         else{
           const cur=arr[idx];
           // Only overwrite records that came from the cloud (synced), so
-          // unsynced local edits aren't clobbered
-          if(cur.sbSynced&&JSON.stringify({...cur,sbSynced:0,synced:0})!==JSON.stringify({...d,sbSynced:0,synced:0})){
-            arr[idx]={...d,sbSynced:true,synced:true};changedTotal++;
+          // unsynced local edits aren't clobbered. Preserve the local sync time.
+          if(cur.sbSynced&&_norm(cur)!==_norm(d)){
+            arr[idx]={...d,sbSynced:true,synced:true,syncedAt:cur.syncedAt||d.syncedAt};changedTotal++;
           }
         }
       });
@@ -2253,7 +2258,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.6.6';
+const APP_VER='2.6.7';
 /* Compact human-readable Survey ID: A-260531-1437 (type + YYMMDD + HHMM) */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -3240,7 +3245,7 @@ function aSnap(){
   const collPeriodSnap=aS.days>0&&aS.nights>0?'Day & Night Collection':aS.days>0?'Day Collection':aS.nights>0?'Night Collection':'';
   return {id:Date.now(),savedAt:new Date().toISOString(),savedBy:window._estUser?.username||'',appType:'adult',v:'2.0',collType:aS.collType,date:aS.date,state:(aS.state||''),district:aS.district,location:aS.location,zone:getZone('a'),workers:aS.workers,officers:aS.officers,collectors:aS.collectors,days:aS.days,nights:aS.nights,collectionPeriod:collPeriodSnap,lat:aS.lat,lng:aS.lng,houses:aS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),speciesBreakdown:spB,MHD:calcMHD(),TMHD:calcTMHD(),indoorDensity:calcIndoorDensity(),outdoorDensity:calcOutdoorDensity(),roomDensity:calcRoomDensity(),HBR:calcHBR(),HBRHr:calcHBRHr(),ALR:calcALR(),ALRNight:calcALRNight(),ALRSimple:calcALRSimple(),totalMosq:aTotAll(),totIndoor:aTotIndoor(),totOutdoor:aTotOutdoor(),totNonCulex:aTotNonCulex(),totCulex:aTotCulex(),totalRooms:aTotRooms(),totalManHours:aManHours(),track:TrackRecorder.getTrack()};
 }
-function saveAdultSurvey(){TrackRecorder.stop();saveLastZone('a');const s=aSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(A_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('adult');activeSavedTab='adult';lastSavedId=s.id;lastSavedType='adult';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'adult');}
+function saveAdultSurvey(){TrackRecorder.stop();saveLastZone('a');const s=aSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(A_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('adult');_clearFormFields('a');activeSavedTab='adult';lastSavedId=s.id;lastSavedType='adult';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'adult');}
 
 
 /* ── CONTAINER TYPES ────────────────────────────────────── */
@@ -3490,7 +3495,7 @@ function lSnap(){
   const allCont=lS.houses.reduce((acc,h)=>{(h.contDetails||[]).forEach((c,i)=>{if(!acc[i])acc[i]={name:c.name,examined:0,positive:0};acc[i].examined+=c.examined;acc[i].positive+=c.positive;});return acc;},{});
   return {id:Date.now(),savedAt:new Date().toISOString(),savedBy:window._estUser?.username||'',appType:'larval',v:'2.0',date:lS.date,state:lS.state,district:lS.district,location:lS.location,zone:getZone('l'),workers:lS.workers,officers:lS.officers,lat:lS.lat,lng:lS.lng,houses:lS.houses.map(h=>({...h,counts:h.counts.map(r=>[...r])})),dipSites:lS.dipSites||[],containerSummary:Object.values(allCont),HI:calcHI(),CI:calcCI(),BI:calcBI(),PI:calcPI(),LD:calcLD(),PD:calcPD(),totalLarvae:lTotLarvae(),totalPupae:lTotPupae(),totalDips:lTotDips(),totalContainers:lTotContainers(),totalPositive:lTotPositive(),track:TrackRecorder.getTrack()};
 }
-function saveLarvalSurvey(){TrackRecorder.stop();saveLastZone('l');const s=lSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(L_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('larval');activeSavedTab='larval';lastSavedId=s.id;lastSavedType='larval';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'larval');}
+function saveLarvalSurvey(){TrackRecorder.stop();saveLastZone('l');const s=lSnap();let saved=[];try{saved=JSON.parse(localStorage.getItem(L_SAVED)||'[]');}catch(e){}saved.unshift(s);try{localStorage.setItem(L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}clearDraft('larval');_clearFormFields('l');activeSavedTab='larval';lastSavedId=s.id;lastSavedType='larval';document.getElementById('success-modal').classList.add('open');ghAutoSync(s,'larval');}
 
 /* ── CSV EXPORT ─────────────────────────────────────────── */
 function buildAdultCSV(s){
@@ -3726,7 +3731,7 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.6.6)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.6.7)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -3802,7 +3807,7 @@ function buildAdultXLSX(surveys,isCompiled){
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.6.6)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.6.7)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -4467,7 +4472,7 @@ function renderSavedMod(mod){
       const meta=(s.state||'')+(s.state&&s.district?' · ':'')+( s.district||'')+(s.date?' · '+s.date:'')+( savedTime?' · '+savedTime:'');
       const typeTag=s._manType==='adult'?'<span style="font-size:9px;background:rgba(62,207,142,.15);color:var(--primary);padding:1px 5px;border-radius:8px;font-weight:700;">ADULT</span>':'<span style="font-size:9px;background:rgba(33,150,243,.13);color:var(--larval);padding:1px 5px;border-radius:8px;font-weight:700;">LARVAL</span>';
       const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');div.dataset.sid=String(s.id);
-      div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="manualSel[this.checked?'add':'delete']('${s.id}');renderSavedMod('manual');"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${idx+1}</span>${typeTag}<div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${_isSynced(s)?'ok':'pend'}">${mkSvg(_isSynced(s)?'check':'warn',13)} ${_isSynced(s)?'Synced to cloud':'Not synced'}</div><div class="sit-acts"><button class="sit-act" onclick="editManualEntry(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('csv',13,'#ff9800')} Edit</button><button class="sit-act pm-xlsx" onclick="exportManualOne(${s.id},'${s._manType}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act pm-pdf" onclick="exportManualOnePDF(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('pdf',13,'#ff9800')} PDF</button><button class="sit-act" onclick="syncManualOne(${s.id},'${s._manType}')" style="${_isSynced(s)?'color:var(--osv);':'color:var(--primary);font-weight:700;'}">${mkSvg('check',13)} ${_isSynced(s)?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteManualSaved(${s.id},'${s._manType}')">${mkSvg('del',13)} Del</button></div>`;
+      div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="manualSel[this.checked?'add':'delete']('${s.id}');renderSavedMod('manual');"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${idx+1}</span>${typeTag}<div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${_isSynced(s)?'ok':'pend'}">${mkSvg(_isSynced(s)?'check':'warn',13)} ${_isSynced(s)?('Synced'+(_fmtSyncDT(s.syncedAt)?' '+_fmtSyncDT(s.syncedAt):' to cloud')):'Not synced'}</div><div class="sit-acts"><button class="sit-act" onclick="editManualEntry(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('csv',13,'#ff9800')} Edit</button><button class="sit-act pm-xlsx" onclick="exportManualOne(${s.id},'${s._manType}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act pm-pdf" onclick="exportManualOnePDF(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('pdf',13,'#ff9800')} PDF</button><button class="sit-act" onclick="syncManualOne(${s.id},'${s._manType}')" style="${_isSynced(s)?'color:var(--osv);':'color:var(--primary);font-weight:700;'}">${mkSvg('check',13)} ${_isSynced(s)?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteManualSaved(${s.id},'${s._manType}')">${mkSvg('del',13)} Del</button></div>`;
       list.appendChild(div);
     });
     return;
@@ -4488,7 +4493,7 @@ function renderSavedMod(mod){
     const meta=(s.state||'')+(s.state&&s.district?' · ':'')+( s.district||'')+(s.date?' · '+s.date:'')+( savedTime?' · '+savedTime:'');
     const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');div.dataset.sid=String(s.id);
     const serialNo=surveyIdx+1;
-    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${_isSynced(s)?'ok':'pend'}">${mkSvg(_isSynced(s)?'check':'warn',13)} ${_isSynced(s)?('Synced'+(_fmtSyncDate(s.syncedAt)?' '+_fmtSyncDate(s.syncedAt):' to cloud')):'Not synced'}</div><div class="sit-views"><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','survey')">Survey</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','collect')">Collect</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','review')">Review</button></div><div class="sit-acts"><button class="sit-act pm-xlsx" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act pm-pdf" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act pm-email" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act pm-wa" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act pm-map" onclick="showSavedMap('${mod}','${s.id}')" style="${mod==='adult'?'':'border-color:rgba(21,101,192,.3);color:var(--larval);'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="${mod==='adult'?'var(--primary)':'var(--larval)'}"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg> Map</button><button class="sit-act" onclick="resaveSurvey('${mod}','${s.id}')" style="border-color:rgba(100,100,100,.3);color:#555;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg> Resave</button><button class="sit-sync-btn sit-act" onclick="syncOneSurvey('${mod}','${s.id}')" style="${_isSynced(s)?'border-color:rgba(0,107,92,.25);color:var(--osv);':'border-color:rgba(0,107,92,.6);color:var(--primary);font-weight:700;'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg> ${_isSynced(s)?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
+    div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleSel('${mod}','${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${serialNo}</span><div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${_isSynced(s)?'ok':'pend'}">${mkSvg(_isSynced(s)?'check':'warn',13)} ${_isSynced(s)?('Synced'+(_fmtSyncDT(s.syncedAt)?' '+_fmtSyncDT(s.syncedAt):' to cloud')):'Not synced'}</div><div class="sit-views"><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','survey')">Survey</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','collect')">Collect</button><button class="sit-vbtn" onclick="viewSavedSurvey('${mod}','${s.id}','review')">Review</button></div><div class="sit-acts"><button class="sit-act pm-xlsx" onclick="exportOneSavedCSV('${mod}','${s.id}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act pm-pdf" onclick="exportOneSavedPDF('${mod}','${s.id}')">${mkSvg('pdf',13,'var(--primary)')} PDF</button><button class="sit-act pm-email" style="border-color:rgba(0,107,92,.3);color:var(--primary);" onclick="openShareEmail('${mod}','${s.id}')">${mkSvg('check',13,'var(--primary)')} Email</button><button class="sit-act pm-wa" onclick="shareWASaved('${mod}','${s.id}')">${mkSvg('wa',13,'#25d366')} WA</button><button class="sit-act pm-map" onclick="showSavedMap('${mod}','${s.id}')" style="${mod==='adult'?'':'border-color:rgba(21,101,192,.3);color:var(--larval);'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="${mod==='adult'?'var(--primary)':'var(--larval)'}"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg> Map</button><button class="sit-act" onclick="resaveSurvey('${mod}','${s.id}')" style="border-color:rgba(100,100,100,.3);color:#555;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg> Resave</button><button class="sit-sync-btn sit-act" onclick="syncOneSurvey('${mod}','${s.id}')" style="${_isSynced(s)?'border-color:rgba(0,107,92,.25);color:var(--osv);':'border-color:rgba(0,107,92,.6);color:var(--primary);font-weight:700;'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg> ${_isSynced(s)?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteSaved('${mod}','${s.id}')">${mkSvg('del',13)} Del</button></div>`;
     list.appendChild(div);
   });
 }
@@ -4918,9 +4923,67 @@ function doShareEmail(type){
 function syncAll(){ ghSyncAll(); }
 
 /* ── INIT ───────────────────────────────────────────────── */
+/* ── IN-PROGRESS FORM PERSISTENCE ─────────────────────────────
+   The top-of-form fields (date, location, workers, etc.) live only in the
+   inputs until a survey is saved, so a reload used to wipe them. Mirror them
+   to localStorage on every keystroke and restore on load so a reload/refresh
+   never resets in-progress entry to zero. */
+const _FF_KEY='est_form_inprogress';
+const _FORM_FIELDS={
+  a :['a-date','a-state','a-district','a-zone','a-zone-other','a-location','a-workers','a-officers'],
+  l :['l-date','l-state','l-district','l-zone','l-zone-other','l-location','l-workers','l-officers'],
+  ma:['ma-date','ma-date-to','ma-state','ma-district','ma-zone','ma-zone-other','ma-location','ma-workers','ma-officers'],
+  ml:['ml-date','ml-date-to','ml-state','ml-district','ml-zone','ml-zone-other','ml-location','ml-workers','ml-officers','ml-remarks']
+};
+const _ALL_FF=Object.values(_FORM_FIELDS).flat();
+function _persistFormFields(){
+  const o={};
+  _ALL_FF.forEach(id=>{const el=document.getElementById(id);if(el&&el.value&&el.value.trim())o[id]=el.value;});
+  try{ Object.keys(o).length?localStorage.setItem(_FF_KEY,JSON.stringify(o)):localStorage.removeItem(_FF_KEY); }catch(e){}
+}
+function _restoreFormFields(){
+  let o=null;try{o=JSON.parse(localStorage.getItem(_FF_KEY)||'null');}catch(e){}
+  if(!o)return;
+  // State drives the district option list, so ensure states exist, set the saved
+  // state, then rebuild the district options before restoring the rest.
+  ['a','l','ma','ml'].forEach(p=>{
+    const stId=p+'-state',st=document.getElementById(stId);
+    if(!st)return;
+    if(st.options.length<=1&&typeof populateStates==='function')populateStates(stId);
+    if(o[stId])st.value=o[stId];
+    if(typeof populateDistricts==='function')populateDistricts(stId,p+'-district');
+  });
+  // Restore every saved field (override defaults like today's date).
+  Object.entries(o).forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.value=v;});
+  // Reflect restored zones: show the "Other" box and re-apply zone→district lock.
+  ['a','l','ma','ml'].forEach(p=>{
+    const z=document.getElementById(p+'-zone'),oth=document.getElementById(p+'-zone-other');
+    if(z&&oth)oth.style.display=z.value==='Other'?'block':'none';
+    if(z&&typeof _syncDistrictFromZone==='function')_syncDistrictFromZone(p,z.value==='Other'?'':z.value);
+  });
+}
+function _clearFormFields(prefix){
+  // Drop just this form's persisted fields (blob is shared across all forms),
+  // so saving one form never wipes another form's in-progress entry.
+  let o=null;try{o=JSON.parse(localStorage.getItem(_FF_KEY)||'null');}catch(e){}
+  if(!o)return;
+  (prefix&&_FORM_FIELDS[prefix]?_FORM_FIELDS[prefix]:_ALL_FF).forEach(id=>{delete o[id];});
+  try{ Object.keys(o).length?localStorage.setItem(_FF_KEY,JSON.stringify(o)):localStorage.removeItem(_FF_KEY); }catch(e){}
+}
+// Attach input listeners once the DOM is ready.
+document.addEventListener('DOMContentLoaded',()=>{
+  _ALL_FF.forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',_persistFormFields);});
+});
+
+// Anything typed in a detail form counts as in-progress data worth guarding.
+function _hasInProgressData(){
+  if((aS&&aS.houses&&aS.houses.length>0)||(lS&&lS.houses&&lS.houses.length>0))return true;
+  if(lS&&lS.dipSites&&lS.dipSites.length>0)return true;
+  return ['a-location','l-location','ma-location','ml-location','a-workers','l-workers'].some(id=>{const el=document.getElementById(id);return el&&el.value&&el.value.trim();});
+}
 window.addEventListener('beforeunload',(e)=>{
-  if(aS.houses.length>0||lS.houses.length>0){
-    e.preventDefault();e.returnValue='Survey in progress. Reload will not lose saved data.';return e.returnValue;
+  if(_hasInProgressData()){
+    e.preventDefault();e.returnValue='Survey in progress — leave or reload this page?';return e.returnValue;
   }
 });
 document.addEventListener('DOMContentLoaded',()=>{
@@ -4937,8 +5000,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   buildZone('a');buildZone('l');buildZone('ma');buildZone('ml');
   const _hlcw=document.getElementById('hlc-warn');if(_hlcw)_hlcw.style.display='none';
   const _nrw=document.getElementById('a-nights-row');if(_nrw)_nrw.style.display='block';
-  // Populate India states/UTs in both survey forms
-  setTimeout(()=>{populateStates('a-state');populateStates('l-state');},100);
+  // Populate India states/UTs in both survey forms, then restore any
+  // in-progress entry so a reload/refresh never resets the form to zero.
+  setTimeout(()=>{populateStates('a-state');populateStates('l-state');try{_restoreFormFields();}catch(e){}},100);
   // Set version strings in UI
   const _vStr='EST v'+APP_VER;
   const _sv=document.getElementById('splash-ver');if(_sv)_sv.textContent=_vStr;
@@ -5365,6 +5429,7 @@ function saveManualAdult(){
   ghPushManualSurvey(survey,'adult').then(ok=>{
     if(ok){saved=saved.map(s=>s.id===survey.id?{...s,synced:true}:s);try{localStorage.setItem(MAN_A_SAVED,JSON.stringify(saved));}catch(e){}}
   });
+  _clearFormFields('ma');
   if(!editId)try{localStorage.setItem('est_ma_last',JSON.stringify({location,workers,officers:(document.getElementById('ma-officers')?.value||'').trim()}));}catch(e){}
   showToast(editId?'Manual adult updated ✓':'Adult manual survey saved ✓','check');
   showScreen('manual-entry');
@@ -5466,6 +5531,7 @@ function saveManualLarval(){
   ghPushManualSurvey(survey,'larval').then(ok=>{
     if(ok){saved=saved.map(s=>s.id===survey.id?{...s,synced:true}:s);try{localStorage.setItem(MAN_L_SAVED,JSON.stringify(saved));}catch(e){}}
   });
+  _clearFormFields('ml');
   if(!editIdL)try{localStorage.setItem('est_ml_last',JSON.stringify({location,workers,officers:(document.getElementById('ml-officers')?.value||'').trim()}));}catch(e){}
   showToast(editIdL?'Manual larval updated ✓':'Larval manual survey saved ✓','check');
   showScreen('manual-entry');
