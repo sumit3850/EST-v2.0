@@ -314,7 +314,7 @@ table thead th{background:rgba(62,207,142,.05);}
 [data-theme="light"] .tb-btn.primary{box-shadow:0 2px 8px rgba(23,160,94,.35),inset 0 1px 0 rgba(255,255,255,.4);}
 [data-theme="light"] .sidebar{background:linear-gradient(180deg,#0d1712,#0a120c);}
 
-/* ═══ PREMIUM POLISH (v2.6.8) ═══ */
+/* ═══ PREMIUM POLISH (v2.6.9) ═══ */
 .kpi-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
 .kpi-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 0 1px var(--bdr2);}
 .nav-item.active{background:linear-gradient(90deg,rgba(62,207,142,.18),rgba(62,207,142,.06));box-shadow:inset 3px 0 0 var(--teal),0 0 18px rgba(62,207,142,.06);}
@@ -345,7 +345,7 @@ table tbody tr:hover td{background:rgba(62,207,142,.045);}
 .status-bar{border-radius:0;font-weight:600;}
 .note-box{border-radius:12px;}
 select,input[type="date"]{border-radius:9px;}
-/* — premium mobile spacing (v2.6.8) — */
+/* — premium mobile spacing (v2.6.9) — */
 @media(max-width:680px){
   .topbar{padding:8px 12px;gap:8px;}
   .tb-btn{height:36px;padding:0 11px;font-size:11.5px;}
@@ -804,7 +804,7 @@ tr:hover td{background:var(--teal-lt);}
     </div>
     <div class="li-chips"><span>WHO-standard indices</span><span>offline-first field sync</span><span>admin-only access</span></div>
     <div class="li-ver" id="login-ver-intro" style="margin-top:22px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:#5d7368;letter-spacing:.05em;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-      <span>EST Dashboard v2.6.8</span>
+      <span>EST Dashboard v2.6.9</span>
       <span style="opacity:.4;">│</span>
       <span style="display:inline-flex;align-items:center;gap:6px;"><span id="login-sb-dot" style="width:6px;height:6px;border-radius:50%;background:#5d7368;"></span><span id="login-sb-txt">supabase: checking…</span></span>
     </div>
@@ -825,7 +825,7 @@ tr:hover td{background:var(--teal-lt);}
         </svg>
       </div>
       <h1>EST Database</h1>
-      <p>Admin Dashboard · v2.6.8</p>
+      <p>Admin Dashboard · v2.6.9</p>
     </div>
     <div class="lc">
       <label class="lf-label">Username</label>
@@ -866,7 +866,7 @@ tr:hover td{background:var(--teal-lt);}
         <line x1="55" y1="27" x2="66" y2="14" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
       </svg>
     </div>
-    <div class="sb-title"><h2>EST Database</h2><p>v2.6.8 · A&amp;N Entomological Surveillance</p></div>
+    <div class="sb-title"><h2>EST Database</h2><p>v2.6.9 · A&amp;N Entomological Surveillance</p></div>
   </div>
   <!-- Nav -->
   <nav class="sb-nav">
@@ -933,7 +933,7 @@ tr:hover td{background:var(--teal-lt);}
       <div class="breadcrumb"><span id="bc-main">Overview</span></div>
     </div>
     <div class="topbar-right">
-      <span id="tb-ver" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--txt2);background:var(--teal-lt);border:1px solid var(--bdr2);border-radius:99px;padding:4px 11px;white-space:nowrap;">v2.6.8</span>
+      <span id="tb-ver" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--txt2);background:var(--teal-lt);border:1px solid var(--bdr2);border-radius:99px;padding:4px 11px;white-space:nowrap;">v2.6.9</span>
       <button class="tb-icon-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">☀</button>
       <button class="install-btn" id="install-btn" onclick="installDashApp()" title="Install EST Dashboard as app">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -1050,20 +1050,24 @@ tr:hover td{background:var(--teal-lt);}
         <div class="section-head-actions">
           <button class="tb-btn ghost" onclick="selectAll('adult',true)">☑ All</button>
           <button class="tb-btn ghost" onclick="selectAll('adult',false)">☐ Clear</button>
+          <button class="tb-btn primary" onclick="openCompile('adult')">🧮 <span class="tb-lbl">Compile</span></button>
           <button class="tb-btn blue" onclick="exportSelected('adult')">⬇ <span class="tb-lbl">Export Selected</span></button>
           <button class="tb-btn secondary" onclick="exportFiltered('adult')">⬇ <span class="tb-lbl">Export Filtered</span></button>
           <button class="tb-btn danger" onclick="deleteSelected('adult')">🗑 <span class="tb-lbl">Delete Selected</span></button>
         </div>
       </div>
       <div class="panel-toolbar">
-        <input class="pt-search" id="search-adult" placeholder="🔍  Search location, district, officer…" oninput="_deb(filterTable,150)('adult')">
+        <select class="pt-select" id="f-adult-user" onchange="filterTable('adult')"><option value="">👤 All Surveyors</option></select>
+        <select class="pt-select" id="f-adult-district" onchange="filterTable('adult')"><option value="">🗺 All Districts</option></select>
+        <select class="pt-select" id="f-adult-zone" onchange="filterTable('adult')"><option value="">📍 All Zones</option></select>
+        <select class="pt-select" id="f-adult-loc" onchange="filterTable('adult')"><option value="">🏘 All Locations</option></select>
         <select class="pt-select" id="filter-type" onchange="filterTable('adult')">
           <option value="">All Types</option><option value="resting">Resting</option><option value="hlc">HLC</option>
         </select>
         <div class="date-range-group">
           <label>From</label><input type="date" class="pt-select" id="filter-adult-from" onchange="filterTable('adult')">
           <label>To</label><input type="date" class="pt-select" id="filter-adult-to" onchange="filterTable('adult')">
-          <button class="pt-btn ghost" onclick="resetDateFilter('adult')" title="Clear date range" style="height:34px;padding:0 10px;font-size:13px;">✕</button>
+          <button class="pt-btn ghost" onclick="resetDateFilter('adult')" title="Clear all filters" style="height:34px;padding:0 10px;font-size:13px;">✕</button>
         </div>
       </div>
       <div class="tbl-outer">
@@ -1090,17 +1094,21 @@ tr:hover td{background:var(--teal-lt);}
         <div class="section-head-actions">
           <button class="tb-btn ghost" onclick="selectAll('larval',true)">☑ All</button>
           <button class="tb-btn ghost" onclick="selectAll('larval',false)">☐ Clear</button>
+          <button class="tb-btn primary" onclick="openCompile('larval')">🧮 <span class="tb-lbl">Compile</span></button>
           <button class="tb-btn blue" onclick="exportSelected('larval')">⬇ <span class="tb-lbl">Export Selected</span></button>
           <button class="tb-btn secondary" onclick="exportFiltered('larval')">⬇ <span class="tb-lbl">Export Filtered</span></button>
           <button class="tb-btn danger" onclick="deleteSelected('larval')">🗑 <span class="tb-lbl">Delete Selected</span></button>
         </div>
       </div>
       <div class="panel-toolbar">
-        <input class="pt-search" id="search-larval" placeholder="🔍  Search location, district, officer…" oninput="_deb(filterTable,150)('larval')">
+        <select class="pt-select" id="f-larval-user" onchange="filterTable('larval')"><option value="">👤 All Surveyors</option></select>
+        <select class="pt-select" id="f-larval-district" onchange="filterTable('larval')"><option value="">🗺 All Districts</option></select>
+        <select class="pt-select" id="f-larval-zone" onchange="filterTable('larval')"><option value="">📍 All Zones</option></select>
+        <select class="pt-select" id="f-larval-loc" onchange="filterTable('larval')"><option value="">🏘 All Locations</option></select>
         <div class="date-range-group">
           <label>From</label><input type="date" class="pt-select" id="filter-larval-from" onchange="filterTable('larval')">
           <label>To</label><input type="date" class="pt-select" id="filter-larval-to" onchange="filterTable('larval')">
-          <button class="pt-btn ghost" onclick="resetDateFilter('larval')" title="Clear date range" style="height:34px;padding:0 10px;font-size:13px;">✕</button>
+          <button class="pt-btn ghost" onclick="resetDateFilter('larval')" title="Clear all filters" style="height:34px;padding:0 10px;font-size:13px;">✕</button>
         </div>
       </div>
       <div class="tbl-outer">
@@ -1547,11 +1555,14 @@ tr:hover td{background:var(--teal-lt);}
         </div>
       </div>
       <div class="panel-toolbar">
-        <input class="pt-search" id="search-manual-adult" placeholder="🔍  Search location, district, officer…" oninput="_deb(filterManual,150)('adult')">
+        <select class="pt-select" id="f-manadult-user" onchange="filterManual('adult')"><option value="">👤 All Surveyors</option></select>
+        <select class="pt-select" id="f-manadult-district" onchange="filterManual('adult')"><option value="">🗺 All Districts</option></select>
+        <select class="pt-select" id="f-manadult-zone" onchange="filterManual('adult')"><option value="">📍 All Zones</option></select>
+        <select class="pt-select" id="f-manadult-loc" onchange="filterManual('adult')"><option value="">🏘 All Locations</option></select>
         <div class="date-range-group">
           <label>From</label><input type="date" class="pt-select" id="filter-manadult-from" onchange="filterManual('adult')">
           <label>To</label><input type="date" class="pt-select" id="filter-manadult-to" onchange="filterManual('adult')">
-          <button class="pt-btn ghost" onclick="resetManualFilter('adult')" title="Clear date range" style="height:34px;padding:0 10px;font-size:13px;">✕</button>
+          <button class="pt-btn ghost" onclick="resetManualFilter('adult')" title="Clear all filters" style="height:34px;padding:0 10px;font-size:13px;">✕</button>
         </div>
       </div>
       <div class="tbl-outer">
@@ -1582,11 +1593,14 @@ tr:hover td{background:var(--teal-lt);}
         </div>
       </div>
       <div class="panel-toolbar">
-        <input class="pt-search" id="search-manual-larval" placeholder="🔍  Search location, district, officer…" oninput="_deb(filterManual,150)('larval')">
+        <select class="pt-select" id="f-manlarval-user" onchange="filterManual('larval')"><option value="">👤 All Surveyors</option></select>
+        <select class="pt-select" id="f-manlarval-district" onchange="filterManual('larval')"><option value="">🗺 All Districts</option></select>
+        <select class="pt-select" id="f-manlarval-zone" onchange="filterManual('larval')"><option value="">📍 All Zones</option></select>
+        <select class="pt-select" id="f-manlarval-loc" onchange="filterManual('larval')"><option value="">🏘 All Locations</option></select>
         <div class="date-range-group">
           <label>From</label><input type="date" class="pt-select" id="filter-manlarval-from" onchange="filterManual('larval')">
           <label>To</label><input type="date" class="pt-select" id="filter-manlarval-to" onchange="filterManual('larval')">
-          <button class="pt-btn ghost" onclick="resetManualFilter('larval')" title="Clear date range" style="height:34px;padding:0 10px;font-size:13px;">✕</button>
+          <button class="pt-btn ghost" onclick="resetManualFilter('larval')" title="Clear all filters" style="height:34px;padding:0 10px;font-size:13px;">✕</button>
         </div>
       </div>
       <div class="tbl-outer">
@@ -1609,7 +1623,7 @@ tr:hover td{background:var(--teal-lt);}
 
   </div><!-- .main-content -->
   <footer class="dash-footer">
-    <span>EST Dashboard v2.6.8</span><span class="dfsep">│</span>
+    <span>EST Dashboard v2.6.9</span><span class="dfsep">│</span>
     <a href="https://estweb-git-main-explorer3850.vercel.app/" target="_blank" rel="noopener">website ↗</a><span class="dfsep">│</span>
     <span class="df-pill"><span id="df-sb-dot" class="df-dot"></span><span id="df-sb">supabase: checking…</span></span><span class="dfsep">│</span>
     <span id="df-net">network: —</span><span class="dfsep">│</span>
@@ -1622,7 +1636,7 @@ tr:hover td{background:var(--teal-lt);}
 <div id="manual-edit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:1001;align-items:center;justify-content:center;padding:16px;">
   <div style="background:var(--sf);border-radius:14px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.7);">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--bdr);background:var(--sf2);border-radius:14px 14px 0 0;position:sticky;top:0;z-index:1;">
-      <div style="font-size:14px;font-weight:700;color:var(--txt);">✏ Edit Manual Survey</div>
+      <div class="me-title" style="font-size:14px;font-weight:700;color:var(--txt);">✏ Edit Manual Survey</div>
       <button onclick="document.getElementById('manual-edit-modal').style.display='none'" style="background:rgba(255,255,255,.1);border:1px solid var(--bdr);color:var(--txt2);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:16px;">✕</button>
     </div>
     <div id="manual-edit-form" style="padding:16px 18px;">
@@ -1720,6 +1734,33 @@ tr:hover td{background:var(--teal-lt);}
       <div style="display:flex;gap:8px;justify-content:flex-end;padding-top:12px;border-top:1px solid var(--bdr);">
         <button onclick="document.getElementById('survey-edit-modal').style.display='none'" class="tb-btn ghost">Cancel</button>
         <button onclick="saveSurveyEdit()" class="tb-btn primary">💾 Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Compile Modal -->
+<div id="compile-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:1001;align-items:center;justify-content:center;padding:16px;">
+  <div style="background:var(--sf);border-radius:14px;width:100%;max-width:620px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.7);">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--bdr);background:var(--sf2);border-radius:14px 14px 0 0;position:sticky;top:0;z-index:1;">
+      <div class="cmp-title" style="font-size:14px;font-weight:700;color:var(--txt);">🧮 Compile Records</div>
+      <button onclick="document.getElementById('compile-modal').style.display='none'" style="background:rgba(255,255,255,.1);border:1px solid var(--bdr);color:var(--txt2);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:16px;">✕</button>
+    </div>
+    <div style="padding:16px 18px;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;padding:8px 10px;background:rgba(0,0,0,.12);border-radius:6px;border-left:3px solid var(--teal);">Combine multiple field + manual records into one aggregated station report. Totals are summed and HI / CI / BI / PI are recalculated across all matching records.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+        <div><label class="sf-label">Date From</label><input type="date" id="cmp-from" class="sf-input" onchange="runCompile()"></div>
+        <div><label class="sf-label">Date To</label><input type="date" id="cmp-to" class="sf-input" onchange="runCompile()"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+        <div><label class="sf-label">Location</label><select id="cmp-loc" class="sf-input" onchange="runCompile()"><option value="">All locations</option></select></div>
+        <div><label class="sf-label">Zone</label><select id="cmp-zone" class="sf-input" onchange="runCompile()"><option value="">All zones</option></select></div>
+      </div>
+      <div id="cmp-result"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:12px;border-top:1px solid var(--bdr);">
+        <button onclick="document.getElementById('compile-modal').style.display='none'" class="tb-btn ghost">Close</button>
+        <button id="cmp-xlsx-btn" onclick="exportCompiled('xlsx')" class="tb-btn blue" disabled>⬇ XLSX</button>
+        <button id="cmp-pdf-btn" onclick="exportCompiled('pdf')" class="tb-btn secondary" disabled>⬇ PDF</button>
       </div>
     </div>
   </div>
@@ -1943,7 +1984,7 @@ async function loadAll(){
     adultF=[...allAdult];larvalF=[...allLarval];manualAdultF=[...allManualAdult];manualLarvalF=[...allManualLarval];
     const cfg=await ghGet('config.json').then(d=>JSON.parse(b64d(d.content))).catch(()=>null);
     if(cfg)usersCfg=cfg.credentials||[];
-    updateStats();renderAdult();renderLarval();renderManualAdult();renderManualLarval();renderUsers();renderAlerts();buildMapCarousel();loadSignups().catch(()=>{});
+    updateStats();renderAdult();renderLarval();renderManualAdult();renderManualLarval();populateFilters();renderUsers();renderAlerts();buildMapCarousel();loadSignups().catch(()=>{});
     pill.textContent='Connected ✓ ('+allAdult.length+'A + '+allLarval.length+'L'+(allManualAdult.length+allManualLarval.length?' + '+(allManualAdult.length+allManualLarval.length)+' Manual':'')+')';pill.classList.add('ok');
     document.getElementById('st-sync').textContent=new Date().toLocaleTimeString();_dashFooterSync();
     const _dc=document.getElementById('ov-date-chip');if(_dc)_dc.textContent=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
@@ -2223,7 +2264,7 @@ function restoreData(input){
       allManualAdult=data.manualAdult||[];
       allManualLarval=data.manualLarval||[];
       adultF=[...allAdult];larvalF=[...allLarval];manualAdultF=[...allManualAdult];manualLarvalF=[...allManualLarval];
-      updateStats();renderAdult();renderLarval();renderManualAdult();renderManualLarval();renderUsers();renderAlerts();
+      updateStats();renderAdult();renderLarval();renderManualAdult();renderManualLarval();populateFilters();renderUsers();renderAlerts();
       const total=allAdult.length+allLarval.length+allManualAdult.length+allManualLarval.length;
       if(st)st.textContent='✓ Restored '+total+' records from backup ('+( data.exportedAt?data.exportedAt.slice(0,10):'unknown date')+')';
       setTimeout(()=>{if(st)st.textContent='';},6000);
@@ -2592,7 +2633,7 @@ function exportRiskPDF(){
     const rows=sorted.map(([name,cnt],idx)=>`<tr style="${idx%2===0?'':'background:#f9f9f9;'}"><td>${name}</td><td style="font-weight:700;color:#1a7a4a;">${cnt}</td><td style="padding:4px 8px;"><div style="height:10px;border-radius:5px;background:#1a7a4a;width:${Math.min(100,(cnt/mx*100)).toFixed(0)}%;min-width:4px;"></div></td></tr>`).join('');
     return`<h3>${dk} — Breeding Preferred Containers</h3><table><thead><tr><th>Container Type</th><th>Positive Count</th><th style="min-width:120px;">Proportion</th></tr></thead><tbody>${rows}</tbody></table>`;
   }).join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#1a7a4a;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #1a7a4a;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:18px;font-weight:700;color:#1a7a4a;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:10px 14px;background:#fff8e1;border-left:3px solid #f9a825;font-size:13px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #1a7a4a;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${(range.label||'All Data')+' · '+_riskModuleLabel()}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><h2>Overall Entomological Indices — Aedes Breeding for Andaman &amp; Nicobar Islands</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#1a7a4a;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.6.8 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Entomological Report — Aedes Risk Assessment</title><style>*{box-sizing:border-box;}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;margin:0;padding:0;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page{max-width:820px;margin:0 auto;padding:32px 36px;}.super-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#1a7a4a;margin-bottom:4px;}h1{font-size:22px;margin:0 0 16px;color:#00352a;font-weight:800;border-bottom:3px solid #1a7a4a;padding-bottom:8px;}h2{font-size:13px;font-weight:700;color:#00352a;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #cce8e3;}h3{font-size:11px;font-weight:700;color:#333;margin:16px 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd;}.period{font-size:18px;font-weight:700;color:#1a7a4a;margin-bottom:12px;letter-spacing:.01em;}.badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;background:${overallC}18;color:${overallC};border:2px solid ${overallC}55;}.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}.kpi-box{border:1.5px solid #ddd;border-radius:8px;padding:14px 10px;text-align:center;background:#fafafa;}.kpi-name{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:7px;}.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}.kpi-risk{font-size:9px;font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:.06em;}table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}th{padding:6px 8px;background:#e8f5f0;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#445;text-align:left;border-bottom:2px solid #b2dfdb;}td{padding:5px 8px;border-bottom:1px solid #eee;}.legend{display:flex;gap:16px;margin-bottom:4px;flex-wrap:wrap;}.leg-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#444;}.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}.note-box{margin-top:6px;padding:10px 14px;background:#fff8e1;border-left:3px solid #f9a825;font-size:13px;color:#555;font-style:italic;line-height:1.7;}.ref{margin-top:18px;padding:10px 14px;background:#e8f5f0;border-left:3px solid #1a7a4a;font-size:10px;color:#444;line-height:1.9;}.footer{margin-top:24px;padding-top:10px;border-top:1.5px solid #ccc;font-size:9.5px;color:#666;display:flex;justify-content:space-between;align-items:center;}@media print{.page{padding:18px 22px;}}</style></head><body><div class="page"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;"><div><div class="super-heading">Entomological Report</div><h1>Aedes Breeding Risk Assessment</h1><div class="period">${(range.label||'All Data')+' · '+_riskModuleLabel()}</div><div class="note-box" style="margin-top:6px;margin-bottom:0;">Note: The indices are generated based on the larval surveillance and source reduction data of respective station.</div></div><div style="text-align:right;font-size:9.5px;color:#777;padding-top:4px;">Generated: ${todayFmt}</div></div><h2>Overall Entomological Indices — Aedes Breeding for Andaman &amp; Nicobar Islands</h2><div class="kpi-grid"><div class="kpi-box"><div class="kpi-name">House Index (HI)</div><div class="kpi-val" style="color:${rClr(hi,5,10)}">${hi>0?hi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(hi,5,10)}">${hi>0?rLvl(hi,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Container Index (CI)</div><div class="kpi-val" style="color:${rClr(ci,5,10)}">${ci>0?ci.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(ci,5,10)}">${ci>0?rLvl(ci,5,10):'No data'}</div></div><div class="kpi-box"><div class="kpi-name">Breteau Index (BI)</div><div class="kpi-val" style="color:${rClr(bi,5,50)}">${bi>0?bi.toFixed(1):'—'}</div><div class="kpi-risk" style="color:${rClr(bi,5,50)}">${bi>0?rLvl(bi,5,50):'No data'}</div></div></div><h2>District-level Indices</h2><div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#1b5e20;"></div>Low Risk (HI/CI &lt;1 · BI &lt;1)</div><div class="leg-item"><div class="leg-dot" style="background:#1565c0;border:1px solid #0d47a1;"></div><span style="color:#1565c0;">Moderate</span> (HI/CI 5–10 · BI 5–50)</div><div class="leg-item"><div class="leg-dot" style="background:#c62828;"></div>High Risk (HI/CI &gt;10 · BI &gt;50)</div></div><table><thead><tr><th>District</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${distTblRows}</tbody></table>${zoneEntries2.length?`<h2>Zone-wise Indices</h2><table><thead><tr><th>Zone</th><th>HI</th><th>HI Risk</th><th>CI</th><th>CI Risk</th><th>BI †</th><th>BI Risk</th></tr></thead><tbody>${zoneTblRows2}</tbody></table>`:''}<h2>Location Breakdown by District</h2>${locSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No location data available.</p>'}<p style="font-size:9px;color:#888;margin-top:-4px;">† BI is shown only when ≥100 houses are inspected; otherwise N/A.</p><h2>Breeding Preferred Containers by District</h2><div class="legend" style="margin-bottom:8px;"><div class="leg-item"><div class="leg-dot" style="background:#1a7a4a;"></div>Positive container count (bar = relative proportion)</div></div>${contSections2||'<p style="color:#888;font-size:11px;margin:4px 0 12px;">No container data available.</p>'}<div class="ref"><b>Risk Thresholds:</b><br>House Index (HI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Container Index (CI): Low &lt;1 · Moderate 5–10 · High &gt;10<br>Breteau Index (BI): Low &lt;1 · Moderate 5–50 · High &gt;50</div><div class="footer"><span>EST v2.6.9 · Developed by Dr. B. Sumit Kumar Rao, State Entomologist, NVBDCP-SHS, A &amp; N Islands</span><span>${todayFmt}</span></div></div></body></html>`;
   const win=window.open('','_blank','width=920,height=740');
   if(win){win.document.write(html);win.document.close();setTimeout(()=>win.print(),700);}
 }
@@ -3064,12 +3105,16 @@ function switchManualTab(tab){
   });
 }
 function filterManual(mod){
-  const q=(document.getElementById('search-manual-'+mod)?.value||'').toLowerCase();
-  const fromD=document.getElementById('filter-man'+mod+'-from')?.value||'';
-  const toD=document.getElementById('filter-man'+mod+'-to')?.value||'';
+  const pfx=mod==='adult'?'manadult':'manlarval';
+  const gv=id=>document.getElementById(id)?.value||'';
+  const fUser=gv('f-'+pfx+'-user'),fDist=gv('f-'+pfx+'-district'),fZone=gv('f-'+pfx+'-zone'),fLoc=gv('f-'+pfx+'-loc');
+  const fromD=gv('filter-'+pfx+'-from'),toD=gv('filter-'+pfx+'-to');
   const src=mod==='adult'?allManualAdult:allManualLarval;
   const filtered=src.filter(s=>{
-    if(q&&!((s.location||'')+(s.district||'')+(s.workers||'')+(s.officers||'')+(s.state||'')).toLowerCase().includes(q))return false;
+    if(fUser&&(s.savedBy||'')!==fUser)return false;
+    if(fDist&&_sDist(s)!==fDist)return false;
+    if(fZone&&(s.zone||'')!==fZone)return false;
+    if(fLoc&&(s.location||'')!==fLoc)return false;
     const sd=normDate(s.date);
     if(fromD&&(!sd||sd<fromD))return false;
     if(toD&&(!sd||sd>toD))return false;
@@ -3079,10 +3124,8 @@ function filterManual(mod){
   else{manualLarvalF=filtered;renderManualLarval();}
 }
 function resetManualFilter(mod){
-  const f=document.getElementById('filter-man'+mod+'-from');
-  const t=document.getElementById('filter-man'+mod+'-to');
-  const s=document.getElementById('search-manual-'+mod);
-  if(f)f.value='';if(t)t.value='';if(s)s.value='';
+  const pfx=mod==='adult'?'manadult':'manlarval';
+  ['f-'+pfx+'-user','f-'+pfx+'-district','f-'+pfx+'-zone','f-'+pfx+'-loc','filter-'+pfx+'-from','filter-'+pfx+'-to'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   if(mod==='adult'){manualAdultF=[...allManualAdult];renderManualAdult();}
   else{manualLarvalF=[...allManualLarval];renderManualLarval();}
 }
@@ -3116,17 +3159,10 @@ async function deleteSelectedManual(mod){
   setStatus(`✓ Deleted ${ok} record(s)${fail?' — '+fail+' failed':''}`,fail?'err':'ok');
   loadAll();
 }
-function openEditManualDash(id,mod){
-  const src=mod==='adult'?allManualAdult:allManualLarval;
-  const s=src.find(x=>String(x.id)===String(id));
-  if(!s){alert('Survey not found');return;}
-  const modal=document.getElementById('manual-edit-modal');
-  const form=document.getElementById('manual-edit-form');
-  if(!modal||!form)return;
-  form.dataset.editId=id;
-  form.dataset.editMod=mod;
-  form.dataset.editPath=s._path||'';
-  form.dataset.editSha=s._sha||'';
+const _ME_CONT_NAMES=['Pl. Drum','Mt. Drum','Buckets','Wt. Tank (Over Head)','Wt. Tank (Ground Lvl)','Wt. Tank (Under Gnd)','Cement Tank','Drain','Tyres','Other Containers','Flower Pots','Flower Trays','Mud Pots','Coolers / Refrig.','Broken Utensils','Coconut Shells','Tree Holes','Miscellaneous'];
+// Fill the rich edit modal (me-*) from a survey record — shared by the manual
+// editor and the adult/larval surveillance editor so both look identical.
+function _meFill(s,mod){
   document.getElementById('me-date').value=normDate(s.date)||'';
   document.getElementById('me-location').value=s.location||'';
   document.getElementById('me-state').value=s.state||'';
@@ -3139,42 +3175,32 @@ function openEditManualDash(id,mod){
     document.getElementById('me-colltype').value=s.collType||'resting';
     document.getElementById('me-collectors').value=s.collectors||1;
     document.getElementById('me-manhours').value=s.totalManHours||0;
-    document.getElementById('me-housesex').value=s.housesExamined||0;
-    document.getElementById('me-housepos').value=s.housePositive||0;
+    document.getElementById('me-housesex').value=_hEx(s)||0;
+    document.getElementById('me-housepos').value=_hPos(s)||0;
     document.getElementById('me-nonculex').value=s.totNonCulex||0;
     document.getElementById('me-culex').value=s.totCulex||0;
   } else {
     document.getElementById('me-adult-fields').style.display='none';
     document.getElementById('me-larval-fields').style.display='block';
-    document.getElementById('me-l-housesex').value=s.housesExamined||0;
-    document.getElementById('me-l-housepos').value=s.housePositive||0;
-    document.getElementById('me-l-containers').value=s.totalContainers||0;
-    document.getElementById('me-l-positive').value=s.totalPositive||0;
+    document.getElementById('me-l-housesex').value=_hEx(s)||0;
+    document.getElementById('me-l-housepos').value=_hPos(s)||0;
+    document.getElementById('me-l-containers').value=_tCont(s)||0;
+    document.getElementById('me-l-positive').value=_tPos(s)||0;
     document.getElementById('me-l-pupal').value=s.totalPupalContainers||0;
     document.getElementById('me-l-dips').value=s.totalDips||0;
     document.getElementById('me-l-larvae').value=s.totalLarvae||0;
     document.getElementById('me-l-pupae').value=s.totalPupae||0;
-    const CONT_NAMES_D=['Pl. Drum','Mt. Drum','Buckets','Wt. Tank (Over Head)','Wt. Tank (Ground Lvl)','Wt. Tank (Under Gnd)','Cement Tank','Drain','Tyres','Other Containers','Flower Pots','Flower Trays','Mud Pots','Coolers / Refrig.','Broken Utensils','Coconut Shells','Tree Holes','Miscellaneous'];
     const ctBody=document.getElementById('me-cont-body');
     if(ctBody){
-      ctBody.innerHTML=CONT_NAMES_D.map((n,i)=>{
+      ctBody.innerHTML=_ME_CONT_NAMES.map((n,i)=>{
         const ct=(s.containerSummary||[]).find(x=>x.name===n)||{examined:0,positive:0};
         return`<tr style="${i%2===0?'':'background:rgba(0,0,0,.02)'}"><td style="padding:4px 8px;font-size:11px;">${n}</td><td style="padding:3px 4px;"><input type="number" min="0" id="me-ce-${i}" value="${parseInt(ct.examined)||0}" style="width:64px;text-align:center;height:28px;border:1px solid var(--bdr);border-radius:4px;background:var(--sf);color:var(--txt);font-size:11px;" oninput="const p=document.getElementById('me-cp-${i}');if(p&&(parseInt(p.value)||0)>(parseInt(this.value)||0))p.value=parseInt(this.value)||0;"></td><td style="padding:3px 4px;"><input type="number" min="0" id="me-cp-${i}" value="${parseInt(ct.positive)||0}" style="width:64px;text-align:center;height:28px;border:1px solid var(--bdr);border-radius:4px;background:var(--sf);color:var(--txt);font-size:11px;" oninput="const ex=parseInt(document.getElementById('me-ce-${i}')?.value)||0;if((parseInt(this.value)||0)>ex)this.value=ex;"></td></tr>`;
       }).join('');
     }
   }
-  modal.style.display='flex';
 }
-async function saveManualDashEdit(){
-  const form=document.getElementById('manual-edit-form');
-  if(!form)return;
-  const id=form.dataset.editId;
-  const mod=form.dataset.editMod;
-  const path=form.dataset.editPath;
-  const sha=form.dataset.editSha;
-  const src=mod==='adult'?allManualAdult:allManualLarval;
-  const s=src.find(x=>String(x.id)===String(id));
-  if(!s){alert('Survey not found');return;}
+// Read the rich edit modal back into an updated record + recompute indices.
+function _meBuildUpdated(s,mod){
   const updated={...s};
   updated.date=_toDMY(document.getElementById('me-date').value)||s.date;
   updated.location=document.getElementById('me-location').value||s.location;
@@ -3206,12 +3232,42 @@ async function saveManualDashEdit(){
     updated.CI=((updated.totalPositive/cont)*100).toFixed(1);
     updated.BI=((updated.totalPositive/hEx)*100).toFixed(1);
     updated.PI=((updated.totalPupalContainers/hEx)*100).toFixed(1);
-    const CONT_NAMES_SV=['Pl. Drum','Mt. Drum','Buckets','Wt. Tank (Over Head)','Wt. Tank (Ground Lvl)','Wt. Tank (Under Gnd)','Cement Tank','Drain','Tyres','Other Containers','Flower Pots','Flower Trays','Mud Pots','Coolers / Refrig.','Broken Utensils','Coconut Shells','Tree Holes','Miscellaneous'];
-    const newContSummary=CONT_NAMES_SV.map((name,i)=>({name,examined:parseInt(document.getElementById('me-ce-'+i)?.value)||0,positive:parseInt(document.getElementById('me-cp-'+i)?.value)||0}));
+    const newContSummary=_ME_CONT_NAMES.map((name,i)=>({name,examined:parseInt(document.getElementById('me-ce-'+i)?.value)||0,positive:parseInt(document.getElementById('me-cp-'+i)?.value)||0}));
     if(newContSummary.some(ct=>ct.examined>0||ct.positive>0))updated.containerSummary=newContSummary;
   }
+  return updated;
+}
+function openEditManualDash(id,mod){
+  const src=mod==='adult'?allManualAdult:allManualLarval;
+  const s=src.find(x=>String(x.id)===String(id));
+  if(!s){alert('Survey not found');return;}
+  const modal=document.getElementById('manual-edit-modal');
+  const form=document.getElementById('manual-edit-form');
+  if(!modal||!form)return;
+  form.dataset.editIsManual='1';
+  form.dataset.editId=id;
+  form.dataset.editMod=mod;
+  form.dataset.editPath=s._path||'';
+  form.dataset.editSha=s._sha||'';
+  document.querySelector('#manual-edit-modal .me-title').textContent='✏ Edit Manual Survey';
+  _meFill(s,mod);
+  modal.style.display='flex';
+}
+async function saveManualDashEdit(){
+  const form=document.getElementById('manual-edit-form');
+  if(!form)return;
+  const isManual=form.dataset.editIsManual!=='0';
+  const mod=isManual?form.dataset.editMod:form.dataset.editType;
+  const path=form.dataset.editPath;
+  const sha=form.dataset.editSha;
+  // Locate the record: manual entries by id, surveillance records by index.
+  let s;
+  if(isManual){const src=mod==='adult'?allManualAdult:allManualLarval;s=src.find(x=>String(x.id)===String(form.dataset.editId));}
+  else{const src=mod==='adult'?adultF:larvalF;s=src[parseInt(form.dataset.editIdx)];}
+  if(!s){alert('Survey not found');return;}
+  const updated=_meBuildUpdated(s,mod);
   setStatus('Saving edit to the database…','info');
-  const sbOk=await sbUpsertRow(mod,true,updated);
+  const sbOk=await sbUpsertRow(mod,isManual,updated);
   if(path&&sha&&GH.owner&&GH.token){try{await ghPut(path,updated,sha);}catch(e){}}
   if(sbOk||path){
     setStatus('✓ Survey updated — change will sync to the surveyor\'s account','ok');
@@ -3247,14 +3303,16 @@ async function deleteSurvey(path,sha,type){
 
 /* ── FILTER ── */
 function filterTable(mod){
-  const q=(document.getElementById('search-'+mod)?.value||'').toLowerCase();
-  const fromD=document.getElementById('filter-'+mod+'-from')?.value||'';
-  const toD=document.getElementById('filter-'+mod+'-to')?.value||'';
-  const tf=document.getElementById('filter-type')?.value||'';
+  const gv=id=>document.getElementById(id)?.value||'';
+  const fUser=gv('f-'+mod+'-user'),fDist=gv('f-'+mod+'-district'),fZone=gv('f-'+mod+'-zone'),fLoc=gv('f-'+mod+'-loc');
+  const fromD=gv('filter-'+mod+'-from'),toD=gv('filter-'+mod+'-to');
+  const tf=gv('filter-type');
   const src=mod==='adult'?allAdult:allLarval;
   const filtered=src.filter(s=>{
-    // Search: safe string concat
-    if(q&&!((s.location||'')+(s.district||'')+(s.workers||'')+(s.officers||'')+(s.state||'')).toLowerCase().includes(q))return false;
+    if(fUser&&(s.savedBy||'')!==fUser)return false;
+    if(fDist&&_sDist(s)!==fDist)return false;
+    if(fZone&&(s.zone||'')!==fZone)return false;
+    if(fLoc&&(s.location||'')!==fLoc)return false;
     // Date filter: normalize to YYYY-MM-DD; surveys with no date are excluded when filter is active
     const sd=normDate(s.date);
     if(fromD&&(!sd||sd<fromD))return false;
@@ -3264,6 +3322,26 @@ function filterTable(mod){
     return true;
   });
   if(mod==='adult'){adultF=filtered;renderAdult();}else{larvalF=filtered;renderLarval();}
+}
+// Populate a filter dropdown with the unique values actually present, keeping
+// the first ("All …") option and preserving the current selection.
+function _uniqSorted(arr,fn){const set=new Set();arr.forEach(x=>{const v=(fn(x)||'').toString().trim();if(v)set.add(v);});return [...set].sort((a,b)=>a.localeCompare(b));}
+function _fillSel(id,vals){
+  const sel=document.getElementById(id);if(!sel)return;
+  const cur=sel.value;
+  const first=sel.querySelector('option');
+  const firstHTML=first?first.outerHTML:'<option value="">All</option>';
+  sel.innerHTML=firstHTML+vals.map(v=>`<option value="${String(v).replace(/"/g,'&quot;')}">${String(v).replace(/</g,'&lt;')}</option>`).join('');
+  if(vals.indexOf(cur)>=0)sel.value=cur;
+}
+function populateFilters(){
+  [['adult',allAdult],['larval',allLarval],['manadult',allManualAdult],['manlarval',allManualLarval]].forEach(([pfx,data])=>{
+    if(!data)return;
+    _fillSel('f-'+pfx+'-user',_uniqSorted(data,s=>s.savedBy));
+    _fillSel('f-'+pfx+'-district',_uniqSorted(data,s=>_sDist(s)));
+    _fillSel('f-'+pfx+'-zone',_uniqSorted(data,s=>s.zone));
+    _fillSel('f-'+pfx+'-loc',_uniqSorted(data,s=>s.location));
+  });
 }
 // YYYY-MM-DD (from a <input type="date">) → DD-MM-YYYY, the format surveys are
 // stored in. Passes through anything already DD-MM-YYYY or unparseable.
@@ -3286,10 +3364,8 @@ function normDate(d){
   return '';
 }
 function resetDateFilter(mod){
-  const f=document.getElementById('filter-'+mod+'-from');
-  const t=document.getElementById('filter-'+mod+'-to');
-  if(f)f.value='';
-  if(t)t.value='';
+  ['f-'+mod+'-user','f-'+mod+'-district','f-'+mod+'-zone','f-'+mod+'-loc','filter-'+mod+'-from','filter-'+mod+'-to'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  if(mod==='adult'){const t=document.getElementById('filter-type');if(t)t.value='';}
   filterTable(mod);
 }
 async function _delRows(list,mod,manual){
@@ -3449,7 +3525,7 @@ function buildAdultXLSX(surveys,isCompiled){
   const H=v=>({v,s:1}),C=v=>({v,s:2}),CF=f=>({f,s:2}),B=v=>({v,s:3});
   // ── Report Status ──
   const statusRows=[
-    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.6.8')],
+    [H('EST Adult Surveillance Report'), H('Database Export — EST v2.6.9')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -3522,7 +3598,7 @@ function buildLarvalXLSX(surveys,isCompiled){
   // ── Report Status sheet ──
   const B=v=>({v,s:3}); // bold-left label
   const statusRows=[
-    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.6.8')],
+    [H('EST Larval Surveillance Report'), H('Database Export — EST v2.6.9')],
     [B('Generated:'), ts],
     [B('Compiled / Single:'), isCompiled?'Compiled':'Single Survey'],
     [B('Surveys Included:'), String(surveys.length)],
@@ -3666,7 +3742,7 @@ function buildAdultCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.6.8 — Adult Mosquito Surveillance Report (Database Export)');
+  r('EST v2.6.9 — Adult Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -3718,7 +3794,7 @@ function buildAdultCSV(surveys){
     });
   });
   blank();
-  r('EST v2.6.8 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.6.9 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -3730,7 +3806,7 @@ function buildLarvalCSV(surveys){
   const r=(...cols)=>rows.push(cols);
   const blank=()=>rows.push([]);
   const sep=label=>rows.push([label]);
-  r('EST v2.6.8 — Larval Mosquito Surveillance Report (Database Export)');
+  r('EST v2.6.9 — Larval Mosquito Surveillance Report (Database Export)');
   r('Generated:',new Date().toLocaleString('en-IN'));
   r('Surveys included:',surveys.length);
   blank();
@@ -3811,7 +3887,7 @@ function buildLarvalCSV(surveys){
     }
   });
   blank();
-  r('EST v2.6.8 · Entomological Surveillance Tool · Database Export');
+  r('EST v2.6.9 · Entomological Surveillance Tool · Database Export');
   r('Exported: '+new Date().toLocaleString('en-IN'));
   return rows;
 }
@@ -5016,23 +5092,22 @@ function _getRegion(district){
   return 'South Andaman';
 }
 
+// Adult/Larval surveillance records now use the SAME rich editor as manual
+// entries (survey values + container breakdown + auto index recalculation).
 function openEditSurvey(idx,type){
   const src=type==='adult'?adultF:larvalF;
   const s=src[idx];
   if(!s){alert('Survey not found');return;}
-  const modal=document.getElementById('survey-edit-modal');
-  const form=document.getElementById('survey-edit-form');
+  const modal=document.getElementById('manual-edit-modal');
+  const form=document.getElementById('manual-edit-form');
   if(!modal||!form)return;
+  form.dataset.editIsManual='0';
   form.dataset.editIdx=idx;
   form.dataset.editType=type;
   form.dataset.editPath=s._path||'';
   form.dataset.editSha=s._sha||'';
-  document.getElementById('se-date').value=s.date||'';
-  document.getElementById('se-location').value=s.location||'';
-  document.getElementById('se-state').value=s.state||'';
-  document.getElementById('se-district').value=s.district||'';
-  document.getElementById('se-zone').value=s.zone||'';
-  document.getElementById('se-officers').value=s.officers||'';
+  document.querySelector('#manual-edit-modal .me-title').textContent='✏ Edit '+(type==='adult'?'Adult':'Larval')+' Survey';
+  _meFill(s,type);
   modal.style.display='flex';
 }
 
@@ -5064,6 +5139,132 @@ async function saveSurveyEdit(){
   }else{
     setStatus('Failed to save the edit','err');
   }
+}
+
+/* ── COMPILE: aggregate records by date range + location ─────── */
+let _cmpMod='larval', _cmpResult=null;
+function _cmpSource(mod){
+  return mod==='adult'?[...(allAdult||[]),...(allManualAdult||[])]:[...(allLarval||[]),...(allManualLarval||[])];
+}
+function openCompile(mod){
+  _cmpMod=mod; _cmpResult=null;
+  document.querySelector('#compile-modal .cmp-title').textContent='🧮 Compile '+(mod==='adult'?'Adult':'Larval')+' Records';
+  const data=_cmpSource(mod);
+  _fillSel('cmp-loc',_uniqSorted(data,s=>s.location));
+  _fillSel('cmp-zone',_uniqSorted(data,s=>s.zone));
+  // Prefill the date range from the table's current filter, if any.
+  document.getElementById('cmp-from').value=document.getElementById('filter-'+mod+'-from')?.value||'';
+  document.getElementById('cmp-to').value=document.getElementById('filter-'+mod+'-to')?.value||'';
+  document.getElementById('cmp-xlsx-btn').disabled=true;
+  document.getElementById('cmp-pdf-btn').disabled=true;
+  document.getElementById('compile-modal').style.display='flex';
+  runCompile();
+}
+function _cnum(v){return parseFloat(v)||0;}
+function runCompile(){
+  const mod=_cmpMod;
+  const from=document.getElementById('cmp-from').value||'';
+  const to=document.getElementById('cmp-to').value||'';
+  const loc=document.getElementById('cmp-loc').value||'';
+  const zone=document.getElementById('cmp-zone').value||'';
+  const recs=_cmpSource(mod).filter(s=>{
+    const sd=normDate(s.date);
+    if(from&&(!sd||sd<from))return false;
+    if(to&&(!sd||sd>to))return false;
+    if(loc&&(s.location||'')!==loc)return false;
+    if(zone&&(s.zone||'')!==zone)return false;
+    return true;
+  });
+  const box=document.getElementById('cmp-result');
+  const xb=document.getElementById('cmp-xlsx-btn'),pb=document.getElementById('cmp-pdf-btn');
+  if(!recs.length){box.innerHTML='<div style="padding:14px;text-align:center;color:var(--muted);font-size:12px;">No records match these filters.</div>';xb.disabled=true;pb.disabled=true;_cmpResult=null;return;}
+  const agg=_aggregate(recs,mod,{from,to,loc,zone});
+  _cmpResult={agg,recs,mod};
+  box.innerHTML=_renderCompile(agg,recs,mod);
+  xb.disabled=false;pb.disabled=false;
+}
+function _aggregate(recs,mod,ctx){
+  const agg={compiled:true,_count:recs.length,
+    date:(ctx.from&&ctx.to)?(_toDMY(ctx.from)+' → '+_toDMY(ctx.to)):(recs.map(r=>r.date).filter(Boolean)[0]||''),
+    location:ctx.loc||'All locations',zone:ctx.zone||(recs[0].zone||''),state:recs[0].state||'Andaman and Nicobar Islands',
+    district:_sDist(recs[0]),officers:'',savedBy:'COMPILED',id:'CMP-'+Date.now(),entryType:'manual',appType:mod};
+  const sum=fn=>recs.reduce((a,s)=>a+fn(s),0);
+  if(mod==='adult'){
+    agg.collType='resting';
+    agg.collectors=sum(s=>_cnum(s.collectors));
+    agg.totalManHours=sum(s=>_cnum(s.totalManHours));
+    agg.housesExamined=sum(s=>_hEx(s));
+    agg.housePositive=sum(s=>_hPos(s));
+    agg.totNonCulex=sum(s=>_cnum(s.totNonCulex));
+    agg.totCulex=sum(s=>_cnum(s.totCulex));
+    agg.totalMosq=agg.totNonCulex+agg.totCulex;
+    agg.nights=sum(s=>_cnum(s.nights));
+  }else{
+    agg.housesExamined=sum(s=>_hEx(s));
+    agg.housePositive=sum(s=>_hPos(s));
+    agg.totalContainers=sum(s=>_tCont(s));
+    agg.totalPositive=sum(s=>_tPos(s));
+    agg.totalPupalContainers=sum(s=>_cnum(s.totalPupalContainers));
+    agg.totalDips=sum(s=>_cnum(s.totalDips));
+    agg.totalLarvae=sum(s=>_cnum(s.totalLarvae));
+    agg.totalPupae=sum(s=>_cnum(s.totalPupae));
+    const cm={};
+    recs.forEach(s=>(s.containerSummary||[]).forEach(ct=>{const n=ct.name;if(!cm[n])cm[n]={name:n,examined:0,positive:0};cm[n].examined+=parseInt(ct.examined)||0;cm[n].positive+=parseInt(ct.positive)||0;}));
+    if(Object.keys(cm).length)agg.containerSummary=Object.values(cm);
+    const hEx=agg.housesExamined||1,cont=agg.totalContainers||1;
+    agg.HI=((agg.housePositive/hEx)*100).toFixed(1);
+    agg.CI=((agg.totalPositive/cont)*100).toFixed(1);
+    agg.BI=((agg.totalPositive/hEx)*100).toFixed(1);
+    agg.PI=((agg.totalPupalContainers/hEx)*100).toFixed(1);
+  }
+  return agg;
+}
+function _renderCompile(agg,recs,mod){
+  const kpi=(l,v)=>`<div style="border:1px solid var(--bdr);border-radius:8px;padding:10px;text-align:center;background:var(--sf2);"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px;">${l}</div><div style="font-size:18px;font-weight:800;color:var(--txt);">${v}</div></div>`;
+  const kpis=mod==='larval'
+    ?kpi('HI',agg.HI)+kpi('CI',agg.CI)+kpi('BI',agg.BI)+kpi('PI',agg.PI)+kpi('Houses Exam.',agg.housesExamined)+kpi('+ve Houses',agg.housePositive)+kpi('Containers',agg.totalContainers)+kpi('+ve Cont.',agg.totalPositive)
+    :kpi('Houses Exam.',agg.housesExamined)+kpi('+ve Houses',agg.housePositive)+kpi('Non-Culex',agg.totNonCulex)+kpi('Culex',agg.totCulex)+kpi('Total Mosq.',agg.totalMosq)+kpi('Man-Hours',agg.totalManHours.toFixed(1))+kpi('Collectors',agg.collectors)+kpi('Nights',agg.nights);
+  const list=recs.map(s=>`<div style="display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--bdr);font-size:11px;"><span>${fmtSid(mod,s.id,s.date)} · ${(s.location||'-')}</span><span style="color:var(--muted);">${s.date||'-'} · ${s.savedBy||'-'}</span></div>`).join('');
+  return `<div style="font-size:11px;font-weight:700;color:var(--teal);margin:6px 0 8px;">${recs.length} record${recs.length>1?'s':''} compiled · ${agg.location}${agg.zone?(' · '+agg.zone):''}</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;">${kpis}</div>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Included records</div>
+    <div style="max-height:160px;overflow-y:auto;border:1px solid var(--bdr);border-radius:6px;padding:6px 10px;">${list}</div>`;
+}
+function exportCompiled(fmt){
+  if(!_cmpResult){alert('Nothing compiled yet');return;}
+  const {agg,recs,mod}=_cmpResult;
+  const dn=new Date().toISOString().slice(0,10).replace(/-/g,'');
+  if(fmt==='xlsx'){
+    const xlsx=mod==='adult'?buildAdultXLSX([agg],true):buildLarvalXLSX([agg],true);
+    dlXLSX(xlsx,'EST_Compiled_'+mod+'_'+dn+'.xlsx');
+  }else{
+    _compiledPDF(agg,recs,mod);
+  }
+}
+function _compiledPDF(agg,recs,mod){
+  const w=window.open('','_blank');
+  if(!w){alert('Allow pop-ups to export the PDF');return;}
+  const row=(k,v)=>`<tr><td style="padding:4px 8px;border:1px solid #ccc;font-weight:600;">${k}</td><td style="padding:4px 8px;border:1px solid #ccc;">${v}</td></tr>`;
+  const indices=mod==='larval'
+    ?row('House Index (HI)',agg.HI)+row('Container Index (CI)',agg.CI)+row('Breteau Index (BI)',agg.BI)+row('Pupal Index (PI)',agg.PI)+row('Houses Examined',agg.housesExamined)+row('+ve Houses',agg.housePositive)+row('Containers',agg.totalContainers)+row('+ve Containers',agg.totalPositive)+row('Pupal Containers',agg.totalPupalContainers)+row('Total Dips',agg.totalDips)+row('Larvae',agg.totalLarvae)+row('Pupae',agg.totalPupae)
+    :row('Houses Examined',agg.housesExamined)+row('+ve Houses',agg.housePositive)+row('Non-Culex',agg.totNonCulex)+row('Culex',agg.totCulex)+row('Total Mosquitoes',agg.totalMosq)+row('Man-Hours',agg.totalManHours.toFixed(1))+row('Collectors',agg.collectors)+row('Nights',agg.nights);
+  let contTbl='';
+  if(mod==='larval'&&agg.containerSummary&&agg.containerSummary.length){
+    contTbl='<h3>Container Type Breakdown</h3><table style="border-collapse:collapse;width:100%;font-size:11px;"><tr><th style="border:1px solid #ccc;padding:4px 8px;text-align:left;">Container</th><th style="border:1px solid #ccc;padding:4px 8px;">Examined</th><th style="border:1px solid #ccc;padding:4px 8px;">Positive</th></tr>'+agg.containerSummary.map(c=>`<tr><td style="border:1px solid #ccc;padding:4px 8px;">${c.name}</td><td style="border:1px solid #ccc;padding:4px 8px;text-align:center;">${c.examined}</td><td style="border:1px solid #ccc;padding:4px 8px;text-align:center;">${c.positive}</td></tr>`).join('')+'</table>';
+  }
+  const incl=recs.map(s=>`<tr><td style="border:1px solid #ccc;padding:3px 8px;">${fmtSid(mod,s.id,s.date)}</td><td style="border:1px solid #ccc;padding:3px 8px;">${s.location||'-'}</td><td style="border:1px solid #ccc;padding:3px 8px;">${s.date||'-'}</td><td style="border:1px solid #ccc;padding:3px 8px;">${s.savedBy||'-'}</td></tr>`).join('');
+  const esc=v=>String(v==null?'':v).replace(/</g,'&lt;');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Compiled '+esc(mod)+' Report</title></head><body style="font-family:Arial,sans-serif;color:#111;padding:24px;">'
+    +'<h1 style="color:#00352a;">EST — Compiled '+(mod==='adult'?'Adult':'Larval')+' Report</h1>'
+    +'<p><b>Location:</b> '+esc(agg.location)+' &nbsp; <b>Zone:</b> '+esc(agg.zone||'—')+' &nbsp; <b>District:</b> '+esc(agg.district)+'</p>'
+    +'<p><b>Period:</b> '+esc(agg.date)+' &nbsp; <b>Records compiled:</b> '+recs.length+'</p>'
+    +'<h3>Combined Indices / Totals</h3><table style="border-collapse:collapse;width:100%;font-size:12px;">'+indices+'</table>'
+    +contTbl
+    +'<h3>Included Records</h3><table style="border-collapse:collapse;width:100%;font-size:11px;"><tr><th style="border:1px solid #ccc;padding:3px 8px;">Survey ID</th><th style="border:1px solid #ccc;padding:3px 8px;">Location</th><th style="border:1px solid #ccc;padding:3px 8px;">Date</th><th style="border:1px solid #ccc;padding:3px 8px;">Surveyor</th></tr>'+incl+'</table>'
+    +'<p style="margin-top:24px;font-size:10px;color:#666;">Compiled '+new Date().toLocaleString('en-IN')+' · EST Dashboard</p>'
+    +'<scr'+'ipt>window.onload=function(){setTimeout(function(){window.print();},350);}<\/scr'+'ipt>'
+    +'</body></html>');
+  w.document.close();
 }
 
 function _buildOfficerData(){
