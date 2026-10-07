@@ -348,7 +348,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 #focus-shield svg{opacity:.5;}
 #focus-shield p{color:rgba(255,255,255,.5);font-size:14px;font-weight:600;letter-spacing:.05em;}
 
-/* ═══ PREMIUM POLISH (v2.8.9) ═══ */
+/* ═══ PREMIUM POLISH (v2.9.0) ═══ */
 .launch-btn{background:linear-gradient(180deg,#46e09d,#3ecf8e) !important;color:#04140c !important;box-shadow:0 6px 22px rgba(62,207,142,.32),inset 0 1px 0 rgba(255,255,255,.35) !important;}
 .launch-btn:hover{filter:brightness(1.05);}
 .launch-btn:active{transform:scale(.985);}
@@ -361,12 +361,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);}
 ::-webkit-scrollbar-thumb{background:rgba(26,122,74,.25);border-radius:99px;}
 ::-webkit-scrollbar-thumb:hover{background:rgba(26,122,74,.45);}
 #app-header{border-bottom:1px solid rgba(26,122,74,.14);box-shadow:0 1px 12px rgba(10,40,25,.06);}
-/* — premium spacing rhythm (v2.8.9) — */
+/* — premium spacing rhythm (v2.9.0) — */
 .scroll-area{padding-left:16px;padding-right:16px;overflow-y:scroll;overflow-x:hidden;min-height:0;overscroll-behavior:contain;padding-bottom:calc(var(--nh) + 48px);scrollbar-gutter:stable;}
 .scroll-area > *{max-width:100%;}
 @media(min-width:900px){.scroll-area{max-width:900px;margin:0 auto;width:100%;}}
 .screen{min-height:0;}
-/* Compact saved-item cards (v2.8.9) */
+/* Compact saved-item cards (v2.9.0) */
 .saved-item{padding:8px 11px;margin-bottom:6px;border-radius:11px;border:1px solid rgba(26,122,74,.15);box-shadow:0 1px 5px rgba(10,40,25,.04);transition:border-color var(--tr),box-shadow var(--tr);}
 .saved-item:hover{border-color:rgba(26,122,74,.32);}
 .saved-item.selected{border-color:var(--primary);box-shadow:0 0 0 1.5px var(--primary);}
@@ -522,7 +522,7 @@ body.lt-aedes #larval-ancx-block,body.lt-aedes #l-rev-dips{display:none !importa
         </svg>
       </div>
       <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub" id="dash-sub-ver">EST v2.8.9</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.9.0</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -568,7 +568,7 @@ body.lt-aedes #larval-ancx-block,body.lt-aedes #l-rev-dips{display:none !importa
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About <span id="dash-about-ver">EST v2.8.9</span>
+      About <span id="dash-about-ver">EST v2.9.0</span>
     </button>
     <button onclick="estSignOut()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;background:rgba(248,113,113,.1);border:1.5px solid rgba(248,113,113,.35);border-radius:var(--rxl);color:#fca5a5;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -2364,7 +2364,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.8.9';
+const APP_VER='2.9.0';
 /* Compact human-readable Survey ID: A-260531-1437 (type + YYMMDD + HHMM) */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -3891,7 +3891,7 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.8.9)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.9.0)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -3967,7 +3967,7 @@ function buildAdultXLSX(surveys,isCompiled){
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.8.9)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.9.0)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -5624,8 +5624,15 @@ function saveManualAdult(){
   let saved=[];try{saved=JSON.parse(localStorage.getItem(MAN_A_SAVED)||'[]');}catch(e){}
   const screenEl=document.getElementById('screen-manual-adult');
   const editId=screenEl?.dataset.editId;
-  if(editId){survey.id=(+editId||editId);saved=saved.filter(s=>String(s.id)!==editId);if(screenEl)delete screenEl.dataset.editId;}
-  saved.unshift(survey);
+  if(editId){
+    survey.id=(+editId||editId);
+    const _i=saved.findIndex(s=>String(s.id)===editId);
+    if(_i>=0){survey.savedAt=saved[_i].savedAt||survey.savedAt;saved[_i]=survey;}
+    else saved.unshift(survey);
+    if(screenEl)delete screenEl.dataset.editId;
+  } else {
+    saved.unshift(survey);
+  }
   try{localStorage.setItem(MAN_A_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}
   sbPushSurvey(survey,'adult').then(ok=>{if(ok)_markSbSynced('adult',survey.id,survey);});
   ghPushManualSurvey(survey,'adult').then(ok=>{
@@ -5634,7 +5641,7 @@ function saveManualAdult(){
   _clearFormFields('ma');
   if(!editId)try{localStorage.setItem('est_ma_last',JSON.stringify({location,workers,officers:(document.getElementById('ma-officers')?.value||'').trim()}));}catch(e){}
   showToast(editId?'Manual adult updated ✓':'Adult manual survey saved ✓','check');
-  showScreen('manual-entry');
+  if(editId){_returnToSavedManual('adult',survey.id);}else{showScreen('manual-entry');}
 }
 
 function startManualLarval(){
@@ -5726,8 +5733,17 @@ function saveManualLarval(){
   let saved=[];try{saved=JSON.parse(localStorage.getItem(MAN_L_SAVED)||'[]');}catch(e){}
   const screenElL=document.getElementById('screen-manual-larval');
   const editIdL=screenElL?.dataset.editId;
-  if(editIdL){survey.id=(+editIdL||editIdL);saved=saved.filter(s=>String(s.id)!==editIdL);if(screenElL)delete screenElL.dataset.editId;}
-  saved.unshift(survey);
+  if(editIdL){
+    survey.id=(+editIdL||editIdL);
+    const _i=saved.findIndex(s=>String(s.id)===editIdL);
+    // Update in place — keeps the entry's position & original savedAt (no jump
+    // to top) and never leaves a duplicate behind.
+    if(_i>=0){survey.savedAt=saved[_i].savedAt||survey.savedAt;saved[_i]=survey;}
+    else saved.unshift(survey);
+    if(screenElL)delete screenElL.dataset.editId;
+  } else {
+    saved.unshift(survey);
+  }
   try{localStorage.setItem(MAN_L_SAVED,JSON.stringify(saved));}catch(e){showToast('Storage full','warn');return;}
   sbPushSurvey(survey,'larval').then(ok=>{if(ok)_markSbSynced('larval',survey.id,survey);});
   ghPushManualSurvey(survey,'larval').then(ok=>{
@@ -5736,7 +5752,20 @@ function saveManualLarval(){
   _clearFormFields('ml');
   if(!editIdL)try{localStorage.setItem('est_ml_last',JSON.stringify({location,workers,officers:(document.getElementById('ml-officers')?.value||'').trim()}));}catch(e){}
   showToast(editIdL?'Manual larval updated ✓':'Larval manual survey saved ✓','check');
-  showScreen('manual-entry');
+  if(editIdL){_returnToSavedManual('larval',survey.id);}else{showScreen('manual-entry');}
+}
+// After editing a manual entry, go back to the Saved list (right sub-tab) and
+// scroll to the edited entry instead of dropping the user at the top.
+function _returnToSavedManual(sub,id){
+  try{manualSubTab=sub;}catch(e){}
+  showSavedTab('manual');
+  if(typeof showManualSubTab==='function'){try{showManualSubTab(sub);}catch(e){}}
+  else{renderSavedMod('manual');}
+  showScreen('saved');
+  setTimeout(()=>{
+    const el=document.querySelector('#manual-saved-list [data-sid="'+id+'"]');
+    if(el){el.scrollIntoView({block:'center',behavior:'smooth'});el.style.outline='2.5px solid var(--primary)';el.style.outlineOffset='3px';setTimeout(()=>{el.style.outline='';el.style.outlineOffset='';},2200);}
+  },260);
 }
 
 async function ghPushManualSurvey(surveyData,mod){
