@@ -348,7 +348,7 @@ body.view-mode-active .scroll-area{padding-bottom:calc(var(--nh) + 52px + 22px)!
 #focus-shield svg{opacity:.5;}
 #focus-shield p{color:rgba(255,255,255,.5);font-size:14px;font-weight:600;letter-spacing:.05em;}
 
-/* ═══ PREMIUM POLISH (v2.8.5) ═══ */
+/* ═══ PREMIUM POLISH (v2.8.6) ═══ */
 .launch-btn{background:linear-gradient(180deg,#46e09d,#3ecf8e) !important;color:#04140c !important;box-shadow:0 6px 22px rgba(62,207,142,.32),inset 0 1px 0 rgba(255,255,255,.35) !important;}
 .launch-btn:hover{filter:brightness(1.05);}
 .launch-btn:active{transform:scale(.985);}
@@ -361,7 +361,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);}
 ::-webkit-scrollbar-thumb{background:rgba(26,122,74,.25);border-radius:99px;}
 ::-webkit-scrollbar-thumb:hover{background:rgba(26,122,74,.45);}
 #app-header{border-bottom:1px solid rgba(26,122,74,.14);box-shadow:0 1px 12px rgba(10,40,25,.06);}
-/* — premium spacing rhythm (v2.8.5) — */
+/* — premium spacing rhythm (v2.8.6) — */
 .scroll-area{padding-left:16px;padding-right:16px;overflow-y:scroll;overflow-x:hidden;min-height:0;overscroll-behavior:contain;padding-bottom:calc(var(--nh) + 48px);scrollbar-gutter:stable;}
 .scroll-area > *{max-width:100%;}
 @media(min-width:900px){.scroll-area{max-width:900px;margin:0 auto;width:100%;}}
@@ -508,7 +508,7 @@ body.lt-aedes #larval-ancx-block,body.lt-aedes #l-rev-dips{display:none !importa
         </svg>
       </div>
       <div class="dash-title" style="text-transform:uppercase;letter-spacing:.04em;">Entomological<br>Surveillance Tool</div>
-      <div class="dash-sub" id="dash-sub-ver">EST v2.8.5</div>
+      <div class="dash-sub" id="dash-sub-ver">EST v2.8.6</div>
 
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:11px;">Select Surveillance Module</div>
@@ -554,7 +554,7 @@ body.lt-aedes #larval-ancx-block,body.lt-aedes #l-rev-dips{display:none !importa
     </div>
     <button onclick="goTo('about')" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;gap:9px;color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      About <span id="dash-about-ver">EST v2.8.5</span>
+      About <span id="dash-about-ver">EST v2.8.6</span>
     </button>
     <button onclick="estSignOut()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;background:rgba(248,113,113,.1);border:1.5px solid rgba(248,113,113,.35);border-radius:var(--rxl);color:#fca5a5;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -1463,6 +1463,13 @@ body.lt-aedes #larval-ancx-block,body.lt-aedes #l-rev-dips{display:none !importa
       <button class="stab" id="stab-larval" onclick="showSavedTab('larval')"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>Larval Surveillance</button>
       <button class="stab" id="stab-manual" onclick="showSavedTab('manual')"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>Manual Entries</button>
     </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;background:var(--sfc);border:1px solid var(--olv);border-radius:var(--rmd);padding:9px 11px;">
+      <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--osv);">📅 Survey date</span>
+      <input type="date" id="saved-from" onchange="applySavedDateFilter()" style="flex:1;min-width:120px;height:34px;padding:0 8px;border:1.5px solid var(--olv);border-radius:var(--rsm);font-size:12px;color:var(--os);background:var(--sf);">
+      <span style="font-size:11px;font-weight:600;color:var(--osv);">to</span>
+      <input type="date" id="saved-to" onchange="applySavedDateFilter()" style="flex:1;min-width:120px;height:34px;padding:0 8px;border:1.5px solid var(--olv);border-radius:var(--rsm);font-size:12px;color:var(--os);background:var(--sf);">
+      <button onclick="clearSavedDateFilter()" title="Clear date filter" style="height:34px;padding:0 11px;background:var(--sf);border:1.5px solid var(--olv);border-radius:var(--rsm);font-size:13px;font-weight:700;color:var(--osv);cursor:pointer;">✕</button>
+    </div>
     <div id="saved-adult-panel">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:7px;">
         <span style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--osv);" id="adult-saved-count">0 surveys</span>
@@ -2340,7 +2347,7 @@ async function syncValidUsersFromCache(){
   //    so deleted usernames are freed and stale entries can't log in
   if(latestCfg) _purgeDeletedUsers(latestCfg);
 }
-const APP_VER='2.8.5';
+const APP_VER='2.8.6';
 /* Compact human-readable Survey ID: A-260531-1437 (type + YYMMDD + HHMM) */
 function fmtSid(type,id){
   const d=new Date(Number(id));
@@ -3867,7 +3874,7 @@ function dlXLSX(blob,filename){const u=URL.createObjectURL(blob);const a=documen
 function buildAdultXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Adult Surveillance Report (Database Export_EST v2.8.5)'],
+    ['Report','Adult Surveillance Report (Database Export_EST v2.8.6)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -3943,7 +3950,7 @@ function buildAdultXLSX(surveys,isCompiled){
 function buildLarvalXLSX(surveys,isCompiled){
   const ts=new Date().toLocaleString('en-IN');
   const statusRows=[
-    ['Report','Larval Surveillance Report (Database Export_EST v2.8.5)'],
+    ['Report','Larval Surveillance Report (Database Export_EST v2.8.6)'],
     ['Generated:',ts],
     ['Compiled / Single',isCompiled?'Compiled':'Single'],
     ['Surveys included:',surveys.length],
@@ -4591,12 +4598,31 @@ function abbrevDistrict(d){
   };
   return map[d]||d;
 }
+// ── Saved-folder date-range filter ──
+function _savedNorm(d){
+  if(!d)return '';d=String(d).trim();
+  let m=d.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})$/);if(m)return m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0');
+  m=d.match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})$/);if(m)return m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');
+  return '';
+}
+function _savedDatePass(s){
+  const from=document.getElementById('saved-from')?.value||'';
+  const to=document.getElementById('saved-to')?.value||'';
+  if(!from&&!to)return true;
+  const sd=_savedNorm(s.date);
+  if(!sd)return false;
+  if(from&&sd<from)return false;
+  if(to&&sd>to)return false;
+  return true;
+}
+function applySavedDateFilter(){renderSavedMod(activeSavedTab||'adult');}
+function clearSavedDateFilter(){const f=document.getElementById('saved-from'),t=document.getElementById('saved-to');if(f)f.value='';if(t)t.value='';renderSavedMod(activeSavedTab||'adult');}
 function renderSavedMod(mod){
   if(mod==='manual'){
     let aE=[];try{aE=JSON.parse(localStorage.getItem(MAN_A_SAVED)||'[]');}catch(e){}
     let lE=[];try{lE=JSON.parse(localStorage.getItem(MAN_L_SAVED)||'[]');}catch(e){}
     const _ms=manualSubTab==='adult'?aE.map(s=>({...s,_manType:'adult'})):lE.map(s=>({...s,_manType:'larval'}));
-    const surveys=[..._ms].sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
+    const surveys=[..._ms].filter(_savedDatePass).sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
     const list=document.getElementById('manual-saved-list'),empty=document.getElementById('manual-saved-empty'),count=document.getElementById('manual-saved-count');
     if(!list)return;
     if(count)count.textContent=surveys.length+' entr'+(surveys.length===1?'y':'ies')+(manualSel.size>0?' — '+manualSel.size+' selected':'');
@@ -4609,7 +4635,7 @@ function renderSavedMod(mod){
       const meta=(s.state||'')+(s.state&&s.district?' · ':'')+( s.district||'')+(s.date?' · '+s.date:'')+( savedTime?' · '+savedTime:'');
       const typeTag=s._manType==='adult'?'<span style="font-size:9px;background:rgba(62,207,142,.15);color:var(--primary);padding:1px 5px;border-radius:8px;font-weight:700;">ADULT</span>':'<span style="font-size:9px;background:rgba(33,150,243,.13);color:var(--larval);padding:1px 5px;border-radius:8px;font-weight:700;">LARVAL</span>';
       const div=document.createElement('div');div.className='saved-item'+(isSel?' selected':'');div.dataset.sid=String(s.id);
-      div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="manualSel[this.checked?'add':'delete']('${s.id}');renderSavedMod('manual');"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${idx+1}</span>${typeTag}<div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${_isSynced(s)?'ok':'pend'}">${mkSvg(_isSynced(s)?'check':'warn',13)} ${_isSynced(s)?('Synced'+(_fmtSyncDT(s.syncedAt)?' '+_fmtSyncDT(s.syncedAt):' to cloud')):'Not synced'}</div><div class="sit-acts"><button class="sit-act" onclick="editManualEntry(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('csv',13,'#ff9800')} Edit</button><button class="sit-act pm-xlsx" onclick="exportManualOne(${s.id},'${s._manType}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act pm-pdf" onclick="exportManualOnePDF(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('pdf',13,'#ff9800')} PDF</button><button class="sit-act" onclick="syncManualOne(${s.id},'${s._manType}')" style="${_isSynced(s)?'color:var(--osv);':'color:var(--primary);font-weight:700;'}">${mkSvg('check',13)} ${_isSynced(s)?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteManualSaved(${s.id},'${s._manType}')">${mkSvg('del',13)} Del</button></div>`;
+      div.innerHTML=`<div class="sit-top"><input type="checkbox" class="sit-check" ${isSel?'checked':''} onchange="toggleManualSel('${s.id}',this)"><div class="sit-info"><div style="display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;"><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--osv);flex-shrink:0;">#${idx+1}</span>${typeTag}<div class="sit-title">${s.location||'-'}</div></div><div class="sit-meta">${meta}</div></div></div><div class="sit-sync ${_isSynced(s)?'ok':'pend'}">${mkSvg(_isSynced(s)?'check':'warn',13)} ${_isSynced(s)?('Synced'+(_fmtSyncDT(s.syncedAt)?' '+_fmtSyncDT(s.syncedAt):' to cloud')):'Not synced'}</div><div class="sit-acts"><button class="sit-act" onclick="editManualEntry(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('csv',13,'#ff9800')} Edit</button><button class="sit-act pm-xlsx" onclick="exportManualOne(${s.id},'${s._manType}')">${mkSvg('csv',13,'var(--primary)')} XLSX</button><button class="sit-act pm-pdf" onclick="exportManualOnePDF(${s.id},'${s._manType}')" style="border-color:rgba(255,152,0,.5);color:#ff9800;">${mkSvg('pdf',13,'#ff9800')} PDF</button><button class="sit-act" onclick="syncManualOne(${s.id},'${s._manType}')" style="${_isSynced(s)?'color:var(--osv);':'color:var(--primary);font-weight:700;'}">${mkSvg('check',13)} ${_isSynced(s)?'Re-sync':'Sync'}</button><button class="sit-act del" onclick="deleteManualSaved(${s.id},'${s._manType}')">${mkSvg('del',13)} Del</button></div>`;
       list.appendChild(div);
     });
     return;
@@ -4617,7 +4643,8 @@ function renderSavedMod(mod){
   const key=mod==='adult'?A_SAVED:L_SAVED;let surveys=[];try{surveys=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}
   const sel=mod==='adult'?aSel:lSel;
   const list=document.getElementById(mod+'-saved-list'),empty=document.getElementById(mod+'-saved-empty'),count=document.getElementById(mod+'-saved-count');
-  // Sort newest saved first
+  // Apply the saved-folder date-range filter, then sort newest saved first
+  surveys=surveys.filter(_savedDatePass);
   surveys.sort((a,b)=>(b.savedAt||'')>(a.savedAt||'')?1:-1);
   const selCount=sel.size;
   if(count)count.textContent=surveys.length+' survey'+(surveys.length!==1?'s':'')+(selCount>0?' — '+selCount+' selected':'');
@@ -4635,7 +4662,18 @@ function renderSavedMod(mod){
     list.appendChild(div);
   });
 }
-function toggleSel(mod,id,el){const sel=mod==='adult'?aSel:lSel;if(el.checked)sel.add(String(id));else sel.delete(String(id));renderSaved();}
+// Ticking a checkbox only updates the selection set + the card highlight — no
+// full list re-render (that caused a noticeable lag with many saved entries).
+function _updSavedCount(mod){
+  const listId=mod==='manual'?'manual-saved-list':mod+'-saved-list';
+  const countId=mod==='manual'?'manual-saved-count':mod+'-saved-count';
+  const n=document.getElementById(listId)?.children.length||0;
+  const selSize=mod==='manual'?manualSel.size:(mod==='adult'?aSel:lSel).size;
+  const el=document.getElementById(countId);
+  if(el){const noun=mod==='manual'?('entr'+(n===1?'y':'ies')):('survey'+(n!==1?'s':''));el.textContent=n+' '+noun+(selSize>0?' — '+selSize+' selected':'');}
+}
+function toggleSel(mod,id,el){const sel=mod==='adult'?aSel:lSel;if(el.checked)sel.add(String(id));else sel.delete(String(id));const it=el.closest&&el.closest('.saved-item');if(it)it.classList.toggle('selected',el.checked);_updSavedCount(mod);}
+function toggleManualSel(id,el){if(el.checked)manualSel.add(String(id));else manualSel.delete(String(id));const it=el.closest&&el.closest('.saved-item');if(it)it.classList.toggle('selected',el.checked);_updSavedCount('manual');}
 function selectAll(mod){
   if(mod==='manual'){
     let a=[];try{a=JSON.parse(localStorage.getItem(MAN_A_SAVED)||'[]');}catch(e){}
@@ -5890,6 +5928,15 @@ async function syncManualOne(id,type){
   }else{showToast('Sync failed — check connection','warn');}
   renderSavedMod('manual');
 }
+// Load a stored zone into a manual form's zone dropdown (handles custom "Other").
+function _setManualZone(prefix,zone){
+  zone=(zone||'').trim();
+  const sel=document.getElementById(prefix+'-zone');if(!sel)return;
+  const oth=document.getElementById(prefix+'-zone-other');
+  if(!zone){sel.value='';if(oth)oth.style.display='none';return;}
+  if([...sel.options].some(o=>o.value===zone)){sel.value=zone;if(oth)oth.style.display='none';}
+  else{sel.value='Other';if(oth){oth.value=zone;oth.style.display='block';}}
+}
 function editManualEntry(id,type){
   const key=type==='adult'?MAN_A_SAVED:MAN_L_SAVED;
   let saved=[];try{saved=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}
@@ -5899,6 +5946,7 @@ function editManualEntry(id,type){
     setTimeout(()=>{
       const st=document.getElementById('ma-state');if(st){st.value=s.state||'';populateDistricts('ma-state','ma-district');}
       setTimeout(()=>{const di=document.getElementById('ma-district');if(di)di.value=s.district||'';},80);
+      _setManualZone('ma',s.zone);
       const el_d=document.getElementById('ma-date');if(el_d)el_d.value=s.date||'';
       const el_dt=document.getElementById('ma-date-to');if(el_dt)el_dt.value=s.dateTo||'';
       const el_l=document.getElementById('ma-location');if(el_l)el_l.value=s.location||'';
@@ -5923,6 +5971,8 @@ function editManualEntry(id,type){
     setTimeout(()=>{
       const st=document.getElementById('ml-state');if(st){st.value=s.state||'';populateDistricts('ml-state','ml-district');}
       setTimeout(()=>{const di=document.getElementById('ml-district');if(di)di.value=s.district||'';},80);
+      // Load the stored zone (was missing → edit showed a default, masking the real zone)
+      _setManualZone('ml',s.zone);
       const el_d=document.getElementById('ml-date');if(el_d)el_d.value=s.date||'';
       const el_dt=document.getElementById('ml-date-to');if(el_dt)el_dt.value=s.dateTo||'';
       const el_l=document.getElementById('ml-location');if(el_l)el_l.value=s.location||'';
