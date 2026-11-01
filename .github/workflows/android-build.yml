@@ -1,0 +1,88 @@
+name: Android app (Capacitor)
+
+# Builds the EST Android app from native/:
+#  • every push to main that touches the web app or native/ → debug APK (artifact, for testers)
+#  • a tag v*  or manual run with "release"  → signed App Bundle (.aab) for Google Play
+#
+# Release signing needs four repository secrets (Settings → Secrets → Actions):
+#   ANDROID_KEYSTORE_BASE64   base64 of your upload keystore (.jks)   → base64 -w0 est-upload.jks
+#   ANDROID_KEYSTORE_PASSWORD
+#   ANDROID_KEY_ALIAS
+#   ANDROID_KEY_PASSWORD
+# Create the keystore once (keep it safe — losing it means a new app listing):
+#   keytool -genkeypair -v -keystore est-upload.jks -alias est -keyalg RSA -keysize 2048 -validity 10000
+
+on:
+  push:
+    branches: [main]
+    paths: ['app.html', 'signin.html', 'dashboard.html', 'offline-*.{js,css}', 'manifest.json', 'native/**', '.github/workflows/android-build.yml']
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: 'debug (APK) or release (signed AAB)'
+        default: 'debug'
+        type: choice
+        options: [debug, release]
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      RELEASE: ${{ startsWith(github.ref, 'refs/tags/v') || inputs.kind == 'release' }}
+      # Play requires a strictly increasing versionCode; the run number guarantees it.
+      EST_VERSION_CODE: ${{ github.run_number }}
+      EST_VERSION_NAME: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('2.9.{0}', github.run_number) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm, cache-dependency-path: native/package-lock.json }
+
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21 }
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install native project deps
+        working-directory: native
+        run: npm ci
+
+      - name: Build web assets and sync Capacitor
+        working-directory: native
+        run: npm run sync:android
+
+      - name: Generate icons & splash from assets/
+        working-directory: native
+        run: npm run assets || echo "asset generation skipped"
+
+      - name: Decode upload keystore
+        if: env.RELEASE == 'true'
+        working-directory: native/android
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > app/est-upload.jks
+
+      - name: Build debug APK
+        if: env.RELEASE != 'true'
+        working-directory: native/android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Build signed release bundle
+        if: env.RELEASE == 'true'
+        working-directory: native/android
+        env:
+          EST_KEYSTORE_FILE: est-upload.jks
+          EST_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          EST_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          EST_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: ./gradlew bundleRelease --no-daemon
+
+      - name: Upload debug APK
+        if: env.RELEASE != 'true'
+        uses: actions/upload-artifact@v4
+        with: { name: EST-debug-apk, path: native/android/app/build/outputs/apk/debug/*.apk, retention-days: 30 }
+
+      - name: Upload release bundle (.aab)
+        if: env.RELEASE == 'true'
+        uses: actions/upload-artifact@v4
+        with: { name: EST-release-aab, path: native/android/app/build/outputs/bundle/release/*.aab, retention-days: 90 }

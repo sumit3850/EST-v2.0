@@ -1,0 +1,35 @@
+{
+  "name": "est-native",
+  "version": "2.9.20",
+  "private": true,
+  "description": "EST — Entomological Surveillance Tool: native Android/iOS shell (Capacitor) around the field app",
+  "type": "module",
+  "scripts": {
+    "build:www": "node scripts/build-www.mjs",
+    "sync": "npm run build:www && npx cap sync",
+    "sync:android": "npm run build:www && npx cap sync android",
+    "open:android": "npx cap open android",
+    "open:ios": "npx cap open ios",
+    "assets": "npx capacitor-assets generate --android --ios --iconBackgroundColor '#0d2018' --iconBackgroundColorDark '#0d2018' --splashBackgroundColor '#0d2018' --splashBackgroundColorDark '#0d2018'",
+    "android:bundle": "npm run sync:android && cd android && ./gradlew bundleRelease",
+    "android:apk": "npm run sync:android && cd android && ./gradlew assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/browser": "^8.0.0",
+    "@capacitor/camera": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/filesystem": "^8.0.0",
+    "@capacitor/geolocation": "^8.0.0",
+    "@capacitor/ios": "^8.0.0",
+    "@capacitor/network": "^8.0.0",
+    "@capacitor/share": "^8.0.0",
+    "@capacitor/splash-screen": "^8.0.0",
+    "@capacitor/status-bar": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.0.0"
+  }
+}
