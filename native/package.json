@@ -1,6 +1,6 @@
 {
   "name": "est-native",
-  "version": "2.9.20",
+  "version": "2.9.21",
   "private": true,
   "description": "EST — Entomological Surveillance Tool: native Android/iOS shell (Capacitor) around the field app",
   "type": "module",
