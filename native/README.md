@@ -6,7 +6,7 @@ Store, with native permissions, file saving/sharing and a proper app icon.
 
 ```
 native/
-├─ capacitor.config.ts   app id, name, splash/status-bar settings
+├─ capacitor.config.json app id, name, splash/status-bar settings
 ├─ package.json          Capacitor + plugins, build scripts
 ├─ scripts/build-www.mjs copies app.html → www/index.html (+ signin, dashboard, assets)
 ├─ bridge/native-bridge.js  runs only inside the shell: permissions, blob → share sheet,
@@ -17,7 +17,7 @@ native/
 ```
 
 **App id: `in.est.surveillance`** — permanent once uploaded to a store. Change it
-in `capacitor.config.ts` *before* the first upload if you prefer another.
+in `capacitor.config.json` *before* the first upload if you prefer another.
 
 ## Build on your own machine
 
