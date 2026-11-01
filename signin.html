@@ -228,6 +228,11 @@ body{
 .link-out:hover{color:var(--err);}
 .hidden{display:none !important;}
 </style>
+<style>
+.seg{display:flex;gap:6px;margin-bottom:12px;background:rgba(255,255,255,.04);border:1px solid var(--bdr,rgba(255,255,255,.12));border-radius:12px;padding:4px;}
+.seg-btn{flex:1;padding:8px 10px;border-radius:9px;border:none;background:transparent;color:var(--txt2,#cfd8d3);font-weight:700;font-size:12.5px;cursor:pointer;transition:background .15s,color .15s;}
+.seg-btn.active{background:var(--primary,#1a7a4a);color:#fff;}
+</style>
 </head>
 <body>
 <div class="grid-bg" aria-hidden="true"></div>
@@ -344,15 +349,46 @@ body{
       </form>
 
       <!-- ── Forgot username / password panel ── -->
-      <form id="panel-forgot" class="hidden" onsubmit="doForgot(event)">
+      <!-- Self-service: identify by email or phone → one-time code → new password / username -->
+      <form id="panel-forgot" class="hidden" onsubmit="rcSubmit(event)" novalidate>
         <h2 id="fg-title">Reset password</h2>
-        <p class="lead" id="fg-lead">Enter your username or registered email.</p>
-        <div class="field">
-          <label for="fg-id" id="fg-label">Username or email <span class="req">*</span></label>
-          <input class="in mono" id="fg-id" type="text" autocapitalize="off" spellcheck="false" required>
+        <p class="lead" id="fg-lead">We will send a one-time code to the email or mobile number registered on your account.</p>
+        <div id="rc-step1">
+          <div class="seg" role="tablist" aria-label="Send the code by">
+            <button type="button" class="seg-btn active" id="rc-ch-email" role="tab" onclick="rcChannel('email')">Email</button>
+            <button type="button" class="seg-btn" id="rc-ch-phone" role="tab" onclick="rcChannel('phone')">Phone</button>
+          </div>
+          <div class="field">
+            <label for="fg-id" id="fg-label">Registered email <span class="req">*</span></label>
+            <input class="in mono" id="fg-id" type="text" autocapitalize="off" spellcheck="false" inputmode="email" placeholder="you@example.com">
+          </div>
+          <button class="btn btn-primary" id="fg-btn" type="submit">Send code</button>
         </div>
-        <button class="btn btn-primary" id="fg-btn" type="submit">Send reset request</button>
+        <div id="rc-step2" class="hidden">
+          <p class="lead" id="rc-sent-to"></p>
+          <div class="field">
+            <label for="rc-code">6-digit code <span class="req">*</span></label>
+            <input class="in mono" id="rc-code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="one-time-code" placeholder="••••••">
+          </div>
+          <button class="btn btn-primary" id="rc-verify-btn" type="submit">Verify code</button>
+          <div style="display:flex;justify-content:center;gap:18px;margin-top:10px;flex-wrap:wrap;">
+            <button type="button" class="fg-link" onclick="rcResend()">Resend code</button>
+            <button type="button" class="fg-link" onclick="rcBackToStart()">Use a different email / phone</button>
+          </div>
+        </div>
+        <div id="rc-step3" class="hidden">
+          <p class="lead">Code accepted — choose a new password.</p>
+          <div class="field"><label for="rc-np">New password <span class="req">*</span></label><input class="in" id="rc-np" type="password" minlength="6" autocomplete="new-password"></div>
+          <div class="field"><label for="rc-np2">Confirm password <span class="req">*</span></label><input class="in" id="rc-np2" type="password" minlength="6" autocomplete="new-password"></div>
+          <button class="btn btn-primary" id="rc-save-btn" type="submit">Save new password</button>
+        </div>
+        <div id="rc-step4" class="hidden" style="text-align:center;">
+          <p class="lead">Your EST username is</p>
+          <div class="mono" id="rc-username" style="font-size:22px;font-weight:800;letter-spacing:.04em;margin:6px 0 16px;"></div>
+          <button class="btn btn-primary" type="button" onclick="rcDone()">Continue to sign in</button>
+        </div>
         <div class="msg" id="fg-msg" role="alert" aria-live="polite"></div>
+        <div id="rc-fallback" style="text-align:center;margin-top:12px;font-size:12px;color:var(--txt3);">Can't receive a code? <button type="button" class="fg-link" onclick="rcNotifyAdmin()">Ask the EST admin to reset it</button></div>
         <button type="button" class="link-out" style="margin:14px auto 0;color:var(--txt3);" onclick="showAuth()">← back to sign in</button>
       </form>
 
@@ -462,7 +498,7 @@ body{
 </main>
 
 <footer class="statusbar">
-  <span>console v2.9.16</span><span class="sep">│</span>
+  <span>console v2.9.17</span><span class="sep">│</span>
   <a href="https://estweb-git-main-explorer3850.vercel.app/" target="_blank" rel="noopener" style="color:var(--txt2);text-decoration:none;border-bottom:1px dotted var(--txt3);">website ↗</a><span class="sep">│</span>
   <span class="status-pill"><span id="fb-dot" class="status-dot checking"></span><span id="fb-state">supabase: checking…</span></span>
   <span class="sep">│</span><span id="fb-net">network: —</span>
@@ -540,8 +576,33 @@ function showAuth(){
   switchTab('signin');
 }
 
-/* ══ Forgot username / password ══ */
-let _fgMode='password';
+/* ══ Forgot username / password — self-service with a one-time code ══
+   1) identify by registered email or mobile  2) Supabase sends a 6-digit code
+   3) code verified → set a new password, or the username is shown.
+   The admin is only involved when no code can be delivered. */
+let _fgMode='password', _rcChannel='email', _rcDest='', _rcIdent='';
+function normPhone(raw){
+  let d=String(raw||'').replace(/[^0-9+]/g,'');
+  if(!d)return null;
+  if(d[0]==='+')d='+'+d.slice(1).replace(/[^0-9]/g,'');
+  else if(d.startsWith('00'))d='+'+d.slice(2);
+  else if(d.length===10)d='+91'+d;
+  else if(d.length===11&&d[0]==='0')d='+91'+d.slice(1);
+  else if(d.length===12&&d.startsWith('91'))d='+'+d;
+  else d='+'+d;
+  return (d.length>=11&&d.length<=16)?d:null;
+}
+function rcShowStep(n){
+  ['rc-step1','rc-step2','rc-step3','rc-step4'].forEach((id,i)=>$(id).classList.toggle('hidden',i!==n-1));
+  $('rc-fallback').style.display=n===1?'':'none';
+}
+function rcChannel(ch){
+  _rcChannel=ch;
+  $('rc-ch-email').classList.toggle('active',ch==='email');
+  $('rc-ch-phone').classList.toggle('active',ch==='phone');
+  $('fg-label').innerHTML=(ch==='email'?'Registered email':'Registered mobile number')+' <span class="req">*</span>';
+  const inp=$('fg-id');inp.placeholder=ch==='email'?'you@example.com':'+91 98765 43210';inp.inputMode=ch==='email'?'email':'tel';inp.value='';
+}
 function showForgot(mode){
   _fgMode=mode;
   $('auth-tabs').classList.add('hidden');
@@ -553,72 +614,131 @@ function showForgot(mode){
   hideMsg('fg-msg');
   $('fg-title').textContent=mode==='password'?'Reset password':'Recover username';
   $('fg-lead').textContent=mode==='password'
-    ?'Enter your username or registered email. If your account has an email on file you will receive a reset link; the EST admin is also notified.'
-    :'Enter the email you registered with — we will look up your username, and the EST admin is also notified.';
-  $('fg-label').innerHTML=(mode==='password'?'Username or email':'Registered email')+' <span class="req">*</span>';
-  $('fg-btn').textContent=mode==='password'?'Send reset request':'Recover username';
-  $('fg-id').value='';$('fg-id').focus();
+    ?'We will send a one-time code to the email or mobile number registered on your account. Enter it to set a new password.'
+    :'We will send a one-time code to the email or mobile number registered on your account. Enter it to see your username.';
+  rcShowStep(1);rcChannel('email');$('fg-id').focus();
 }
-async function doForgot(ev){
-  ev.preventDefault();hideMsg('fg-msg');
-  const v=$('fg-id').value.trim();
-  if(!v)return;
-  setBusy('fg-btn',true,'Sending…');
+function rcBackToStart(){hideMsg('fg-msg');rcShowStep(1);$('fg-id').focus();}
+function rcDone(){const u=$('rc-username').textContent;showAuth();$('si-user').value=u;$('si-pass').focus();}
+function _rcLog(step,detail){
+  try{fetch(SUPABASE_URL+'/rest/v1/recovery_log',{method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify([{mode:_fgMode,channel:_rcChannel,identifier_hint:_rcDest,step,detail:String(detail||'').slice(0,200)}])}).catch(()=>{});}catch(e){}
+}
+function rcSubmit(ev){
+  ev.preventDefault();
+  if(!$('rc-step1').classList.contains('hidden'))return rcStart();
+  if(!$('rc-step2').classList.contains('hidden'))return rcVerify();
+  if(!$('rc-step3').classList.contains('hidden'))return rcSavePassword();
+}
+async function rcStart(){
+  hideMsg('fg-msg');
+  const raw=$('fg-id').value.trim();
+  if(!raw){showMsg('fg-msg','err',_rcChannel==='email'?'Enter your registered email.':'Enter your registered mobile number.');return;}
+  if(!_sb){showMsg('fg-msg','err','The authentication service is unreachable — check your connection and reload.');return;}
+  let ident=raw;
+  if(_rcChannel==='email'){
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)){showMsg('fg-msg','err','That does not look like a valid email address.');return;}
+    ident=raw.toLowerCase();
+  }else{
+    ident=normPhone(raw);
+    if(!ident){showMsg('fg-msg','err','Enter a valid mobile number — 10 digits, or with the country code.');return;}
+  }
+  setBusy('fg-btn',true,'Checking…');
   try{
-    let uname='',email='';
-    if(v.indexOf('@')>0)email=v.toLowerCase();else uname=v;
-    // Resolve the other half from the profiles registry
-    try{
-      if(_sb){
-        if(uname){
-          const {data}=await _sb.from('profiles').select('username,email').ilike('username',uname).maybeSingle();
-          if(data){email=(data.email||email);uname=data.username||uname;}
-        }else{
-          const {data}=await _sb.from('profiles').select('username,email').ilike('email',email).maybeSingle();
-          if(data)uname=data.username||'';
-        }
+    // 1) Is there an account for this contact, and can a code reach it?
+    let info=null;
+    try{const {data,error}=await _sb.rpc('lookup_account',{p_identifier:ident});if(!error)info=data;}catch(e){}
+    if(info&&info.found===false){
+      showMsg('fg-msg','err',(_rcChannel==='email'?'No EST account is registered with that email.':'No EST account is registered with that mobile number.')+' Check it, try the other option, or request access as a new user.');
+      _rcLog('failed','no_account');return;
+    }
+    if(info&&info.found){
+      if(_rcChannel==='email'&&!info.email_linked){
+        showMsg('fg-msg','warn',info.phone_linked
+          ?'This account has no email set up for codes — switch to Phone'+(info.phone_hint?' ('+info.phone_hint+')':'')+', or ask the admin below.'
+          :'This account has no email set up for codes yet. '+(info.email_on_profile?'Ask the EST admin to press “Sync contacts” in the dashboard once, then try again — or use the button below.':'Use the button below to ask the EST admin.'));
+        _rcLog('failed','email_not_linked');return;
       }
-    }catch(e){}
-    // Record the request so it appears in the admin dashboard
-    let logged=false,logMissingTable=false;
-    try{
-      const r=await fetch(SUPABASE_URL+'/rest/v1/reset_requests',{
-        method:'POST',
-        headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
-        body:JSON.stringify([{req_type:_fgMode,username:uname,email:email,status:'open'}])
-      });
-      logged=r.ok;
-      if(r.status===404)logMissingTable=true;
-    }catch(e){}
+      if(_rcChannel==='phone'&&!info.phone_linked){
+        showMsg('fg-msg','warn',info.email_linked
+          ?'This account has no mobile number set up for codes — switch to Email'+(info.email_hint?' ('+info.email_hint+')':'')+', or ask the admin below.'
+          :'This account has no mobile number set up for codes yet. '+(info.phone_on_profile?'Ask the EST admin to press “Sync contacts” in the dashboard once, then try again — or use the button below.':'Use the button below to ask the EST admin.'));
+        _rcLog('failed','phone_not_linked');return;
+      }
+      if(_rcChannel==='email'&&info.auth_email)ident=info.auth_email;
+      if(_rcChannel==='phone'&&info.auth_phone)ident=info.auth_phone.startsWith('+')?info.auth_phone:'+'+info.auth_phone;
+    }
+    // 2) Send the one-time code through Supabase Auth
+    const payload=_rcChannel==='email'?{email:ident,options:{shouldCreateUser:false}}:{phone:ident,options:{shouldCreateUser:false,channel:'sms'}};
+    const {error}=await _sb.auth.signInWithOtp(payload);
+    if(error){
+      const m=error.message||'';
+      if(/signups not allowed|user not found/i.test(m))showMsg('fg-msg','err','No account is set up for codes at that '+(_rcChannel==='email'?'email':'number')+'. Try the other option, or ask the admin below.');
+      else if(/unsupported phone provider|sms provider|phone provider|not enabled|disabled|phone logins/i.test(m))showMsg('fg-msg','warn','Phone codes are not enabled on this server yet — use your Email instead, or ask the admin below.');
+      else if(/rate limit|security purposes|too many/i.test(m))showMsg('fg-msg','warn','A code was requested very recently — wait a minute and try again.');
+      else showMsg('fg-msg','err','Could not send the code: '+m);
+      _rcLog('failed',m);return;
+    }
+    _rcIdent=ident;
+    _rcDest=_rcChannel==='email'?((info&&info.email_hint)||ident.replace(/^(.)(.*)(@.*)$/,'$1****$3')):('•••• '+ident.slice(-4));
+    $('rc-sent-to').textContent='We sent a 6-digit code to '+_rcDest+'. It is valid for 10 minutes.'+(_rcChannel==='email'?' Check the spam folder if it does not arrive.':'');
+    $('rc-code').value='';rcShowStep(2);$('rc-code').focus();
+    _rcLog('code_sent');
+  }catch(e){showMsg('fg-msg','err','Connection failed — check your internet and try again.');}
+  finally{setBusy('fg-btn',false);}
+}
+async function rcResend(){hideMsg('fg-msg');rcShowStep(1);await rcStart();}
+async function rcVerify(){
+  hideMsg('fg-msg');
+  const code=$('rc-code').value.replace(/\D/g,'');
+  if(code.length<6){showMsg('fg-msg','err','Enter the 6-digit code from the message.');return;}
+  setBusy('rc-verify-btn',true,'Verifying…');
+  try{
+    const params=_rcChannel==='email'?{email:_rcIdent,token:code,type:'email'}:{phone:_rcIdent,token:code,type:'sms'};
+    const {data,error}=await _sb.auth.verifyOtp(params);
+    if(error){const m=error.message||'';showMsg('fg-msg','err',/expired|invalid/i.test(m)?'That code is wrong or has expired — check it, or request a new one.':m);_rcLog('failed','verify: '+m);return;}
+    const user=data&&data.user;
+    let profile=null;try{const r=await _sb.from('profiles').select('username,status').eq('id',user.id).single();profile=r.data;}catch(e){}
+    _rcLog('verified');
     if(_fgMode==='username'){
-      if(uname)showMsg('fg-msg','ok','Your username is “'+uname+'”. The EST admin has also been notified.');
-      else if(logged)showMsg('fg-msg','warn','No account found for that email — the EST admin has been notified and will contact you.');
-      else if(logMissingTable)showMsg('fg-msg','err','The reset-request system is not set up yet — ask the EST admin to apply the latest database schema.');
-      else showMsg('fg-msg','err','Could not reach the server — check your connection and try again.');
-      return;
-    }
-    // Password mode: try to send a Supabase reset link to the registered email
-    let mailed=false,mailErr='';
-    if(_sb&&email){
-      try{
-        const {error}=await _sb.auth.resetPasswordForEmail(email,{redirectTo:location.href.split('#')[0].split('?')[0]});
-        if(error)mailErr=error.message||'';else mailed=true;
-      }catch(e){mailErr=String(e&&e.message||e);}
-    }
-    if(mailed){
-      showMsg('fg-msg','ok','Password reset link sent to '+email+' — check your inbox and spam folder. In Gmail, click the “···” button if the message looks empty. The EST admin has also been notified.');
-    }else if(/security purposes|rate limit/i.test(mailErr)){
-      showMsg('fg-msg','warn','A reset link was requested very recently — wait a minute before requesting another. ('+mailErr+')');
-    }else if(mailErr){
-      showMsg('fg-msg','err','Could not send the reset email: '+mailErr+(logged?' — the EST admin has been notified instead.':''));
-    }else if(logged){
-      showMsg('fg-msg','warn','Request recorded — the EST admin has been notified and will reset your password and contact you.'+(email?'':' (No email is on file for this account, so a reset link could not be sent.)'));
-    }else if(logMissingTable){
-      showMsg('fg-msg','err','The reset-request system is not set up yet — ask the EST admin to apply the latest database schema.');
+      $('rc-username').textContent=(profile&&profile.username)||(user.user_metadata&&user.user_metadata.username)||'';
+      await _sb.auth.signOut().catch(()=>{});   // identity proven — sign in normally afterwards
+      rcShowStep(4);_rcLog('completed');
     }else{
-      showMsg('fg-msg','err','Could not reach the server — check your connection and try again.');
+      $('rc-np').value='';$('rc-np2').value='';rcShowStep(3);$('rc-np').focus();
     }
-  }finally{setBusy('fg-btn',false);}
+  }catch(e){showMsg('fg-msg','err','Connection failed — try again.');}
+  finally{setBusy('rc-verify-btn',false);}
+}
+async function rcSavePassword(){
+  hideMsg('fg-msg');
+  const p=$('rc-np').value,p2=$('rc-np2').value;
+  if(p.length<6){showMsg('fg-msg','err','Password must be at least 6 characters.');return;}
+  if(p!==p2){showMsg('fg-msg','err','Passwords do not match.');return;}
+  setBusy('rc-save-btn',true,'Saving…');
+  try{
+    const {error}=await _sb.auth.updateUser({password:p});
+    if(error){showMsg('fg-msg','err',error.message);_rcLog('failed','update: '+error.message);return;}
+    _rcLog('completed');
+    await _sb.auth.signOut().catch(()=>{});
+    showAuth();
+    showMsg('si-msg','ok','Password updated ✓ — sign in with your new password.');
+  }catch(e){showMsg('fg-msg','err','Connection failed — try again.');}
+  finally{setBusy('rc-save-btn',false);}
+}
+/* Fallback when no code can be delivered: file a request the admin sees in the dashboard */
+async function rcNotifyAdmin(){
+  hideMsg('fg-msg');
+  const v=$('fg-id').value.trim();
+  if(!v){showMsg('fg-msg','err','Enter your email or mobile number first, so the admin knows which account.');return;}
+  let email='',phone='';
+  if(v.indexOf('@')>0)email=v.toLowerCase();else phone=normPhone(v)||v;
+  try{
+    const r=await fetch(SUPABASE_URL+'/rest/v1/reset_requests',{method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify([{req_type:_fgMode,username:'',email,phone,status:'open'}])});
+    if(r.ok){showMsg('fg-msg','ok','Request sent — the EST admin will reset it and contact you at '+(email||phone)+'.');_rcLog('failed','admin_notified');}
+    else showMsg('fg-msg','err','Could not send the request — check your connection and try again.');
+  }catch(e){showMsg('fg-msg','err','Could not reach the server — check your connection.');}
 }
 
 /* ══ Set new password after following the email reset link ══ */
@@ -754,7 +874,7 @@ async function doSignUp(ev){
     // the EST username lives in the profile and is used to sign in.
     const {data,error}=await _sb.auth.signUp({
       email:em,password:p,
-      options:{data:{username:u,full_name:(fn+' '+ln).trim(),first_name:fn,last_name:ln,contact_email:em,phone:ph}}
+      options:{data:{username:u,full_name:(fn+' '+ln).trim(),first_name:fn,last_name:ln,contact_email:em,phone:(normPhone(ph)||ph)}}
     });
     if(error){
       let m=error.message;
