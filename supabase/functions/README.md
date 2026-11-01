@@ -60,8 +60,41 @@ Logs: Supabase → Edge Functions → razorpay-webhook → Logs.
   invoice / bank-transfer buyers — `grant_license()` / `revoke_license()` from
   schema v4.
 
-## Store subscriptions (Phase 3)
+## revenuecat-webhook — Pro licence from Google Play / App Store (Phase 3)
 
-Google Play / App Store purchases will arrive through a second function
-(RevenueCat webhook) that writes the same `licenses` table with `source`
-`play` / `apple`. Nothing in the app changes — it only ever reads `is_pro()`.
+Store apps must sell digital features through Play Billing / Apple IAP.
+RevenueCat fronts both stores (receipt validation, renewals, refunds) and calls
+this function on every subscription event; it mirrors the "pro" entitlement into
+the same `licenses` table with `source` `play` / `apple`. The app only reads
+`is_pro()`, so nothing else changes.
+
+### One-time setup (after the store developer accounts exist)
+
+1. **Stores**: create the subscription product in Play Console
+   (`est_pro_monthly`, ₹1,499 / month) and in App Store Connect (same id);
+   fill the store's tax/payments profile.
+2. **RevenueCat** (free up to US$2.5k MTR): new project → add the Play app
+   (upload the Play service-account JSON) and the iOS app (App Store Connect
+   API key) → Products: import `est_pro_monthly` from both → Entitlement
+   **`pro`** attached to both products → Offering `default`.
+3. **Deploy this function** and secrets:
+   ```bash
+   supabase secrets set REVENUECAT_WEBHOOK_AUTH='Bearer <long-random-string>'
+   supabase functions deploy revenuecat-webhook --no-verify-jwt
+   ```
+   RevenueCat → Integrations → Webhooks → URL
+   `https://fivqdckmtymtuxlhjjoj.functions.supabase.co/revenuecat-webhook`,
+   Authorization header = the same value.
+4. **App wiring** (done in the Capacitor shell once the RevenueCat public SDK
+   keys exist): `@revenuecat/purchases-capacitor` is configured with the Play /
+   Apple public key and **`appUserID` = the Supabase auth user id**, so events
+   arrive with `app_user_id` = `profiles.id`. The "Subscribe" button in the
+   payment dialog calls `Purchases.purchasePackage(default offering)`; on
+   success the app re-checks `is_pro()` (webhook latency is seconds).
+5. **Test** with Play licence testers / Apple sandbox accounts; check
+   `select * from licenses order by created_at desc` and the function logs.
+
+Event handling: INITIAL_PURCHASE / RENEWAL / UNCANCELLATION / PRODUCT_CHANGE /
+TRANSFER → upsert Pro until `expiration_at_ms`; EXPIRATION / REFUND /
+SUBSCRIPTION_PAUSED → end the licence now; CANCELLATION (auto-renew off) leaves
+access until expiry; BILLING_ISSUE is left to the store's grace period.
