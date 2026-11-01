@@ -14,8 +14,10 @@ const WWW = join(here, '..', 'www');
 const BRIDGE = join(here, '..', 'bridge', 'native-bridge.js');
 
 const PAGES = ['app.html', 'signin.html', 'dashboard.html'];
-const STATIC = ['manifest.json', 'dashboard-manifest.json', 'offline-helper.js', 'offline-styles.css', 'config.json', 'PRIVACY.md', 'LICENSE'];
-const DIRS = ['data'];                         // legacy reference data used by the pages
+const STATIC = ['manifest.json', 'dashboard-manifest.json', 'offline-helper.js', 'offline-styles.css', 'config.json', 'privacy.html', 'terms.html', 'LICENSE'];
+// NOTE: the root data/ folder is the legacy survey archive (real field records) — it is
+// deliberately NOT bundled into the app; the app reads live data from Supabase.
+const DIRS = [];
 
 rmSync(WWW, { recursive: true, force: true });
 mkdirSync(WWW, { recursive: true });

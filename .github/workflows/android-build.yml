@@ -15,7 +15,7 @@ name: Android app (Capacitor)
 on:
   push:
     branches: [main]
-    paths: ['app.html', 'signin.html', 'dashboard.html', 'offline-*.{js,css}', 'manifest.json', 'native/**', '.github/workflows/android-build.yml']
+    paths: ['app.html', 'signin.html', 'dashboard.html', 'offline-helper.js', 'offline-styles.css', 'manifest.json', 'privacy.html', 'terms.html', 'native/**', '.github/workflows/android-build.yml']
     tags: ['v*']
   workflow_dispatch:
     inputs:
@@ -35,15 +35,18 @@ jobs:
       EST_VERSION_CODE: ${{ github.run_number }}
       EST_VERSION_NAME: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('2.9.{0}', github.run_number) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with: { node-version: 20, cache: npm, cache-dependency-path: native/package-lock.json }
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with: { distribution: temurin, java-version: 21 }
 
-      - uses: android-actions/setup-android@v3
+      # The ubuntu-latest runner ships the Android SDK (ANDROID_HOME preset); the Android
+      # Gradle plugin downloads any missing platform/build-tools itself, licences pre-accepted.
+      - name: Android SDK on runner
+        run: echo "ANDROID_HOME=$ANDROID_HOME" && ls "$ANDROID_HOME/platforms" | tail -3
 
       - name: Install native project deps
         working-directory: native
