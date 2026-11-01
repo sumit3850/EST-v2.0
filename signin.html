@@ -39,6 +39,7 @@
   --warn-bg:rgba(251,191,36,.09);
   --ok-bg:rgba(62,207,142,.09);
   --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.4,0,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);
   --sans:'Inter',system-ui,-apple-system,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -57,7 +58,16 @@ body{
   mask-image:radial-gradient(ellipse 90% 80% at 50% 30%,#000 30%,transparent 75%);
   -webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 30%,#000 30%,transparent 75%);
 }
-.shell{position:relative;min-height:100dvh;display:flex;flex-direction:column;}
+.blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.42;pointer-events:none;z-index:0;}
+.blob.a{width:520px;height:520px;left:-160px;top:-180px;background:radial-gradient(circle,rgba(62,207,142,.35),transparent 70%);}
+.blob.b{width:460px;height:460px;right:-140px;bottom:-200px;background:radial-gradient(circle,rgba(43,157,108,.28),transparent 70%);}
+@media(prefers-reduced-motion:no-preference){
+  .blob.a{animation:blobA 22s ease-in-out infinite;}
+  .blob.b{animation:blobB 28s ease-in-out infinite;}
+  @keyframes blobA{50%{transform:translate(60px,40px) scale(1.08);}}
+  @keyframes blobB{50%{transform:translate(-50px,-60px) scale(1.06);}}
+}
+.shell{position:relative;z-index:1;min-height:100dvh;display:flex;flex-direction:column;}
 .wrap{flex:1;display:grid;grid-template-columns:1fr;max-width:1200px;width:100%;margin:0 auto;padding:24px 20px;gap:40px;align-items:center;}
 @media(min-width:1024px){.wrap{grid-template-columns:1.1fr .9fr;padding:40px 48px;gap:64px;}}
 
@@ -69,7 +79,11 @@ body{
   background:linear-gradient(145deg,#0f241a,#0a1710);border:1px solid var(--border-hi);
   box-shadow:0 0 34px var(--accent-glow),inset 0 1px 0 rgba(255,255,255,.05);margin-bottom:26px;
 }
-.brand h1{font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-bottom:10px;}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+.brand h1{font-size:38px;font-weight:800;letter-spacing:-.025em;line-height:1.08;margin-bottom:12px;}
+.feats{display:grid;gap:10px;margin:0 0 30px;}
+.feat{display:flex;align-items:center;gap:11px;font-size:14px;font-weight:600;color:var(--txt);}
+.feat svg{width:20px;height:20px;flex:none;color:var(--accent);}
 .brand h1 em{font-style:normal;color:var(--accent);}
 .brand .sub{font-size:15.5px;color:var(--txt2);max-width:44ch;margin-bottom:36px;}
 .console-card{
@@ -112,6 +126,15 @@ body{
   box-shadow:0 24px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.04);
 }
 @media(min-width:480px){.card{padding:32px 32px 30px;}}
+@media(prefers-reduced-motion:no-preference){
+  .card{animation:cardIn .55s var(--spring) both;}
+  @keyframes cardIn{from{opacity:0;transform:translateY(14px) scale(.985);}to{opacity:1;transform:none;}}
+  #panel-signin,#panel-signup,#panel-forgot,#panel-recover,#panel-acct{animation:panelIn .32s var(--ease) both;}
+  @keyframes panelIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  #rc-step1,#rc-step2,#rc-step3,#rc-step4{animation:panelIn .28s var(--ease) both;}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(62,207,142,.34),inset 0 1px 0 rgba(255,255,255,.35);}
+  .btn-primary:active{transform:translateY(0) scale(.985);}
+}
 .tabs{
   display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:11px;
   background:var(--bg2);border:1px solid var(--border);margin-bottom:26px;
@@ -236,6 +259,7 @@ body{
 </head>
 <body>
 <div class="grid-bg" aria-hidden="true"></div>
+<div class="blob a" aria-hidden="true"></div><div class="blob b" aria-hidden="true"></div>
 <div class="shell">
 <main class="wrap">
 
@@ -254,8 +278,15 @@ body{
         <line x1="55" y1="27" x2="66" y2="14" stroke="#3ecf8e" stroke-width="1.8"/>
       </svg>
     </div>
-    <h1>EST <em>Operations Console</em></h1>
-    <p class="sub">Unified access for the Entomological Surveillance Tool — field data collection, vector indices, and the A&amp;N Islands surveillance database.</p>
+    <div class="eyebrow">Entomological surveillance, simplified</div>
+    <h1>Fewer registers.<br><em>Live vector indices.</em><br>One source of truth.</h1>
+    <p class="sub">One console for the Entomological Surveillance Tool — field collection, WHO indices, risk assessment and the A&amp;N Islands surveillance database, in sync across every device.</p>
+    <div class="feats" aria-label="Highlights">
+      <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>GPS-tagged adult &amp; larval surveys, offline-first</div>
+      <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>HI · CI · BI computed live, risk assessment in one click</div>
+      <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Monthly NVBDCP formats, PDF &amp; Excel exports</div>
+      <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Syncs the moment you're back online</div>
+    </div>
 
     <div class="console-card" role="status" aria-label="System status">
       <div class="console-head">
@@ -498,7 +529,7 @@ body{
 </main>
 
 <footer class="statusbar">
-  <span>console v2.9.17</span><span class="sep">│</span>
+  <span>console v2.9.18</span><span class="sep">│</span>
   <a href="https://estweb-git-main-explorer3850.vercel.app/" target="_blank" rel="noopener" style="color:var(--txt2);text-decoration:none;border-bottom:1px dotted var(--txt3);">website ↗</a><span class="sep">│</span>
   <span class="status-pill"><span id="fb-dot" class="status-dot checking"></span><span id="fb-state">supabase: checking…</span></span>
   <span class="sep">│</span><span id="fb-net">network: —</span>
@@ -965,6 +996,10 @@ document.addEventListener('DOMContentLoaded',async()=>{
     showMsg('fg-msg','warn','That reset link is invalid or has already expired — reset links work only once and for a short time. Enter your username or email below to get a fresh one.');
     return;
   }
+  // Deep links from the field app / dashboard sign-in screens — honoured even when
+  // the auth SDK could not load, so the user at least lands on the right panel.
+  if(location.hash==='#forgot'){showForgot('password');return;}
+  if(location.hash==='#signup'){switchTab('signup');return;}
   if(!_sb){
     // Offline (Supabase unreachable): fall back to the stored console session
     // so a signed-in field worker can still reach the app without internet.
@@ -978,9 +1013,6 @@ document.addEventListener('DOMContentLoaded',async()=>{
     }catch(e){}
     $('si-user').focus();return;
   }
-  // Deep links from the field app / dashboard sign-in screens
-  if(location.hash==='#forgot'){showForgot('password');return;}
-  if(location.hash==='#signup'){switchTab('signup');return;}
   // Arriving from a password-reset email: let the recovery panel take over
   if(/type=recovery/.test(location.hash))return;
   try{
